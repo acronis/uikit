@@ -5,6 +5,10 @@ import {
   CartesianGrid,
   XAxis,
 } from 'recharts';
+import {
+  EllipsisIcon,
+  SquareDashedIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { AreaChart } from '../area-chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
@@ -15,6 +19,9 @@ import {
   formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
+import { ChartWidget } from '../../chart-widget';
+import { ButtonIcon } from '../../button-icon';
+import { Metric } from '../../metric';
 
 // Series colors are supplied by the caller via `config`. There is no chart token
 // tier yet, so these reference the shared semantic brand/status tokens (a
@@ -42,30 +49,11 @@ const meta = {
   component: AreaChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // text/grid but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
     dataKeys: ['desktop', 'mobile', 'tablet'],
     xKey: 'month',
-    curve: 'monotone',
-    strokeWidth: 2,
-    fillOpacity: 0.4,
-    showDots: false,
-    connectNulls: false,
-    showGrid: true,
-    showTooltip: true,
-    showLegend: true,
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
@@ -139,6 +127,87 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// The chart rendered with all default props — matches the Figma design node.
+// Any visual delta here means the component defaults are wrong.
+export const Default: Story = {};
+
+const widgetData = [
+  { month: 'Jan', desktop: 186, mobile: 80 },
+  { month: 'Feb', desktop: 305, mobile: 200 },
+  { month: 'Mar', desktop: 237, mobile: 120 },
+  { month: 'Apr', desktop: 273, mobile: 190 },
+  { month: 'May', desktop: 209, mobile: 130 },
+  { month: 'Jun', desktop: 214, mobile: 140 },
+];
+
+const widgetConfig = {
+  desktop: { label: 'Desktop' },
+  mobile: { label: 'Mobile' },
+} satisfies ChartConfig;
+
+// The design's `ChartArea` in full: the card, its header and ⋯ menu, and the
+// metric row all belong to `ChartWidget` — AreaChart is only the plot and its
+// legend, and fills the widget body responsively.
+//
+// Figma `8174:22335` (size=md, 592px wide).
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="h-[300px] w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric icon={<SquareDashedIcon />} value="125" unit="Label" />
+        }
+      >
+        <AreaChart
+          config={widgetConfig}
+          data={widgetData}
+          dataKeys={['desktop', 'mobile']}
+          xKey="month"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
+// Figma `8977:2273` — projection zone starts at Apr.
+export const WithProjections: Story = {
+  render: () => (
+    <div className="h-[300px] w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric icon={<SquareDashedIcon />} value="125" unit="Label" />
+        }
+      >
+        <AreaChart
+          config={widgetConfig}
+          data={widgetData}
+          dataKeys={['desktop', 'mobile']}
+          xKey="month"
+          projectionStart="Apr"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
 // New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
 // fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
 export const AxisAndGridConfig: Story = {
@@ -150,19 +219,15 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
-// Overlapping areas with the default gradient fill.
-export const Single: Story = {
-  args: { layout: 'single', fill: 'gradient' },
+// Gradient fill — the series color fades from full opacity at the line down to
+// transparent. Use when the trend (not the volume) is the message.
+export const GradientFill: Story = {
+  args: { fill: 'gradient' },
 };
 
 // Areas summed on a shared stack.
 export const Stacked: Story = {
   args: { layout: 'stacked', fill: 'gradient' },
-};
-
-// Flat translucent fill instead of a gradient.
-export const SolidFill: Story = {
-  args: { fill: 'solid' },
 };
 
 // The four curve types beyond linear/monotone/step, side by side on one series
@@ -192,7 +257,6 @@ export const ExtendedCurves: Story = {
 // third series stepped with its own dots.
 export const PerSeriesStyling: Story = {
   args: {
-    fill: 'solid',
     showDots: true,
     areaSettings: {
       mobile: { dashed: true, fillOpacity: 0.1, showDots: false },
@@ -243,15 +307,14 @@ export const AxisLabels: Story = {
   },
 };
 
-// All chrome toggled off + a solid flat fill — the baseline that would catch a
-// toggle silently becoming a no-op (the unit env can't paint recharts chrome).
+// All chrome toggled off — the baseline that would catch a toggle silently
+// becoming a no-op (the unit env can't paint recharts chrome).
 export const NoChrome: Story = {
   args: {
     showGrid: false,
     showTooltip: false,
     showLegend: false,
     showDots: false,
-    fill: 'solid',
   },
 };
 

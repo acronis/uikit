@@ -8,7 +8,7 @@ import figma from '@figma/code-connect';
 
 import { LineChart } from './line-chart';
 
-figma.connect(LineChart, 'FIGMA_NODE_URL', {
+figma.connect(LineChart, 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8811-175733&m=dev', {
   props: {
     curve: figma.enum('Curve', {
       Linear: 'linear',

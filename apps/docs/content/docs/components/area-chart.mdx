@@ -32,7 +32,7 @@ stroke and fill from. Single vs multi area simply follows from how many
   <AreaChartDemo />
 </DemoReact>
 
-A multi-series area chart with the default gradient fill, a themed tooltip and
+A multi-series area chart with the default solid fill, a themed tooltip and
 legend:
 
 ```tsx
@@ -70,8 +70,8 @@ Stack the series into one band with `layout="stacked"`:
 />
 ```
 
-Use a flat translucent fill instead of the gradient with `fill="solid"` (tune it
-with `fillOpacity`):
+Switch from the default solid fill to a gradient with `fill="gradient"` — the
+series color fades from full opacity at the line down to transparent:
 
 ```tsx
 <AreaChart
@@ -79,8 +79,7 @@ with `fillOpacity`):
   data={data}
   dataKeys={['desktop', 'mobile']}
   xKey="month"
-  fill="solid"
-  fillOpacity={0.3}
+  fill="gradient"
 />
 ```
 
@@ -140,6 +139,28 @@ Add axis titles and a y-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
   yUnit="ms"
 />
 ```
+
+## Projections
+
+Mark a boundary at which the data transitions from actuals to forecast with
+`projectionStart`. Pass the `xKey` value where the projection zone begins — from
+that point onward, x-axis tick labels render in the disabled text color, series
+strokes switch to a dashed pattern, and the area fill is suppressed so only the
+dashed line continues:
+
+```tsx
+<AreaChart
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile']}
+  xKey="month"
+  projectionStart="Apr"
+/>
+```
+
+The boundary point is included in both the solid and dashed segments so they
+connect visually. When `projectionStart` doesn't match any value in the data the
+chart renders normally.
 
 ## Per-series overrides
 

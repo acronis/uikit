@@ -11,8 +11,11 @@ import {
   Line,
   LineChart as RechartsLineChart,
   ReferenceLine,
+  Text,
   XAxis,
   YAxis,
+  useXAxisScale,
+  usePlotArea,
 } from 'recharts';
 
 import { cn } from '@/lib/utils';
@@ -27,6 +30,7 @@ import {
   resolveAnimation,
   resolveAxisDomain,
   resolveBrushProps,
+  dropProjectionPayload,
   resolveChartReferenceValue,
   resolveLabelFillClass,
   resolveReferenceLineProps,
@@ -83,6 +87,67 @@ const lineChartVariants = cva('', {
   },
 });
 
+// Renders two <clipPath> defs (actual / projection), a CSS <style> that clips
+// each recharts Line layer to its half, and a dashed separator line at the
+// visual midpoint between the last actual tick and the first projection tick.
+//
+// recharts' StaticCurve explicitly overwrites any clipPath prop passed to
+// <Line> with its own plot-area URL, so the prop-based approach used by
+// <Area> cannot be used here. Instead we apply CSS clip-path to the outer <g>
+// that recharts wraps each Line series in (targeted via a unique className we
+// set on the <Line> component). CSS clip-path on a class selector (specificity
+// 0,1,0) beats the SVG presentation attribute recharts sets on the inner
+// <path> (specificity 0), so the two clips compose: outer = our half, inner =
+// recharts' plot-area — net effect is the correct half within the plot area.
+function ProjectionClip({
+  projectionStart,
+  prevTick,
+  clipId,
+  dataKeys,
+}: {
+  projectionStart: string | number;
+  prevTick: string | number;
+  clipId: string;
+  dataKeys: string[];
+}) {
+  const xScale = useXAxisScale();
+  const plotArea = usePlotArea();
+  if (!xScale || !plotArea) return null;
+  const prevX = xScale(prevTick as string);
+  const currX = xScale(projectionStart as string);
+  if (prevX == null || currX == null) return null;
+  const midX = (prevX + currX) / 2;
+  const { x, y, width, height } = plotArea;
+  const css = dataKeys
+    .map(
+      (_, i) =>
+        `.actual-${clipId}-${i}{clip-path:url(#${clipId}-actual)}` +
+        `.proj-${clipId}-${i}{clip-path:url(#${clipId}-projection)}`
+    )
+    .join('');
+  return (
+    <>
+      <defs>
+        <clipPath id={`${clipId}-actual`}>
+          <rect x={x} y={y} width={midX - x} height={height} />
+        </clipPath>
+        <clipPath id={`${clipId}-projection`}>
+          <rect x={midX} y={y} width={x + width - midX} height={height} />
+        </clipPath>
+      </defs>
+      <style>{css}</style>
+      <line
+        x1={midX}
+        y1={y}
+        x2={midX}
+        y2={y + height}
+        stroke="var(--ui-border-on-surface-border)"
+        strokeDasharray="4 4"
+      />
+    </>
+  );
+}
+
 // Reserved field prefix for the synthetic delta-band range series. Each band
 // mints one `__band_<n>` field that feeds an <Area>; it must never surface in
 // the tooltip or legend (those describe only real, caller-supplied series).
@@ -127,6 +192,21 @@ export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
     const merged = {
       ...props,
       payload: dropBandSeries(props.payload),
+    } as TooltipRenderProps;
+    return typeof tooltipContent === 'function'
+      ? React.createElement(
+          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
+          merged
+        )
+      : React.cloneElement(tooltipContent, merged);
+  };
+}
+
+function createProjectionTooltip(tooltipContent: TooltipContentType) {
+  return function ProjectionTooltip(props: TooltipRenderProps) {
+    const merged = {
+      ...props,
+      payload: dropProjectionPayload(props.payload),
     } as TooltipRenderProps;
     return typeof tooltipContent === 'function'
       ? React.createElement(
@@ -230,6 +310,16 @@ export interface LineChartProps
    * several at once.
    */
   referenceLine?: ChartReferenceLine | ChartReferenceLine[];
+  /**
+   * The category value (matching an `xKey` entry) at which the projection
+   * zone starts. Ticks from this point onward render in the disabled text
+   * color (`--ui-text-on-surface-disabled`). The chart data and series
+   * themselves are not affected — only the X-axis tick appearance changes.
+   *
+   * Use this when displaying a forecast/projection range where future
+   * data points should be visually de-emphasized on the axis.
+   */
+  projectionStart?: string | number;
   showLegend?: boolean;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
@@ -252,12 +342,13 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       curve = 'monotone',
       lineStyle = 'solid',
       strokeWidth = 2,
-      showDots = true,
+      showDots = false,
       dotSize = 3,
       showActiveDot,
       connectNulls = false,
       lineSettings,
       referenceLine,
+      projectionStart,
       showGrid = true,
       showTooltip = true,
       showLegend = true,
@@ -313,13 +404,77 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
 
     const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
+    const projStartIndex = React.useMemo(() => {
+      if (projectionStart === undefined) return -1;
+      return data.findIndex((row) => row[xKey] === projectionStart);
+    }, [projectionStart, data, xKey]);
+    // projStartIndex === 0 (boundary at the first tick) is excluded: there is no
+    // "previous tick" to define the clip midpoint, so clipPath defs can't be
+    // emitted, which would make all series invisible. Treat it as no-projection.
+    const hasProjection = projStartIndex > 0;
+
+    // Build the projection tick renderer when projectionStart is set. Each tick
+    // past (and including) the start value renders in the disabled text color;
+    // ticks before it stay in the muted-foreground color. Returns undefined when
+    // projectionStart is absent or not found so recharts uses its own renderer.
+    const projectionTick = React.useMemo(() => {
+      if (!hasProjection) return undefined;
+      const projectedValues = new Set(
+        data.slice(projStartIndex).map((row) => row[xKey])
+      );
+      const ProjectionTick = ({
+        payload,
+        ...tickProps
+      }: {
+        payload: { value: string | number };
+        [key: string]: unknown;
+      }) => (
+        <Text
+          {...(tickProps as React.ComponentProps<typeof Text>)}
+          fontSize={12}
+          className={
+            projectedValues.has(payload.value)
+              ? 'fill-[var(--ui-text-on-surface-disabled)]'
+              : 'fill-muted-foreground'
+          }
+        >
+          {xTickFormatter
+            ? xTickFormatter(payload.value as never, 0)
+            : payload.value}
+        </Text>
+      );
+      return ProjectionTick;
+    }, [hasProjection, projStartIndex, data, xKey, xTickFormatter]);
+
+    // When projection is active, copy each series value to `_proj_${key}` — same
+    // data, no nulls. Both the actual and projection <Line> see the identical curve;
+    // the clipPath (computed in ProjectionClip) restricts which half each paints.
+    const projectionData = React.useMemo(() => {
+      if (!hasProjection) return data;
+      return data.map((row) => ({
+        ...row,
+        ...Object.fromEntries(
+          dataKeys.map((k) => [`_proj_${k}`, row[k]])
+        ),
+      }));
+    }, [hasProjection, data, dataKeys]);
+
+    // The tick immediately before the projection boundary — needed to compute the
+    // visual midpoint where the clip edge and separator line are placed.
+    const prevTickValue = React.useMemo(() => {
+      if (projStartIndex <= 0) return undefined;
+      return data[projStartIndex - 1]?.[xKey];
+    }, [projStartIndex, data, xKey]);
+
+    const clipId = `line-proj-${React.useId().replace(/:/g, '')}`;
+
     // Memoized so recharts sees a stable content type across renders — a fresh
     // wrapper each render would remount the caller's tooltip and reset its state.
-    const customTooltip = React.useMemo(
-      () =>
-        tooltipContent ? createBandStrippedTooltip(tooltipContent) : undefined,
-      [tooltipContent]
-    );
+    const customTooltip = React.useMemo(() => {
+      if (!tooltipContent) return undefined;
+      const bandStripped = createBandStrippedTooltip(tooltipContent);
+      return hasProjection ? createProjectionTooltip(bandStripped) : bandStripped;
+    }, [tooltipContent, hasProjection]);
 
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
@@ -343,14 +498,14 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     const hasBands = bands.length > 0;
     const tooltipNode =
       customTooltip ??
-      (hasBands ? (
+      (hasBands || hasProjection ? (
         (props: TooltipRenderProps) => (
           <ChartTooltipContent
             active={props.active}
             label={props.label}
             payload={
-              dropBandSeries(
-                props.payload
+              dropProjectionPayload(
+                dropBandSeries(props.payload)
               ) as ChartTooltipContentProps['payload']
             }
           />
@@ -358,20 +513,24 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       ) : (
         <ChartTooltipContent />
       ));
-    const legendNode = hasBands ? (
+    const legendNode = hasBands || hasProjection ? (
       (props: LegendContentProps) => (
         <ChartLegendContent
           verticalAlign={props.verticalAlign}
           payload={
-            dropBandSeries(props.payload) as ChartLegendContentProps['payload']
+            dropProjectionPayload(
+              dropBandSeries(props.payload)
+            ) as ChartLegendContentProps['payload']
           }
         />
       )
     ) : (
       <ChartLegendContent />
     );
+    // Bands are computed over the projection-augmented rows, so a band shades
+    // only the actual zone — past the boundary the real series is `null` there.
     const chartData = bands.length
-      ? data.map((row) => {
+      ? projectionData.map((row) => {
           const augmented: Record<string, unknown> = { ...row };
           for (const { field, current, comparison } of bands) {
             const a = row[current];
@@ -383,7 +542,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           }
           return augmented;
         })
-      : data;
+      : projectionData;
 
     // Only a delta band needs an <Area>, which recharts renders under
     // ComposedChart, not LineChart. Escalate to ComposedChart only then, so
@@ -421,7 +580,8 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={xTickFormatter}
+              tickFormatter={projectionTick ? undefined : xTickFormatter}
+              tick={projectionTick}
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
@@ -442,6 +602,14 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
             />
             {showTooltip && <ChartTooltip content={tooltipNode} />}
             {showLegend && <ChartLegend content={legendNode} />}
+            {hasProjection && prevTickValue != null && (
+              <ProjectionClip
+                projectionStart={projectionStart!}
+                prevTick={prevTickValue}
+                clipId={clipId}
+                dataKeys={dataKeys}
+              />
+            )}
             {/* Delta bands render before the lines so the lines draw on top. */}
             {bands.map(({ field, current }) => (
               <Area
@@ -461,7 +629,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 tooltipType="none"
               />
             ))}
-            {dataKeys.map((key) => {
+            {dataKeys.map((key, index) => {
               // Comparison series read as secondary: always dashed, dimmed, and
               // dot-less, regardless of the global lineStyle / showDots.
               const isComparison = comparisonKeys?.includes(key);
@@ -479,6 +647,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               return (
                 <Line
                   key={key}
+                  className={hasProjection ? `actual-${clipId}-${index}` : undefined}
                   type={curveFor(key)}
                   dataKey={key}
                   stroke={colorFor(key)}
@@ -502,6 +671,29 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 </Line>
               );
             })}
+            {hasProjection &&
+              dataKeys.map((key, index) => {
+                const isComparison = comparisonKeys?.includes(key);
+                if (isComparison) return null;
+                const settings = lineSettings?.[key];
+                return (
+                  <Line
+                    key={`_proj_${key}`}
+                    className={`proj-${clipId}-${index}`}
+                    type={curveFor(key)}
+                    dataKey={`_proj_${key}`}
+                    name={key}
+                    stroke={colorFor(key)}
+                    strokeWidth={settings?.strokeWidth ?? strokeWidth}
+                    strokeDasharray="5 5"
+                    dot={false}
+                    activeDot={false}
+                    legendType="none"
+                    tooltipType="none"
+                    {...animation}
+                  />
+                );
+              })}
             {/* Annotations draw over the series they describe. */}
             {referenceLines.map((ref, index) => {
               const value = resolveChartReferenceValue(ref, data, dataKeys);

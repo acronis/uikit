@@ -59,6 +59,7 @@ export {
   CHART_LABEL_FONT_SIZE,
   CHART_BRUSH_HEIGHT,
   CHART_BRUSH_ARIA_LABEL,
+  dropProjectionPayload,
 } from './chart-format';
 export type {
   TickFormatter,
