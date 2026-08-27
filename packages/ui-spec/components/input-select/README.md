@@ -4,7 +4,10 @@ The next-gen select **field**: a label (with an optional required marker), a tri
 box showing the value / placeholder and a chevron, an optional description or error,
 and a floating dropdown with an in-dropdown search, sections, single- or
 multiple-selectable items, and loading / empty / error status. It composes Base UI
-`Select` and the `--ui-input-select-*` token tier.
+`Select` and the `--ui-input-select-*` token tier. The dropdown's placement is
+controllable (`side` / `align` / offsets / collision avoidance, or an explicit
+`anchor` element to position against instead of the trigger), and
+`is-popover-styled` swaps its chrome to the popover look — see `behavior.md`.
 
 > `Select` is an alias of this family (re-pointed off the deleted `--ui-form-*` tier).
 > Prefer importing `InputSelect*` directly in new code.

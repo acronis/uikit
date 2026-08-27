@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 import {
   BriefcaseIcon,
   BuildingIcon,
@@ -7,6 +8,7 @@ import {
   NodeTreeIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
+import { Button } from '../../button/button';
 import {
   InputSelect,
   InputSelectContent,
@@ -433,6 +435,113 @@ export const TenantSelector: Story = {
   ),
 };
 
+// Same tenant tree as `TenantSelector`, but the popup is fully controlled (`open` /
+// `onOpenChange`) and opened by an external button instead of the field's own
+// trigger. The trigger still has to exist — Base UI needs it internally — but it
+// stays mounted `sr-only` rather than being removed. Its layout position isn't
+// where the popup should visually align, though (it sits below the button in
+// flow), so `InputSelectContent`'s `anchor` prop points the popup at the visible
+// button instead of the hidden trigger.
+//
+// Because the button isn't the Select's own trigger, Base UI classifies a press on
+// it as an *outside press* and closes the popup on `pointerdown` — before the
+// button's `click` handler runs. A plain `onClick={() => setOpen(true)}` would
+// therefore reopen what the outside press just closed, so the button could open the
+// popup but never close it. `onOpenChange` cancels that one outside press (Base UI
+// then skips its own state update as well) and leaves the button's click handler as
+// the single source of truth for the toggle.
+function ControlledTenantSelector() {
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <Button
+        ref={buttonRef}
+        className="self-start"
+        aria-expanded={open}
+        onClick={() => setOpen((isOpen) => !isOpen)}
+      >
+        Select a tenant
+      </Button>
+      <InputSelect
+        items={tenantItems}
+        defaultValue="all-clients"
+        open={open}
+        onOpenChange={(nextOpen, eventDetails) => {
+          if (
+            !nextOpen &&
+            eventDetails.reason === 'outside-press' &&
+            buttonRef.current?.contains(eventDetails.event.target as Node)
+          ) {
+            eventDetails.cancel();
+            return;
+          }
+          setOpen(nextOpen);
+          if (!nextOpen) {
+            // The Select's own trigger is `sr-only`, so focus must never be left
+            // on it (WCAG 2.4.7) — and `tabIndex={-1}` doesn't block programmatic
+            // focus. At close time focus is in one of four places: still inside
+            // the popup that's going away (Escape and item selection — Base UI
+            // moves it to the hidden trigger *asynchronously*, after this handler
+            // returns), already on that hidden trigger, lost to `document.body`
+            // (an outside press onto nothing focusable — Base UI does not move
+            // focus on this path), or on another element the press legitimately
+            // focused. Reclaim it for the visible button in the first three cases
+            // only; never steal focus from an element the user interacted with.
+            const reclaimIfUnclaimed = () => {
+              const active = document.activeElement;
+              if (
+                active === triggerRef.current ||
+                active === document.body ||
+                (active !== null && popupRef.current?.contains(active))
+              ) {
+                buttonRef.current?.focus();
+              }
+            };
+            reclaimIfUnclaimed();
+            requestAnimationFrame(reclaimIfUnclaimed);
+          }
+        }}
+      >
+        <InputSelectField className="sr-only">
+          <InputSelectLabel>Tenant</InputSelectLabel>
+          <InputSelectTrigger ref={triggerRef} tabIndex={-1}>
+            <InputSelectValue placeholder="Select a tenant" />
+          </InputSelectTrigger>
+        </InputSelectField>
+        <InputSelectContent
+          ref={popupRef}
+          side="right"
+          sideOffset={60}
+          anchor={buttonRef}
+          collisionAvoidance={{ side: 'none', fallbackAxisSide: 'none' }}
+          isPopoverStyled
+        >
+          <InputSelectSearch aria-label="Search tenants" placeholder="Search…" />
+          <TenantTree />
+        </InputSelectContent>
+      </InputSelect>
+    </div>
+  );
+}
+
+// The popup is controlled by internal state with no `defaultOpen` lever, so the
+// story opens it in `play` — otherwise the VR baseline would only ever capture the
+// closed button. animationDelay lets the fade/zoom/slide settle before the shot.
+export const ControlledOffsetWithDirectionPopoverStyled: Story = {
+  name: 'Controlled, Offset, With Direction, Popover styled',
+  parameters: { snapshot: { animationDelay: 400 } },
+  render: () => <ControlledTenantSelector />,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(
+      within(canvasElement).getByRole('button', { name: /select a tenant/i })
+    );
+  },
+};
+
 // The tenant dropdown's loading / empty / error variants, each with the in-dropdown
 // search on top — mirrors the Figma "InputSelectDropdownTenants" status variants
 // (nodes 3064-21462 / 21467 / 21472).
@@ -495,5 +604,49 @@ export const ConstrainedWidth: Story = {
         <InputSelectContent>{fruits}</InputSelectContent>
       </InputSelect>
     </div>
+  ),
+};
+
+// Enforced placement: `collisionAvoidance` disables Base UI's auto-flip/shift, so
+// the dropdown stays pinned to the right of the trigger with a 20px offset —
+// unlike every other story, which lets Base UI pick the side that fits.
+export const EnforcedPlacement: Story = {
+  args: { defaultOpen: true },
+  render: (args) => (
+    <InputSelect {...args} items={fruitItems}>
+      <InputSelectField>
+        <InputSelectLabel>Fruit</InputSelectLabel>
+        <InputSelectTrigger>
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+      </InputSelectField>
+      <InputSelectContent
+        side="right"
+        sideOffset={20}
+        collisionAvoidance={{ side: 'none', fallbackAxisSide: 'none' }}
+      >
+        {fruits}
+      </InputSelectContent>
+    </InputSelect>
+  ),
+};
+
+// Renders the dropdown with `PopoverContent`'s chrome (`--ui-popover-container-*`
+// tokens, no shadow, fade/zoom/slide animation) instead of the default
+// `--ui-input-select-dropdown-container-*` tokens + static `shadow-md`.
+// animationDelay lets the open transition settle before the screenshot.
+export const PopoverStyled: Story = {
+  args: { defaultOpen: true },
+  parameters: { snapshot: { animationDelay: 400 } },
+  render: (args) => (
+    <InputSelect {...args} items={fruitItems}>
+      <InputSelectField>
+        <InputSelectLabel>Fruit</InputSelectLabel>
+        <InputSelectTrigger>
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+      </InputSelectField>
+      <InputSelectContent isPopoverStyled>{fruits}</InputSelectContent>
+    </InputSelect>
   ),
 };

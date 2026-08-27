@@ -64,7 +64,8 @@ parts:
   - id: popup
     description: >-
       The floating listbox panel (`role="listbox"`), portaled below the trigger
-      (defaults to `document.body`; overridable via `portalContainer`).
+      (defaults to the nearest portal-container provider, or `document.body`
+      when there is none; overridable via `portalContainer`).
       `--ui-input-select-dropdown-container-*`.
     element: div
   - id: search

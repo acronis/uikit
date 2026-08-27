@@ -63,6 +63,28 @@ tokens:
   - { name: --ui-input-select-dropdown-container-border-radius, affects: popup }
   - { name: --ui-input-select-dropdown-container-padding-y, affects: popup }
 
+  # ── Dropdown popup — popover-styled variant (`is-popover-styled`) ──
+  - {
+      name: --ui-popover-container-color,
+      affects: popup,
+      description: Popup fill when styled as a popover,
+    }
+  - {
+      name: --ui-popover-container-border-color,
+      affects: popup,
+      description: Popup border color when styled as a popover,
+    }
+  - {
+      name: --ui-popover-container-border-width,
+      affects: popup,
+      description: Popup border width when styled as a popover,
+    }
+  - {
+      name: --ui-popover-container-border-radius,
+      affects: popup,
+      description: Popup corner radius when styled as a popover,
+    }
+
   # ── In-dropdown search ──
   - { name: --ui-input-select-dropdown-dropdown-search-gap, affects: search }
   - {

@@ -55,18 +55,36 @@ function InputSelect<Value, Multiple extends boolean | undefined = false>(
   const [query, setQuery] = React.useState('');
   const filter = React.useMemo(() => ({ query, setQuery }), [query]);
 
-  // Reset the query when the popup closes so it reopens unfiltered.
+  // Reset the query when the popup closes so it reopens unfiltered, via two paths.
+  // 1. `onOpenChange` — the only path in uncontrolled mode, where Base UI owns the
+  //    open state and reports every real transition. A consumer that calls
+  //    `eventDetails.cancel()` keeps the popup open (Base UI skips its own state
+  //    update too), so the query must survive that.
+  // 2. The `open` prop transitioning true -> false — needed in controlled mode,
+  //    where a consumer can flip its own state directly (e.g. an external toggle
+  //    button whose click handler runs after it cancelled Base UI's outside-press
+  //    close) without `onOpenChange` ever firing for that transition. A cancelled
+  //    close leaves `open` at `true`, so this path preserves the query too.
   const handleOpenChange = React.useCallback<
     NonNullable<SelectPrimitive.Root.Props<Value, Multiple>['onOpenChange']>
   >(
     (open, eventDetails) => {
       onOpenChange?.(open, eventDetails);
-      if (!open) {
+      if (!open && !eventDetails.isCanceled) {
         setQuery('');
       }
     },
     [onOpenChange]
   );
+
+  const controlledOpen = props.open;
+  const previousOpenRef = React.useRef(controlledOpen);
+  React.useEffect(() => {
+    if (previousOpenRef.current && controlledOpen === false) {
+      setQuery('');
+    }
+    previousOpenRef.current = controlledOpen;
+  }, [controlledOpen]);
 
   return (
     <InputSelectModeContext.Provider value={Boolean(props.multiple)}>
@@ -176,11 +194,43 @@ const InputSelectContent = React.forwardRef<
     align?: SelectPrimitive.Positioner.Props['align'];
     side?: SelectPrimitive.Positioner.Props['side'];
     /**
-     * Container to portal the dropdown into. Defaults to the document body;
-     * pass an element to scope the portal (e.g. a shadow root, so the popup
+     * Offset in px along the alignment axis (perpendicular to `side`). Defaults
+     * to Base UI's own `0` when omitted — pass a value to nudge the dropdown
+     * along the trigger's edge without changing its `align`.
+     */
+    alignOffset?: SelectPrimitive.Positioner.Props['alignOffset'];
+    /**
+     * Collision-avoidance strategy. Defaults to Base UI's own flip/shift
+     * behavior, which may move the dropdown off the requested `side`/`align`
+     * when it doesn't fit. Pass `{ side: 'none', fallbackAxisSide: 'none' }`
+     * alongside an explicit `side`/`align` to lock the popup to that placement
+     * with no auto-flip fallback (e.g. "always to the right, no matter what":
+     * `side="right" sideOffset={20} collisionAvoidance={{ side: 'none',
+     * fallbackAxisSide: 'none' }}`).
+     */
+    collisionAvoidance?: SelectPrimitive.Positioner.Props['collisionAvoidance'];
+    /**
+     * Element (or ref/getter) the popup positions itself against, overriding
+     * the default of anchoring to `InputSelectTrigger`. Use when the visible
+     * trigger isn't the element Base UI tracks internally — e.g. an external
+     * button drives a hidden trigger, and the popup should align with the
+     * button instead of the hidden trigger's layout position.
+     */
+    anchor?: SelectPrimitive.Positioner.Props['anchor'];
+    /**
+     * Container to portal the dropdown into. Defaults to the nearest
+     * `PortalContainerProvider`, or `document.body` when there is none; pass an
+     * element to scope the portal explicitly (e.g. a shadow root, so the popup
      * inherits styles defined there).
      */
     portalContainer?: SelectPrimitive.Portal.Props['container'];
+    /**
+     * Render the dropdown chrome like `PopoverContent` (`--ui-popover-container-*`
+     * tokens, no shadow, fade/zoom/slide enter-exit animation) instead of the
+     * default `--ui-input-select-dropdown-container-*` tokens + static `shadow-md`.
+     * See `components/ui/popover/popover.tsx`.
+     */
+    isPopoverStyled?: boolean;
   }
 >(
   (
@@ -190,7 +240,11 @@ const InputSelectContent = React.forwardRef<
       sideOffset = 4,
       align = 'start',
       side = 'bottom',
+      alignOffset,
+      collisionAvoidance,
+      anchor,
       portalContainer,
+      isPopoverStyled = false,
       ...props
     },
     ref
@@ -204,13 +258,28 @@ const InputSelectContent = React.forwardRef<
         sideOffset={sideOffset}
         align={align}
         side={side}
+        alignOffset={alignOffset}
+        collisionAvoidance={collisionAvoidance}
+        anchor={anchor}
         alignItemWithTrigger={false}
         className="z-50 outline-none"
       >
         <SelectPrimitive.Popup
           ref={ref}
           className={cn(
-            'max-h-[var(--available-height)] min-w-[var(--anchor-width)] overflow-y-auto rounded-[var(--ui-input-select-dropdown-container-border-radius)] border border-[var(--ui-input-select-dropdown-container-border-color)] bg-[var(--ui-input-select-dropdown-container-color)] py-[var(--ui-input-select-dropdown-container-padding-y)] text-sm shadow-md outline-none',
+            'max-h-[var(--available-height)] min-w-[var(--anchor-width)] overflow-y-auto py-[var(--ui-input-select-dropdown-container-padding-y)] text-sm outline-none',
+            // Keep the border/radius/background token references and the animation
+            // classes below in sync with PopoverContent's container in popover.tsx —
+            // but deliberately NOT its sizing (`min-w`/`max-w`) or `text-foreground`:
+            // the dropdown keeps its own `--anchor-width`/`--available-height` sizing
+            // and default text color whether or not `isPopoverStyled` is set.
+            isPopoverStyled
+              ? [
+                  'rounded-[var(--ui-popover-container-border-radius)] border-[length:var(--ui-popover-container-border-width)] border-solid border-[var(--ui-popover-container-border-color)] bg-[var(--ui-popover-container-color)]',
+                  'duration-200 data-[open]:animate-in data-[closed]:animate-out data-[open]:fade-in-0 data-[closed]:fade-out-0 data-[open]:zoom-in-95 data-[closed]:zoom-out-95',
+                  'data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2',
+                ]
+              : 'rounded-[var(--ui-input-select-dropdown-container-border-radius)] border border-[var(--ui-input-select-dropdown-container-border-color)] bg-[var(--ui-input-select-dropdown-container-color)] shadow-md',
             className
           )}
           {...props}

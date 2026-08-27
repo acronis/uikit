@@ -1,7 +1,7 @@
-import { createRef } from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { createRef, useRef, useState } from 'react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   InputSelect,
@@ -232,6 +232,36 @@ describe('InputSelect', () => {
     );
   });
 
+  it('renders the dropdown with input-select tokens by default', async () => {
+    render(<Field />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    const popup = screen.getByRole('listbox');
+    expect(popup).toHaveClass(
+      'bg-[var(--ui-input-select-dropdown-container-color)]',
+      'shadow-md'
+    );
+  });
+
+  it('renders the dropdown with popover tokens and no shadow when isPopoverStyled', async () => {
+    render(
+      <InputSelect items={{ apple: 'Apple' }}>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        <InputSelectContent isPopoverStyled>
+          <InputSelectItem value="apple">Apple</InputSelectItem>
+        </InputSelectContent>
+      </InputSelect>
+    );
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    const popup = screen.getByRole('listbox');
+    expect(popup).toHaveClass('bg-[var(--ui-popover-container-color)]');
+    expect(popup).not.toHaveClass(
+      'bg-[var(--ui-input-select-dropdown-container-color)]',
+      'shadow-md'
+    );
+  });
+
   it('forwards className to the field wrapper', () => {
     render(
       <InputSelect items={{ apple: 'Apple' }}>
@@ -246,6 +276,368 @@ describe('InputSelect', () => {
       </InputSelect>
     );
     expect(screen.getByTestId('field')).toHaveClass('w-24');
+  });
+});
+
+describe('InputSelectContent positioning', () => {
+  // happy-dom reports every element as a zero-sized rect at the origin, so
+  // floating-ui resolves every placement to translate(0, 0) and no offset is
+  // observable. Give the anchor/popup a real box so the computed transform
+  // actually reflects the offsets under test.
+  function mockLayout() {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(
+      () =>
+        ({
+          width: 200,
+          height: 32,
+          x: 100,
+          y: 100,
+          top: 100,
+          left: 100,
+          right: 300,
+          bottom: 132,
+          toJSON() {},
+        }) as DOMRect
+    );
+  }
+
+  function open(content: React.ReactNode) {
+    render(
+      <InputSelect defaultOpen items={{ apple: 'Apple' }}>
+        <InputSelectTrigger aria-label="Fruit">
+          <InputSelectValue placeholder="Select an option" />
+        </InputSelectTrigger>
+        {content}
+      </InputSelect>
+    );
+    return screen.getByRole('listbox').parentElement as HTMLElement;
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('forwards alignOffset and collisionAvoidance to the positioner', async () => {
+    mockLayout();
+    const positioner = open(
+      <InputSelectContent
+        side="right"
+        sideOffset={20}
+        alignOffset={24}
+        collisionAvoidance={{ side: 'none', align: 'none', fallbackAxisSide: 'none' }}
+      >
+        <InputSelectItem value="apple">Apple</InputSelectItem>
+      </InputSelectContent>
+    );
+    // `side` sticks (no flip), the popup clears the 200px-wide anchor by
+    // `sideOffset`, and `alignOffset` shifts it down the alignment axis.
+    expect(positioner).toHaveAttribute('data-side', 'right');
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(220px, 24px)');
+    });
+  });
+
+  it('keeps Base UI collision avoidance when collisionAvoidance is omitted', async () => {
+    mockLayout();
+    const positioner = open(
+      <InputSelectContent side="right" sideOffset={20} alignOffset={24}>
+        <InputSelectItem value="apple">Apple</InputSelectItem>
+      </InputSelectContent>
+    );
+    // Same offsets, but Base UI's default avoidance flips the popup off the
+    // requested side and shifts away the alignOffset — the contrast that proves
+    // the previous test's placement came from `collisionAvoidance`.
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(-20px, 0px)');
+    });
+    expect(positioner).toHaveAttribute('data-side', 'left');
+  });
+
+  // `anchor` swaps the element the popup measures itself against, so give the
+  // external anchor a box distinct from every other element's and read the
+  // resulting transform: it can only come from the element actually measured.
+  function mockLayoutWithAnchor() {
+    vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(
+      function (this: Element) {
+        const isAnchor = this.getAttribute('data-testid') === 'external-anchor';
+        const x = isAnchor ? 400 : 100;
+        const y = isAnchor ? 300 : 100;
+        return {
+          width: 200,
+          height: 32,
+          x,
+          y,
+          top: y,
+          left: x,
+          right: x + 200,
+          bottom: y + 32,
+          toJSON() {},
+        } as DOMRect;
+      }
+    );
+  }
+
+  const anchorRef = createRef<HTMLDivElement>();
+
+  function Anchored({ anchored }: { anchored: boolean }) {
+    return (
+      <>
+        <div ref={anchorRef} data-testid="external-anchor" />
+        <InputSelect defaultOpen items={{ apple: 'Apple' }}>
+          <InputSelectTrigger aria-label="Fruit">
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+          <InputSelectContent
+            anchor={anchored ? anchorRef : undefined}
+            collisionAvoidance={{ side: 'none', align: 'none', fallbackAxisSide: 'none' }}
+          >
+            <InputSelectItem value="apple">Apple</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+      </>
+    );
+  }
+
+  it('positions the popup against the trigger when anchor is omitted', async () => {
+    mockLayoutWithAnchor();
+    render(<Anchored anchored={false} />);
+    const positioner = screen.getByRole('listbox').parentElement as HTMLElement;
+    // Trigger box: left 100, bottom 132, plus the default 4px sideOffset.
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(0px, 36px)');
+    });
+  });
+
+  it('positions the popup against a custom anchor element', async () => {
+    mockLayoutWithAnchor();
+    render(<Anchored anchored />);
+    const positioner = screen.getByRole('listbox').parentElement as HTMLElement;
+    // Anchor box: left 400, bottom 332, plus the default 4px sideOffset — i.e.
+    // 300px further right and 200px further down than the trigger.
+    await waitFor(() => {
+      expect(positioner.style.transform).toBe('translate(300px, 236px)');
+    });
+  });
+});
+
+// The pattern the `ControlledOffsetWithDirectionPopoverStyled` story documents: an
+// external button drives a controlled popup that anchors to the button while the
+// Select's own trigger stays `sr-only`.
+describe('InputSelect driven by an external button', () => {
+  function ExternalButtonSelect() {
+    const [open, setOpen] = useState(false);
+    const buttonRef = useRef<HTMLButtonElement>(null);
+    const triggerRef = useRef<HTMLButtonElement>(null);
+    const popupRef = useRef<HTMLDivElement>(null);
+
+    return (
+      <>
+        <button ref={buttonRef} type="button" onClick={() => setOpen((v) => !v)}>
+          Open
+        </button>
+        <input aria-label="Bystander" />
+        <InputSelect
+          items={{ apple: 'Apple' }}
+          open={open}
+          onOpenChange={(nextOpen, eventDetails) => {
+            if (
+              !nextOpen &&
+              eventDetails.reason === 'outside-press' &&
+              buttonRef.current?.contains(eventDetails.event.target as Node)
+            ) {
+              eventDetails.cancel();
+              return;
+            }
+            setOpen(nextOpen);
+            if (!nextOpen) {
+              // The Select's own trigger is `sr-only`, so focus must never be
+              // left on it (WCAG 2.4.7) — and `tabIndex={-1}` doesn't block
+              // programmatic focus. At close time focus is in one of four
+              // places: still inside the popup that's going away (Escape and
+              // item selection — Base UI moves it to the hidden trigger
+              // *asynchronously*, after this handler returns), already on that
+              // hidden trigger, lost to `document.body` (an outside press onto
+              // nothing focusable — Base UI does not move focus on this path),
+              // or on another element the press legitimately focused. Reclaim it
+              // for the visible button in the first three cases only; never
+              // steal it from an element the user actually interacted with.
+              const reclaimIfUnclaimed = () => {
+                const active = document.activeElement;
+                if (
+                  active === triggerRef.current ||
+                  active === document.body ||
+                  (active !== null && popupRef.current?.contains(active))
+                ) {
+                  buttonRef.current?.focus();
+                }
+              };
+              reclaimIfUnclaimed();
+              requestAnimationFrame(reclaimIfUnclaimed);
+            }
+          }}
+        >
+          <InputSelectTrigger
+            ref={triggerRef}
+            aria-label="Fruit"
+            className="sr-only"
+            tabIndex={-1}
+          >
+            <InputSelectValue placeholder="Select an option" />
+          </InputSelectTrigger>
+          <InputSelectContent ref={popupRef} anchor={buttonRef}>
+            <InputSelectSearch aria-label="Filter" placeholder="Search" />
+            <InputSelectItem value="apple">Apple</InputSelectItem>
+          </InputSelectContent>
+        </InputSelect>
+      </>
+    );
+  }
+
+  // Without the cancel, Base UI's outside-press close on `pointerdown` and the
+  // button's `click` handler fight: the button can open the popup but never close
+  // it.
+  it('opens on the first click and closes on the second', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await userEvent.click(button);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('still closes on an outside press away from the button', async () => {
+    render(<ExternalButtonSelect />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await userEvent.click(document.body);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+  });
+
+  it('preserves the query on a cancelled close and keeps the popup open', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    await userEvent.type(screen.getByLabelText('Filter'), 'app');
+    expect(screen.getByLabelText('Filter')).toHaveValue('app');
+
+    // The button's pointerdown makes Base UI attempt an outside-press close, which
+    // the fixture cancels; the popup stays open and the query must survive.
+    fireEvent.pointerDown(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filter')).toHaveValue('app');
+  });
+
+  // The button's own `onClick` flips the controlled `open` to `false` directly,
+  // after the fixture cancelled Base UI's outside-press close — so `onOpenChange`
+  // never reports this transition and the reset has to key off `open` itself.
+  it('resets the query after a real close and reopen', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    await userEvent.type(screen.getByLabelText('Filter'), 'app');
+    expect(screen.getByLabelText('Filter')).toHaveValue('app');
+
+    await userEvent.click(button);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Filter')).toHaveValue('');
+  });
+
+  it('resets the query after an outside-press close and reopen', async () => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    await userEvent.type(screen.getByLabelText('Filter'), 'app');
+
+    await userEvent.click(document.body);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(button);
+    expect(screen.getByLabelText('Filter')).toHaveValue('');
+  });
+
+  // WCAG 2.4.7: the sr-only trigger is invisible, so it must not be a Tab stop —
+  // otherwise a keyboard user lands on a focus ring they cannot see.
+  it('keeps the sr-only trigger out of the Tab sequence', () => {
+    render(<ExternalButtonSelect />);
+    expect(screen.getByRole('combobox', { name: 'Fruit' })).toHaveAttribute(
+      'tabindex',
+      '-1'
+    );
+  });
+
+  // `tabIndex={-1}` alone is not enough: on both Escape and item selection Base
+  // UI calls `.focus()` on the sr-only trigger *asynchronously* (focus is still
+  // inside the popup when `onOpenChange` runs), and script-driven focus still
+  // works on a `tabIndex={-1}` element. On an
+  // outside press onto nothing focusable, focus is instead simply lost to
+  // `document.body`. Either way the fixture has to reclaim it for the visible
+  // button.
+  it.each([
+    ['Escape', async () => userEvent.keyboard('{Escape}')],
+    ['an outside press', async () => userEvent.click(document.body)],
+    [
+      'an item selection',
+      async () => userEvent.click(screen.getByRole('option', { name: 'Apple' })),
+    ],
+  ])('returns focus to the external button after %s close', async (_, close) => {
+    render(<ExternalButtonSelect />);
+    const button = screen.getByRole('button', { name: 'Open' });
+
+    await userEvent.click(button);
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    await close();
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+    // Base UI's own refocus of the sr-only trigger lands after `onOpenChange`
+    // returns, so the fixture's deferred refocus is what has to win.
+    await waitFor(() => {
+      expect(button).toHaveFocus();
+    });
+    expect(screen.getByRole('combobox', { name: 'Fruit' })).not.toHaveFocus();
+  });
+
+  // The refocus must be a *reclaim*, not an unconditional grab: an outside press
+  // that lands on another focusable element is that element's focus to keep, and
+  // stealing it back one frame later would silently undo the user's click.
+  it('leaves focus on another focusable element pressed to close the popup', async () => {
+    render(<ExternalButtonSelect />);
+    await userEvent.click(screen.getByRole('button', { name: 'Open' }));
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+
+    const bystander = screen.getByLabelText('Bystander');
+    await userEvent.click(bystander);
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    expect(bystander).toHaveFocus();
+    // The deferred reclaim runs a frame after the close — give it the chance to
+    // misbehave before asserting focus survived.
+    await new Promise((resolve) => requestAnimationFrame(() => resolve(null)));
+    expect(bystander).toHaveFocus();
+    expect(screen.getByRole('button', { name: 'Open' })).not.toHaveFocus();
   });
 });
 
@@ -315,6 +707,26 @@ describe('InputSelect in-dropdown search', () => {
     expect(screen.getByRole('option', { name: 'Banana' })).toBeVisible();
     // Apple hides (kept mounted, so still queryable by text) instead of unmounting.
     expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+  });
+
+  // No `open`/`onOpenChange` props: Base UI owns the open state, so the reset can
+  // only come from the `onOpenChange` path (the `open`-prop effect stays inert
+  // because `props.open` is `undefined` for the whole lifecycle).
+  it('resets the query on an uncontrolled close, so the popup reopens unfiltered', async () => {
+    render(<SearchableSelect />);
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Filter' }), 'ban');
+    expect(screen.getByRole('searchbox', { name: 'Filter' })).toHaveValue('ban');
+    expect(screen.getByText('Apple').closest('[role="option"]')).not.toBeVisible();
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => {
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    await userEvent.click(screen.getByRole('combobox', { name: 'Fruit' }));
+    expect(screen.getByRole('searchbox', { name: 'Filter' })).toHaveValue('');
+    expect(screen.getByRole('option', { name: 'Apple' })).toBeVisible();
   });
 
   it('follows an externally controlled value and re-syncs when it changes outside onChange', async () => {
