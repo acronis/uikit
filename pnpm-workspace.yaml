@@ -62,7 +62,7 @@ catalog:
 
   # SVGO v4 — SVG optimizer shared by the icon tooling:
   # tools/style-dictionary, tools/figma-design-assets-sync.
-  svgo: 4.0.1
+  svgo: 4.0.2
 
 # Pin transitive deps that we don't want pnpm to bump.
 overrides:
