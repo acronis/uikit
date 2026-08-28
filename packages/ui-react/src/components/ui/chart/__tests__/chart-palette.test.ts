@@ -410,6 +410,38 @@ describe('resolveChartColors — diverging side assignment', () => {
     // a3 and b3 and a2 taken; available = [b2, a1, b1] → un-sided gets b2
     expect(resolved.neutral1.color).toBe(bo[3]); // b2
   });
+
+  it('warns when an un-sided series names a status under diverging', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const config = {
+      withStatus: { tone: { status: 'danger' as const } },
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    // Still gets a positional stop (not rejected), but a warning fires.
+    expect(resolved.withStatus.color).toBe(bo[0]);
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('status')
+    );
+  });
+
+  it('warns when an un-sided series pins a slot under diverging', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const config = {
+      withSlot: { tone: { slot: 3 } },
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    expect(resolved.withSlot.color).toBe(bo[0]);
+    expect(warn).toHaveBeenCalledOnce();
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('slot')
+    );
+  });
+
 });
 
 describe('findDuplicateTones', () => {
