@@ -35,6 +35,9 @@ export type ChartStatusTone =
   | 'info'
   | 'neutral';
 
+/** Which hue side of a diverging pair a series belongs to. */
+export type ChartDivergingSide = 'a' | 'b';
+
 /** Which palette a chart's series are painted from. */
 export type ChartPalette =
   | { type: 'categorical' }
@@ -45,24 +48,33 @@ export type ChartPalette =
 /**
  * How one series picks its color out of the active palette.
  *
- * Only the two palettes whose colors are independent of each other accept an
- * override:
+ * Three palettes accept a per-series override:
  *
  * - `categorical` — `{ slot }` picks one of the 16 hues.
- * - `status` — `{ status }` names a tone.
+ * - `status` — `{ status }` names a tone (required; there is no meaningful
+ *   positional fallback for status colors).
+ * - `diverging` — `{ side: 'a' | 'b' }` pins the series to one hue family.
+ *   All side-`a` series walk the a-hue stops (a3 → a2 → a1, strongest-first,
+ *   wrapping past three). All side-`b` series walk the b-hue stops likewise.
+ *   Un-sided series walk the default interleaved ramp (a3-b3-a2-b2-a1-b1),
+ *   skipping any stop already claimed by a sided series. This assignment
+ *   requires the full config, so it happens in `resolveChartColors`, not here.
  *
- * `sequential` and `diverging` accept none. Their stops are a *ramp*: the
- * colors mean something only in relation to each other, so letting one series
- * jump to an arbitrary stop would break the reading order the ramp exists to
- * convey. The product's widget editor agrees — it offers a ramp/pair picker
- * and no per-series control. An override passed under those palettes is
+ * `sequential` accepts no override: its stops are a ramp, meaningful only in
+ * relation to each other. An override passed under a non-matching palette is
  * ignored, with a dev warning.
  *
- * Neither form can express a color from outside the palette — that is the point.
+ * `{ sameAs: key }` is palette-agnostic: the series mirrors whatever color
+ * another series resolves to. Use it for a twin series that is the *same*
+ * metric drawn differently (a forecast tail, a projection band), where two
+ * distinct hues would read as two separate metrics. An aliased series doesn't
+ * consume a stop.
+ *
+ * No form can express a color from outside the active palette — that is the point.
  */
 export type ChartSeriesTone =
-  | { slot: number; status?: never; sameAs?: never }
-  | { slot?: never; status: ChartStatusTone; sameAs?: never }
+  | { slot: number; status?: never; sameAs?: never; side?: never }
+  | { slot?: never; status: ChartStatusTone; sameAs?: never; side?: never }
   /**
    * Paint whatever the series under this key paints, under any palette. For a
    * twin series that is the *same* metric drawn differently — a forecast tail
@@ -70,7 +82,16 @@ export type ChartSeriesTone =
    * would read as two metrics. Resolved by `resolveChartColors`, which is the
    * only place the whole config is in view.
    */
-  | { slot?: never; status?: never; sameAs: string };
+  | { slot?: never; status?: never; sameAs: string; side?: never }
+  /**
+   * Diverging palette only. Pins this series to one of the two hue sides.
+   * `resolveChartColors` groups all series that share a side together and
+   * assigns them that side's three stops (strongest first, wrapping). Series
+   * that declare no side walk the default interleaved ramp.
+   *
+   * Under any palette other than `diverging`, this is ignored with a dev warning.
+   */
+  | { slot?: never; status?: never; sameAs?: never; side: ChartDivergingSide };
 
 const token = (name: string) => `var(--ui-dataviz-${name})`;
 
@@ -79,37 +100,35 @@ export const CHART_CATEGORICAL_TOKENS = Object.freeze(
   Array.from({ length: 16 }, (_, i) => token(`categorical-${i + 1}`))
 );
 
-/** Each sequential ramp's eight stops, lightest (1) to darkest (8). */
+/** Each sequential ramp's eight stops, darkest (8) to lightest (1). */
 export const CHART_SEQUENTIAL_TOKENS: Readonly<
   Record<ChartSequentialRamp, readonly string[]>
 > = Object.freeze({
   blue: Object.freeze(
-    Array.from({ length: 8 }, (_, i) => token(`sequential-blue-${i + 1}`))
+    Array.from({ length: 8 }, (_, i) => token(`sequential-blue-${8 - i}`))
   ),
   teal: Object.freeze(
-    Array.from({ length: 8 }, (_, i) => token(`sequential-teal-${i + 1}`))
+    Array.from({ length: 8 }, (_, i) => token(`sequential-teal-${8 - i}`))
   ),
   orange: Object.freeze(
-    Array.from({ length: 8 }, (_, i) => token(`sequential-orange-${i + 1}`))
+    Array.from({ length: 8 }, (_, i) => token(`sequential-orange-${8 - i}`))
   ),
   violet: Object.freeze(
-    Array.from({ length: 8 }, (_, i) => token(`sequential-violet-${i + 1}`))
+    Array.from({ length: 8 }, (_, i) => token(`sequential-violet-${8 - i}`))
   ),
 });
 
-// Ordered `a3 → a1` then `b1 → b3`: strongest of the first hue, through the two
-// pale midpoints, out to the strongest of the second. That is the order the
-// ChartTreeMap mockup paints its tiles in (Figma node 8999:72012), and it is
-// what makes a diverging palette read as a single gradient rather than two
-// unrelated ramps.
+// Interleaved strongest-first: a3-b3-a2-b2-a1-b1 so adjacent series contrast
+// maximally (one "a" hue next to one "b" hue), and the darkest/most saturated
+// stops are used first.
 const divergingStops = (pair: string) =>
   Object.freeze([
     token(`diverging-${pair}-a3`),
+    token(`diverging-${pair}-b3`),
     token(`diverging-${pair}-a2`),
+    token(`diverging-${pair}-b2`),
     token(`diverging-${pair}-a1`),
     token(`diverging-${pair}-b1`),
-    token(`diverging-${pair}-b2`),
-    token(`diverging-${pair}-b3`),
   ]);
 
 /** Each diverging pair's six stops, one hue's strongest through to the other's. */
@@ -173,6 +192,8 @@ export function listPaletteChoices(
       );
     case 'categorical':
       return CHART_CATEGORICAL_TOKENS.map((_, i) => ({ slot: i + 1 }));
+    case 'diverging':
+      return [{ side: 'a' as const }, { side: 'b' as const }];
     default:
       return [];
   }
@@ -254,6 +275,14 @@ export function resolveSeriesColor(
     warn(
       `A chart series pins slot ${tone.slot} under the "${palette.type}" palette, whose stops are a ramp and are not individually selectable. Ignoring.`
     );
+  } else if (tone?.side !== undefined) {
+    if (palette.type !== 'diverging') {
+      warn(
+        `A chart series declares a side ("${tone.side}") under the "${palette.type}" palette, which is not diverging. Ignoring.`
+      );
+    }
+    // For diverging: resolveChartColors handles side assignment directly.
+    // Fall through to positional as a safe fallback for standalone calls.
   }
 
   // Wraps rather than clamps once the stops run out: a chart with more series

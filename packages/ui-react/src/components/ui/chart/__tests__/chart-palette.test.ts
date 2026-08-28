@@ -14,6 +14,7 @@ import {
   type ChartConfig,
   type ChartPalette,
   type ResolvedChartConfig,
+  type ChartDivergingSide,
 } from '../index';
 
 const CATEGORICAL: ChartPalette = { type: 'categorical' };
@@ -62,14 +63,14 @@ describe('chart palette tokens', () => {
     }
   });
 
-  it('walks a diverging pair from one hue through to the other', () => {
+  it('interleaves a diverging pair strongest-first: a3-b3-a2-b2-a1-b1', () => {
     expect(CHART_DIVERGING_TOKENS['blue-orange']).toEqual([
       'var(--ui-dataviz-diverging-blue-orange-a3)',
+      'var(--ui-dataviz-diverging-blue-orange-b3)',
       'var(--ui-dataviz-diverging-blue-orange-a2)',
+      'var(--ui-dataviz-diverging-blue-orange-b2)',
       'var(--ui-dataviz-diverging-blue-orange-a1)',
       'var(--ui-dataviz-diverging-blue-orange-b1)',
-      'var(--ui-dataviz-diverging-blue-orange-b2)',
-      'var(--ui-dataviz-diverging-blue-orange-b3)',
     ]);
   });
 
@@ -184,6 +185,24 @@ describe('per-series overrides', () => {
     ).toBe(CHART_CATEGORICAL_TOKENS[1]);
     expect(warn).toHaveBeenCalledOnce();
   });
+
+  it('ignores a side under a non-diverging palette with a warning, falls back to positional', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    expect(
+      resolveSeriesColor(CATEGORICAL, { index: 2, tone: { side: 'a' } })
+    ).toBe(CHART_CATEGORICAL_TOKENS[2]);
+    expect(warn).toHaveBeenCalledOnce();
+  });
+
+  it('accepts a side under a diverging palette without warning, falls back to positional', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    expect(
+      resolveSeriesColor(DIVERGING, { index: 0, tone: { side: 'b' } })
+    ).toBe(CHART_DIVERGING_TOKENS['blue-orange'][0]);
+    expect(warn).not.toHaveBeenCalled();
+  });
 });
 
 describe('listPaletteChoices', () => {
@@ -192,9 +211,15 @@ describe('listPaletteChoices', () => {
     expect(listPaletteChoices(CATEGORICAL)[6]).toEqual({ slot: 7 });
   });
 
-  it('offers nothing for the ramp palettes — they have no per-series control', () => {
+  it('offers nothing for the sequential palette — it has no per-series control', () => {
     expect(listPaletteChoices(SEQUENTIAL)).toEqual([]);
-    expect(listPaletteChoices(DIVERGING)).toEqual([]);
+  });
+
+  it('offers the two hue sides for the diverging palette', () => {
+    expect(listPaletteChoices(DIVERGING)).toEqual([
+      { side: 'a' },
+      { side: 'b' },
+    ]);
   });
 
   it('offers the six named tones for the status palette', () => {
@@ -309,6 +334,81 @@ describe('resolveChartColors', () => {
       'second',
       'third',
     ]);
+  });
+});
+
+describe('resolveChartColors — diverging side assignment', () => {
+  const bo = CHART_DIVERGING_TOKENS['blue-orange'];
+  // After interleave: [a3, b3, a2, b2, a1, b1] → side a = [0,2,4], side b = [1,3,5]
+
+  it('assigns side-a series from the a stops, strongest first', () => {
+    const config = {
+      first: { tone: { side: 'a' as ChartDivergingSide } },
+      second: { tone: { side: 'a' as ChartDivergingSide } },
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    expect(resolved.first.color).toBe(bo[0]); // a3
+    expect(resolved.second.color).toBe(bo[2]); // a2
+  });
+
+  it('assigns side-b series from the b stops, strongest first', () => {
+    const config = {
+      first: { tone: { side: 'b' as ChartDivergingSide } },
+      second: { tone: { side: 'b' as ChartDivergingSide } },
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    expect(resolved.first.color).toBe(bo[1]); // b3
+    expect(resolved.second.color).toBe(bo[3]); // b2
+  });
+
+  it('wraps side stops when there are more than three series on one side', () => {
+    const config = {
+      s1: { tone: { side: 'a' as ChartDivergingSide } },
+      s2: { tone: { side: 'a' as ChartDivergingSide } },
+      s3: { tone: { side: 'a' as ChartDivergingSide } },
+      s4: { tone: { side: 'a' as ChartDivergingSide } },
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    expect(resolved.s1.color).toBe(bo[0]); // a3
+    expect(resolved.s2.color).toBe(bo[2]); // a2
+    expect(resolved.s3.color).toBe(bo[4]); // a1
+    expect(resolved.s4.color).toBe(bo[0]); // wraps back to a3
+  });
+
+  it('un-sided series walk the interleaved ramp skipping stops taken by sided series', () => {
+    const config = {
+      sideA: { tone: { side: 'a' as ChartDivergingSide } }, // takes bo[0] = a3
+      sideB: { tone: { side: 'b' as ChartDivergingSide } }, // takes bo[1] = b3
+      free: {},
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    // available = [a2, b2, a1, b1] → first un-sided gets a2
+    expect(resolved.free.color).toBe(bo[2]); // a2
+  });
+
+  it('interleaves sided and un-sided series in a mixed config', () => {
+    const config = {
+      hotA1: { tone: { side: 'a' as ChartDivergingSide } },
+      hotB1: { tone: { side: 'b' as ChartDivergingSide } },
+      neutral1: {},
+      hotA2: { tone: { side: 'a' as ChartDivergingSide } },
+    } satisfies ChartConfig;
+
+    const resolved = resolveChartColors(config, DIVERGING);
+
+    expect(resolved.hotA1.color).toBe(bo[0]); // a3 (first a)
+    expect(resolved.hotB1.color).toBe(bo[1]); // b3 (first b)
+    expect(resolved.hotA2.color).toBe(bo[2]); // a2 (second a)
+    // a3 and b3 and a2 taken; available = [b2, a1, b1] → un-sided gets b2
+    expect(resolved.neutral1.color).toBe(bo[3]); // b2
   });
 });
 

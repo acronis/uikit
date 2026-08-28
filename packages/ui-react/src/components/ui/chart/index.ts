@@ -31,6 +31,7 @@ export type {
   ChartSeriesTone,
   ChartSequentialRamp,
   ChartDivergingPair,
+  ChartDivergingSide,
   ChartStatusTone,
   ResolveSeriesColorOptions,
 } from './chart-palette';
