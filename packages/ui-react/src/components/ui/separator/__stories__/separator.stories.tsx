@@ -73,3 +73,17 @@ export const Sizes: Story = {
     </div>
   ),
 };
+
+export const VerticalSizes: Story = {
+  render: () => (
+    <div className="flex h-10 items-center">
+      <p className="text-sm">S1 (no spacing)</p>
+      <Separator orientation="vertical" size="S1" />
+      <p className="text-sm">S2 (--ui-gap-4)</p>
+      <Separator orientation="vertical" size="S2" />
+      <p className="text-sm">S3 (--ui-gap-8)</p>
+      <Separator orientation="vertical" size="S3" />
+      <p className="text-sm">End</p>
+    </div>
+  ),
+};

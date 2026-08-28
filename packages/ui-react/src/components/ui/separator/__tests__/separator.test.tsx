@@ -8,6 +8,8 @@ describe('Separator', () => {
   it('renders with the separator role and the divider token', () => {
     render(<Separator data-testid="sep" />);
     const sep = screen.getByTestId('sep');
+    expect(sep).toBe(screen.getByRole('separator'));
+    expect(sep).toHaveAttribute('aria-orientation', 'horizontal');
     expect(sep).toHaveClass('bg-[var(--ui-border-on-surface-divider)]', 'h-px', 'w-full');
   });
 
@@ -21,7 +23,8 @@ describe('Separator', () => {
   it('applies no surrounding spacing for the default S1 size', () => {
     render(<Separator data-testid="sep" />);
     const sep = screen.getByTestId('sep');
-    expect(sep).not.toHaveClass('my-[var(--ui-gap-4)]', 'my-[var(--ui-gap-8)]');
+    expect(sep).not.toHaveClass('my-[var(--ui-gap-4)]');
+    expect(sep).not.toHaveClass('my-[var(--ui-gap-8)]');
   });
 
   it('applies the S2/S3 spacing tokens for horizontal separators', () => {
