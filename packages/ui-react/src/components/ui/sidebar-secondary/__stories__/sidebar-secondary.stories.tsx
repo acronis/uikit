@@ -198,7 +198,7 @@ export const ItemsOnly: Story = {
   name: 'Items only (no header, no footer)',
   render: () => (
     <Shell>
-      <SidebarSecondary>
+      <SidebarSecondary collapsible={false} resizable={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
@@ -223,7 +223,7 @@ export const HeaderAndItems: Story = {
   name: 'Header + items (no footer)',
   render: () => (
     <Shell>
-      <SidebarSecondary>
+      <SidebarSecondary collapsible={false} resizable={false}>
         <SidebarSecondaryHeader label="Protection" />
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
@@ -282,7 +282,7 @@ export const Selected: Story = {
   name: 'Selected vs unselected',
   render: () => (
     <Shell>
-      <SidebarSecondary>
+      <SidebarSecondary collapsible={false} resizable={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
@@ -307,7 +307,7 @@ export const ExpandableSectionOpenClosed: Story = {
   name: 'Expandable section (open + closed)',
   render: () => (
     <Shell>
-      <SidebarSecondary>
+      <SidebarSecondary collapsible={false} resizable={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection expandable>
             <SidebarSecondarySectionLabel>Open section</SidebarSecondarySectionLabel>
@@ -337,7 +337,7 @@ export const ExpandableSectionOpenClosed: Story = {
 export const WithExtras: Story = {
   render: () => (
     <Shell>
-      <SidebarSecondary>
+      <SidebarSecondary collapsible={false} resizable={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
@@ -716,7 +716,7 @@ export const Localized: Story = {
 };
 
 export const NotCollapsible: Story = {
-  name: 'Not collapsible (expanded)',
+  name: 'Not collapsible',
   render: () => (
     <Shell height={600}>
       <SidebarSecondary collapsible={false}>
@@ -739,49 +739,6 @@ export const NotCollapsible: Story = {
             </SidebarSecondaryMenu>
           </SidebarSecondarySection>
         </SidebarSecondaryContent>
-        <SidebarSecondaryFooter>
-          <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />}>
-              Collapse
-            </SidebarSecondaryCollapseTrigger>
-          </SidebarSecondaryMenu>
-        </SidebarSecondaryFooter>
-      </SidebarSecondary>
-    </Shell>
-  ),
-};
-
-export const NotCollapsibleCollapsed: Story = {
-  name: 'Not collapsible (collapsed)',
-  render: () => (
-    <Shell height={600}>
-      <SidebarSecondary collapsible={false} defaultExpanded={false}>
-        <SidebarSecondaryHeader label="Protection" />
-        <SidebarSecondaryContent>
-          <SidebarSecondarySection>
-            <SidebarSecondarySectionLabel>
-              Overview
-            </SidebarSecondarySectionLabel>
-            <SidebarSecondaryMenu>
-              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
-                Dashboard
-              </SidebarSecondaryMenuItem>
-              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
-                Devices
-              </SidebarSecondaryMenuItem>
-              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
-                Policies
-              </SidebarSecondaryMenuItem>
-            </SidebarSecondaryMenu>
-          </SidebarSecondarySection>
-        </SidebarSecondaryContent>
-        <SidebarSecondaryFooter>
-          <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />}>
-              Collapse
-            </SidebarSecondaryCollapseTrigger>
-          </SidebarSecondaryMenu>
-        </SidebarSecondaryFooter>
       </SidebarSecondary>
     </Shell>
   ),
