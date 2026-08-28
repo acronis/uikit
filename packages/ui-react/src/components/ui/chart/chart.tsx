@@ -14,8 +14,10 @@ import { TooltipContentProps } from 'recharts/types/component/Tooltip';
 import { cn } from '@/lib/utils';
 import {
   CHART_DEFAULT_PALETTE,
+  CHART_DIVERGING_TOKENS,
   CHART_STATUS_TOKENS,
   resolveSeriesColor,
+  type ChartDivergingSide,
   type ChartPalette,
   type ChartSeriesTone,
 } from './chart-palette';
@@ -63,17 +65,49 @@ export function resolveChartColors(
   // is the same metric drawn a second way, so it must not consume a colour or
   // shift the series after it along the palette.
   const isAlias = (item: ChartConfig[string]) => Boolean(item.tone?.sameAs);
-  let index = 0;
   const resolved: Record<string, ChartConfig[string] & { color: string }> = {};
 
-  for (const [key, item] of entries) {
-    if (isAlias(item)) {
-      continue;
-    }
-    resolved[key] = {
-      ...item,
-      color: resolveSeriesColor(palette, { index: index++, tone: item.tone }),
+  if (palette.type === 'diverging') {
+    const interleavedStops = CHART_DIVERGING_TOKENS[palette.pair];
+    // Derive each side's three stops from the interleaved ramp (a at even
+    // indices, b at odd indices): a3, a2, a1 and b3, b2, b1.
+    const sideStops: Record<ChartDivergingSide, readonly string[]> = {
+      a: [interleavedStops[0], interleavedStops[2], interleavedStops[4]],
+      b: [interleavedStops[1], interleavedStops[3], interleavedStops[5]],
     };
+
+    // First pass: assign sided series — group by side, each group walks its
+    // side's three stops strongest-first, wrapping if there are more than three.
+    const sideCounters: Record<ChartDivergingSide, number> = { a: 0, b: 0 };
+    const takenStops = new Set<string>();
+    for (const [key, item] of entries) {
+      if (isAlias(item) || !item.tone?.side) continue;
+      const side = item.tone.side;
+      const stops = sideStops[side];
+      const stop = stops[sideCounters[side]++ % stops.length];
+      takenStops.add(stop);
+      resolved[key] = { ...item, color: stop };
+    }
+
+    // Second pass: assign un-sided series from the remaining interleaved stops,
+    // skipping any stop already claimed by a sided series. Fall back to the
+    // full interleaved ramp if all stops were consumed.
+    const available = interleavedStops.filter((s) => !takenStops.has(s));
+    const pool = available.length > 0 ? available : interleavedStops;
+    let unsidedIdx = 0;
+    for (const [key, item] of entries) {
+      if (isAlias(item) || item.tone?.side) continue;
+      resolved[key] = { ...item, color: pool[unsidedIdx++ % pool.length] };
+    }
+  } else {
+    let index = 0;
+    for (const [key, item] of entries) {
+      if (isAlias(item)) continue;
+      resolved[key] = {
+        ...item,
+        color: resolveSeriesColor(palette, { index: index++, tone: item.tone }),
+      };
+    }
   }
 
   // An alias may point at another alias, in any order, so a single pass over

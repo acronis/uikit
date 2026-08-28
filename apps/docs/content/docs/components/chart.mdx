@@ -43,8 +43,8 @@ color has to communicate:
 | `palette` | Use it when | Stops |
 | --- | --- | --- |
 | `{ type: 'categorical' }` *(default)* | Unrelated categories with no order between them. Color carries identity, not magnitude. | 16 hues |
-| `{ type: 'sequential', ramp }` | One quantity along an ordered scale — funnel stages, tiers, recency. `ramp`: `blue` · `teal` · `orange` · `violet`. | 8 stops, light → dark |
-| `{ type: 'diverging', pair }` | Two directions away from a midpoint — over/under, gain/loss. `pair`: `blue-orange` · `teal-violet`. | 6 stops |
+| `{ type: 'sequential', ramp }` | One quantity along an ordered scale — funnel stages, tiers, recency. `ramp`: `blue` · `teal` · `orange` · `violet`. | 8 stops, dark → light (darkest first) |
+| `{ type: 'diverging', pair }` | Two directions away from a midpoint — over/under, gain/loss. `pair`: `blue-orange` · `teal-violet`. | 6 stops, interleaved a–b strongest-first |
 | `{ type: 'status' }` | The value *means* a severity. Never decorative. | `danger` · `critical` · `warning` · `success` · `info` · `neutral` |
 
 Series walk the palette **in its defined order** — the first entry in `config`
@@ -61,9 +61,14 @@ A series can be re-pointed with `tone`:
   series that is the *same* metric drawn differently (a forecast tail, a
   projection band), where two hues would read as two metrics. An aliased series
   doesn't consume a stop.
+- `{ side: 'a' | 'b' }` — diverging palette only. Pins the series to one of the
+  two hue families. All `side: 'a'` series share the a-hue stops (a3 → a2 → a1,
+  strongest-first), and all `side: 'b'` series share the b-hue stops likewise.
+  Series with no `side` walk the default interleaved ramp, skipping any stop
+  already claimed by a sided series.
 
-`sequential` and `diverging` take no per-series override: their stops are a ramp,
-meaningful only in relation to each other.
+`sequential` takes no per-series override: its stops are a ramp, meaningful only
+in relation to each other.
 
 ## Examples
 

@@ -387,9 +387,10 @@ export const Overview: Story = {
 // a chart that actually calls for it: the question these answer is *when* to
 // reach for a palette, not that colors can be swapped.
 //
-// Series state no `color`. They walk the palette in its defined order — series
-// 1 takes stop 1, and so on. `Status` is the exception: its tones carry meaning
-// rather than a position, so each series names one with `tone`.
+// Series walk the palette in its defined order — series 1 takes stop 1, and so
+// on — unless they carry a `tone`. `status` is always tone-driven (colors carry
+// meaning); `diverging` also accepts `{ side: 'a' | 'b' }` to pin a series to
+// one hue family.
 //
 // Note the slug keys (`signedUp`, not `Signed up`). A config key becomes part
 // of a `--color-<key>` custom property, so it has to be CSS-safe; the display
@@ -399,24 +400,50 @@ export const Overview: Story = {
 function PaletteFrame({
   when,
   stops,
+  stopGroups,
   children,
 }: {
   when: string;
-  stops: readonly string[];
+  /** Flat stop list — use for palettes with a single set (categorical, status). */
+  stops?: readonly string[];
+  /** Labeled stop sets — use when a palette ships multiple ramps or pairs. */
+  stopGroups?: Array<{ label: string; stops: readonly string[] }>;
   children: React.ReactNode;
 }) {
   return (
     <div className="w-[860px] space-y-3">
       <p className="text-sm text-muted-foreground">{when}</p>
-      <div className="flex flex-wrap gap-1">
-        {stops.map((color) => (
-          <div
-            key={color}
-            className="h-5 w-5 rounded-sm border border-border"
-            style={{ backgroundColor: color }}
-          />
-        ))}
-      </div>
+      {stops && (
+        <div className="flex flex-wrap gap-1">
+          {stops.map((color) => (
+            <div
+              key={color}
+              className="h-5 w-5 rounded-sm border border-border"
+              style={{ backgroundColor: color }}
+            />
+          ))}
+        </div>
+      )}
+      {stopGroups && (
+        <div className="space-y-1.5">
+          {stopGroups.map(({ label, stops: groupStops }) => (
+            <div key={label} className="flex items-center gap-2">
+              <span className="w-20 shrink-0 text-right text-xs text-muted-foreground">
+                {label}
+              </span>
+              <div className="flex gap-1">
+                {groupStops.map((color) => (
+                  <div
+                    key={color}
+                    className="h-5 w-5 rounded-sm border border-border"
+                    style={{ backgroundColor: color }}
+                  />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       {children}
     </div>
   );
@@ -518,8 +545,11 @@ export const SequentialPalette: Story = {
   args: { config: funnelConfig, children: <span /> },
   render: () => (
     <PaletteFrame
-      when="One quantity along an ordered scale. Darker reads as further along; the hue itself means nothing."
-      stops={CHART_SEQUENTIAL_TOKENS.blue}
+      when="One quantity along an ordered scale. Darker reads as further along; the hue itself means nothing. Stops run darkest-to-lightest so series 1 gets the most saturated colour."
+      stopGroups={SEQUENTIAL_RAMPS.map((ramp) => ({
+        label: ramp,
+        stops: CHART_SEQUENTIAL_TOKENS[ramp],
+      }))}
     >
       <div className="grid grid-cols-2 gap-6">
         {SEQUENTIAL_RAMPS.map((ramp) => (
@@ -569,8 +599,11 @@ export const DivergingPalette: Story = {
   args: { config: storageConfig, children: <span /> },
   render: () => (
     <PaletteFrame
-      when="Two directions away from a midpoint. The pale centre is the neutral point."
-      stops={CHART_DIVERGING_TOKENS['blue-orange']}
+      when="Two directions away from a midpoint. The pale centre is the neutral point. Stops interleave strongest-first (a3-b3-a2-b2-a1-b1) so adjacent series contrast maximally."
+      stopGroups={DIVERGING_PAIRS.map((pair) => ({
+        label: pair,
+        stops: CHART_DIVERGING_TOKENS[pair],
+      }))}
     >
       <div className="grid grid-cols-2 gap-6">
         {DIVERGING_PAIRS.map((pair) => (
@@ -581,6 +614,92 @@ export const DivergingPalette: Story = {
               data={storageData}
               dataKey="value"
               nameKey="name"
+              className="h-[220px] w-full"
+            />
+          </Variant>
+        ))}
+      </div>
+    </PaletteFrame>
+  ),
+};
+
+// Four-series data: two on each diverging side (e.g. two "hot" categories and
+// two "cold" categories).
+const divSideData = [
+  { month: 'Jan', hotA: 40, hotB: 35, coldA: 15, coldB: 10 },
+  { month: 'Feb', hotA: 55, hotB: 48, coldA: 22, coldB: 18 },
+  { month: 'Mar', hotA: 70, hotB: 62, coldA: 30, coldB: 25 },
+  { month: 'Apr', hotA: 80, hotB: 72, coldA: 38, coldB: 32 },
+];
+
+const divSideConfig = {
+  hotA: { label: 'Gain A', tone: { side: 'a' as const } },
+  hotB: { label: 'Gain B', tone: { side: 'a' as const } },
+  coldA: { label: 'Loss A', tone: { side: 'b' as const } },
+  coldB: { label: 'Loss B', tone: { side: 'b' as const } },
+} satisfies ChartConfig;
+
+/**
+ * Two series declared `side: "a"` get the a-hue stops (a3 then a2); two
+ * declared `side: "b"` get the b-hue stops (b3 then b2). This lets a chart
+ * with multiple series express a clear two-group structure — all gains share
+ * one hue family, all losses share another — without losing differentiation
+ * within each group.
+ */
+export const DivergingSidePalette: Story = {
+  name: 'Palette — diverging side override',
+  args: { config: divSideConfig, children: <span /> },
+  parameters: {
+    docs: {
+      source: {
+        code: `import { BarChart, type ChartConfig } from '@acronis-platform/ui-react';
+
+const data = [
+  { month: 'Jan', gainA: 40, gainB: 35, lossA: 15, lossB: 10 },
+  { month: 'Feb', gainA: 55, gainB: 48, lossA: 22, lossB: 18 },
+  { month: 'Mar', gainA: 70, gainB: 62, lossA: 30, lossB: 25 },
+  { month: 'Apr', gainA: 80, gainB: 72, lossA: 38, lossB: 32 },
+];
+
+// side: 'a' → a-hue stops (a3, a2, a1), strongest first.
+// side: 'b' → b-hue stops (b3, b2, b1), strongest first.
+// Series without a side walk the default interleaved ramp.
+const config = {
+  gainA: { label: 'Gain A', tone: { side: 'a' } },
+  gainB: { label: 'Gain B', tone: { side: 'a' } },
+  lossA: { label: 'Loss A', tone: { side: 'b' } },
+  lossB: { label: 'Loss B', tone: { side: 'b' } },
+} satisfies ChartConfig;
+
+<BarChart
+  config={config}
+  palette={{ type: 'diverging', pair: 'blue-orange' }}
+  data={data}
+  dataKeys={['gainA', 'gainB', 'lossA', 'lossB']}
+  xKey="month"
+  layout="grouped"
+/>`,
+      },
+    },
+  },
+  render: () => (
+    <PaletteFrame
+      when='Four series, two declared side="a" (a-hue stops) and two declared side="b" (b-hue stops). Each side walks its own three stops strongest-first; series without a side walk the interleaved ramp.'
+      stopGroups={DIVERGING_PAIRS.map((pair) => ({
+        label: pair,
+        stops: CHART_DIVERGING_TOKENS[pair],
+      }))}
+    >
+      <div className="grid grid-cols-2 gap-6">
+        {DIVERGING_PAIRS.map((pair) => (
+          <Variant key={pair} name={pair}>
+            <BarChart
+              config={divSideConfig}
+              palette={{ type: 'diverging', pair }}
+              data={divSideData}
+              dataKeys={['hotA', 'hotB', 'coldA', 'coldB']}
+              xKey="month"
+              layout="grouped"
               className="h-[220px] w-full"
             />
           </Variant>

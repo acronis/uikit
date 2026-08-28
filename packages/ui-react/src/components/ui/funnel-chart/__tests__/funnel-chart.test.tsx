@@ -106,10 +106,10 @@ describe('FunnelChart', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
     expect(style).toContain(
-      '--color-Visits: var(--ui-dataviz-sequential-blue-1)'
+      '--color-Visits: var(--ui-dataviz-sequential-blue-8)'
     );
     expect(style).toContain(
-      '--color-Purchases: var(--ui-dataviz-sequential-blue-4)'
+      '--color-Purchases: var(--ui-dataviz-sequential-blue-5)'
     );
   });
 
@@ -642,7 +642,7 @@ describe('FunnelChart stages and colors', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
     expect(style).toContain(
-      '--color-Visits: var(--ui-dataviz-sequential-blue-1)'
+      '--color-Visits: var(--ui-dataviz-sequential-blue-8)'
     );
     expect(style).not.toContain('--ui-dataviz-categorical-1)');
   });
@@ -934,10 +934,10 @@ describe('FunnelChart legend', () => {
       )
     ).map((node) => node.style.backgroundColor);
     expect(swatches).toEqual([
-      'var(--ui-dataviz-sequential-blue-1)',
-      'var(--ui-dataviz-sequential-blue-2)',
-      'var(--ui-dataviz-sequential-blue-3)',
-      'var(--ui-dataviz-sequential-blue-4)',
+      'var(--ui-dataviz-sequential-blue-8)',
+      'var(--ui-dataviz-sequential-blue-7)',
+      'var(--ui-dataviz-sequential-blue-6)',
+      'var(--ui-dataviz-sequential-blue-5)',
     ]);
     expect(swatches).not.toContain('var(--color-Visits)');
   });
