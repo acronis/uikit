@@ -67,6 +67,24 @@ export function resolveChartColors(
   const isAlias = (item: ChartConfig[string]) => Boolean(item.tone?.sameAs);
   const resolved: Record<string, ChartConfig[string] & { color: string }> = {};
 
+  // Warn about overrides that are meaningless under a diverging palette.
+  // resolveSeriesColor issues the same warnings for every other palette type,
+  // but the diverging branch below bypasses it, so we replicate the check here
+  // to preserve the documented dev-warning contract (see ChartSeriesTone).
+  const warnDivergingMismatch = (tone: ChartSeriesTone | undefined) => {
+    if (process.env.NODE_ENV !== 'production' && tone) {
+      if (tone.status) {
+        console.warn(
+          `[ui-react] A chart series names a status ("${tone.status}") under the "diverging" palette, which has no status tones. Ignoring.`
+        );
+      } else if (typeof tone.slot === 'number') {
+        console.warn(
+          `[ui-react] A chart series pins slot ${tone.slot} under the "diverging" palette, whose stops are a ramp and are not individually selectable. Ignoring.`
+        );
+      }
+    }
+  };
+
   if (palette.type === 'diverging') {
     const interleavedStops = CHART_DIVERGING_TOKENS[palette.pair];
     // Derive each side's three stops from the interleaved ramp (a at even
@@ -82,6 +100,7 @@ export function resolveChartColors(
     const takenStops = new Set<string>();
     for (const [key, item] of entries) {
       if (isAlias(item) || !item.tone?.side) continue;
+      warnDivergingMismatch(item.tone);
       const side = item.tone.side;
       const stops = sideStops[side];
       const stop = stops[sideCounters[side]++ % stops.length];
@@ -97,6 +116,7 @@ export function resolveChartColors(
     let unsidedIdx = 0;
     for (const [key, item] of entries) {
       if (isAlias(item) || item.tone?.side) continue;
+      warnDivergingMismatch(item.tone);
       resolved[key] = { ...item, color: pool[unsidedIdx++ % pool.length] };
     }
   } else {
