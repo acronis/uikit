@@ -208,6 +208,15 @@ export const WithProjections: Story = {
   ),
 };
 
+// Stacked layout with projection — verifies the projection half of each
+// series stacks from the cumulative baseline, not from zero.
+export const StackedWithProjections: Story = {
+  args: {
+    layout: 'stacked',
+    projectionStart: 'Apr',
+  },
+};
+
 // New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
 // fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
 export const AxisAndGridConfig: Story = {

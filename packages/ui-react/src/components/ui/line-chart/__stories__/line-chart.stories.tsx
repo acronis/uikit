@@ -354,6 +354,31 @@ export const ComparisonWithDeltaBand: Story = {
   },
 };
 
+// Comparison + projection — the comparison overlay (lastYear) renders unclipped
+// across the full width while the primary series is split at the boundary.
+export const ComparisonWithProjections: Story = {
+  args: {
+    data: trendData,
+    config: trendConfig,
+    dataKeys: ['thisYear', 'lastYear'],
+    comparisonKeys: ['lastYear'],
+    projectionStart: 'Apr',
+  },
+};
+
+// Delta band + projection — the shaded band is clipped to the actual zone so it
+// doesn't shade past the projection boundary.
+export const DeltaBandWithProjections: Story = {
+  args: {
+    data: trendData,
+    config: trendConfig,
+    dataKeys: ['thisYear', 'lastYear'],
+    comparisonKeys: ['lastYear'],
+    deltaBands: [['thisYear', 'lastYear']],
+    projectionStart: 'Apr',
+  },
+};
+
 // Response times in ms — real units, so `yUnit`/`xUnit` read truthfully. (The
 // session-count data above has no unit; the former `yUnit="k"` was an
 // abbreviation masquerading as one.)

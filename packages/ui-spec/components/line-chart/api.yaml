@@ -81,7 +81,7 @@ contract:
     - name: showDots
       type: boolean
       required: false
-      default: 'true'
+      default: 'false'
       description: Render a dot at each data point.
     - name: dotSize
       type: number
@@ -120,6 +120,16 @@ contract:
       required: false
       default: 'false'
       description: Bridge `null` gaps in the data instead of breaking the line.
+    - name: projectionStart
+      type: string | number
+      required: false
+      description: >-
+        The category value (matching an `xKey` entry) at which the projection
+        zone starts. Ticks from this point onward render in the disabled text
+        color. The actual series are clipped to the left of the boundary; a
+        dashed, dot-less projection continuation renders on the right.
+        Comparison series (`comparisonKeys`) are excluded from the projection
+        split and render unclipped across the full width.
     - name: showGrid
       type: boolean
       required: false

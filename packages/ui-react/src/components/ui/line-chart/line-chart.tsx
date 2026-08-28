@@ -193,12 +193,13 @@ export function createBandStrippedTooltip(tooltipContent: TooltipContentType) {
       ...props,
       payload: dropBandSeries(props.payload),
     } as TooltipRenderProps;
-    return typeof tooltipContent === 'function'
-      ? React.createElement(
-          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
-          merged
-        )
-      : React.cloneElement(tooltipContent, merged);
+    if (typeof tooltipContent === 'function') {
+      const Comp = tooltipContent as React.FunctionComponent<TooltipRenderProps>;
+      return <Comp {...merged} />;
+    }
+    // Element-form tooltip: cloneElement is the React-idiomatic way to
+    // re-render an existing element with new props (preserves refs & keys).
+    return React.cloneElement(tooltipContent, merged);
   };
 }
 
@@ -208,12 +209,13 @@ function createProjectionTooltip(tooltipContent: TooltipContentType) {
       ...props,
       payload: dropProjectionPayload(props.payload),
     } as TooltipRenderProps;
-    return typeof tooltipContent === 'function'
-      ? React.createElement(
-          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
-          merged
-        )
-      : React.cloneElement(tooltipContent, merged);
+    if (typeof tooltipContent === 'function') {
+      const Comp = tooltipContent as React.FunctionComponent<TooltipRenderProps>;
+      return <Comp {...merged} />;
+    }
+    // Element-form tooltip: cloneElement is the React-idiomatic way to
+    // re-render an existing element with new props (preserves refs & keys).
+    return React.cloneElement(tooltipContent, merged);
   };
 }
 
@@ -424,9 +426,11 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       );
       const ProjectionTick = ({
         payload,
+        index,
         ...tickProps
       }: {
         payload: { value: string | number };
+        index?: number;
         [key: string]: unknown;
       }) => (
         <Text
@@ -439,7 +443,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
           }
         >
           {xTickFormatter
-            ? xTickFormatter(payload.value as never, 0)
+            ? xTickFormatter(payload.value as never, index)
             : payload.value}
         </Text>
       );
@@ -527,8 +531,8 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     ) : (
       <ChartLegendContent />
     );
-    // Bands are computed over the projection-augmented rows, so a band shades
-    // only the actual zone — past the boundary the real series is `null` there.
+    // Bands are computed over the full (projection-augmented) rows; when
+    // projection is active the band <Area> is clipped to the actual zone.
     const chartData = bands.length
       ? projectionData.map((row) => {
           const augmented: Record<string, unknown> = { ...row };
@@ -610,7 +614,11 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 dataKeys={dataKeys}
               />
             )}
-            {/* Delta bands render before the lines so the lines draw on top. */}
+            {/* Delta bands render before the lines so the lines draw on top.
+                When projection is active, clip bands to the actual zone — the
+                comparison series they measure against is absent past the
+                boundary, so an unclipped band would shade a region with no
+                visible far edge. */}
             {bands.map(({ field, current }) => (
               <Area
                 key={field}
@@ -624,6 +632,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
                 connectNulls={connectNulls}
                 dot={false}
                 activeDot={false}
+                clipPath={hasProjection ? `url(#${clipId}-actual)` : undefined}
                 {...animation}
                 legendType="none"
                 tooltipType="none"
@@ -644,10 +653,13 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               const seriesLabel = settings?.showLabel ?? showLabels;
               const seriesLabelPosition =
                 settings?.labelPosition ?? lineLabelPosition;
+              // Comparison series have no projection counterpart — they render
+              // unclipped across the full width so they don't vanish at the
+              // projection boundary.
               return (
                 <Line
                   key={key}
-                  className={hasProjection ? `actual-${clipId}-${index}` : undefined}
+                  className={hasProjection && !isComparison ? `actual-${clipId}-${index}` : undefined}
                   type={curveFor(key)}
                   dataKey={key}
                   stroke={colorFor(key)}

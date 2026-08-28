@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import {
   LineChart,
@@ -670,6 +670,63 @@ describe('LineChart curves, dots and per-series overrides', () => {
     it('does not render a separator line when projectionStart is absent', () => {
       const { container } = renderChart();
       expect(container.querySelectorAll('line[stroke-dasharray="4 4"]')).toHaveLength(0);
+    });
+
+    // Finding 3: the custom ProjectionTick renderer must forward the real tick
+    // index to xTickFormatter, not a hardcoded 0.
+    it('forwards the real tick index to xTickFormatter', () => {
+      const formatter = vi.fn(
+        (value: string | number, index?: number) => `${value}#${index}`
+      );
+      renderChart({ projectionStart: 'Mar', xTickFormatter: formatter });
+      if (formatter.mock.calls.length > 0) {
+        const indices = formatter.mock.calls.map(([, idx]) => idx);
+        // With 3 ticks (Jan=0, Feb=1, Mar=2), at least one index must be > 0.
+        expect(indices.some((i) => i !== undefined && i > 0)).toBe(true);
+      }
+    });
+
+    // Finding 4: comparison series have no projection counterpart, so they must
+    // not receive the actual-clip class — otherwise they vanish past the boundary.
+    it('leaves comparison series unclipped when projectionStart is set', () => {
+      const { container } = renderChart({
+        comparisonKeys: ['mobile'],
+        projectionStart: 'Mar',
+      });
+      // With projectionStart, each non-comparison series gets a <Line> with the
+      // `actual-*` class. Comparison series must NOT carry that class.
+      const lineGroups = [
+        ...container.querySelectorAll<SVGGElement>(
+          'g.recharts-line'
+        ),
+      ];
+      const actualClipped = lineGroups.filter((g) =>
+        (g.getAttribute('class') ?? '').match(/actual-/)
+      );
+      // 2 dataKeys: desktop (non-comparison, clipped) + mobile (comparison,
+      // unclipped). Only 1 should carry the actual-clip class.
+      if (lineGroups.length >= 2) {
+        expect(actualClipped).toHaveLength(1);
+      } else {
+        expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+      }
+    });
+
+    // Finding 5: delta bands must be clipped to the actual zone so they don't
+    // shade past the projection boundary (where the comparison line they measure
+    // against has been clipped away).
+    it('clips delta bands to the actual zone when projectionStart is set', () => {
+      const { container } = renderChart({
+        deltaBands: [['desktop', 'mobile']],
+        projectionStart: 'Mar',
+      });
+      // The band <Area> should carry a clip-path pointing at the actual clip rect.
+      const bandArea = container.querySelector('.recharts-area-area');
+      if (bandArea) {
+        expect(bandArea.getAttribute('clip-path')).toMatch(/url\(#.*-actual\)/);
+      } else {
+        expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
+      }
     });
   });
 

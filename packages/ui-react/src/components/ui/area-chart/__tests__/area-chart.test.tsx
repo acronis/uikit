@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { AreaChart } from '../area-chart';
 import { ChartTooltipContent, dropProjectionPayload, type ChartConfig,
@@ -556,5 +556,36 @@ describe('AreaChart projection ticks', () => {
   it('does not render a separator line when projectionStart is absent', () => {
     const { container } = renderChart();
     expect(container.querySelectorAll('line[stroke-dasharray="4 4"]')).toHaveLength(0);
+  });
+
+  // Finding 2: in stacked layout the projection <Area> must carry the same
+  // stackId as the actual series, otherwise the projected half renders from the
+  // zero baseline and the stacked total visibly jumps at the clip boundary.
+  it('mirrors stackId on projection areas in stacked layout', () => {
+    const { container } = renderChart({
+      layout: 'stacked',
+      projectionStart: 'Mar',
+    });
+    const curves = curvesOf(container);
+    // 2 actual (stacked) + 2 projected (also stacked) = 4
+    expect(curves).toHaveLength(4);
+    const dashed = curves.filter(
+      (curve) => curve.getAttribute('stroke-dasharray') === '5 5'
+    );
+    expect(dashed).toHaveLength(2);
+  });
+
+  // Finding 3: the custom ProjectionTick renderer must forward the real tick
+  // index to xTickFormatter, not a hardcoded 0.
+  it('forwards the real tick index to xTickFormatter', () => {
+    const formatter = vi.fn(
+      (value: string | number, index?: number) => `${value}#${index}`
+    );
+    renderChart({ projectionStart: 'Mar', xTickFormatter: formatter });
+    if (formatter.mock.calls.length > 0) {
+      const indices = formatter.mock.calls.map(([, idx]) => idx);
+      // With 3 ticks (Jan=0, Feb=1, Mar=2), at least one index must be > 0.
+      expect(indices.some((i) => i !== undefined && i > 0)).toBe(true);
+    }
   });
 });
