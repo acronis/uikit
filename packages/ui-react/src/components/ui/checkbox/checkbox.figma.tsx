@@ -1,5 +1,5 @@
 // Figma Code Connect — status: COMPLETE
-// Mapped to the "Checkbox" component set in the shadcn-uikit Figma file.
+// Mapped to the "Checkbox" component set in the ui-react Figma file.
 // `variant` chooses checked vs indeterminate (unchecked maps to neither);
 // `state=disabled` maps to the disabled prop (idle/hover/active/focus are purely
 // visual). `label` / `description` are composed by Checkbox itself, gated by the
@@ -10,7 +10,7 @@ import { Checkbox } from './checkbox';
 
 figma.connect(
   Checkbox,
-  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/shadcn-uikit?node-id=2238-43890',
+  'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=725-2773',
   {
     props: {
       checked: figma.enum('variant', {
