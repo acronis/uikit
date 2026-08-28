@@ -58,6 +58,10 @@ active/cursor styling — nothing in the current implementation visually
 distinguishes it from an editable box beyond `aria-readonly="true"`, so a
 consumer should pair it with copy that explains why it can't be changed
 
+> Known gap, not yet ratified: the absence of a read-only visual affordance is
+> the current behavior, not a signed-off design decision. It needs design-lead
+> sign-off before it is treated as final.
+
 ---
 
 ## States
