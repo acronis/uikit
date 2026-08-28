@@ -184,6 +184,60 @@ export const Default: Story = {
   ),
 };
 
+export const ItemsOnly: Story = {
+  name: 'Items only (no header, no footer)',
+  render: () => (
+    <Shell>
+      <SidebarSecondary>
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
+                Devices
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
+                Policies
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
+export const HeaderAndItems: Story = {
+  name: 'Header + items (no footer)',
+  render: () => (
+    <Shell>
+      <SidebarSecondary>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>
+              Overview
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
+                Devices
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
+                Policies
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
 export const Collapsed: Story = {
   name: 'Collapsed (breadcrumb rail)',
   render: () => (
