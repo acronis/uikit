@@ -1,6 +1,8 @@
+import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
   FolderIcon,
+  NodeTreeIcon,
   PencilIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
@@ -231,4 +233,152 @@ export const ComposedTree: Story = {
       </ul>
     </ul>
   ),
+};
+
+interface DemoTreeNode {
+  id: string;
+  label: string;
+  icon?: React.ReactNode;
+  children?: DemoTreeNode[];
+}
+
+// Four levels: root → group → tenant → workload.
+const workloadTree: DemoTreeNode = {
+  id: 'all',
+  label: 'All workloads',
+  icon: <FolderIcon size={16} />,
+  children: [
+    {
+      id: 'agents',
+      label: 'Machines with agents',
+      icon: <FolderIcon size={16} />,
+      children: [
+        {
+          id: 'obsidian',
+          label: 'Obsidian Legal Group',
+          icon: <FolderIcon size={16} />,
+          children: [
+            { id: 'obsidian-dc1', label: 'dc-01.obsidian.local' },
+            { id: 'obsidian-web', label: 'web-01.obsidian.local' },
+          ],
+        },
+        {
+          id: 'cedar',
+          label: 'Cedar Grove Capital',
+          icon: <FolderIcon size={16} />,
+          children: [
+            { id: 'cedar-sql', label: 'sql-01.cedar.local' },
+            { id: 'cedar-file', label: 'file-01.cedar.local' },
+          ],
+        },
+      ],
+    },
+    {
+      id: 'cloud',
+      label: 'Cloud applications',
+      icon: <FolderIcon size={16} />,
+      children: [
+        {
+          id: 'm365',
+          label: 'Microsoft 365',
+          icon: <FolderIcon size={16} />,
+          children: [
+            { id: 'm365-mail', label: 'Mailboxes' },
+            { id: 'm365-sites', label: 'SharePoint sites' },
+          ],
+        },
+        {
+          id: 'gws',
+          label: 'Google Workspace',
+          icon: <FolderIcon size={16} />,
+          children: [{ id: 'gws-drive', label: 'Shared drives' }],
+        },
+      ],
+    },
+    { id: 'unmanaged', label: 'Unmanaged workloads' },
+  ],
+};
+
+// Everything the interaction needs — the open/closed map, the toggle handler and
+// the nested-list rendering — lives here in the consumer, because `TreeItem` is a
+// single stateless row by design. Collapsed branches are unmounted rather than
+// hidden: the row holds no state, animation or measurement worth preserving.
+function ExpandableWorkloadTree() {
+  const [expanded, setExpanded] = React.useState<Record<string, boolean>>({
+    all: true,
+    agents: true,
+    obsidian: true,
+  });
+  const toggle = (id: string) =>
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  // `level` is the 1-based ARIA depth: the nested `<ul role="group">` is a DOM
+  // sibling of the row, not its parent, so nothing but `aria-level` conveys depth.
+  const renderNode = (
+    node: DemoTreeNode,
+    level = 1,
+    posInSet = 1,
+    setSize = 1
+  ): React.ReactNode => {
+    const branch = !!node.children?.length;
+    const open = branch && !!expanded[node.id];
+
+    return (
+      <React.Fragment key={node.id}>
+        <TreeItem
+          render={
+            <li
+              role="treeitem"
+              aria-level={level}
+              aria-posinset={posInSet}
+              aria-setsize={setSize}
+              {...(branch ? { 'aria-expanded': open } : {})}
+            />
+          }
+          onClick={branch ? () => toggle(node.id) : undefined}
+          onKeyDown={
+            branch
+              ? (event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggle(node.id);
+                  }
+                }
+              : undefined
+          }
+          className={branch ? 'cursor-pointer' : undefined}
+          isExpandable={branch}
+          hasIcon
+          icon={node.icon ?? <NodeTreeIcon size={16} />}
+          title={node.label}
+          tabIndex={level === 1 ? 0 : -1}
+        />
+        {open && (
+          <ul role="group" className="ps-4">
+            {node.children!.map((child, index) =>
+              renderNode(child, level + 1, index + 1, node.children!.length)
+            )}
+          </ul>
+        )}
+      </React.Fragment>
+    );
+  };
+
+  return (
+    <ul role="tree" aria-label="Workloads" className="w-80">
+      {renderNode(workloadTree)}
+    </ul>
+  );
+}
+
+/**
+ * A working four-level tree: clicking an expandable row toggles its `aria-expanded`
+ * and mounts/unmounts the nested `<ul role="group">` beneath it. All of that state
+ * is the consumer's — the story's — since `TreeItem` deliberately renders one row
+ * and nothing else. The root row is the tree's single tab stop (`tabIndex={0}`,
+ * every descendant `-1`) and Enter/Space activate the same toggle as a click;
+ * full arrow-key roving navigation is out of scope for this demo.
+ */
+export const ExpandCollapseTree: Story = {
+  render: () => <ExpandableWorkloadTree />,
 };
