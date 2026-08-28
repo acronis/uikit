@@ -1,5 +1,5 @@
 ---
-'@acronis-platform/ui-react': patch
+'@acronis-platform/ui-react': minor
 ---
 
 **Separator**: aligned with Figma's `DividerHorizontal` component (node `788:15147`).
