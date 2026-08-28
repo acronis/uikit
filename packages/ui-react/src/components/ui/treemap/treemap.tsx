@@ -10,16 +10,19 @@ import {
   ChartLegendContent,
   ChartStyle,
   resolveChartColors,
-  CHART_DEFAULT_PALETTE,
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
-  CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartPalette,
   type ChartAnimationProps,
   type TickFormatter,
 } from '../chart';
+
+// Treemap-specific default: the diverging palette shows the two-sided distribution
+// that a treemap is most commonly used for, and its adaptive text (auto-computed
+// from resolved token names below) works correctly out of the box.
+const TREEMAP_DEFAULT_PALETTE: ChartPalette = { type: 'diverging', pair: 'blue-orange' };
 
 // A typed recharts composition over the shared `Chart` primitives. A treemap is
 // the odd one out: a single `Treemap` element with no axes/grid, themed through a
@@ -42,21 +45,22 @@ export type TreemapLabelAlign = 'bottom-start' | 'top-start' | 'center';
 // are separated by the surface showing through rather than by a stroke, and the
 // corners are rounded.
 const CELL_GAP = 2;
-const CELL_RADIUS = 6;
+const CELL_RADIUS = 0;
 
 // Label geometry, in px. The block's own layout is CSS (see the renderer); these
 // are the heights the tile has to clear for a label to fit *without being
 // clipped* — one line, or two.
 //
-// Line boxes, not font sizes: Tailwind's `--text-xs--line-height` is 4/3, so the
-// `text-xs` title renders a 16px line box, and the second line inherits that same
+// Line boxes, not font sizes: Tailwind's `--text-sm--line-height` is 4/3, so the
+// `text-sm` title renders a ~19px line box, and the second line inherits that same
 // ratio (an arbitrary `text-[11px]` sets font-size only) for ~14.7px. Measuring by
 // font size instead would let a tile pass the threshold and still have the block's
 // `overflow-hidden` eat the top of the first line.
 const CELL_PADDING = 12;
 const LINE_HEIGHT_RATIO = 4 / 3;
+const TITLE_FONT_SIZE = 14; // text-sm
 const SECONDARY_FONT_SIZE = 11;
-const TITLE_LINE_HEIGHT = Math.ceil(CHART_LABEL_FONT_SIZE * LINE_HEIGHT_RATIO);
+const TITLE_LINE_HEIGHT = Math.ceil(TITLE_FONT_SIZE * LINE_HEIGHT_RATIO);
 const SECONDARY_LINE_HEIGHT = Math.ceil(
   SECONDARY_FONT_SIZE * LINE_HEIGHT_RATIO
 );
@@ -107,6 +111,14 @@ interface TreemapCellProps {
   secondaryLabel?: string;
   showLabels?: boolean;
   labelAlign?: TreemapLabelAlign;
+  /**
+   * Whether this leaf's fill is "dark enough" to need light text. Stamped by `Treemap` onto
+   * each row before recharts hands it to the cell renderer. Auto-computed from the resolved
+   * token name suffix: pale diverging stops (a1, a2, b1, b2) and sequential stops 1–2 get
+   * dark text; all other stops (diverging a3/b3, sequential 3–8, categorical, status) are
+   * saturated and keep white text.
+   */
+  darkFill?: boolean;
 }
 
 // How the label block sits in its tile. `text-start`/`text-center` and the
@@ -141,7 +153,8 @@ export function TreemapCell({
   primaryLabel,
   secondaryLabel,
   showLabels = true,
-  labelAlign = 'bottom-start',
+  labelAlign = 'center',
+  darkFill = true,
 }: TreemapCellProps) {
   // recharts invokes `content` for the synthetic root node too (full chart
   // dimensions, empty name). Skip any name-less node — otherwise its rect has no
@@ -191,17 +204,18 @@ export function TreemapCell({
               // Each line truncates with a real ellipsis — CSS measures the text,
               // so nothing has to estimate how much of it fits.
               'flex size-full flex-col overflow-hidden p-3',
-              // The design system's "text on a strong colored surface" token
-              // (constant white in both themes) — reads over the saturated series
-              // colors without hardcoding a color. The weight, not a second color,
-              // carries the hierarchy over the second line: the on-strong
-              // *secondary* text token resolves to a dark grey in dark mode, which
-              // a cell's fill stays saturated behind.
-              'text-[var(--ui-text-on-status-strong-neutral)]',
+              // Adaptive text: dark fills (diverging a3/b3, all categorical/sequential/status
+              // stops) use the on-strong neutral token (white); pale fills (diverging
+              // a1/a2/b1/b2) use the surface primary token (dark). The decision is
+              // palette-structural — token values are light-dark() pairs that change per
+              // theme, so a runtime luminance check would be fragile.
+              darkFill
+                ? 'text-[var(--ui-text-on-status-strong-neutral)]'
+                : 'text-[var(--ui-text-on-surface-primary)]',
               LABEL_ALIGN_CLASS[labelAlign]
             )}
           >
-            <span className="truncate text-xs font-semibold">
+            <span className="truncate text-sm">
               {primaryLabel ?? name}
             </span>
             {secondary && (
@@ -253,10 +267,9 @@ export interface TreemapProps
   /** Render each leaf's label inside its cell (when it fits). */
   showLabels?: boolean;
   /**
-   * Where a cell's label sits. Defaults to `bottom-start` — the design's
-   * placement, which keeps the label anchored to a tile corner as the tiling
-   * reflows. `top-start` anchors it to the opposite corner; `center` centers the
-   * block in the tile. The corner variants are named for the tile's *start* edge
+   * Where a cell's label sits. Defaults to `center` — the Figma-canonical placement.
+   * `bottom-start` anchors the block to the tile's bottom start corner; `top-start`
+   * to the top start corner. The corner variants are named for the tile's *start* edge
    * because they mirror under `dir="rtl"`.
    */
   labelAlign?: TreemapLabelAlign;
@@ -295,13 +308,13 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     {
       className,
       config,
-      palette,
+      palette = TREEMAP_DEFAULT_PALETTE,
       data,
       dataKey,
       nameKey,
       aspectRatio = 4 / 3,
       showLabels = true,
-      labelAlign = 'bottom-start',
+      labelAlign = 'center',
       secondaryKeys,
       secondaryFormatter,
       secondarySeparator = ' · ',
@@ -328,41 +341,58 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     // per-cell color on the tooltip payload item — and with its `secondaryLabel`,
     // which reaches the cell renderer the same way: recharts hands the whole row
     // to `content`, so a composed label has to be on the row before it gets there.
-    const seriesData: Record<string, string | number>[] = React.useMemo(
-      () =>
-        data.map((row) => {
-          const name = String(row[nameKey]);
-          const secondaryLabel = secondaryKeys?.length
-            ? treemapSecondaryLabel({
-                row,
-                keys: secondaryKeys,
-                separator: secondarySeparator,
-                formatter: secondaryFormatter,
-              })
-            : undefined;
-          // The on-cell name is the leaf's `config` label, so a cell reads like its
-          // legend entry and tooltip row do. It matters more here than elsewhere:
-          // the raw `nameKey` value has to be CSS-safe (it becomes part of
-          // `--color-<name>`), so a leaf whose display name has a space in it is
-          // keyed by a slug — and the slug is not what belongs on the tile. Only a
-          // string label can go in SVG text; a `ReactNode` one falls back to the key.
-          const label = config[name]?.label;
-          return {
-            ...row,
-            fill: `var(--color-${name})`,
-            ...(typeof label === 'string' ? { primaryLabel: label } : {}),
-            ...(secondaryLabel ? { secondaryLabel } : {}),
-          };
-        }),
-      [
-        config,
-        data,
-        nameKey,
-        secondaryFormatter,
-        secondaryKeys,
-        secondarySeparator,
-      ]
-    );
+    const seriesData: Record<string, string | number | boolean>[] =
+      React.useMemo(
+        () => {
+          // Auto dark-fill detection: resolve each leaf's token name and check
+          // its suffix. Pale diverging stops (a1, a2, b1, b2) need dark text; all
+          // other stops (a3, b3, categorical, sequential, status) are saturated
+          // enough for white text. Token values are light-dark() pairs so a runtime
+          // luminance check would be theme-fragile — the token name suffix is stable.
+          const resolvedColors = resolveChartColors(config, palette);
+          return data.map((row) => {
+            const name = String(row[nameKey]);
+            const secondaryLabel = secondaryKeys?.length
+              ? treemapSecondaryLabel({
+                  row,
+                  keys: secondaryKeys,
+                  separator: secondarySeparator,
+                  formatter: secondaryFormatter,
+                })
+              : undefined;
+            // The on-cell name is the leaf's `config` label, so a cell reads like its
+            // legend entry and tooltip row do. It matters more here than elsewhere:
+            // the raw `nameKey` value has to be CSS-safe (it becomes part of
+            // `--color-<name>`), so a leaf whose display name has a space in it is
+            // keyed by a slug — and the slug is not what belongs on the tile. Only a
+            // string label can go in SVG text; a `ReactNode` one falls back to the key.
+            const label = config[name]?.label;
+            const rawToken = (resolvedColors[name]?.color ?? '').replace(
+              /^var\(|\)$/g,
+              ''
+            );
+            // Diverging: a1/a2/b1/b2 are pale; a3/b3 are dark.
+            // Sequential: stops 1–2 are pale enough to need dark text.
+            const darkFill = !/-(?:a[12]|b[12]|sequential-[a-z]+-[12])$/.test(rawToken);
+            return {
+              ...row,
+              fill: `var(--color-${name})`,
+              darkFill,
+              ...(typeof label === 'string' ? { primaryLabel: label } : {}),
+              ...(secondaryLabel ? { secondaryLabel } : {}),
+            };
+          });
+        },
+        [
+          config,
+          data,
+          nameKey,
+          palette,
+          secondaryFormatter,
+          secondaryKeys,
+          secondarySeparator,
+        ]
+      );
 
     // recharts 3 builds the legend payload from the graphical item, and `Treemap`
     // — unlike Bar/Line/Area/Pie/Radar/RadialBar/Scatter — never registers one,
@@ -419,7 +449,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
       <div data-chart={legendChartId} className="text-xs">
         <ChartStyle
           id={legendChartId}
-          config={resolveChartColors(config, palette ?? CHART_DEFAULT_PALETTE)}
+          config={resolveChartColors(config, palette)}
         />
         <ChartLegendContent
           config={config}
