@@ -827,14 +827,19 @@ const RENDER: Record<string, RenderHint> = {
   // default title. Turn the optional slots on so the snapshot actually covers
   // the anatomy, and give the extras slot real content (an empty slot is a 16px
   // void). `selected` is the only prop-driven look, and it is not an axis the
-  // generator enumerates, so the hand-written stories carry it.
+  // generator enumerates, so the hand-written stories carry it. `tabIndex={0}`
+  // makes the row itself the first tab stop: the row sets no `tabIndex` of its
+  // own (see tree-item.tsx), so without this the generated `FocusVisible`
+  // story's single `userEvent.tab()` lands on the nested `Checkbox` instead —
+  // the only other focusable element — and paints the checkbox's ring, not the
+  // row's.
   'tree-item': {
     extraImports: [
       "import { Tag } from '../../tag';",
       "import { FolderIcon } from '@acronis-platform/icons-react/stroke-mono';",
     ],
     props:
-      'title="All workloads" hasIcon icon={<FolderIcon size={16} />} hasCheckbox className="w-72"',
+      'title="All workloads" hasIcon icon={<FolderIcon size={16} />} hasCheckbox tabIndex={0} className="w-72"',
     sample: ['', '      <Tag variant="info">24</Tag>', '    '].join('\n'),
   },
   'stepper-item': {

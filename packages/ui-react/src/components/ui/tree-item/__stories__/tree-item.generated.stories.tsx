@@ -24,6 +24,7 @@ export const States: Story = {
         hasIcon
         icon={<FolderIcon size={16} />}
         hasCheckbox
+        tabIndex={0}
         className="w-72"
       >
         <Tag variant="info">24</Tag>
@@ -40,6 +41,7 @@ export const Hover: Story = {
       hasIcon
       icon={<FolderIcon size={16} />}
       hasCheckbox
+      tabIndex={0}
       className="w-72"
     >
       <Tag variant="info">24</Tag>
@@ -54,6 +56,7 @@ export const FocusVisible: Story = {
       hasIcon
       icon={<FolderIcon size={16} />}
       hasCheckbox
+      tabIndex={0}
       className="w-72"
     >
       <Tag variant="info">24</Tag>

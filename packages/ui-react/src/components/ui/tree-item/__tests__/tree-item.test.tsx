@@ -180,7 +180,10 @@ describe('TreeItem', () => {
     expect(container.firstElementChild).toHaveClass(
       'bg-[var(--ui-background-surface-active)]'
     );
-    expect(container.firstElementChild).toHaveAttribute('data-selected');
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-selected',
+      'true'
+    );
   });
 
   // ── hasExtras / children ──

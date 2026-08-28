@@ -12,6 +12,13 @@
 // `variant=selected` (its generated reference code applies the selected
 // background class), so it previews a selected row rather than a mousedown —
 // there is nothing extra to express in code.
+//
+// `expanded` also has no Figma property (the node draws no distinct expanded
+// variant — see tree-item.tsx), but unlike `state` it's a prop a consumer must
+// still supply for the chevron to agree with their own `aria-expanded`. Left
+// out of the mapping it would silently default to `false`, so — same pattern
+// as `carousel-dialog.figma.tsx`'s unmapped `slideCount`/`selectedIndex` — the
+// example fixes it as a literal instead of dropping it.
 import figma from '@figma/code-connect';
 
 import { TreeItem } from './tree-item';
@@ -50,6 +57,7 @@ figma.connect(
         icon={icon}
         hasCheckbox={hasCheckbox}
         isExpandable={isExpandable}
+        expanded={false}
         hasExtras={hasExtras}
         selected={selected}
       >

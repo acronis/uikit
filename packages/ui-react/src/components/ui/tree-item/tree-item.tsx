@@ -149,7 +149,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
     // when spread in (the same shape `StepperItem` / `CardFilter` use).
     const attributes = {
       'data-slot': 'tree-item',
-      ...(selected ? { 'data-selected': '' } : {}),
+      ...(selected ? { 'data-selected': 'true' } : {}),
     };
 
     return useRender({
