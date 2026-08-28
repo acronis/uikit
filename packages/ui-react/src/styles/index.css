@@ -74,14 +74,6 @@
    that for the `dark:` variant. */
 @custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
 
-/* Indeterminate Progress bar: a sliding indicator with no known completion.
-   Ported from ui-legacy's tailwind.preset; registered as a Tailwind v4 utility
-   (`animate-indeterminate-progress`) keyed to Base UI's `data-[indeterminate]`. */
-@theme {
-  --animate-indeterminate-progress: indeterminate-progress 1.5s ease-in-out
-    infinite;
-}
-
 /* Viewport breakpoints pinned to the design team's px ranges (sm/md are
    intentionally left unset — they're Tailwind's stock, unoverridden
    defaults, not a real design-team override):
@@ -130,15 +122,6 @@
    flicker back to `pointer` while dragging over a neighboring header. */
 html[data-ui-column-resizing] * {
   cursor: var(--ui-resizable-cursor) !important;
-}
-
-@keyframes indeterminate-progress {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(400%);
-  }
 }
 
 /* Bridge: map the generated `--ui-*` design-token custom properties onto the

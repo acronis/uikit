@@ -18,7 +18,7 @@ when_to_use:
   - Overview / dashboard screens made of a grid of widget cards.
 when_not_to_use:
   - A general two-dimensional layout outside a variable-width area — a plain `Grid` (viewport breakpoints) is enough.
-  - Non-grid page content — use `Section` / `Stack`.
+  - Non-grid page content — use `Section`.
 
 anti_patterns:
   - Reaching for a bespoke "dashboard layout" component — it's just App Shell + a container Grid (this pattern).

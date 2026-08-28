@@ -150,7 +150,7 @@ contract:
       description: >-
         Filter field children rendered inside `FilterSearchFilters`'s popover
         form. Plain children — wire each field to the draft via
-        `useFilterSearchFilters`. Group fields with a `Separator` as a layout
+        `useFilterSearchFilters`. Group fields with a divider as a layout
         convention if desired.
 
   methods:

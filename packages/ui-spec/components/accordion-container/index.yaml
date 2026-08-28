@@ -8,8 +8,8 @@ description: >-
   variant. Built directly on Base UI's Collapsible — owns open state, the
   trigger button, chevron rotation, and panel animation — while imposing no
   visual styling beyond what the disclosure mechanic itself requires — the two
-  exceptions are its trigger's chevron glyph color (the same neutral treatment
-  Accordion's chevron uses) and, when `collapsible` is true, Root defaulting to
+  exceptions are its trigger's chevron glyph color (the shared neutral glyph
+  treatment) and, when `collapsible` is true, Root defaulting to
   `display: contents` so it stays transparent to the consumer's layout. Every
   other visual decision (header layout, spacing, background, borders) stays
   owned by the component composing it.

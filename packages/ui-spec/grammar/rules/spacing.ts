@@ -17,7 +17,7 @@ export const spacingRules = [
     title: 'Controls in a row share height',
     category: 'spacing',
     severity: 'must',
-    rule: 'Interactive controls placed together (Button, Input, Select, Combobox, …) must share the same height within a size tier.',
+    rule: 'Interactive controls placed together (Button, Input, Select, InputSelect, …) must share the same height within a size tier.',
     rationale:
       'Mismatched control heights in one toolbar/row are the single most visible "the kit is inconsistent" defect.',
     checklist: 'Z2',

@@ -49,6 +49,6 @@
 
 ## Body
 
-- **Given** `children` (a chart, a `Separator`, an insight line)
+- **Given** `children` (a chart, a divider, an insight line)
   **Then** they render below the stats strip. No card chrome wraps them — Metric
   is a plain `<div>`.

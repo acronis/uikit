@@ -20,7 +20,6 @@ palette resolves to `--ui-dataviz-*` tokens on the semantic tier.
 
 - A single metric or KPI — use a `Tag`, `Badge`, or plain text.
 - Tabular detail — use `Table` / `DataTable`.
-- Progress toward a goal — use `Progress` or `ProgressCircle`.
 
 ## Parts
 

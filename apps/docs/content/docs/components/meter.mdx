@@ -15,8 +15,7 @@ import { Meter } from '@acronis-platform/ui-react';
 `Meter` shows a scalar value within a known range — a **fractional value / share**
 — as a labelled bar: label + `value · %` over a proportional track, with a hover
 tooltip. It's built on Base UI's `Meter` (`role="meter"`, like the HTML
-`<meter>` element), as opposed to [`Progress`](/components/progress) /
-`ProgressCircle`, which track a task over time. Stack several — sharing one `max`
+`<meter>` element) — a share, not task progress over time. Stack several — sharing one `max`
 (the total), sorted by value — to build a **ranked breakdown** (a "bar list").
 
 > **Design-pending v1.** No chart token tier yet, so the fill `color` is

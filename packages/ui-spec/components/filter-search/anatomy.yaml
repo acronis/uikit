@@ -79,7 +79,7 @@ parts:
       internally (`max-h-80 overflow-y-auto`) once they exceed the popover's
       max height. Each field reads/writes the draft via the
       `useFilterSearchFilters` context hook. Fields may be grouped with a
-      `Separator` as a layout convention (not a prop).
+      divider as a layout convention (not a prop).
     element: div
     optional: true
   - id: filters-footer

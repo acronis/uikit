@@ -12,7 +12,6 @@ caller's `className`.
 ## When not to use
 
 - Indeterminate work with no known shape — use `Loading`.
-- Determinate progress — use `Progress` / `ProgressCircle`.
 
 ## Parts
 

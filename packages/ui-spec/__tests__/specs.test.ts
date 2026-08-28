@@ -411,21 +411,6 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
   });
 
-  it('ProgressCircle: api.yaml size enum matches the cva keys in ui-react', () => {
-    const source = readFileSync(
-      resolve(
-        HERE,
-        '../../ui-react/src/components/ui/progress-circle/progress-circle.tsx'
-      ),
-      'utf8'
-    );
-    const groups = extractCvaGroups(source);
-    const api = loadSpec('progress-circle').api;
-
-    expect(Object.keys(groups)).toEqual(['size']);
-    expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
-  });
-
   it('Dialog: api.yaml size enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/dialog/dialog.tsx'),
@@ -450,19 +435,6 @@ describe('cva ↔ contract conformance', () => {
     // `side` (the four edges) is the only cva axis.
     expect(Object.keys(groups)).toEqual(['side']);
     expect(groups.side.sort()).toEqual(enumMembers(api, 'side').sort());
-  });
-
-  it('Stack: api.yaml string enums match the cva keys in ui-react', () => {
-    const source = readFileSync(
-      resolve(HERE, '../../ui-react/src/components/ui/stack/stack.tsx'),
-      'utf8'
-    );
-    const groups = extractCvaGroups(source);
-    const api = loadSpec('stack').api;
-    // wrap is a boolean axis (no string-literal enum), so it's excluded here.
-    for (const axis of ['direction', 'gap', 'align', 'justify']) {
-      expect(groups[axis].sort(), axis).toEqual(enumMembers(api, axis));
-    }
   });
 
   it('Grid: api.yaml gap enum matches the cva keys in ui-react', () => {

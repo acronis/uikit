@@ -70,8 +70,8 @@ contract:
   content:
     - name: default
       description: >-
-        Content below the stats strip (`children`) — e.g. a chart, a
-        `Separator`, an AI-insight line. Composed by the consumer.
+        Content below the stats strip (`children`) — e.g. a chart, a divider,
+        an AI-insight line. Composed by the consumer.
 
   events: []
   methods: []
@@ -92,7 +92,6 @@ adapters:
         supportingText="Target: 80%"
       >
         <BarChart {...} />
-        <Separator className="my-3" />
         <p>Margin eroding — check labor cost per client…</p>
       </Metric>
   vue:

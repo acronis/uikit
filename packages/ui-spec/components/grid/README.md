@@ -11,7 +11,7 @@ steps down at smaller breakpoints, with a configurable gap.
 
 ## When not to use
 
-- One-dimensional rows/columns — use `Stack`.
+- One-dimensional rows/columns — a plain flex row/column is enough.
 - Tabular data — use `Table` / `DataTable`.
 
 ## Parts

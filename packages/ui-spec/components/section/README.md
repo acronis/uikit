@@ -18,7 +18,7 @@ labels a run of cards — or a table — and separates it from the next run.
 
 - Inside a card. Use `CardSection` — it is card chrome, with the smaller 14px
   header and the card's own inset rhythm.
-- As a bare layout wrapper with no title. Use `Stack` / `Grid`; a section with
+- As a bare layout wrapper with no title. Use `Grid`; a section with
   no header adds a band with no meaning.
 - As a surface. `Section` paints no background of its own; the page surface
   shows through.

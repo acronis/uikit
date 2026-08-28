@@ -19,7 +19,6 @@ import {
   DateRangePicker,
   type DateRange,
 } from '../../date-range-picker/date-range-picker';
-import { Separator } from '../../separator/separator';
 import {
   InputSelect,
   InputSelectContent,
@@ -190,7 +189,7 @@ function DeviceFilterFields() {
         label="Billing mode"
         items={BILLING_ITEMS}
       />
-      <Separator />
+      <div role="separator" className="h-px w-full shrink-0 bg-border" />
       <CeoBirthdayField />
     </>
   );
@@ -289,7 +288,7 @@ function AlertsFilterFields() {
   return (
     <>
       <SelectField filterKey="status" label="Status" items={STATUS_ITEMS} />
-      <Separator />
+      <div role="separator" className="h-px w-full shrink-0 bg-border" />
       <PeriodFilterField />
     </>
   );

@@ -17,7 +17,7 @@ own.
 
 - For a single metric with no siblings — render a bare `CardFilter` instead.
 - For a wrapping grid of cards — `FilterCards` is a single row, not a grid;
-  use `Grid`/`Stack` for a wrapping layout.
+  use `Grid` for a wrapping layout.
 
 ## Examples
 

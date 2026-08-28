@@ -56,7 +56,7 @@ export interface MetricProps extends React.ComponentProps<'div'> {
   tooltipLabel?: string;
   /** Show a skeleton in place of the value, preserving its space. */
   loading?: boolean;
-  /** Content below the stats strip — e.g. a chart, a `Separator`, an insight line. */
+  /** Content below the stats strip — e.g. a chart, a divider, an insight line. */
   children?: React.ReactNode;
 }
 

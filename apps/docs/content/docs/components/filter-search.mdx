@@ -85,7 +85,7 @@ as above — an unset filter is the absence of a key, so it stays out of the
 applied set and out of the chip row rather than showing a `status: undefined`
 chip that can't be cleared.
 
-Group fields with a `Separator` as a layout convention if desired. Calling
+Group fields with a divider as a layout convention if desired. Calling
 `useFilterSearchFilters()` outside a `<FilterSearchFilters>` popover throws.
 
 Need a filter popover **outside** a `FilterSearch` toolbar? See the
@@ -116,7 +116,6 @@ function DeviceFilterFields() {
     <>
       <TypeField />
       <PricingModeField />
-      <Separator />
       <StatusField />
     </>
   );

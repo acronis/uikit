@@ -15,7 +15,7 @@ composable parts so the trail's structure stays explicit in markup.
 - **Flat navigation** with no hierarchy — breadcrumbs add no value.
 - **Single-level pages** with no parent to navigate to.
 - **Step-by-step wizards** — use a Stepper.
-- **Sibling/tab navigation** — use Tabs.
+- **Sibling/tab navigation** — breadcrumbs express hierarchy, not siblings.
 
 ## Parts
 

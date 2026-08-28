@@ -149,18 +149,18 @@ function MyComponent() {
 ### Available Components
 
 The library covers layout (`AppShellChat`, `Card`,
-`CardFilter`, `FilterCards`, `Grid`, `Stack`, `Section`, `PageContent`, `PageHeader`,
-`Separator`, `ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
-`Tabs`, `Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms
+`CardFilter`, `FilterCards`, `Grid`, `Section`, `PageHeader`,
+`ScrollArea`, `Resizable`, `Toolbar`), navigation (`Breadcrumb`,
+`Pagination`, `SidebarPrimary`, `SidebarSecondary`, `Link`), forms
 (`InputText`, `InputSearch`, `InputTextArea`, `InputSelect`,
-`InputDatePicker`, `InputPassword`, `InputOTP`, `Combobox`, `Select`,
-`Checkbox`, `Radio`, `Switch`, `Slider`, `NumberField`, `Calendar`,
-`DateRangePicker`, `Field`, `Form`, `Label`), buttons (`Button`, `ButtonIcon`,
+`InputDatePicker`, `InputPassword`, `InputOTP`, `Select`,
+`Checkbox`, `Radio`, `Switch`, `CalendarPanel`,
+`DateRangePicker`, `Field`, `Label`), buttons (`Button`, `ButtonIcon`,
 `ButtonMenu`), overlays (`Dialog`, `Sheet`, `Popover`, `Tooltip`,
-`DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Progress`,
-`ProgressCircle`, `Loading`, `Skeleton`, `Toast`, `Empty`), data display
-(`Table`, `DataTable`, `Avatar`, `DescriptionList`, `Accordion`,
-`Collapsible`, `Timeline`, `ToggleGroup`), and data visualization (`Chart` and
+`DropdownMenu`), feedback (`Alert`, `Tag`/`Badge`, `Chip`, `Loading`,
+`Skeleton`, `Toast`, `Empty`), data display
+(`Table`, `DataTable`, `Avatar`, `DescriptionList`, `AccordionContainer`,
+`Timeline`), and data visualization (`Chart` and
 per-type charts — `AreaChart`, `BarChart`, `LineChart`, `PieChart`,
 `ComposedChart`, `RadarChart`, `RadialBarChart`, `ScatterChart`,
 `FunnelChart`, `SankeyChart`, `Histogram`, `Treemap` — plus dashboard

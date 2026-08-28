@@ -175,22 +175,6 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
-  tabs: {
-    props: 'defaultValue="account"',
-    extraImports: [
-      "import { TabsList, TabsTrigger, TabsContent } from '../tabs';",
-    ],
-    sample: [
-      '',
-      '      <TabsList className="grid w-[400px] grid-cols-2">',
-      '        <TabsTrigger value="account">Account</TabsTrigger>',
-      '        <TabsTrigger value="password">Password</TabsTrigger>',
-      '      </TabsList>',
-      '      <TabsContent value="account">Account settings</TabsContent>',
-      '      <TabsContent value="password">Password settings</TabsContent>',
-      '    ',
-    ].join('\n'),
-  },
   table: {
     extraImports: [
       "import { TableHeader, TableBody, TableRow, TableHead, TableCell, TableCaption } from '../table';",
@@ -554,12 +538,6 @@ const RENDER: Record<string, RenderHint> = {
     // (Default / WithError / Disabled / Horizontal / CheckboxGroup / Grouped).
     skip: true,
   },
-  form: {
-    // A <form> that needs Field children + a submit control to render anything
-    // meaningful. VR is covered by the hand-written stories (Default /
-    // WithServerErrors).
-    skip: true,
-  },
   alert: {
     // A composition needing AlertIcon/AlertContent/AlertText/AlertTitle children
     // to render meaningfully, and the banner has a 384px min-width — the
@@ -573,11 +551,6 @@ const RENDER: Record<string, RenderHint> = {
     // VR is covered by the hand-written stories (Default / Card).
     skip: true,
   },
-  combobox: {
-    // A multi-part composition needing items + input + list children to render
-    // meaningfully. VR is covered by the hand-written stories (Default / Open).
-    skip: true,
-  },
   collapsible: {
     // A disclosure needing a trigger + panel children. VR is covered by the
     // hand-written story (Default).
@@ -589,29 +562,9 @@ const RENDER: Record<string, RenderHint> = {
     // isCollapsable states: false / true-expanded / true-collapsed).
     skip: true,
   },
-  slider: {
-    // Needs a bounded-width wrapper to render meaningfully. VR is covered by the
-    // hand-written stories (Default / Range / Disabled).
-    skip: true,
-  },
-  'number-field': {
-    // A composition needing Group/Input/stepper children. VR is covered by the
-    // hand-written stories (Default / Disabled).
-    skip: true,
-  },
-  'toggle-group': {
-    // A composition needing ToggleGroupItem children. VR is covered by the
-    // hand-written stories (Default / StandaloneToggle / Disabled).
-    skip: true,
-  },
   pagination: {
     // A composition needing content/item/link children. VR is covered by the
     // hand-written story (Default).
-    skip: true,
-  },
-  stack: {
-    // A layout primitive — needs child boxes to render meaningfully. VR is covered
-    // by the hand-written stories (Vertical / Horizontal).
     skip: true,
   },
   grid: {
@@ -627,11 +580,6 @@ const RENDER: Record<string, RenderHint> = {
   'page-header': {
     // A composition needing title/actions/etc. children. VR is covered by the
     // hand-written stories (Default / WithBreadcrumbAndDescription).
-    skip: true,
-  },
-  'page-content': {
-    // A padded content region — needs children to render meaningfully. VR is
-    // covered by the hand-written story (Default).
     skip: true,
   },
   wizard: {
@@ -650,11 +598,6 @@ const RENDER: Record<string, RenderHint> = {
     // hand-written story (SignIn).
     skip: true,
   },
-  accordion: {
-    // A composition needing item/trigger/panel children. VR is covered by the
-    // hand-written stories (Default / Multiple).
-    skip: true,
-  },
   toolbar: {
     // A layout wrapper needing Button/ButtonMenu action children. VR is
     // covered by the hand-written stories (Default / MoreActions / Disabled).
@@ -666,10 +609,6 @@ const RENDER: Record<string, RenderHint> = {
     // anatomy.yaml). VR is covered by the hand-written stories (Default /
     // WithDescription / WithLink).
     skip: true,
-  },
-  'progress-circle': {
-    // Driven by `value`; render a representative filled ring (per size grid).
-    props: 'value={75} showValue',
   },
   'description-list': {
     extraImports: [

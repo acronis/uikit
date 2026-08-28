@@ -23,14 +23,14 @@ breakdown, or insight.
 ```
 GROSS MARGIN                 [Last 30 days]   ← label + caption
 [◐] 73 %              ↘ 5% vs prev 30d         ← icon badge + value + unit · trend
-——————————————————————————————————————         ← (children body: chart / Separator / insight)
+——————————————————————————————————————         ← (children body: chart / divider / insight)
 ```
 
 ## Composition
 
 Metric is a Card. Put the trend in the `trend` slot (a `TrendIndicator`), a
 timeframe in `caption` (a `Tag`), and drop a chart / `Meter` breakdown /
-`Separator` / insight line into `children`:
+divider / insight line into `children`:
 
 ```tsx
 <Metric
@@ -54,7 +54,6 @@ timeframe in `caption` (a `Tag`), and drop a chart / `Meter` breakdown /
     max={54}
     color="var(--ui-background-status-strong-success)"
   />
-  <Separator className="my-3" />
   <p>+3 customers predicted at-risk within 30 days.</p>
 </Metric>
 ```

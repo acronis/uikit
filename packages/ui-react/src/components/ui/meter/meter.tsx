@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
 // A meter: a labelled bar showing a scalar value within a known range (a
-// fractional value / share), as opposed to `Progress` which tracks a task over
+// fractional value / share), rather than task progress over
 // time — hence Base UI's Meter primitive (`role="meter"`, mirroring the HTML
 // `<meter>` element). One row — label + `value · %` over a proportional track
 // bar — designed to be stacked into a ranked breakdown (a "bar list"). No new

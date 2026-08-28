@@ -14,7 +14,6 @@ completed step. Compose the steps inside `Stepper`, which lays them out.
 
 ## When not to use
 
-- To show progress as a single quantity — use `Progress` or `ProgressCircle`.
 - For a chronological log of things that already happened — use `Timeline`.
 - As the whole stepper — that is `Stepper`, which lays the steps out in a row and
   adds the compact, narrow-viewport summary. Don't hand-roll that row. The

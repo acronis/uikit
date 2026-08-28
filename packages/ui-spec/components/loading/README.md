@@ -14,7 +14,6 @@ four placement contexts.
 - For a small inline icon-scale spinner (e.g. inside a `Button` or `Toast`) —
   those compose the internal `Spinner` primitive directly; it isn't part of
   the public component set.
-- For determinate progress — use `Progress`.
 - For content placeholders — use a skeleton.
 
 ## Parts

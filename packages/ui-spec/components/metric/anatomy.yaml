@@ -74,7 +74,7 @@ parts:
   - id: body
     description: >-
       Optional content below the stats strip (`children`) — e.g. a chart, a
-      `Separator`, an AI-insight line. Composed by the consumer.
+      divider, an AI-insight line. Composed by the consumer.
     optional: true
     visible_when: '`children` are provided'
 

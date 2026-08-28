@@ -33,7 +33,7 @@ parts:
       between the closed (pointing toward reading-direction end) and open
       (pointing down) states, wired off Base UI's `data-panel-open`. Carries
       only its own hit-target sizing, a button-reset, and the chevron's glyph
-      color (the same neutral treatment Accordion's chevron uses) — no
+      color (the shared neutral glyph treatment) — no
       position, margin, background, or hover styling relative to its
       siblings; the consumer places and styles those within their own header
       layout. Falls back to an `aria-label="Toggle"` when the consumer
