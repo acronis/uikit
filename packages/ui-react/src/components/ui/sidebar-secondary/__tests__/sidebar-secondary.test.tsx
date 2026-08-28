@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -546,6 +546,230 @@ describe('Resize', () => {
     edge.focus();
     await userEvent.keyboard('{ArrowRight}');
     expect(onChange).toHaveBeenCalledWith(true);
+  });
+});
+
+describe('SidebarSecondary — collapsible={false}', () => {
+  function CollapsiblePanel(
+    props: React.ComponentProps<typeof SidebarSecondary>
+  ) {
+    return (
+      <SidebarSecondary {...props}>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="/dashboard" selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger>
+              Collapse menu
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    );
+  }
+
+  /** Simulates a drag on the resize edge to `clientX` and releases. */
+  function dragEdgeTo(edge: HTMLElement, clientX: number) {
+    fireEvent.pointerDown(edge, { pointerId: 1, clientX: 256 });
+    fireEvent.pointerMove(window, { pointerId: 1, clientX });
+    fireEvent.pointerUp(window, { pointerId: 1, clientX });
+  }
+
+  it('blocks click-to-collapse on the resize edge', async () => {
+    const onChange = vi.fn();
+    render(
+      <Panel resizable collapsible={false} onExpandedChange={onChange} />
+    );
+    const nav = screen.getByRole('navigation');
+    await userEvent.click(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(onChange).not.toHaveBeenCalled();
+    expect(nav).toHaveAttribute('data-state', 'expanded');
+  });
+
+  it('blocks the double-click collapse path but still resets the width', async () => {
+    const onWidth = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <Panel
+        resizable
+        collapsible={false}
+        expanded={false}
+        onWidthChange={onWidth}
+        onExpandedChange={onChange}
+      />
+    );
+    await userEvent.dblClick(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    await waitFor(() => {
+      expect(onWidth).toHaveBeenCalled();
+    });
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('blocks keyboard collapse (Space) and arrow-grow while collapsed', async () => {
+    const onChange = vi.fn();
+    const { unmount } = render(
+      <Panel resizable collapsible={false} onExpandedChange={onChange} />
+    );
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    edge.focus();
+    await userEvent.keyboard(' ');
+    expect(onChange).not.toHaveBeenCalled();
+    unmount();
+
+    render(
+      <Panel
+        resizable
+        collapsible={false}
+        expanded={false}
+        onExpandedChange={onChange}
+      />
+    );
+    const collapsedEdge = screen.getByRole('separator', {
+      name: /resize sidebar/i,
+    });
+    collapsedEdge.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('clamps ArrowLeft shrink to minWidth instead of collapsing', async () => {
+    const onWidth = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <Panel
+        resizable
+        collapsible={false}
+        onWidthChange={onWidth}
+        onExpandedChange={onChange}
+      />
+    );
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    edge.focus();
+    // Width starts at the 256px minimum, so a single step would drop below it.
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onWidth).toHaveBeenLastCalledWith(256);
+  });
+
+  it('clamps a drag below the collapse threshold to minWidth', () => {
+    const onWidth = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <Panel
+        resizable
+        collapsible={false}
+        onWidthChange={onWidth}
+        onExpandedChange={onChange}
+      />
+    );
+    dragEdgeTo(
+      screen.getByRole('separator', { name: /resize sidebar/i }),
+      20
+    );
+    expect(onChange).not.toHaveBeenCalled();
+    expect(onWidth).toHaveBeenLastCalledWith(256);
+  });
+
+  it('still resizes above the minimum while not collapsible', () => {
+    const onWidth = vi.fn();
+    render(<Panel resizable collapsible={false} onWidthChange={onWidth} />);
+    dragEdgeTo(
+      screen.getByRole('separator', { name: /resize sidebar/i }),
+      400
+    );
+    expect(onWidth).toHaveBeenLastCalledWith(400);
+  });
+
+  it('natively disables the collapse trigger and drops aria-expanded', async () => {
+    const onChange = vi.fn();
+    render(
+      <CollapsiblePanel collapsible={false} onExpandedChange={onChange} />
+    );
+    const trigger = screen.getByRole('button', { name: 'Collapse menu' });
+    expect(trigger).toBeDisabled();
+    expect(trigger).not.toHaveAttribute('aria-expanded');
+    await userEvent.click(trigger);
+    expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('renders permanently collapsed with defaultExpanded={false} and no way out', async () => {
+    const onChange = vi.fn();
+    render(
+      <CollapsiblePanel
+        collapsible={false}
+        defaultExpanded={false}
+        onExpandedChange={onChange}
+      />
+    );
+    const nav = screen.getByRole('navigation');
+    expect(nav).toHaveAttribute('data-state', 'collapsed');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Collapse menu' }));
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    await userEvent.click(edge);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    edge.focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await userEvent.keyboard('{Home}');
+    dragEdgeTo(edge, 400);
+
+    expect(onChange).not.toHaveBeenCalled();
+    expect(nav).toHaveAttribute('data-state', 'collapsed');
+  });
+
+  it('Home still resets the stored width while collapsed and non-collapsible', async () => {
+    const onWidth = vi.fn();
+    render(
+      <Panel
+        resizable
+        collapsible={false}
+        defaultExpanded={false}
+        onWidthChange={onWidth}
+      />
+    );
+    const nav = screen.getByRole('navigation');
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    edge.focus();
+    fireEvent.keyDown(edge, { key: 'Home' });
+
+    // Only the expand toggle is gated by `collapsible`; the width reset still runs.
+    expect(onWidth).toHaveBeenCalledWith(256);
+    expect(nav).toHaveAttribute('data-state', 'collapsed');
+  });
+
+  it('gives the disabled collapse trigger a not-allowed cursor and no hover fill', () => {
+    render(<CollapsiblePanel collapsible={false} />);
+    const trigger = screen.getByRole('button', { name: 'Collapse menu' });
+    expect(trigger).toHaveClass('disabled:cursor-not-allowed');
+    expect(trigger).toHaveClass(
+      'disabled:hover:bg-[var(--ui-sidebar-secondary-menu-item-unselected-container-color-idle)]'
+    );
+    expect(trigger).toHaveClass(
+      'disabled:text-[var(--ui-text-on-surface-disabled)]'
+    );
+  });
+
+  it('defaults to collapsible: the collapse trigger stays enabled and toggles', async () => {
+    const onChange = vi.fn();
+    render(<CollapsiblePanel onExpandedChange={onChange} />);
+    const trigger = screen.getByRole('button', { name: 'Collapse menu' });
+    expect(trigger).toBeEnabled();
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(trigger);
+    expect(onChange).toHaveBeenCalledWith(false);
   });
 });
 

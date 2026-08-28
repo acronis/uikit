@@ -95,6 +95,18 @@ contract:
         Enable the draggable resize edge on the right border. When `true`, the
         sidebar can be resized between the expanded-width token and twice that
         value.
+    - name: collapsible
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Allow the user to collapse/expand the panel (resize-edge click, drag
+        past the collapse threshold, keyboard, and the footer collapse
+        trigger). When `false` those interactions never change `expanded` and
+        the footer collapse trigger renders natively disabled with no
+        `aria-expanded`; dragging still resizes the panel, clamped to the
+        minimum width. Independent of `expanded` — pair it with
+        `defaultExpanded: false` for a permanently collapsed rail.
     - name: resizeAriaLabel
       type: string
       required: false

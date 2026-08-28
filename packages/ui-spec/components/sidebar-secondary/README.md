@@ -36,7 +36,7 @@ breadcrumb rail.
 | `SidebarSecondaryMenuSubContent`      | `Collapsible.Panel` `<div><ul>`      | Level-2 child list                                                                     |
 | `SidebarSecondaryMenuSubItem`         | `<li><a>`                            | Level-2 indented leaf                                                                  |
 | `SidebarSecondaryMenuItemExtras`      | `<span>`                             | Trailing shortcut / external-link / tag                                                |
-| `SidebarSecondaryCollapseTrigger`     | `<li><button>`                       | Footer "Collapse menu" button; toggles `expanded`                                      |
+| `SidebarSecondaryCollapseTrigger`     | `<li><button>`                       | Footer "Collapse menu" button; toggles `expanded` (`disabled` when not collapsible)    |
 
 ## Quick Examples
 
@@ -117,6 +117,29 @@ Author both the `SidebarSecondaryContent` (section list) and the
 `SidebarSecondaryCollapsedBreadcrumb`. Visibility is toggled by the panel's
 `expanded` state via CSS — both stay in the DOM, so the breadcrumb is
 SSR-present and no JS branch is needed.
+
+## Locking the width state (`collapsible`)
+
+`collapsible` defaults to `true`. Pass `collapsible={false}` when the surface
+must not let the user change the panel width state:
+
+```tsx
+<SidebarSecondary collapsible={false}>{/* … */}</SidebarSecondary>
+```
+
+- Every user-initiated collapse/expand path is blocked — resize-edge click,
+  double-click-to-expand, drag past the collapse threshold, the resize edge's
+  Arrow/Enter/Space/Home keys, and the footer
+  `SidebarSecondaryCollapseTrigger` (which renders natively `disabled`).
+- **Resizing still works.** A drag or Arrow-shrink that would have collapsed the
+  panel clamps to the minimum width instead. Pass `resizable={false}` as well to
+  lock the width outright.
+- It does **not** force `expanded`. `collapsible={false}` with
+  `defaultExpanded={false}` is valid and renders a permanently collapsed rail; a
+  controlled `expanded` prop still has full authority.
+- The default resize tooltips still say "Collapse: Click" / "Expand: Click".
+  Override `resizeTooltipExpanded` / `resizeTooltipCollapsed` (or pass `null`)
+  so the copy matches the gestures that apply.
 
 ## Spec Files
 

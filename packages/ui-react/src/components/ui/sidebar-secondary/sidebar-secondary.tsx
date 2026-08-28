@@ -104,6 +104,12 @@ interface SidebarSecondaryContextValue {
   expanded: boolean;
   /** Flip the panel width — drives the controlled/uncontrolled `expanded` state. */
   toggleExpanded: () => void;
+  /**
+   * Whether user-initiated collapse/expand is allowed. When `false`, drag,
+   * click, keyboard and the footer trigger never flip `expanded`; resizing
+   * itself stays live.
+   */
+  collapsible: boolean;
   /** Whether resize is enabled. */
   resizable: boolean;
   /** Current width in px (only meaningful when resizable + expanded). */
@@ -142,6 +148,7 @@ function useSidebarSecondaryContext(): SidebarSecondaryContextValue {
     React.useContext(SidebarSecondaryContext) ?? {
       expanded: true,
       toggleExpanded: () => {},
+      collapsible: true,
       resizable: false,
       width: SIDEBAR_EXPANDED_WIDTH,
       setWidth: () => {},
@@ -191,6 +198,14 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
   /** Fires when the expanded state changes (e.g. a consumer toggle). */
   onExpandedChange?: (expanded: boolean) => void;
   /**
+   * Allow the user to collapse/expand the panel (resize-edge click, drag past
+   * the collapse threshold, keyboard, and the footer collapse trigger).
+   * When `false` those interactions never change `expanded` and the footer
+   * trigger renders `disabled`; dragging still resizes the panel, clamped to
+   * the minimum width. Defaults to `true`.
+   */
+  collapsible?: boolean;
+  /**
    * Enable the draggable resize edge on the right border.
    * When `true`, the sidebar can be resized between the expanded-width token
    * and twice that value.
@@ -224,7 +239,7 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
 
 function SidebarSecondaryResizeEdge() {
   const ctx = useSidebarSecondaryContext();
-  const { expanded, toggleExpanded, resizable } = ctx;
+  const { expanded, toggleExpanded, resizable, collapsible } = ctx;
   const dir = useDocDir();
 
   // Mutable ref so the closure-captured pointermove handler always reads
@@ -282,18 +297,20 @@ function SidebarSecondaryResizeEdge() {
       const newWidth = isRtl
         ? sidebarRect.right - ev.clientX
         : ev.clientX - sidebarRect.left;
-      const { expanded: isExpanded } = ctxRef.current;
+      const { expanded: isExpanded, collapsible: canCollapse } = ctxRef.current;
 
       if (isExpanded) {
-        if (newWidth < collapseThreshold) {
+        if (newWidth < collapseThreshold && canCollapse) {
           ctxRef.current.toggleExpanded();
         } else {
+          // Not collapsible: dragging below the threshold clamps to minWidth
+          // instead of collapsing, so resize stays live either way.
           ctxRef.current.setWidth(
             Math.min(Math.max(newWidth, minWidth), maxWidth)
           );
         }
       } else {
-        if (newWidth > collapseThreshold) {
+        if (newWidth > collapseThreshold && canCollapse) {
           ctxRef.current.toggleExpanded();
         }
       }
@@ -312,6 +329,9 @@ function SidebarSecondaryResizeEdge() {
   };
 
   const handleClick = () => {
+    // A click on the resize edge only ever toggles collapse — nothing to do
+    // when collapsing is disabled.
+    if (!collapsible) return;
     // Suppress click when the interaction was a drag.
     if (didDragRef.current) return;
     // Cancel any pending click timer (dblclick fires two clicks).
@@ -328,7 +348,7 @@ function SidebarSecondaryResizeEdge() {
       clearTimeout(clickTimerRef.current);
       clickTimerRef.current = null;
     }
-    if (!expanded) toggleExpanded();
+    if (!expanded && collapsible) toggleExpanded();
     ctxRef.current.setWidth(ctxRef.current.defaultWidth);
   };
 
@@ -341,6 +361,7 @@ function SidebarSecondaryResizeEdge() {
       setWidth: sw,
       expanded: exp,
       toggleExpanded: te,
+      collapsible: canCollapse,
     } = ctxRef.current;
     const step = 16;
     const growKey = dir === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
@@ -350,21 +371,23 @@ function SidebarSecondaryResizeEdge() {
       sw(Math.min(w + step, maxWidth));
     } else if (e.key === growKey && !exp) {
       e.preventDefault();
-      te();
+      if (canCollapse) te();
     } else if (e.key === shrinkKey && exp) {
       e.preventDefault();
       const next = w - step;
       if (next < minWidth) {
-        te();
+        // Not collapsible: clamp at the minimum instead of collapsing.
+        if (canCollapse) te();
+        else sw(minWidth);
       } else {
         sw(next);
       }
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      te();
+      if (canCollapse) te();
     } else if (e.key === 'Home') {
       e.preventDefault();
-      if (!exp) te();
+      if (!exp && canCollapse) te();
       sw(defaultWidth);
     }
   };
@@ -418,6 +441,7 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       expanded: expandedProp,
       defaultExpanded = true,
       onExpandedChange,
+      collapsible: collapsibleProp = true,
       resizable: resizableProp = true,
       width: widthProp,
       onWidthChange,
@@ -464,6 +488,7 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       () => ({
         expanded,
         toggleExpanded: () => setExpanded(!expanded),
+        collapsible: collapsibleProp,
         resizable: resizableProp,
         width: currentWidth,
         setWidth,
@@ -481,6 +506,7 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       [
         expanded,
         setExpanded,
+        collapsibleProp,
         resizableProp,
         currentWidth,
         setWidth,
@@ -1122,11 +1148,13 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
       extras,
       children,
       onClick,
+      disabled,
       ...props
     },
     ref
   ) => {
-    const { expanded, toggleExpanded } = useSidebarSecondaryContext();
+    const { expanded, toggleExpanded, collapsible } =
+      useSidebarSecondaryContext();
     const dir = useDocDir();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const labelRef = React.useRef<HTMLSpanElement>(null);
@@ -1140,15 +1168,22 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
           else if (ref) ref.current = node;
         }}
         type="button"
-        aria-expanded={expanded}
+        // A non-collapsible panel's trigger has no state to expose or flip:
+        // native `disabled` gives the a11y + styling semantics for free.
+        aria-expanded={collapsible ? expanded : undefined}
+        disabled={disabled || !collapsible}
         className={cn(
           sidebarSecondaryMenuItemVariants({ variant: 'unselected' }),
           'text-start',
+          // The row classes are written for an interactive item; a
+          // non-collapsible (or explicitly disabled) trigger must not keep the
+          // pointer cursor or the hover/active fill it can no longer act on.
+          'disabled:cursor-not-allowed disabled:text-[var(--ui-text-on-surface-disabled)] disabled:[&_svg]:text-[var(--ui-text-on-surface-disabled)] disabled:hover:bg-[var(--ui-sidebar-secondary-menu-item-unselected-container-color-idle)] disabled:active:bg-[var(--ui-sidebar-secondary-menu-item-unselected-container-color-idle)]',
           className
         )}
         onClick={(event) => {
           onClick?.(event);
-          if (!event.defaultPrevented) toggleExpanded();
+          if (!event.defaultPrevented && collapsible) toggleExpanded();
         }}
         {...props}
       >
