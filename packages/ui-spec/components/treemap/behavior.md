@@ -15,7 +15,7 @@ Scenario: Render cells from data and config
 ```gherkin
 Scenario: On-cell labels
   Given showLabels is true
-  Then each cell large enough shows its name at the tile's bottom start corner
+  Then each cell large enough shows its name centered in the tile (the default)
   And the name shown is the leaf's config label, falling back to its nameKey value
   But small cells omit the label to avoid overflow
   And when showLabels is false no labels render
@@ -24,17 +24,27 @@ Scenario: On-cell labels
 ```gherkin
 Scenario: Tiles are separated by the surface, not a stroke
   Given any data
-  Then each tile is inset inside its node's rectangle and its corners are rounded
+  Then each tile is inset inside its node's rectangle (sharp corners, no rounding)
   And the gap between neighbouring tiles is the chart's surface showing through
 ```
 
 ```gherkin
 Scenario: Label alignment
-  Given labelAlign is "top-start" or "center"
-  Then the label block is anchored at the tile's top start corner, or centered in it
+  Given labelAlign is "bottom-start" or "top-start"
+  Then the label block is anchored at the tile's bottom or top start corner
+  And the default ("center") centers the block in the tile
   And what the alignment aligns is the block, not its first line
   And a corner-anchored block hugs the tile's start edge, so it mirrors under dir="rtl"
   And every alignment leaves each line as wide as the tile, so it can still ellipsize
+```
+
+```gherkin
+Scenario: Adaptive text color (three tones)
+  Given a palette with dark, pale, and theme-inverting stops
+  Then "dark" fills (diverging a3/b3, sequential 3–6, categorical, status) use white text (--ui-text-on-status-strong-neutral)
+  And "pale" fills (diverging a2/b2/a1/b1, sequential 1–2) use on-surface-primary (dark in light, light in dark)
+  And "inverts" fills (sequential 7–8, which mirror across themes) use on-strong-primary (near-white in light, near-black in dark)
+  And the decision is structural (based on the resolved token name suffix), not a runtime luminance check
 ```
 
 ```gherkin

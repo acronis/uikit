@@ -11,19 +11,23 @@
 - Do **not** rely on color alone to distinguish cells. The on-cell labels name
   the larger cells; keep `showTooltip` on so small (unlabelled) cells are still
   identifiable on hover.
-- On-cell labels use the `--ui-text-on-status-strong-neutral` token ("text on a
-  strong colored surface", constant white in both themes) to read over the
-  saturated series colors. This is legible on the chromatic brand/status tokens
-  used here but is **not** guaranteed for arbitrary caller colors — pick cell
-  colors dark enough for the light label text (matched per-cell label colors are a
-  design-pending item for the `--ui-chart-*` palette). The tooltip chrome and cell
-  separators resolve to semantic `--ui-*` tokens that meet contrast in both themes.
+- On-cell labels **adapt their text color** to three fill tones (structural,
+  based on the token name suffix — not a runtime luminance check):
+  - **dark** (diverging a3/b3, sequential 3–6, categorical, status): white via
+    `--ui-text-on-status-strong-neutral`.
+  - **pale** (diverging a2/b2/a1/b1, sequential 1–2): dark/light via
+    `--ui-text-on-surface-primary`.
+  - **inverts** (sequential 7–8, whose fills mirror across themes): near-white
+    in light, near-black in dark via `--ui-text-on-status-strong-primary`.
+    The tooltip chrome and cell separators resolve to semantic `--ui-*` tokens
+    that meet contrast in both themes.
 - Watch recharts issue [#4809](https://github.com/recharts/recharts/issues/4809)
   on the a11y layer for heavily-customized charts.
 
 ## Contrast
 
 Tooltip chrome and the surface-colored cell separators meet contrast in both
-themes via the semantic tokens. Cell fills come from `config` and are the
-caller's responsibility — keep them dark enough for the white on-cell labels, and
-adjacent cells distinguishable from each other.
+themes via the semantic tokens. Cell fills come from the active palette's
+`--ui-dataviz-*` tokens. The adaptive label text ensures contrast on every
+palette-assigned stop; adjacent cells are kept distinguishable by the
+interleaved/ramp ordering of the palette.

@@ -6,13 +6,18 @@ it renders a themed recharts `Treemap` — cells sized by value, colored + label
 per name, with a tooltip — so you don't hand-compose recharts children.
 
 Cell colors come from the `palette` prop — a dataviz palette resolving to the
-`--ui-dataviz-*` tokens, `categorical` by default — not from `config`.
+`--ui-dataviz-*` tokens, `diverging` (blue-orange) by default — not from `config`.
 
-> **Design-pending v1.** Ported from the apps/demo `TreemapChartPlayground`.
-> On-cell labels still use `--ui-text-on-status-strong-neutral` — a generic
-> "text on a colored surface" color — over the palette's cell fills, so the
-> palette owes matched per-stop label colors. The chrome is reconciled with Figma
-> later; Code Connect is deferred.
+On-cell labels adapt their text color to three fill tones, decided structurally
+by the resolved token name suffix (not a runtime luminance check):
+
+- **dark** (diverging a3/b3, sequential 3–6, categorical, status): always white
+  text (`--ui-text-on-status-strong-neutral`).
+- **pale** (diverging a2/b2/a1/b1, sequential 1–2): theme-adaptive text via
+  `--ui-text-on-surface-primary` (dark in light, light in dark).
+- **inverts** (sequential 7–8, whose `light-dark()` values mirror across themes):
+  `--ui-text-on-status-strong-primary` — near-white in light (fill is dark),
+  near-black in dark (fill is pale).
 
 ## When to use
 
@@ -45,16 +50,10 @@ const data = [
 ];
 
 const config = {
-  React: { label: 'React', color: 'var(--ui-background-brand-secondary)' },
-  Vue: { label: 'Vue', color: 'var(--ui-background-status-strong-success)' },
-  Angular: {
-    label: 'Angular',
-    color: 'var(--ui-background-status-strong-danger)',
-  },
-  Svelte: {
-    label: 'Svelte',
-    color: 'var(--ui-background-status-strong-warning)',
-  },
+  React: { label: 'React' },
+  Vue: { label: 'Vue' },
+  Angular: { label: 'Angular' },
+  Svelte: { label: 'Svelte' },
 } satisfies ChartConfig;
 
 <Treemap
@@ -66,8 +65,6 @@ const config = {
 />;
 ```
 
-Cell colors reference existing semantic `--ui-*` tokens, keyed by each leaf's
-`nameKey` value. `--ui-background-status-strong-*` is chromatic in every brand;
-`--ui-background-brand-secondary` is brand-dependent (blue in `default`, neutral
-in some white-label brands), so it is not color-stable across brands until the
-real data-viz palette lands.
+Cell colors are assigned automatically from the active `palette` (diverging
+blue-orange by default). The `--ui-dataviz-*` tokens are `light-dark()` pairs,
+so light/dark and brand overrides come for free.

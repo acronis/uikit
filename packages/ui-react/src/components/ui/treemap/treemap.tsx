@@ -112,13 +112,17 @@ interface TreemapCellProps {
   showLabels?: boolean;
   labelAlign?: TreemapLabelAlign;
   /**
-   * Whether this leaf's fill is "dark enough" to need light text. Stamped by `Treemap` onto
-   * each row before recharts hands it to the cell renderer. Auto-computed from the resolved
-   * token name suffix: pale diverging stops (a1, a2, b1, b2) and sequential stops 1–2 get
-   * dark text; all other stops (diverging a3/b3, sequential 3–8, categorical, status) are
-   * saturated and keep white text.
+   * How the leaf's fill relates to text contrast. Stamped by `Treemap` onto each
+   * row before recharts hands it to the cell renderer. Auto-computed from the
+   * resolved token name suffix:
+   *
+   * - `'dark'` — saturated/dark in both themes → always white text.
+   * - `'pale'` — pale in both themes → always dark text (via theme-adaptive token).
+   * - `'inverts'` — dark in light, pale in dark (sequential stops 7–8 whose
+   *   `light-dark()` values mirror across themes) → white text in light, dark text
+   *   in dark, achieved by a `light-dark()` color value in CSS.
    */
-  darkFill?: boolean;
+  fillTone?: 'dark' | 'pale' | 'inverts';
 }
 
 // How the label block sits in its tile. `text-start`/`text-center` and the
@@ -154,7 +158,7 @@ export function TreemapCell({
   secondaryLabel,
   showLabels = true,
   labelAlign = 'center',
-  darkFill = true,
+  fillTone = 'dark',
 }: TreemapCellProps) {
   // recharts invokes `content` for the synthetic root node too (full chart
   // dimensions, empty name). Skip any name-less node — otherwise its rect has no
@@ -204,14 +208,17 @@ export function TreemapCell({
               // Each line truncates with a real ellipsis — CSS measures the text,
               // so nothing has to estimate how much of it fits.
               'flex size-full flex-col overflow-hidden p-3',
-              // Adaptive text: dark fills (diverging a3/b3, all categorical/sequential/status
-              // stops) use the on-strong neutral token (white); pale fills (diverging
-              // a1/a2/b1/b2) use the surface primary token (dark). The decision is
-              // palette-structural — token values are light-dark() pairs that change per
-              // theme, so a runtime luminance check would be fragile.
-              darkFill
-                ? 'text-[var(--ui-text-on-status-strong-neutral)]'
-                : 'text-[var(--ui-text-on-surface-primary)]',
+              // Adaptive text — three tones:
+              // • dark: saturated in both themes → white text (on-strong-neutral).
+              // • pale: pale in both themes → on-surface-primary (dark↔light).
+              // • inverts: dark in light, pale in dark (sequential 7–8 whose
+              //   light-dark() values mirror) → on-strong-primary, which is
+              //   light-dark(near-white, near-black) — the exact inverse.
+              fillTone === 'pale'
+                ? 'text-[var(--ui-text-on-surface-primary)]'
+                : fillTone === 'inverts'
+                  ? 'text-[var(--ui-text-on-status-strong-primary)]'
+                  : 'text-[var(--ui-text-on-status-strong-neutral)]',
               LABEL_ALIGN_CLASS[labelAlign]
             )}
           >
@@ -344,11 +351,9 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     const seriesData: Record<string, string | number | boolean>[] =
       React.useMemo(
         () => {
-          // Auto dark-fill detection: resolve each leaf's token name and check
-          // its suffix. Pale diverging stops (a1, a2, b1, b2) need dark text; all
-          // other stops (a3, b3, categorical, sequential, status) are saturated
-          // enough for white text. Token values are light-dark() pairs so a runtime
-          // luminance check would be theme-fragile — the token name suffix is stable.
+          // Auto fill-tone detection: resolve each leaf's token name and classify
+          // it by suffix. Token values are light-dark() pairs, so a runtime
+          // luminance check would be theme-fragile — the suffix is stable.
           const resolvedColors = resolveChartColors(config, palette);
           return data.map((row) => {
             const name = String(row[nameKey]);
@@ -372,12 +377,20 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
               ''
             );
             // Diverging: a1/a2/b1/b2 are pale; a3/b3 are dark.
-            // Sequential: stops 1–2 are pale enough to need dark text.
-            const darkFill = !/-(?:a[12]|b[12]|sequential-[a-z]+-[12])$/.test(rawToken);
+            // Sequential: stops 1–2 are pale (in light) / dark (in dark); stops
+            // 7–8 invert (dark in light, pale in dark). Stops 3–6 stay dark in
+            // both themes.
+            const isPale = /-(?:a[12]|b[12]|sequential-[a-z]+-[12])$/.test(rawToken);
+            const inverts = /-sequential-[a-z]+-[78]$/.test(rawToken);
+            const fillTone: 'dark' | 'pale' | 'inverts' = isPale
+              ? 'pale'
+              : inverts
+                ? 'inverts'
+                : 'dark';
             return {
               ...row,
               fill: `var(--color-${name})`,
-              darkFill,
+              fillTone,
               ...(typeof label === 'string' ? { primaryLabel: label } : {}),
               ...(secondaryLabel ? { secondaryLabel } : {}),
             };

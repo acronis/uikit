@@ -60,24 +60,25 @@ const widgetConfig = {
 } satisfies ChartConfig;
 
 // Six leaves — one per diverging stop — to demonstrate adaptive text color.
-// a3 (index 0) and b3 (index 5) are dark fills → white text;
-// a2/a1/b1/b2 (indices 1–4) are pale fills → dark text.
+// Keys match the interleaved assignment order: a3-b3-a2-b2-a1-b1 (strongest
+// first, alternating hues). a3 (index 0) and b3 (index 1) are dark fills →
+// white text; a2/b2/a1/b1 (indices 2–5) are pale fills → dark text.
 const divergingData = [
   { name: 'a3', size: 2400 },
-  { name: 'a2', size: 1600 },
-  { name: 'a1', size: 1200 },
-  { name: 'b1', size: 900 },
-  { name: 'b2', size: 600 },
-  { name: 'b3', size: 400 },
+  { name: 'b3', size: 1600 },
+  { name: 'a2', size: 1200 },
+  { name: 'b2', size: 900 },
+  { name: 'a1', size: 600 },
+  { name: 'b1', size: 400 },
 ];
 
 const divergingConfig = {
   a3: { label: 'Category A' },
-  a2: { label: 'Category B' },
-  a1: { label: 'Category C' },
-  b1: { label: 'Category D' },
-  b2: { label: 'Category E' },
-  b3: { label: 'Category F' },
+  b3: { label: 'Category B' },
+  a2: { label: 'Category C' },
+  b2: { label: 'Category D' },
+  a1: { label: 'Category E' },
+  b1: { label: 'Category F' },
 } satisfies ChartConfig;
 
 const meta = {
@@ -187,8 +188,9 @@ export const BottomStartLabels: Story = {
 };
 
 // The Figma-canonical diverging blue-orange palette. Six leaves map to the six
-// diverging stops (a3→b3). Adaptive text: white on dark fills (a3 at index 0, b3
-// at index 5), dark text on pale fills (a2, a1, b1, b2 at indices 1–4).
+// interleaved stops (a3-b3-a2-b2-a1-b1). Adaptive text: white on dark fills
+// (a3 at index 0, b3 at index 1), dark text on pale fills (a2/b2/a1/b1 at
+// indices 2–5).
 export const DivergingPalette: Story = {
   args: {
     data: divergingData,
@@ -197,10 +199,22 @@ export const DivergingPalette: Story = {
   },
 };
 
-// Sequential palette — stops 1–2 (pale) get dark text; stops 3–8 (saturated) keep white text.
+// Sequential palette — ramp is darkest-first (stop 8 at index 0 → stop 1 at
+// index 7). Eight leaves span the full ramp: stops 3–8 (indices 0–5) are dark →
+// white text; stops 1–2 (indices 6–7) are pale → dark text.
 export const SequentialPalette: Story = {
   args: {
     palette: { type: 'sequential', ramp: 'blue' },
+    data: Array.from({ length: 8 }, (_, i) => ({
+      name: `s${8 - i}`,
+      size: 2400 - i * 250,
+    })),
+    config: Object.fromEntries(
+      Array.from({ length: 8 }, (_, i) => [
+        `s${8 - i}`,
+        { label: `Stop ${8 - i}` },
+      ])
+    ),
   },
 };
 

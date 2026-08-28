@@ -5,7 +5,7 @@ schematic: |
   root: <div>                                       (wrapper; a flex column with a legend)
     container: <ChartContainer>                     (themed, sized, responsive)
       plot: recharts <Treemap data dataKey nameKey aspectRatio content>
-        cells:   one rounded tile per leaf (sized by dataKey, filled per nameKey)
+        cells:   one tile per leaf (sized by dataKey, filled per nameKey)
                  + label block (config label + optional second line)
         tooltip: <ChartTooltip> → tooltip-content   (hover card)
     legend: legend-content                          (row beside the plot, opt-in)
@@ -32,7 +32,7 @@ parts:
   - id: cells
     element: g
     description: >-
-      One rounded rect per leaf, sized by `dataKey`, filled from its
+      One rect per leaf (sharp corners), sized by `dataKey`, filled from its
       `--color-<name>` var and inset so the surface shows through as a gutter
       between tiles, carrying the label block: the leaf's config label plus an
       optional second line from `secondaryKeys`, anchored per `labelAlign`. Both
