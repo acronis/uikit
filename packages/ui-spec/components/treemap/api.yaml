@@ -44,12 +44,12 @@ contract:
     - name: labelAlign
       type: "'bottom-start' | 'top-start' | 'center'"
       required: false
-      default: "'bottom-start'"
+      default: "'center'"
       description: >-
-        Where a cell's label block sits — anchored at the tile's bottom start
-        corner (the design's placement), at its top start corner, or centered in
-        the tile. Named for the start edge, not a physical one: the corner
-        variants mirror under dir="rtl".
+        Where a cell's label block sits — centered in the tile (the Figma-canonical
+        default), anchored at the tile's bottom start corner, or at its top start
+        corner. Named for the start edge, not a physical one: the corner variants
+        mirror under dir="rtl".
     - name: secondaryKeys
       type: ReadonlyArray<string>
       required: false

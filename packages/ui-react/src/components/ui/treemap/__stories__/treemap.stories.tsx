@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { Treemap } from '../treemap';
 import { type ChartConfig } from '../../chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import { ButtonIcon } from '../../button-icon';
+import { ChartWidget } from '../../chart-widget';
 
 // NOTE: no `TooltipOpen` story here (unlike the other chart types). recharts'
 // Treemap tooltip is purely hover-driven and does not honor `defaultIndex`/
@@ -37,30 +40,56 @@ const config = {
   },
 } satisfies ChartConfig;
 
+// Separate data for the WidgetExample — matches the Figma widget node 8999:72036.
+const widgetData = [
+  { name: 'cat-a', size: 2400 },
+  { name: 'cat-b', size: 1800 },
+  { name: 'cat-c', size: 1200 },
+  { name: 'cat-d', size: 900 },
+  { name: 'cat-e', size: 600 },
+  { name: 'cat-f', size: 400 },
+];
+
+const widgetConfig = {
+  'cat-a': { label: 'Category A' },
+  'cat-b': { label: 'Category B' },
+  'cat-c': { label: 'Category C' },
+  'cat-d': { label: 'Category D' },
+  'cat-e': { label: 'Category E' },
+  'cat-f': { label: 'Category F' },
+} satisfies ChartConfig;
+
+// Six leaves — one per diverging stop — to demonstrate adaptive text color.
+// a3 (index 0) and b3 (index 5) are dark fills → white text;
+// a2/a1/b1/b2 (indices 1–4) are pale fills → dark text.
+const divergingData = [
+  { name: 'a3', size: 2400 },
+  { name: 'a2', size: 1600 },
+  { name: 'a1', size: 1200 },
+  { name: 'b1', size: 900 },
+  { name: 'b2', size: 600 },
+  { name: 'b3', size: 400 },
+];
+
+const divergingConfig = {
+  a3: { label: 'Category A' },
+  a2: { label: 'Category B' },
+  a1: { label: 'Category C' },
+  b1: { label: 'Category D' },
+  b2: { label: 'Category E' },
+  b3: { label: 'Category F' },
+} satisfies ChartConfig;
+
 const meta = {
   title: 'Widgets/Treemap',
   component: Treemap,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // cell separators but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     data,
     dataKey: 'size',
     nameKey: 'name',
-    aspectRatio: 4 / 3,
-    showLabels: true,
-    showTooltip: true,
     className: 'h-[320px] w-[520px]',
   },
   argTypes: {
@@ -92,6 +121,32 @@ type Story = StoryObj<typeof meta>;
 // A flat treemap: leaves sized by value, colored + labelled per name.
 export const Default: Story = {};
 
+// Figma `8999:72036` — treemap inside a ChartWidget with title and actions.
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+      >
+        <Treemap
+          config={widgetConfig}
+          data={widgetData}
+          dataKey="size"
+          nameKey="name"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
 // A wider aspect ratio changes the tiling.
 export const WideAspect: Story = {
   args: { aspectRatio: 2.5 },
@@ -113,17 +168,13 @@ export const TopStartLabels: Story = {
   args: { labelAlign: 'top-start', secondaryKeys: ['size'] },
 };
 
-// The pre-`labelAlign` placement: the block centered in its cell instead of
-// anchored to the tile's bottom start corner.
-//
-// The first leaf's label is deliberately longer than even the widest tile: a
-// centered line has to truncate against the *tile*, and a baseline where the
-// label happens to fit would go on passing if it started sizing itself to its own
-// text instead (which is what an `items-center` on the block would do — the label
-// would then overrun the tile and be clipped on both edges, with no ellipsis).
-export const CenteredLabels: Story = {
+// The block hung from the tile's bottom start corner — the old default, now an
+// explicit opt-in. The first leaf's label is deliberately longer than even the
+// widest tile: a start-aligned line has to truncate against the tile, and a baseline
+// where the label happens to fit would pass even if it sized itself to its own text.
+export const BottomStartLabels: Story = {
   args: {
-    labelAlign: 'center',
+    labelAlign: 'bottom-start',
     secondaryKeys: ['size'],
     config: {
       ...config,
@@ -132,6 +183,43 @@ export const CenteredLabels: Story = {
         label: 'React, the client rendering runtime, and its build toolchain',
       },
     },
+  },
+};
+
+// The Figma-canonical diverging blue-orange palette. Six leaves map to the six
+// diverging stops (a3→b3). Adaptive text: white on dark fills (a3 at index 0, b3
+// at index 5), dark text on pale fills (a2, a1, b1, b2 at indices 1–4).
+export const DivergingPalette: Story = {
+  args: {
+    data: divergingData,
+    config: divergingConfig,
+    palette: { type: 'diverging', pair: 'blue-orange' },
+  },
+};
+
+// Sequential palette — stops 1–2 (pale) get dark text; stops 3–8 (saturated) keep white text.
+export const SequentialPalette: Story = {
+  args: {
+    palette: { type: 'sequential', ramp: 'blue' },
+  },
+};
+
+// Status palette — all tones are chromatic, so white text is preserved on all tiles.
+export const StatusPalette: Story = {
+  args: {
+    data: [
+      { name: 'success', size: 2400 },
+      { name: 'info', size: 1600 },
+      { name: 'warning', size: 1200 },
+      { name: 'critical', size: 800 },
+    ],
+    config: {
+      success: { label: 'Success', tone: { status: 'success' } },
+      info: { label: 'Info', tone: { status: 'info' } },
+      warning: { label: 'Warning', tone: { status: 'warning' } },
+      critical: { label: 'Critical', tone: { status: 'critical' } },
+    },
+    palette: { type: 'status' },
   },
 };
 

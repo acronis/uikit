@@ -75,8 +75,13 @@ describe('Treemap', () => {
   it('wires each leaf color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-React: var(--ui-dataviz-categorical-1)');
-    expect(style).toContain('--color-Angular: var(--ui-dataviz-categorical-4)');
+    // Default palette is diverging blue-orange; data order React(0)→a3, Angular(3)→b1
+    expect(style).toContain(
+      '--color-React: var(--ui-dataviz-diverging-blue-orange-a3)'
+    );
+    expect(style).toContain(
+      '--color-Angular: var(--ui-dataviz-diverging-blue-orange-b1)'
+    );
   });
 
   it('labels every leaf with its name', () => {
@@ -137,17 +142,17 @@ describe('Treemap', () => {
 // block — its second line, its alignment, and what it drops when the tile is too
 // small — is composed by the chart and laid out by the cell renderer.
 describe('Treemap cell labels', () => {
-  // Logical utilities, not coordinates: `text-start` and the flex alignment are
-  // what mirror the block under `dir="rtl"`, the same way every other component
-  // handles direction.
-  it('anchors the label at the tile start edge, bottom, by default', () => {
+  // Logical utilities, not coordinates: `text-center`/`text-start` and the flex
+  // alignment are what mirror the block under `dir="rtl"`, the same way every other
+  // component handles direction.
+  it('centers the label by default', () => {
     const { container } = renderChart();
-    expect(labelBlock(container)).toHaveClass('justify-end', 'text-start');
+    expect(labelBlock(container)).toHaveClass('justify-center', 'text-center');
   });
 
-  it('centers the label block when asked', () => {
-    const { container } = renderChart({ labelAlign: 'center' });
-    expect(labelBlock(container)).toHaveClass('justify-center', 'text-center');
+  it('anchors the label at bottom-start when asked', () => {
+    const { container } = renderChart({ labelAlign: 'bottom-start' });
+    expect(labelBlock(container)).toHaveClass('justify-end', 'text-start');
   });
 
   it('hangs the label from the tile start edge, top, when asked', () => {
@@ -354,8 +359,9 @@ describe('Treemap legend', () => {
     expect(row?.querySelector('style')?.innerHTML).toContain(
       `[data-chart=${chartId}]`
     );
+    // Default palette is diverging blue-orange
     expect(row?.querySelector('style')?.innerHTML).toContain(
-      '--color-React: var(--ui-dataviz-categorical-1)'
+      '--color-React: var(--ui-dataviz-diverging-blue-orange-a3)'
     );
   });
 
@@ -382,7 +388,7 @@ describe('TreemapCell', () => {
     expect(rect).toHaveAttribute('y', '22');
     expect(rect).toHaveAttribute('width', '156');
     expect(rect).toHaveAttribute('height', '86');
-    expect(rect).toHaveAttribute('rx', '6');
+    expect(rect).toHaveAttribute('rx', '0');
   });
 
   it('labels a named leaf whose tile clears the size threshold', () => {
@@ -451,15 +457,15 @@ describe('TreemapCell', () => {
     expect(cellText(container)).toEqual(['React', '2,400 · 24']);
   });
 
-  // The thresholds are line boxes, not font sizes: `text-xs` renders 16px tall
-  // (Tailwind's 4/3 ratio), so one line needs 12*2 + 16 = 40px of tile and two
-  // need a further 15. A tile between the font-size sum (36) and the real fit
-  // would pass a font-size-based check and then have its first line clipped by
-  // the block's `overflow-hidden`. Node height = tile height + the 2px gutter
-  // on each side.
+  // The thresholds are line boxes, not font sizes: `text-sm` renders 19px tall
+  // (Tailwind's 4/3 ratio on 14px → ceil(18.67) = 19), so one line needs
+  // 12*2 + 19 = 43px of tile and two need a further 15. A tile between the
+  // font-size sum and the real fit would pass a font-size-based check and then
+  // have its first line clipped by the block's `overflow-hidden`. Node height =
+  // tile height + the 2px gutter on each side.
   it.each([
-    { height: 44, tile: 40, labelled: true },
-    { height: 43, tile: 39, labelled: false },
+    { height: 47, tile: 43, labelled: true },
+    { height: 46, tile: 42, labelled: false },
   ])('labels a $tile px tile: $labelled', ({ height, labelled }) => {
     const { container } = render(
       <svg>
@@ -470,8 +476,8 @@ describe('TreemapCell', () => {
   });
 
   it.each([
-    { height: 59, tile: 55, lines: ['React', '2,400'] },
-    { height: 58, tile: 54, lines: ['React'] },
+    { height: 62, tile: 58, lines: ['React', '2,400'] },
+    { height: 61, tile: 57, lines: ['React'] },
   ])('fits two lines in a $tile px tile: $lines', ({ height, lines }) => {
     const { container } = render(
       <svg>
@@ -484,6 +490,99 @@ describe('TreemapCell', () => {
       </svg>
     );
     expect(cellText(container)).toEqual(lines);
+  });
+
+  // Adaptive text color — diverging palette.
+  it('renders light text on dark stops (diverging a3 at index 0, b3 at index 5)', () => {
+    const { container } = renderChart({
+      palette: { type: 'diverging', pair: 'blue-orange' },
+      data: [
+        { name: 'first', size: 2400 }, // slot 0 = a3 = dark fill
+        { name: 'second', size: 1200 }, // slot 1 = a2 = pale fill
+      ],
+      config: {
+        first: { label: 'First' },
+        second: { label: 'Second' },
+      },
+    });
+    const blocks = Array.from(
+      container.querySelectorAll<HTMLElement>('foreignObject > div')
+    );
+    // slot 0 (a3) → dark fill → light text token
+    expect(blocks[0]).toHaveClass(
+      'text-[var(--ui-text-on-status-strong-neutral)]'
+    );
+    // slot 1 (a2) → pale fill → dark text token
+    expect(blocks[1]).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+  });
+
+  it('renders dark text on pale stops (diverging a1/a2/b1/b2)', () => {
+    const { container } = renderChart({
+      palette: { type: 'diverging', pair: 'blue-orange' },
+      data: [
+        { name: 'd0', size: 2400 }, // slot 0 = a3 = dark
+        { name: 'd1', size: 2000 }, // slot 1 = a2 = pale
+        { name: 'd2', size: 1600 }, // slot 2 = a1 = pale
+        { name: 'd3', size: 1200 }, // slot 3 = b1 = pale
+        { name: 'd4', size: 800 },  // slot 4 = b2 = pale
+        { name: 'd5', size: 400 },  // slot 5 = b3 = dark
+      ],
+      config: {
+        d0: { label: 'D0' },
+        d1: { label: 'D1' },
+        d2: { label: 'D2' },
+        d3: { label: 'D3' },
+        d4: { label: 'D4' },
+        d5: { label: 'D5' },
+      },
+    });
+    const blocks = Array.from(
+      container.querySelectorAll<HTMLElement>('foreignObject > div')
+    );
+    const onStrong = 'text-[var(--ui-text-on-status-strong-neutral)]';
+    const onSurface = 'text-[var(--ui-text-on-surface-primary)]';
+    expect(blocks[0]).toHaveClass(onStrong); // a3 — dark
+    expect(blocks[1]).toHaveClass(onSurface); // a2 — pale
+    expect(blocks[2]).toHaveClass(onSurface); // a1 — pale
+    expect(blocks[3]).toHaveClass(onSurface); // b1 — pale
+    expect(blocks[4]).toHaveClass(onSurface); // b2 — pale
+    expect(blocks[5]).toHaveClass(onStrong); // b3 — dark
+  });
+
+  it('preserves light text for categorical palette (all stops saturated)', () => {
+    const { container } = renderChart({ palette: { type: 'categorical' } });
+    const blocks = Array.from(
+      container.querySelectorAll<HTMLElement>('foreignObject > div')
+    );
+    blocks.forEach((block) => {
+      expect(block).toHaveClass(
+        'text-[var(--ui-text-on-status-strong-neutral)]'
+      );
+    });
+  });
+
+  it('renders dark text on sequential stops 1–2 (pale) and white on stop 3+', () => {
+    const { container } = renderChart({
+      palette: { type: 'sequential', ramp: 'blue' },
+      data: [
+        { name: 'first', size: 2400 }, // stop 1 → pale → dark text
+        { name: 'second', size: 1600 }, // stop 2 → pale → dark text
+        { name: 'third', size: 1200 }, // stop 3 → darker → white text
+      ],
+      config: {
+        first: { label: 'First' },
+        second: { label: 'Second' },
+        third: { label: 'Third' },
+      },
+    });
+    const blocks = Array.from(
+      container.querySelectorAll<HTMLElement>('foreignObject > div')
+    );
+    expect(blocks[0]).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+    expect(blocks[1]).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+    expect(blocks[2]).toHaveClass(
+      'text-[var(--ui-text-on-status-strong-neutral)]'
+    );
   });
 
   // "Degrade gracefully": the second line goes before the title does.
