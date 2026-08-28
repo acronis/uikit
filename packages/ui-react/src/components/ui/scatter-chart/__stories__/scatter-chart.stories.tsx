@@ -1,5 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import {
+  EllipsisIcon,
+  SquareDashedIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
+import {
   CartesianGrid,
   Scatter,
   ScatterChart as RechartsScatterChart,
@@ -15,6 +19,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from '../../chart';
+import { ChartWidget } from '../../chart-widget';
+import { ButtonIcon } from '../../button-icon';
+import { Metric } from '../../metric';
 
 // Series colors are supplied by the caller via `config`, keyed by each series'
 // `key`. There is no chart token tier yet, so these reference the shared semantic
@@ -56,30 +63,20 @@ const meta = {
   component: ScatterChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // text/grid but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
     config,
     series,
     xKey: 'hours',
     yKey: 'score',
-    shape: 'circle',
-    showGrid: true,
-    showTooltip: true,
-    showLegend: true,
+    palette: 'diverging-teal-violet',
     className: 'h-[360px] w-[520px]',
   },
   argTypes: {
     ...paletteArgTypes,
+    palette: {
+      ...paletteArgTypes.palette,
+      table: { category: 'Appearance', defaultValue: { summary: 'diverging-teal-violet' } },
+    },
     shape: {
       control: 'inline-radio',
       options: ['circle', 'square', 'triangle', 'diamond', 'star', 'cross', 'wye'],
@@ -105,19 +102,82 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
-// fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
+// Two groups plotted as points on shared x/y axes — the zero-override baseline.
+export const Default: Story = {};
+
+// Separate widget data matching the Figma scatter node (9005:73973, size=size2).
+const widgetSeries = [
+  {
+    key: 'ransomware',
+    data: [
+      { pct: 0, count: 160 }, { pct: 10, count: 140 },
+      { pct: 20, count: 230 }, { pct: 25, count: 170 },
+      { pct: 30, count: 180 }, { pct: 50, count: 140 },
+      { pct: 60, count: 120 }, { pct: 75, count: 60 },
+      { pct: 80, count: 70 }, { pct: 100, count: 30 },
+    ],
+  },
+  {
+    key: 'phishing',
+    data: [
+      { pct: 5, count: 180 }, { pct: 15, count: 100 },
+      { pct: 22, count: 60 }, { pct: 28, count: 140 },
+      { pct: 55, count: 200 }, { pct: 58, count: 190 },
+      { pct: 65, count: 195 }, { pct: 78, count: 280 },
+      { pct: 98, count: 310 },
+    ],
+  },
+];
+
+const widgetConfig = {
+  ransomware: { label: 'Ransomware' },
+  phishing: { label: 'Phishing' },
+} satisfies ChartConfig;
+
+// The chart inside a ChartWidget — the way it appears in a product dashboard.
+// Matches Figma node `9005:73973` (size=size2, 592 × 300 px).
+export const WidgetExample: Story = {
+  render: () => (
+    <div className="h-[300px] w-[592px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric
+            icon={<SquareDashedIcon />}
+            value="125"
+            unit="Label"
+          />
+        }
+      >
+        <ScatterChart
+          config={widgetConfig}
+          series={widgetSeries}
+          xKey="pct"
+          yKey="count"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
+// Axis/grid configuration: rotated X ticks, zero-anchored Y domain, fixed tick
+// count, solid grid (gridDashed={false} overrides the dashed default).
 export const AxisAndGridConfig: Story = {
   args: {
     xAxisAngle: -45,
     yAxisDomain: 'zero',
     yAxisTickCount: 4,
-    gridDashed: true,
+    gridDashed: false,
   },
 };
-
-// Two groups plotted as points on shared x/y axes.
-export const Grouped: Story = {};
 
 // Map a third numeric field to point size (a bubble chart) via zKey.
 export const Bubble: Story = {

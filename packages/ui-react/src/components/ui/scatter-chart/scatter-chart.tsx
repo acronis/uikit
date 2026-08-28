@@ -91,7 +91,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
     {
       className,
       config,
-      palette,
+      palette = { type: 'diverging', pair: 'teal-violet' },
       series,
       xKey,
       yKey,
@@ -113,7 +113,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       xAxisInterval,
       yAxisTickCount,
       yAxisDomain,
-      gridDashed,
+      gridDashed = true,
       gridHorizontal,
       gridVertical,
       tooltipContent,
@@ -158,7 +158,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
             {showGrid && (
               <CartesianGrid
                 horizontal={gridHorizontal ?? true}
-                vertical={gridVertical ?? true}
+                vertical={gridVertical ?? false}
                 strokeDasharray={gridDashed ? '3 3' : undefined}
               />
             )}
