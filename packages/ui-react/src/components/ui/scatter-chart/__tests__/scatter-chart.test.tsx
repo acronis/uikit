@@ -65,8 +65,8 @@ describe('ScatterChart', () => {
   it('wires each series color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    expect(style).toContain('--color-classA: var(--ui-dataviz-categorical-1)');
-    expect(style).toContain('--color-classB: var(--ui-dataviz-categorical-2)');
+    expect(style).toContain('--color-classA: var(--ui-dataviz-diverging-teal-violet-a3)');
+    expect(style).toContain('--color-classB: var(--ui-dataviz-diverging-teal-violet-a2)');
   });
 
   it('draws one point per row of every series, filled from its config color', () => {
@@ -197,6 +197,19 @@ describe('ScatterChart chrome and markers', () => {
     expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
   });
 
+  it('renders dashed horizontal-only grid by default', () => {
+    const { container } = renderChart();
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-horizontal line').length
+    ).toBeGreaterThan(0);
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line')
+    ).toHaveLength(0);
+    expect(
+      container.querySelector('.recharts-cartesian-grid-horizontal line')
+    ).toHaveAttribute('stroke-dasharray', '3 3');
+  });
+
   it('draws only the grid direction it was asked for', () => {
     const { container } = renderChart({
       gridHorizontal: true,
@@ -211,11 +224,18 @@ describe('ScatterChart chrome and markers', () => {
     ).toHaveLength(0);
   });
 
-  it('dashes the grid on request', () => {
-    const { container } = renderChart({ gridDashed: true });
+  it('restores vertical grid lines when gridVertical is true', () => {
+    const { container } = renderChart({ gridVertical: true });
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line').length
+    ).toBeGreaterThan(0);
+  });
+
+  it('renders solid grid when gridDashed is false', () => {
+    const { container } = renderChart({ gridDashed: false });
     expect(
       container.querySelector('.recharts-cartesian-grid-horizontal line')
-    ).toHaveAttribute('stroke-dasharray', '3 3');
+    ).not.toHaveAttribute('stroke-dasharray');
   });
 
   // A shape recharts doesn't recognize silently falls back to a circle, so

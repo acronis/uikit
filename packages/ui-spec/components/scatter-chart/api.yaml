@@ -23,6 +23,13 @@ contract:
         keyed by a `series[].key`, maps that series to a `label` and an optional
         `tone`. Resolved into the `--color-<key>` custom properties the points
         fill from.
+    - name: palette
+      type: ChartPalette
+      required: false
+      default: "{ type: 'diverging', pair: 'teal-violet' }"
+      description: >-
+        The dataviz palette this chart's series are painted from. Defaults to
+        diverging teal-violet, matching the Figma reference design.
     - name: xKey
       type: string
       required: true
@@ -136,6 +143,7 @@ contract:
     - name: gridDashed
       type: boolean
       required: false
+      default: 'true'
       description: Draw grid lines dashed instead of solid.
     - name: gridHorizontal
       type: boolean
