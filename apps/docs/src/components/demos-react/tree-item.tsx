@@ -18,45 +18,57 @@ export function TreeItemDemo() {
       {/* A real tree: the consumer supplies the ARIA roles, the indentation,
           the expand state, and the selection. */}
       <ul role="tree" aria-label="Workloads" className="w-80">
-        <TreeItem
-          render={<li role="treeitem" aria-expanded={open} aria-level={1} />}
-          expanded={open}
-          hasIcon
-          icon={<FolderIcon size={16} />}
-          title="All workloads"
-          tabIndex={0}
-          onClick={() => setOpen((value) => !value)}
-        >
-          <Tag variant="info">24</Tag>
-        </TreeItem>
+        <li role="treeitem" aria-expanded={open} aria-level={1}>
+          <TreeItem
+            expanded={open}
+            hasIcon
+            icon={<FolderIcon size={16} />}
+            title="All workloads"
+            tabIndex={0}
+            onClick={() => setOpen((value) => !value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setOpen((value) => !value);
+              }
+            }}
+          >
+            <Tag variant="info">24</Tag>
+          </TreeItem>
 
-        {open && (
-          <ul role="group" className="ps-4">
-            {[
-              { id: 'machines', title: 'Machines with agents', leaf: false },
-              { id: 'cloud', title: 'Cloud applications', leaf: true },
-              { id: 'unmanaged', title: 'Unmanaged workloads', leaf: true },
-            ].map((node) => (
-              <TreeItem
-                key={node.id}
-                render={
-                  <li
-                    role="treeitem"
-                    aria-level={2}
-                    aria-selected={selected === node.id}
+          {open && (
+            <ul role="group" className="ps-4">
+              {[
+                { id: 'machines', title: 'Machines with agents', leaf: false },
+                { id: 'cloud', title: 'Cloud applications', leaf: true },
+                { id: 'unmanaged', title: 'Unmanaged workloads', leaf: true },
+              ].map((node) => (
+                <li
+                  key={node.id}
+                  role="treeitem"
+                  aria-level={2}
+                  aria-selected={selected === node.id}
+                >
+                  <TreeItem
+                    isExpandable={!node.leaf}
+                    hasIcon
+                    icon={<FolderIcon size={16} />}
+                    title={node.title}
+                    selected={selected === node.id}
+                    tabIndex={-1}
+                    onClick={() => setSelected(node.id)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        setSelected(node.id);
+                      }
+                    }}
                   />
-                }
-                isExpandable={!node.leaf}
-                hasIcon
-                icon={<FolderIcon size={16} />}
-                title={node.title}
-                selected={selected === node.id}
-                tabIndex={-1}
-                onClick={() => setSelected(node.id)}
-              />
-            ))}
-          </ul>
-        )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
       </ul>
 
       {/* Each optional slot on its own. */}

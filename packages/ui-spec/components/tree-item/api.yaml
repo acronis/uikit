@@ -110,25 +110,33 @@ adapters:
     import: "import { TreeItem } from '@acronis-platform/ui-react'"
     example: |
       <ul role="tree" aria-label="Workloads">
-        <TreeItem
-          render={<li role="treeitem" aria-expanded={open} />}
-          expanded={open}
-          hasIcon
-          icon={<FolderIcon size={16} />}
-          title="All workloads"
-          onClick={() => setOpen((v) => !v)}
-        >
-          <Tag variant="info">24</Tag>
-        </TreeItem>
-        <ul role="group" className="ps-4">
+        <li role="treeitem" aria-expanded={open}>
           <TreeItem
-            render={<li role="treeitem" aria-selected />}
-            isExpandable={false}
+            expanded={open}
             hasIcon
-            selected
-            title="Cloud applications"
-          />
-        </ul>
+            icon={<FolderIcon size={16} />}
+            title="All workloads"
+            onClick={() => setOpen((v) => !v)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setOpen((v) => !v);
+              }
+            }}
+          >
+            <Tag variant="info">24</Tag>
+          </TreeItem>
+          <ul role="group" className="ps-4">
+            <li role="treeitem" aria-selected>
+              <TreeItem
+                isExpandable={false}
+                hasIcon
+                selected
+                title="Cloud applications"
+              />
+            </li>
+          </ul>
+        </li>
       </ul>
 
   vue:

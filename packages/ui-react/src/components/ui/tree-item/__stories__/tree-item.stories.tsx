@@ -215,46 +215,56 @@ export const TruncatedTitle: Story = {
 
 /**
  * A real tree is composed by the consumer: several rows, indentation, and the
- * expand state all live outside this component. `render` supplies the ARIA tree
- * semantics the standalone row deliberately does not force. `expanded` tracks
+ * expand state all live outside this component. `expanded` tracks
  * `aria-expanded` on the open row so the chevron never contradicts what the row
  * announces. The collapsed row still spells out `aria-expanded="false"` — ARIA
  * requires the attribute be explicit, not merely absent, on a treeitem that
  * owns a group — but omits `expanded`, which already defaults to false.
+ *
+ * The `<li role="treeitem">` is authored by hand rather than composed through
+ * `render`, because a branch row's nested `<ul role="group">` has to be a DOM
+ * *child* of that `<li>` — both HTML's content model (a `<ul>` may only
+ * contain `<li>`s) and ARIA ownership (a treeitem's group must be reachable
+ * from it) require that. `TreeItem` renders as its default `<div>` inside the
+ * `<li>`, alongside the group.
  */
 export const ComposedTree: Story = {
   render: () => (
     <ul role="tree" aria-label="Workloads" className="w-72">
-      <TreeItem
-        render={<li role="treeitem" aria-expanded="true" />}
-        expanded
-        hasIcon
-        icon={<FolderIcon size={16} />}
-        title="All workloads"
-      >
-        <Tag variant="info">24</Tag>
-      </TreeItem>
-      <ul role="group" className="ps-4">
+      <li role="treeitem" aria-expanded="true">
         <TreeItem
-          render={<li role="treeitem" aria-expanded="false" />}
+          expanded
           hasIcon
           icon={<FolderIcon size={16} />}
-          title="Machines with agents"
-        />
-        <TreeItem
-          render={<li role="treeitem" aria-selected="true" />}
-          isExpandable={false}
-          hasIcon
-          selected
-          title="Cloud applications"
-        />
-        <TreeItem
-          render={<li role="treeitem" />}
-          isExpandable={false}
-          hasIcon
-          title="Unmanaged workloads"
-        />
-      </ul>
+          title="All workloads"
+        >
+          <Tag variant="info">24</Tag>
+        </TreeItem>
+        <ul role="group" className="ps-4">
+          <li role="treeitem" aria-expanded="false">
+            <TreeItem
+              hasIcon
+              icon={<FolderIcon size={16} />}
+              title="Machines with agents"
+            />
+          </li>
+          <li role="treeitem" aria-selected="true">
+            <TreeItem
+              isExpandable={false}
+              hasIcon
+              selected
+              title="Cloud applications"
+            />
+          </li>
+          <li role="treeitem">
+            <TreeItem
+              isExpandable={false}
+              hasIcon
+              title="Unmanaged workloads"
+            />
+          </li>
+        </ul>
+      </li>
     </ul>
   ),
 };
@@ -336,8 +346,13 @@ function ExpandableWorkloadTree() {
   const toggle = (id: string) =>
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
 
-  // `level` is the 1-based ARIA depth: the nested `<ul role="group">` is a DOM
-  // sibling of the row, not its parent, so nothing but `aria-level` conveys depth.
+  // `level` is the 1-based ARIA depth. The `<li role="treeitem">` is authored
+  // by hand (not composed through `render`) so that a branch node's nested
+  // `<ul role="group">` can be its DOM *child* — both HTML's content model
+  // (a `<ul>` may only contain `<li>`s) and ARIA ownership (a treeitem's group
+  // must be reachable from it) require that. `TreeItem` renders as its
+  // default `<div>`, and carries the click/keyboard/focus behavior — the `<li>`
+  // only carries the tree semantics.
   const renderNode = (
     node: DemoTreeNode,
     level = 1,
@@ -348,17 +363,15 @@ function ExpandableWorkloadTree() {
     const open = branch && !!expanded[node.id];
 
     return (
-      <React.Fragment key={node.id}>
+      <li
+        key={node.id}
+        role="treeitem"
+        aria-level={level}
+        aria-posinset={posInSet}
+        aria-setsize={setSize}
+        {...(branch ? { 'aria-expanded': open } : {})}
+      >
         <TreeItem
-          render={
-            <li
-              role="treeitem"
-              aria-level={level}
-              aria-posinset={posInSet}
-              aria-setsize={setSize}
-              {...(branch ? { 'aria-expanded': open } : {})}
-            />
-          }
           onClick={branch ? () => toggle(node.id) : undefined}
           onKeyDown={
             branch
@@ -385,7 +398,7 @@ function ExpandableWorkloadTree() {
             )}
           </ul>
         )}
-      </React.Fragment>
+      </li>
     );
   };
 

@@ -77,38 +77,46 @@ const [open, setOpen] = useState(true);
 const [selected, setSelected] = useState('cloud');
 
 <ul role="tree" aria-label="Workloads">
-  <TreeItem
-    render={<li role="treeitem" aria-expanded={open} aria-level={1} />}
-    expanded={open}
-    hasIcon
-    icon={<FolderIcon size={16} />}
-    title="All workloads"
-    tabIndex={0}
-    onClick={() => setOpen((value) => !value)}
-  >
-    <Tag variant="info">24</Tag>
-  </TreeItem>
-
-  {open && (
-    <ul role="group" className="ps-4">
-      <TreeItem
-        render={
-          <li
-            role="treeitem"
-            aria-level={2}
-            aria-selected={selected === 'cloud'}
-          />
+  <li role="treeitem" aria-expanded={open} aria-level={1}>
+    <TreeItem
+      expanded={open}
+      hasIcon
+      icon={<FolderIcon size={16} />}
+      title="All workloads"
+      tabIndex={0}
+      onClick={() => setOpen((value) => !value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          setOpen((value) => !value);
         }
-        isExpandable={false}
-        hasIcon
-        icon={<FolderIcon size={16} />}
-        title="Cloud applications"
-        selected={selected === 'cloud'}
-        tabIndex={-1}
-        onClick={() => setSelected('cloud')}
-      />
-    </ul>
-  )}
+      }}
+    >
+      <Tag variant="info">24</Tag>
+    </TreeItem>
+
+    {open && (
+      <ul role="group" className="ps-4">
+        <li role="treeitem" aria-level={2} aria-selected={selected === 'cloud'}>
+          <TreeItem
+            isExpandable={false}
+            hasIcon
+            icon={<FolderIcon size={16} />}
+            title="Cloud applications"
+            selected={selected === 'cloud'}
+            tabIndex={-1}
+            onClick={() => setSelected('cloud')}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setSelected('cloud');
+              }
+            }}
+          />
+        </li>
+      </ul>
+    )}
+  </li>
 </ul>;
 ```
 
