@@ -79,7 +79,7 @@ transitions:
     state: checked
     on: click / Space
     to: toggle (!checked)
-    guard: not disabled
+    guard: not disabled and not read-only
     effect: emits checked-change(next)
     when_controlled: >-
       internal value does NOT change; the component emits checked-change and the

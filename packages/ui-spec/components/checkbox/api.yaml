@@ -31,6 +31,11 @@ contract:
       required: false
       default: false
       description: Marks the control as required in a form.
+    - name: read-only
+      type: boolean
+      required: false
+      default: false
+      description: Prevents the user from changing the checked state; stays focusable.
     - name: name
       type: string
       required: false

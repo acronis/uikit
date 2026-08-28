@@ -47,6 +47,17 @@
 **And** `checked-change` does not fire
 **And** the disabled form tokens are applied
 
+### Read-only blocks the state change but not focus
+
+**Given** a Checkbox with `read-only`
+**When** the user clicks it (or presses Space while focused)
+**Then** the state does not change
+**And** `checked-change` does not fire
+**And** the box remains focusable and keeps its normal (non-disabled) hover/
+active/cursor styling — nothing in the current implementation visually
+distinguishes it from an editable box beyond `aria-readonly="true"`, so a
+consumer should pair it with copy that explains why it can't be changed
+
 ---
 
 ## States
@@ -85,3 +96,10 @@
 **Given** a Checkbox with `name` and `value` inside a form
 **When** the form is submitted while checked
 **Then** the field is included with its value
+
+### Required participates in form validation
+
+**Given** a Checkbox with `required`
+**When** it renders
+**Then** `aria-required="true"` is set
+**And** the hidden native input marks the field as required for submission

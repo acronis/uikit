@@ -63,6 +63,21 @@ Indeterminate and disabled states:
 clicking does not clear it, and it wins over `checked` for the rendered glyph
 and `aria-checked="mixed"`.
 
+Form attributes pass straight through to Base UI:
+
+```tsx
+<Checkbox label="Accept terms" required />
+<Checkbox label="Managed by your admin" defaultChecked readOnly />
+```
+
+`required` sets `aria-required` and marks the hidden native input as required
+for submission. `readOnly` sets `aria-readonly` and blocks click/Space from
+changing the state, while keeping the box focusable and in the tab order.
+Neither prop has a visual treatment of its own — a read-only box still shows
+its normal hover/active feedback and cursor, it just silently ignores the
+click — so pair it with surrounding copy (or a `description`) that explains
+why it cannot be changed.
+
 ## API Reference
 
 <AutoTypeTable

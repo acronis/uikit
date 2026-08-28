@@ -45,7 +45,7 @@ export const FocusVisible: Story = {
   },
 };
 
-// transition "toggle": click / Space -> toggle (!checked) [guard: not disabled]
+// transition "toggle": click / Space -> toggle (!checked) [guard: not disabled and not read-only]
 export const Toggle: Story = {
   render: () => <Checkbox aria-label="Accept" />,
   play: async ({ canvasElement }) => {

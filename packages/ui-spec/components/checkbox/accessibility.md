@@ -10,6 +10,8 @@ via Base UI's Checkbox primitive.
 | `role`          | `"checkbox"`                 | Identifies the control                       |
 | `aria-checked`  | `"true" / "false" / "mixed"` | Reflects checked / unchecked / indeterminate |
 | `aria-disabled` | present when disabled        | Conveyed via the disabled state              |
+| `aria-required` | present when `required`      | Announces that the box must be ticked        |
+| `aria-readonly` | present when `read-only`     | Announces that the state cannot be changed   |
 
 The control must have an **accessible name** — provide a visible `<label>`
 associated with it, or an `aria-label` / `aria-labelledby` when used standalone.
@@ -22,7 +24,8 @@ associated with it, or an `aria-label` / `aria-labelledby` when used standalone.
 | Space | Toggles checked / unchecked   |
 
 The box is focusable in its enabled state and removed from the tab order when
-disabled.
+disabled. A **read-only** box stays focusable and in the tab order — Space
+simply does not change its state.
 
 ## Screen Reader Requirements
 

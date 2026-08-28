@@ -113,6 +113,14 @@ export const WithDescription: Story = {
   },
 };
 
+export const Required: Story = {
+  args: { label: 'Accept terms', required: true },
+};
+
+export const ReadOnly: Story = {
+  args: { label: 'Read-only option', readOnly: true, defaultChecked: true },
+};
+
 export const LabelledVariants: Story = {
   render: () => (
     <div className="flex flex-col gap-3">
@@ -124,6 +132,12 @@ export const LabelledVariants: Story = {
         description="This one can't be changed."
         disabled
         defaultChecked
+      />
+      <Checkbox
+        label="Disabled indeterminate option"
+        description="Can't be changed."
+        disabled
+        indeterminate
       />
     </div>
   ),

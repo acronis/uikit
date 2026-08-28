@@ -71,6 +71,35 @@ describe('Checkbox', () => {
     expect(onCheckedChange).not.toHaveBeenCalled();
   });
 
+  it('exposes the readOnly state as aria-readonly="true"', () => {
+    render(<Checkbox aria-label="Accept" readOnly />);
+    expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveAttribute(
+      'aria-readonly',
+      'true'
+    );
+  });
+
+  it('does not fire onCheckedChange when readOnly', async () => {
+    const onCheckedChange = vi.fn();
+    render(
+      <Checkbox
+        aria-label="Accept"
+        readOnly
+        onCheckedChange={onCheckedChange}
+      />
+    );
+    await userEvent.click(screen.getByRole('checkbox', { name: 'Accept' }));
+    expect(onCheckedChange).not.toHaveBeenCalled();
+  });
+
+  it('exposes the required state as aria-required="true"', () => {
+    render(<Checkbox aria-label="Accept" required />);
+    expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveAttribute(
+      'aria-required',
+      'true'
+    );
+  });
+
   it('merges a custom className with the token classes', () => {
     render(<Checkbox aria-label="Accept" className="custom-class" />);
     expect(screen.getByRole('checkbox', { name: 'Accept' })).toHaveClass(
