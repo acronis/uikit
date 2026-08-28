@@ -66,7 +66,7 @@ describe('ScatterChart', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
     expect(style).toContain('--color-classA: var(--ui-dataviz-diverging-teal-violet-a3)');
-    expect(style).toContain('--color-classB: var(--ui-dataviz-diverging-teal-violet-a2)');
+    expect(style).toContain('--color-classB: var(--ui-dataviz-diverging-teal-violet-b3)');
   });
 
   it('draws one point per row of every series, filled from its config color', () => {
