@@ -1,5 +1,101 @@
 # @acronis-platform/ui-react
 
+## 5.0.0
+
+### Major Changes
+
+- [#703](https://github.com/acronis/uikit/pull/703) [`41773f8`](https://github.com/acronis/uikit/commit/41773f8f0038ff7acb77668056818279ad1f36d7) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - **FunnelChart**: aligned with the Figma widget (`ChartFunnel`, node `8811:175245`).
+
+  The funnel is now laid out the way `PieChart` and `RadialBarChart` already are: a
+  120×120 square plot, a 16px gutter, then the stage list taking the remaining
+  width. The component fills its parent's width and carries no height of its own,
+  so it no longer stretches into a tall, narrow wedge inside a widget body.
+  - The legend moves from **below** the funnel to **beside** it, as a two-column
+    list — dot + label on the inline start, the stage's value on the inline end —
+    and is now **on by default** (`showLegend` defaults to `true`).
+  - Legend values use `--ui-text-on-surface-primary`, matching the design; the
+    donut/radial legends keep their link-coloured values.
+  - Legend markers now carry each stage's **resolved** palette colour. They
+    previously referenced a `--color-*` custom property scoped to the chart
+    container, which does not resolve outside it — so a legend rendered beside the
+    plot painted its markers transparent.
+  - Stages are drawn with the design's 2px gap between them and 2px rounded
+    corners (including the triangle's apex). recharts' `Funnel`/`Trapezoid` support
+    neither, so the component supplies its own stage shape.
+  - On-plot stage labels are now **off by default** (`showLabels` defaults to
+    `false`) — the design names the stages in the legend, not on the funnel.
+  - The default palette is the sequential blue ramp
+    (`FUNNEL_CHART_DEFAULT_PALETTE`) rather than the shared categorical default: a
+    funnel's stages are an ordered series.
+  - New `legendValueFormatter` prop for the value in each legend row.
+
+  **Breaking changes**
+  - `legendPos` is **removed**. The legend is beside the funnel, not on its top or
+    bottom edge, so there is no edge to choose. Remove the prop; there is no
+    replacement.
+  - `colorMode` and `gradientColor` are **removed**, along with the
+    `FunnelChartColorMode` type. `palette` is now the only source of stage colour.
+    Replace `colorMode="gradient"` with a sequential palette — e.g.
+    `palette={{ type: 'sequential', ramp: 'blue' }}`, which is also the new default
+    — or pin individual stages through `stageSettings`.
+  - `showLegend` now defaults to `true` and `showLabels` to `false`. A chart that
+    relied on the old defaults must set them explicitly.
+
+### Minor Changes
+
+- [#702](https://github.com/acronis/uikit/pull/702) [`cc308aa`](https://github.com/acronis/uikit/commit/cc308aa610f46d6d03aad38dd68ef2dd615fe7fe) Thanks [@madjorr](https://github.com/madjorr)! - feat(input-select): add `alignOffset`/`collisionAvoidance`/`anchor`/`isPopoverStyled` props to `InputSelectContent`
+
+  `InputSelectContent` now forwards `alignOffset`, `collisionAvoidance`, and
+  `anchor` to Base UI's `Select.Positioner`, so a dropdown can be pinned to an
+  explicit `side`/`align` instead of being auto-flipped when space is tight —
+  e.g. `side="right" sideOffset={20} collisionAvoidance={{ side: 'none',
+fallbackAxisSide: 'none' }}` keeps the popup to the right of the trigger.
+  `alignOffset` nudges it along the alignment axis without changing `align`.
+  `anchor` lets the popup position itself against an element other than
+  `InputSelectTrigger` — e.g. an external button that drives a hidden trigger.
+  All three props are optional; omitting them keeps today's behavior (Base UI's
+  own flip/shift collision handling, anchored to the trigger).
+
+  `InputSelect` now also resets the in-dropdown search query when a controlled
+  `open` prop goes from `true` to `false` on its own — the case where an external
+  toggle button's click handler flips the state directly and Base UI never reports
+  the transition through `onOpenChange`, which previously left the stale query in
+  place on the next open. Resets driven by `onOpenChange` are unchanged, including
+  the existing carve-out for a consumer that calls `eventDetails.cancel()` to keep
+  the popup open (the pattern an external `anchor` button needs, so its own
+  pointerdown isn't treated as a dismissing outside press) — that still keeps the
+  user's typed query.
+
+  One consumer-side requirement comes with the external-button `anchor` pattern:
+  the trigger stays mounted but visually hidden (`sr-only`), and focus is left
+  somewhere invisible on close (WCAG 2.4.7) — on Escape and item selection Base UI
+  moves focus to that hidden trigger _asynchronously_, after `onOpenChange`
+  returns; on an outside press onto nothing focusable it does not restore focus at
+  all and it is lost to `document.body`. Pass `tabIndex={-1}` to
+  `InputSelectTrigger` to keep it out of the Tab sequence **and** reclaim focus for
+  your own visible button from `onOpenChange` when `nextOpen` is `false` —
+  `tabIndex={-1}` does not block Base UI's programmatic focus call, so both are
+  needed. The reclaim must be **guarded** (only when focus is still inside the
+  closing popup, on the hidden trigger, or on `document.body`) and re-asserted in a
+  `requestAnimationFrame`, so the deferred pass cannot pull focus off another
+  element the user legitimately pressed. See the `InputSelect` docs page for the
+  full example.
+
+  A new `isPopoverStyled` boolean draws the dropdown's container chrome like
+  `PopoverContent` — `--ui-popover-container-*` fill / border / radius, no shadow,
+  and a fade/zoom/slide enter-exit animation — instead of the default
+  `--ui-input-select-dropdown-container-*` tokens + static `shadow-md`. Only the
+  container chrome and the transition change: the popup keeps the dropdown's
+  anchor-width sizing and vertical padding, and every row inside it (search,
+  sections, items, status) is untouched. Defaults to `false`, keeping the existing
+  look.
+
+### Patch Changes
+
+- [#696](https://github.com/acronis/uikit/pull/696) [`7be176d`](https://github.com/acronis/uikit/commit/7be176d9f3cad386a92fd72016c0d0cd5eb8d930) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Align RadarChart data-point defaults and label styling with the Figma chart design.
+
+- [#696](https://github.com/acronis/uikit/pull/696) [`c18a717`](https://github.com/acronis/uikit/commit/c18a7171efeaea92344fd4a0373ea95c80de646d) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix RadarChart category labels clipping at the box edges and colliding with the legend. The chart now centres its web on the plot band the legend leaves rather than on the whole box, and widens its default height when `showLabels` pushes the category labels further out.
+
 ## 4.1.0
 
 ### Minor Changes
