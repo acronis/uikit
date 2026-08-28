@@ -191,12 +191,13 @@ function createProjectionTooltip(tooltipContent: TooltipContentType) {
       ...props,
       payload: dropProjectionPayload(props.payload),
     } as TooltipRenderProps;
-    return typeof tooltipContent === 'function'
-      ? React.createElement(
-          tooltipContent as React.FunctionComponent<TooltipRenderProps>,
-          merged
-        )
-      : React.cloneElement(tooltipContent, merged);
+    if (typeof tooltipContent === 'function') {
+      const Comp = tooltipContent as React.FunctionComponent<TooltipRenderProps>;
+      return <Comp {...merged} />;
+    }
+    // Element-form tooltip: cloneElement is the React-idiomatic way to
+    // re-render an existing element with new props (preserves refs & keys).
+    return React.cloneElement(tooltipContent, merged);
   };
 }
 
@@ -386,9 +387,11 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       );
       const ProjectionTick = ({
         payload,
+        index,
         ...tickProps
       }: {
         payload: { value: string | number };
+        index?: number;
         [key: string]: unknown;
       }) => (
         <Text
@@ -401,7 +404,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
           }
         >
           {xTickFormatter
-            ? xTickFormatter(payload.value as never, 0)
+            ? xTickFormatter(payload.value as never, index)
             : payload.value}
         </Text>
       );
@@ -591,6 +594,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     type={settings?.curveType ?? curve ?? 'monotone'}
                     dataKey={`_proj_${key}`}
                     name={key}
+                    stackId={isStacked ? 'proj' : undefined}
                     stroke={colorFor(key)}
                     strokeWidth={settings?.strokeWidth ?? strokeWidth}
                     strokeDasharray="5 5"

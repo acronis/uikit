@@ -18,7 +18,7 @@ contract:
     - name: fill
       type: "'solid' | 'gradient'"
       required: false
-      default: "'gradient'"
+      default: "'solid'"
       description: >-
         How each area is filled. `solid` = a flat translucent fill (`fillOpacity`);
         `gradient` = a vertical top-opaque → bottom-transparent gradient.
@@ -123,6 +123,14 @@ contract:
       required: false
       default: 'false'
       description: Bridge `null` gaps in the data instead of breaking the area.
+    - name: projectionStart
+      type: string | number
+      required: false
+      description: >-
+        The category value (matching an `xKey` entry) at which the projection
+        zone starts. Ticks from this point onward render in the disabled text
+        color. The actual series are clipped to the left of the boundary; a
+        dashed, dot-less projection continuation renders on the right.
     - name: showGrid
       type: boolean
       required: false
