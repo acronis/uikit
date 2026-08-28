@@ -1,0 +1,137 @@
+spec_version: '1.0'
+component: TreeItem
+
+# There is no `cva` in the ui-react source: the row has one shape and exactly one
+# prop-driven look (`selected`), so a variant axis would have a single member.
+# The Figma `state` axis is not modelled as a prop — see anatomy.yaml.
+#
+# `title` is the only string the component renders on its own, and the literal
+# appears only as this property's default, per the repo's localization rule.
+contract:
+  properties:
+    - name: title
+      type: string
+      required: false
+      default: Title
+      description: >-
+        The row label. Truncates rather than wrapping. Note this shadows the
+        native `title` tooltip attribute on the underlying element: the Figma
+        component names the property `title`, and it is the row's visible label.
+    - name: isExpandable
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Show the leading expand chevron. Purely a visual affordance — the row
+        implements no expand/collapse and renders no nested list, so there is no
+        `expanded` value and no change event. Set it false for a leaf row.
+    - name: hasCheckbox
+      type: boolean
+      required: false
+      default: false
+      description: Show a leading checkbox, for a multi-select tree.
+    - name: checkboxProps
+      type: CheckboxProps
+      required: false
+      description: >-
+        Props forwarded verbatim to the leading checkbox (`checked`,
+        `onCheckedChange`, `indeterminate`, `aria-label`, …). The row keeps no
+        checked state of its own, so the consumer controls the box exactly as it
+        would a standalone `Checkbox`. `aria-label` defaults to `title`.
+    - name: hasIcon
+      type: boolean
+      required: false
+      default: false
+      description: Show the leading icon slot.
+    - name: icon
+      type: ReactNode
+      required: false
+      description: >-
+        The leading icon. Only rendered when `hasIcon` is set; falls back to the
+        design's square-dashed placeholder icon, which is what the Figma node
+        draws.
+    - name: hasExtras
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        Render the trailing extras slot at all. When false, `children` are
+        dropped entirely rather than merely hidden.
+    - name: selected
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether the row is selected — the Figma `variant` axis. Paints the
+        persistent highlighted background, the same fill the design's
+        `state=active` swatch previews. Selection is the consumer's state to own;
+        the row only reflects it.
+    - name: render
+      type: RenderProp
+      required: false
+      description: >-
+        Base UI composition prop — replaces the rendered `<div>` while merging
+        props and classes. This is how a real ARIA tree supplies the semantics
+        the standalone row deliberately does not force
+        (`<li role="treeitem" aria-expanded aria-level>`). React-only; other
+        frameworks use their own polymorphism.
+
+  events:
+    - name: onClick
+      payload: '(event: MouseEvent) => void'
+      description: >-
+        Fired when the row is clicked. Expanding and selecting are the consumer's
+        to implement — the row emits nothing of its own for either.
+
+  content:
+    - name: default
+      description: >-
+        The trailing extras slot: action buttons, a count badge. Rendered only
+        when `hasExtras` is true.
+
+  methods: []
+
+adapters:
+  react:
+    component: TreeItem
+    status: implemented
+    import: "import { TreeItem } from '@acronis-platform/ui-react'"
+    example: |
+      <ul role="tree" aria-label="Workloads">
+        <TreeItem
+          render={<li role="treeitem" aria-expanded={open} />}
+          hasIcon
+          icon={<FolderIcon size={16} />}
+          title="All workloads"
+          onClick={() => setOpen((v) => !v)}
+        >
+          <Tag variant="info">24</Tag>
+        </TreeItem>
+        <ul role="group" className="ps-4">
+          <TreeItem
+            render={<li role="treeitem" aria-selected />}
+            isExpandable={false}
+            hasIcon
+            selected
+            title="Cloud applications"
+          />
+        </ul>
+      </ul>
+
+  vue:
+    component: AvTreeItem
+    status: planned
+    import: "import { AvTreeItem } from '@acronis-platform/ui-vue'"
+    example: |
+      <AvTreeItem title="All workloads" has-icon :selected="isSelected">
+        <AvTag variant="info">24</AvTag>
+      </AvTreeItem>
+
+  web-components:
+    element: ui-tree-item
+    status: planned
+    import: "import '@acronis-platform/ui-wc/tree-item'"
+    example: |
+      <ui-tree-item title="All workloads" has-icon selected>
+        <ui-tag variant="info">24</ui-tag>
+      </ui-tree-item>

@@ -1,0 +1,105 @@
+spec_version: '1.0'
+component: TreeItem
+
+schematic: |
+  row (div by default, polymorphic)                        selected: false | true
+  +------------------------------------------------------------------+
+  | (expander) (checkbox) (icon)  title            (extras)          |
+  +------------------------------------------------------------------+
+
+  expander -> 16px chevron, --ui-glyph-on-surface-primary, aria-hidden
+              visual affordance only; mirrors under dir="rtl"
+  checkbox -> the shared Checkbox, rendered unlabelled; aria-label defaults to `title`
+  icon     -> 16px leading icon, --ui-glyph-on-surface-primary
+              falls back to the design's SquareDashedIcon placeholder
+  title    -> --ui-text-on-surface-primary, flex-1, truncates
+  extras   -> trailing slot for `children` (action buttons, a count badge)
+  row      -> transparent idle fill
+              --ui-background-surface-hover  on :hover
+              --ui-background-surface-active  while `selected`
+              --ui-focus-primary  3px :focus-visible ring on a 2px radius
+
+root:
+  element: div
+  description: >-
+    The row. Lays the slots out in a single line, carries the row background
+    (transparent, hover, or the highlighted `selected` fill) and the library's
+    3px `focus-visible` ring, and reserves a 128px minimum width so a column of
+    rows keeps a stable edge. Deliberately role-less and not in the tab order: a
+    standalone row is not a valid ARIA tree, and `role="treeitem"` without a
+    `role="tree"` owner, `aria-expanded`, `aria-level`, and a roving tabindex
+    would produce an invalid tree rather than an accessible one. Polymorphic via
+    the `render` prop, which is how a consumer supplies exactly those semantics
+    (`<li role="treeitem">`).
+
+parts:
+  - id: expander
+    description: >-
+      The expand chevron. A visual affordance only — the row implements no
+      expand/collapse and renders no nested list, matching the Figma node, whose
+      expandable slot has no interaction either. `aria-hidden`, since the state
+      it would announce is not owned here; the consumer puts `aria-expanded` on
+      the element it composes via `render`. Direction-sensitive artwork, so it
+      carries an explicit `rtl:rotate-180`.
+    element: span
+    optional: true
+    visible_when: '`isExpandable` (default true)'
+  - id: checkbox
+    description: >-
+      The shared `Checkbox`, composed unlabelled. The row holds no checked state
+      of its own — `checkboxProps` is forwarded verbatim so the consumer controls
+      it exactly as a standalone `Checkbox`. Its `aria-label` defaults to
+      `title`, so the box is never unnamed.
+    element: span
+    optional: true
+    visible_when: '`hasCheckbox`'
+  - id: icon
+    description: >-
+      The leading icon, 16px. Falls back to the design's `SquareDashedIcon`
+      placeholder when `hasIcon` is set without an `icon`, which is literally
+      what the Figma node draws.
+    element: span
+    optional: true
+    visible_when: '`hasIcon`'
+  - id: title
+    description: >-
+      The row label. Takes the remaining width and truncates rather than
+      wrapping. Component-rendered text, so it is a prop whose default is the
+      only place the literal appears.
+    element: span
+  - id: extras
+    description: >-
+      Trailing slot for `children` — action buttons, a count badge. Reserves the
+      design's 16px minimum so an empty slot still keeps rows aligned, and grows
+      to fit real content.
+    element: span
+    optional: true
+    visible_when: '`hasExtras` (default true)'
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [expander, checkbox, icon, title, extras]
+
+# The Figma `state` axis is not four pseudo-classes. `active` renders the same
+# background as `variant=selected` (its generated reference code applies the
+# selected background class), so it previews a selected row rather than a
+# mousedown — it is folded into the `selected` prop below, and no `:active`
+# pseudo-state is invented.
+states:
+  - id: selected
+    trigger: 'selected === true'
+    kind: prop
+    prop: selected
+    affects: [row]
+  - id: hover
+    trigger: pointer over the row
+    kind: pseudo
+    pseudo: ':hover'
+    affects: [row]
+  - id: focus-visible
+    trigger: the row receives keyboard focus (consumer-supplied tab stop)
+    kind: pseudo
+    pseudo: ':focus-visible'
+    affects: [row]

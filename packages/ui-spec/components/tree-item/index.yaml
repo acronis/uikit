@@ -1,0 +1,21 @@
+spec_version: '1.0'
+component: TreeItem
+name: tree-item
+status: ready
+category: navigation
+description: >-
+  One flat row of a tree or nested-list UI — an optional expand chevron, an
+  optional checkbox, an optional leading icon, the row title, and an optional
+  trailing extras slot. It is a single row and nothing more: it renders no nested
+  list and implements no expand/collapse, so `isExpandable` is a purely visual
+  affordance and `selected` is a prop the consumer drives. The tree itself — its
+  ARIA roles, indentation, expand state, selection, and keyboard roving — belongs
+  to the composition, the same way `Breadcrumb` ships the trail's primitives
+  without owning the trail.
+since: 5.1.0
+dependencies:
+  components:
+    - checkbox
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=2092-2596'
+  codeConnect: packages/ui-react/src/components/ui/tree-item/tree-item.figma.tsx

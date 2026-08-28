@@ -822,6 +822,21 @@ const RENDER: Record<string, RenderHint> = {
       '    ',
     ].join('\n'),
   },
+  // `TreeItem` has no `variant`/`size` axis, so the generator falls through to a
+  // single `States` instance — and an undriven row is a bare chevron plus the
+  // default title. Turn the optional slots on so the snapshot actually covers
+  // the anatomy, and give the extras slot real content (an empty slot is a 16px
+  // void). `selected` is the only prop-driven look, and it is not an axis the
+  // generator enumerates, so the hand-written stories carry it.
+  'tree-item': {
+    extraImports: [
+      "import { Tag } from '../../tag';",
+      "import { FolderIcon } from '@acronis-platform/icons-react/stroke-mono';",
+    ],
+    props:
+      'title="All workloads" hasIcon icon={<FolderIcon size={16} />} hasCheckbox className="w-72"',
+    sample: ['', '      <Tag variant="info">24</Tag>', '    '].join('\n'),
+  },
   'stepper-item': {
     // `avatar` is a required element slot, and `label` is a prop rather than
     // children — the generator can only drive root props, so both are fixed here
@@ -1005,7 +1020,8 @@ export const Matrix: Story = {
     // `label` does, so a hint carrying both `ariaLabel` and `variantProps` keeps
     // its label instead of silently dropping it.
     const variantLabel = (build: (v: string) => string, v: string) =>
-      (hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '') + ` ${build(v)}`;
+      (hint.ariaLabel ? ` aria-label="${hint.ariaLabel}"` : '') +
+      ` ${build(v)}`;
     const variantItems = variantProps
       ? variants
           .map((v) => inst(`${variantLabel(variantProps, v)} variant="${v}"`))
