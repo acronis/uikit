@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Combobox as ComboboxPrimitive } from '@base-ui/react/combobox';
 import {
-  CheckIcon,
+  CheckSmallIcon,
   ChevronDownIcon,
   TimesIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
@@ -157,7 +157,7 @@ const ComboboxItem = React.forwardRef<
   >
     <span className="min-w-0 flex-1 truncate">{children}</span>
     <ComboboxPrimitive.ItemIndicator className="flex shrink-0 items-center text-[var(--ui-input-select-normal-icon-expand-color-hover)]">
-      <CheckIcon size={16} />
+      <CheckSmallIcon size={16} />
     </ComboboxPrimitive.ItemIndicator>
   </ComboboxPrimitive.Item>
 ));
