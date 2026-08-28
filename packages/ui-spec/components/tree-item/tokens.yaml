@@ -1,0 +1,52 @@
+spec_version: '1.0'
+component: TreeItem
+
+# References only. Values live in @acronis-platform/tokens-pd and resolve per
+# brand/theme at paint time; never restate values here.
+#
+# ── No dedicated `Tree` tier ──
+# @acronis-platform/tokens-pd ships no `Tree` component tier, and the Figma
+# node's own variables still live in the pre-next-gen `componentLegacy/tree/*`
+# and `componentLegacy/sidebar/*` namespaces, which the next-gen
+# `brand.components` migration has not reached (see
+# `context/next-gen-components-migration.md`). Every **color** the row paints
+# therefore comes from the semantic tier, listed below — nothing is
+# hand-authored, so the no-fallback rule holds.
+#
+# The row's **layout** numbers are deliberately not tokens: the legacy
+# `componentLegacy/tree/global/units/*` spacing variables are not emitted into
+# tokens-pd at all, so the 8px gap / 8px padding / 128px minimum row width, the
+# 4px slot inset, the 16px icons, and the 16px minimum extras well are written as
+# plain Tailwind utilities matching the design's pixel values. That is the same
+# call `button.tsx` makes for its literal `ring-[3px]` focus ring: the hard rule
+# covers color, not every geometric constant. When the design team migrates the
+# Tree component to `brand.components` and a `--ui-tree-item-*` tier lands, both
+# the colors and the geometry should be re-pointed at it.
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  - name: --ui-text-on-surface-primary
+    affects: title
+    description: The row label's color.
+  - name: --ui-glyph-on-surface-primary
+    affects: expander
+    description: >-
+      Glyph color, shared by the expand chevron and the leading icon — the
+      design's `semantics/colors/glyph/onSurface/primary`. A custom `icon` that
+      sets its own color overrides it.
+  - name: --ui-background-surface-hover
+    affects: row
+    description: Row background while the pointer is over it.
+  - name: --ui-background-surface-active
+    affects: row
+    description: >-
+      Row background while `selected`. The design's `state=active` swatch paints
+      this same fill, which is why `active` is folded into the `selected` prop
+      rather than wired to `:active`.
+  - name: --ui-focus-primary
+    affects: row
+    description: >-
+      The 3px `focus-visible` ring, flush to the row edge on its 2px radius —
+      the library-wide focus token (`Button`, `BreadcrumbLink`), so a focusable
+      row focuses like every other control in the kit. Only ever visible once a
+      consumer gives the row a tab stop.

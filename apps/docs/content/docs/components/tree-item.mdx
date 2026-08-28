@@ -1,0 +1,163 @@
+---
+title: TreeItem
+description: One flat row of a tree or nested-list UI — chevron, checkbox, icon, title, and a trailing extras slot.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { DemoReact } from '@/components/DemoReact';
+import { TreeItemDemo } from '@/components/demos-react/tree-item';
+
+## Usage
+
+```tsx
+import { TreeItem } from '@acronis-platform/ui-react';
+```
+
+`TreeItem` is a single row of a tree or nested list: an optional expand chevron,
+an optional [`Checkbox`](/components/checkbox), an optional leading icon, the row
+`title`, and an optional trailing extras slot for `children`. Every slot is gated
+by its own boolean, mirroring the Figma component's properties —
+`isExpandable` (on by default), `hasCheckbox`, `hasIcon`, `hasExtras` (on by
+default). A separate `expanded` boolean rotates the chevron to point down.
+
+It is deliberately **one row and nothing more**. It renders no nested list, owns
+no expand state, and selects nothing: you compose the rows, indent them, hold the
+open/selected state, and supply the ARIA tree semantics. That is the same
+boundary [`Breadcrumb`](/components/breadcrumb) draws — it ships the trail's
+primitives without owning the trail.
+
+<Callout type="warn">
+  `isExpandable` and `expanded` are **artwork, not behavior**. The first draws
+  the chevron; the second rotates it a quarter turn to point down. Nothing
+  expands when you click it, and there is no change event — the Figma node's
+  expandable slot has no interaction either, so the consumer holds the open
+  state and renders the child level itself. Pass `expanded` from the same
+  boolean that feeds your `aria-expanded`: the chevron shows the state to
+  sighted users, `aria-expanded` announces it, and setting only one leaves them
+  disagreeing.
+</Callout>
+
+<Callout type="warn">
+  `selected` is a **look you drive**. The row never selects itself on click; it
+  only reflects the flag and exposes `data-selected`. Figma's `state=active`
+  swatch paints the same highlighted fill, which is why `active` maps to this
+  prop rather than to CSS `:active`.
+</Callout>
+
+The row is polymorphic via Base UI's `useRender` (the `render` prop), and that is
+how you give it real tree semantics. No `role="treeitem"` and no `tabIndex` are
+forced: a row is only a valid tree item inside a `role="tree"` owner, and the
+role without `aria-expanded` / `aria-level` / `aria-selected` and a roving
+tabindex would make the tree _invalid_ rather than accessible. The checkbox is
+never unnamed — its `aria-label` defaults to `title`, and `checkboxProps` is
+forwarded verbatim so you control `checked` / `onCheckedChange` exactly as on a
+standalone `Checkbox`.
+
+<Callout>
+  `@acronis-platform/tokens-pd` ships no `Tree` component tier — the Figma
+  node's variables still sit in the pre-next-gen `componentLegacy/tree/*`
+  namespace. So the row's colors come from the semantic tier
+  (`--ui-text-on-surface-primary`, `--ui-glyph-on-surface-primary`,
+  `--ui-background-surface-hover` / `--ui-background-surface-active`,
+  `--ui-focus-primary`) and its layout numbers are plain utilities matching the
+  design's pixel values. Both get re-pointed when a `--ui-tree-item-*` tier
+  lands.
+</Callout>
+
+## Examples
+
+<DemoReact>
+  <TreeItemDemo />
+</DemoReact>
+
+A real tree — the roles, indentation, expand state, and selection are all yours:
+
+```tsx
+const [open, setOpen] = useState(true);
+const [selected, setSelected] = useState('cloud');
+
+<ul role="tree" aria-label="Workloads">
+  <li role="treeitem" aria-expanded={open} aria-level={1}>
+    <TreeItem
+      expanded={open}
+      hasIcon
+      icon={<FolderIcon size={16} />}
+      title="All workloads"
+      tabIndex={0}
+      onClick={() => setOpen((value) => !value)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          setOpen((value) => !value);
+        }
+      }}
+    >
+      <Tag variant="info">24</Tag>
+    </TreeItem>
+
+    {open && (
+      <ul role="group" className="ps-4">
+        <li role="treeitem" aria-level={2} aria-selected={selected === 'cloud'}>
+          <TreeItem
+            isExpandable={false}
+            hasIcon
+            icon={<FolderIcon size={16} />}
+            title="Cloud applications"
+            selected={selected === 'cloud'}
+            tabIndex={-1}
+            onClick={() => setSelected('cloud')}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                setSelected('cloud');
+              }
+            }}
+          />
+        </li>
+      </ul>
+    )}
+  </li>
+</ul>;
+```
+
+A multi-select row — the checkbox is controlled through `checkboxProps`:
+
+```tsx
+<TreeItem
+  hasCheckbox
+  hasIcon
+  title="Machines with agents"
+  checkboxProps={{
+    checked,
+    onCheckedChange: (value) => setChecked(Boolean(value)),
+  }}
+/>
+```
+
+A row with a trailing action, and a leaf row with no chevron:
+
+```tsx
+<TreeItem hasIcon title="Backups">
+  <ButtonIcon aria-label="Rename">
+    <PencilIcon size={16} />
+  </ButtonIcon>
+</TreeItem>
+
+<TreeItem isExpandable={false} hasIcon title="readme.md" />
+```
+
+`hasExtras={false}` removes the trailing slot **and its children** from the DOM —
+a button in there does not exist, so it cannot be tabbed to:
+
+```tsx
+<TreeItem hasExtras={false} title="Workloads">
+  <Tag variant="info">12</Tag> {/* not rendered */}
+</TreeItem>
+```
+
+## API Reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/tree-item/tree-item.tsx"
+  name="TreeItemProps"
+/>

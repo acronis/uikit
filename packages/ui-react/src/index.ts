@@ -134,6 +134,7 @@ export {
   Tag as Badge,
   type TagProps as BadgeProps,
 } from './components/ui/tag';
+export * from './components/ui/tree-item';
 export * from './components/ui/treemap';
 export * from './components/ui/trend-indicator';
 export * from './components/ui/widget-placeholder';

@@ -88,6 +88,7 @@
     "tabs",
     "sidebar-primary",
     "sidebar-secondary",
+    "tree-item",
     "resizable",
     "scroll-area",
     "separator",
