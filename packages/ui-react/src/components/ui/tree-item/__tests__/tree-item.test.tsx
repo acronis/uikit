@@ -82,6 +82,29 @@ describe('TreeItem', () => {
     expect(slot(flat, 'expander')).toBeNull();
   });
 
+  // ── expanded ──
+
+  it('leaves the chevron pointing inline-end when not expanded', () => {
+    const { container } = render(<TreeItem />);
+    const chevron = slot(container, 'expander')?.querySelector('svg');
+    expect(chevron).toHaveClass('rtl:rotate-180');
+    expect(chevron).not.toHaveClass('rotate-90');
+  });
+
+  it('rotates the chevron a quarter turn when expanded', () => {
+    const { container } = render(<TreeItem expanded />);
+    const chevron = slot(container, 'expander')?.querySelector('svg');
+    // A quarter turn from a right-pointing glyph reads as "down" in both
+    // writing directions, so the RTL mirror must not also apply.
+    expect(chevron).toHaveClass('rotate-90');
+    expect(chevron).not.toHaveClass('rtl:rotate-180');
+  });
+
+  it('renders no chevron to rotate when the row is not expandable', () => {
+    const { container } = render(<TreeItem isExpandable={false} expanded />);
+    expect(slot(container, 'expander')).toBeNull();
+  });
+
   // ── hasIcon / icon ──
 
   it('hides the icon slot by default', () => {

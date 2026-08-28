@@ -23,8 +23,20 @@ contract:
       default: true
       description: >-
         Show the leading expand chevron. Purely a visual affordance — the row
-        implements no expand/collapse and renders no nested list, so there is no
-        `expanded` value and no change event. Set it false for a leaf row.
+        implements no expand/collapse and renders no nested list, and emits no
+        change event. Set it false for a leaf row.
+    - name: expanded
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether the row's nested list is currently expanded. Purely visual —
+        like `isExpandable`, the row owns no expand/collapse state and renders
+        no nested list. Rotates the leading chevron to reflect the state the
+        consumer is already tracking (and should also be reflecting via
+        `aria-expanded` on its own element, e.g.
+        `<li role="treeitem" aria-expanded={open}>`). Has no effect when
+        `isExpandable` is false.
     - name: hasCheckbox
       type: boolean
       required: false
@@ -100,6 +112,7 @@ adapters:
       <ul role="tree" aria-label="Workloads">
         <TreeItem
           render={<li role="treeitem" aria-expanded={open} />}
+          expanded={open}
           hasIcon
           icon={<FolderIcon size={16} />}
           title="All workloads"

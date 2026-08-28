@@ -34,6 +34,7 @@ const [open, setOpen] = React.useState(true);
 <ul role="tree" aria-label="Workloads">
   <TreeItem
     render={<li role="treeitem" aria-expanded={open} aria-level={1} />}
+    expanded={open}
     hasIcon
     icon={<FolderIcon size={16} />}
     title="All workloads"
@@ -64,9 +65,11 @@ const [open, setOpen] = React.useState(true);
 
 Three things the row hands back to you on purpose:
 
-- **`isExpandable` is artwork, not behavior.** It draws the chevron; it does not
-  expand anything. The Figma node's expandable slot has no interaction either, so
-  there is no `expanded` prop and no change event to invent.
+- **`isExpandable` and `expanded` are artwork, not behavior.** The first draws
+  the chevron, the second rotates it a quarter turn to point down. Neither
+  expands anything, and there is no change event: the Figma node's expandable
+  slot has no interaction either. Pass `expanded` from the same boolean that
+  feeds your `aria-expanded`, so the affordance and the announced state agree.
 - **`selected` is a look you drive.** The row never selects itself on click; it
   only reflects the flag. Figma's `state=active` swatch paints the same fill,
   which is why `active` is not wired to CSS `:active`.
@@ -76,14 +79,14 @@ Three things the row hands back to you on purpose:
 
 ## Parts
 
-| Part       | Element | Notes                                                                           |
-| ---------- | ------- | ------------------------------------------------------------------------------- |
-| row (root) | `div`   | Polymorphic via `render`; carries the hover / `selected` fill and focus ring    |
-| `expander` | `span`  | Optional (`isExpandable`, default on); `aria-hidden` chevron, flips in RTL      |
-| `checkbox` | `span`  | Optional (`hasCheckbox`); the shared `Checkbox`, `aria-label` defaults to title |
-| `icon`     | `span`  | Optional (`hasIcon`); falls back to the design's square-dashed placeholder      |
-| `title`    | `span`  | The row label; takes the remaining width and truncates                          |
-| `extras`   | `span`  | Optional (`hasExtras`, default on); the trailing `children` slot                |
+| Part       | Element | Notes                                                                                             |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------- |
+| row (root) | `div`   | Polymorphic via `render`; carries the hover / `selected` fill and focus ring                      |
+| `expander` | `span`  | Optional (`isExpandable`, default on); `aria-hidden` chevron, flips in RTL, rotates on `expanded` |
+| `checkbox` | `span`  | Optional (`hasCheckbox`); the shared `Checkbox`, `aria-label` defaults to title                   |
+| `icon`     | `span`  | Optional (`hasIcon`); falls back to the design's square-dashed placeholder                        |
+| `title`    | `span`  | The row label; takes the remaining width and truncates                                            |
+| `extras`   | `span`  | Optional (`hasExtras`, default on); the trailing `children` slot                                  |
 
 ## Design status
 

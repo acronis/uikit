@@ -20,6 +20,7 @@ export function TreeItemDemo() {
       <ul role="tree" aria-label="Workloads" className="w-80">
         <TreeItem
           render={<li role="treeitem" aria-expanded={open} aria-level={1} />}
+          expanded={open}
           hasIcon
           icon={<FolderIcon size={16} />}
           title="All workloads"
@@ -91,6 +92,12 @@ export function TreeItemDemo() {
           hasIcon
           icon={<FolderIcon size={16} />}
           title="A leaf row — no chevron"
+        />
+        <TreeItem
+          expanded
+          hasIcon
+          icon={<FolderIcon size={16} />}
+          title="Expanded — the chevron points down"
         />
         <TreeItem
           hasIcon

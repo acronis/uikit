@@ -9,6 +9,7 @@ schematic: |
 
   expander -> 16px chevron, --ui-glyph-on-surface-primary, aria-hidden
               visual affordance only; mirrors under dir="rtl"
+              points down (quarter turn) while `expanded`
   checkbox -> the shared Checkbox, rendered unlabelled; aria-label defaults to `title`
   icon     -> 16px leading icon, --ui-glyph-on-surface-primary
               falls back to the design's SquareDashedIcon placeholder
@@ -37,10 +38,13 @@ parts:
     description: >-
       The expand chevron. A visual affordance only — the row implements no
       expand/collapse and renders no nested list, matching the Figma node, whose
-      expandable slot has no interaction either. `aria-hidden`, since the state
-      it would announce is not owned here; the consumer puts `aria-expanded` on
-      the element it composes via `render`. Direction-sensitive artwork, so it
-      carries an explicit `rtl:rotate-180`.
+      expandable slot has no interaction either. It does *reflect* the consumer's
+      open state: `expanded` rotates it a quarter turn to point down. Still
+      `aria-hidden`, since the state it depicts is not owned here; the consumer
+      puts `aria-expanded` on the element it composes via `render` and should
+      drive both from the same boolean. Direction-sensitive artwork while
+      collapsed, so it carries an explicit `rtl:rotate-180`; the expanded
+      down-pointing rotation is the same in both directions.
     element: span
     optional: true
     visible_when: '`isExpandable` (default true)'
@@ -88,6 +92,11 @@ layout:
 # mousedown — it is folded into the `selected` prop below, and no `:active`
 # pseudo-state is invented.
 states:
+  - id: expanded
+    trigger: 'expanded === true (and isExpandable)'
+    kind: prop
+    prop: expanded
+    affects: [expander]
   - id: selected
     trigger: 'selected === true'
     kind: prop

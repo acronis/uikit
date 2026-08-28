@@ -49,7 +49,7 @@
   **Then** `onClick` fires and nothing else changes: the row does not select
   itself. Selection belongs to the tree the consumer composes.
 
-## Expansion is not implemented here
+## Expansion is reflected, not implemented
 
 - **Given** a click on the chevron
   **Then** nothing expands. The chevron is `aria-hidden` artwork; the row renders
@@ -57,6 +57,16 @@
   expandable slot has no interaction either.
 - The consumer owns the expand state, renders the child level itself, and puts
   `aria-expanded` on the element it supplies through `render`.
+- **Given** `expanded={false}` (the default)
+  **Then** the chevron points along the inline-end direction — the collapsed
+  affordance.
+- **Given** `expanded`
+  **Then** the chevron rotates a quarter turn to point down, so the affordance
+  agrees with the `aria-expanded` the consumer publishes. It is a reflection of
+  the consumer's state, not a state the row holds: nothing else about the row
+  changes, no nested list appears, and no event fires.
+- **Given** `expanded` **and** `isExpandable={false}`
+  **Then** it has no effect — there is no chevron to rotate.
 
 ## Focus
 
@@ -71,8 +81,12 @@
 
 - **Given** `dir="rtl"`
   **Then** the whole row mirrors: the slot order, the gap, and the padding are
-  all logical, and the chevron artwork itself flips via an explicit
+  all logical, and the collapsed chevron artwork itself flips via an explicit
   `rtl:rotate-180` — logical layout alone would leave it pointing the wrong way.
+- **Given** `dir="rtl"` **and** `expanded`
+  **Then** the chevron points down, the same as in LTR: "open" is a
+  direction-agnostic direction, so the expanded rotation replaces the RTL mirror
+  rather than compounding with it.
 
 ## Composition
 
@@ -87,5 +101,6 @@
 
 - The tree: its `role="tree"` owner, indentation, `aria-level`, keyboard roving,
   and type-ahead. The consumer composes rows and supplies all of it.
-- Expand/collapse state and the nested list.
+- Expand/collapse state and the nested list. The row only mirrors that state
+  visually, through `expanded`.
 - Selection state, single vs. multi-select, and the checkbox's checked value.

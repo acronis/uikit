@@ -18,7 +18,7 @@ an optional [`Checkbox`](/components/checkbox), an optional leading icon, the ro
 `title`, and an optional trailing extras slot for `children`. Every slot is gated
 by its own boolean, mirroring the Figma component's properties —
 `isExpandable` (on by default), `hasCheckbox`, `hasIcon`, `hasExtras` (on by
-default).
+default). A separate `expanded` boolean rotates the chevron to point down.
 
 It is deliberately **one row and nothing more**. It renders no nested list, owns
 no expand state, and selects nothing: you compose the rows, indent them, hold the
@@ -27,10 +27,14 @@ boundary [`Breadcrumb`](/components/breadcrumb) draws — it ships the trail's
 primitives without owning the trail.
 
 <Callout type="warn">
-  `isExpandable` is **artwork, not behavior**. It draws the chevron; nothing
-  expands when you click it. The Figma node's expandable slot has no interaction
-  either, so there is no `expanded` prop and no change event — the consumer
-  holds the open state and renders the child level itself.
+  `isExpandable` and `expanded` are **artwork, not behavior**. The first draws
+  the chevron; the second rotates it a quarter turn to point down. Nothing
+  expands when you click it, and there is no change event — the Figma node's
+  expandable slot has no interaction either, so the consumer holds the open
+  state and renders the child level itself. Pass `expanded` from the same
+  boolean that feeds your `aria-expanded`: the chevron shows the state to
+  sighted users, `aria-expanded` announces it, and setting only one leaves them
+  disagreeing.
 </Callout>
 
 <Callout type="warn">
@@ -75,6 +79,7 @@ const [selected, setSelected] = useState('cloud');
 <ul role="tree" aria-label="Workloads">
   <TreeItem
     render={<li role="treeitem" aria-expanded={open} aria-level={1} />}
+    expanded={open}
     hasIcon
     icon={<FolderIcon size={16} />}
     title="All workloads"

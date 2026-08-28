@@ -13,8 +13,12 @@ import { Checkbox } from '../checkbox';
 
 // A single row of a tree / nested-list UI (a file tree, a nested nav), mirroring
 // the Figma "TreeItem" component. It is deliberately *one row* and nothing more:
-// the Figma node has no nested list, no expand/collapse interaction, and no
-// `expanded` variant — `isExpandable` is a purely visual chevron affordance. The
+// the Figma node renders no nested list and draws no distinct expanded variant.
+// `isExpandable` and `expanded` are therefore both purely visual — the first
+// draws the chevron, the second rotates it a quarter turn — and neither toggles
+// anything nor emits a change event. The quarter turn is this implementation's
+// own addition rather than a Figma variant: without it the affordance silently
+// contradicts the `aria-expanded` the consumer is already publishing. The
 // consumer composes several `TreeItem`s, owns the expand/collapse state, and
 // renders the nested level itself. Same scope decision as `Breadcrumb`, which
 // ships the nav/ol/li primitives without owning the trail.
@@ -93,6 +97,15 @@ export interface TreeItemProps extends React.ComponentPropsWithoutRef<'div'> {
    * that state and composes the child rows.
    */
   isExpandable?: boolean;
+  /**
+   * Whether the row's nested list is currently expanded. Purely visual — like
+   * `isExpandable`, this row owns no expand/collapse state and renders no
+   * nested list. Rotates the leading chevron to reflect the state the consumer
+   * is already tracking (and should also be reflecting via `aria-expanded` on
+   * their own `render` target, e.g. `<li role="treeitem" aria-expanded={open}>`).
+   * Has no effect when `isExpandable` is false.
+   */
+  expanded?: boolean;
   /** Render the trailing extras slot (`children`) at all. */
   hasExtras?: boolean;
   /**
@@ -122,6 +135,7 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
       hasCheckbox = false,
       checkboxProps,
       isExpandable = true,
+      expanded = false,
       hasExtras = true,
       selected = false,
       render,
@@ -164,7 +178,13 @@ const TreeItem = React.forwardRef<HTMLDivElement, TreeItemProps>(
                   {/* Direction-sensitive artwork: an inline-end-pointing
                       chevron has to mirror under `dir="rtl"`, which logical
                       layout utilities cannot do on their own. */}
-                  <ChevronRightIcon size={16} className="rtl:rotate-180" />
+                  <ChevronRightIcon
+                    size={16}
+                    className={cn(
+                      'transition-transform',
+                      expanded ? 'rotate-90' : 'rtl:rotate-180'
+                    )}
+                  />
                 </span>
               )}
               {hasCheckbox && (

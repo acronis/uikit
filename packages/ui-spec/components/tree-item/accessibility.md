@@ -34,6 +34,13 @@
   role; a row that only _looks_ expandable would then promise an action nothing
   handles.
 
+- **Keep `expanded` and `aria-expanded` in step.** `expanded` rotates the chevron
+  but publishes nothing to assistive technology; `aria-expanded` on your `render`
+  element publishes the state but paints nothing. They are two renderings of the
+  one boolean you own, so drive both from it (`aria-expanded={open}` +
+  `expanded={open}`). Setting only one leaves the sighted affordance and the
+  announced state disagreeing — which is the bug `expanded` exists to close.
+
 - **The checkbox is always named.** Composed without a visible label, it would
   otherwise be an unnamed control, so its `aria-label` defaults to `title`.
   Override it through `checkboxProps` when the row title is not the right name
@@ -50,8 +57,10 @@
   `checkboxProps['aria-label']`) is consumer-supplied.
 
 - **RTL**: the slot order, gap, and padding are logical, so the row mirrors under
-  `dir="rtl"` on its own. The chevron is direction-sensitive **artwork**, which
-  logical properties cannot mirror, so it carries an explicit `rtl:rotate-180`.
+  `dir="rtl"` on its own. The collapsed chevron is direction-sensitive
+  **artwork**, which logical properties cannot mirror, so it carries an explicit
+  `rtl:rotate-180`. The `expanded` chevron points down in both directions —
+  "open" has no inline direction to mirror.
 
 ## Contrast
 

@@ -35,6 +35,16 @@ const meta = {
         category: 'Appearance',
       },
     },
+    expanded: {
+      control: 'boolean',
+      description:
+        "Whether the row's nested list is currently expanded. Purely visual — it only rotates the leading chevron to reflect state the consumer already owns (and should also mirror via `aria-expanded`). No effect when `isExpandable` is false.",
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'false' },
+        category: 'State',
+      },
+    },
     hasCheckbox: {
       control: 'boolean',
       description:
@@ -114,6 +124,7 @@ const meta = {
   args: {
     title: 'Title',
     isExpandable: true,
+    expanded: false,
     hasCheckbox: false,
     hasIcon: false,
     hasExtras: true,
@@ -165,6 +176,14 @@ export const WithActionExtras: Story = {
   },
 };
 
+/**
+ * `expanded` rotates the chevron a quarter turn to point down. The row still
+ * renders no nested list — the consumer owns the open state and the children.
+ */
+export const Expanded: Story = {
+  args: { expanded: true, hasIcon: true, title: 'Workloads' },
+};
+
 /** A leaf row: no chevron, so nothing suggests it can be expanded. */
 export const NotExpandable: Story = {
   args: { isExpandable: false, hasIcon: true, title: 'readme.md' },
@@ -197,13 +216,18 @@ export const TruncatedTitle: Story = {
 /**
  * A real tree is composed by the consumer: several rows, indentation, and the
  * expand state all live outside this component. `render` supplies the ARIA tree
- * semantics the standalone row deliberately does not force.
+ * semantics the standalone row deliberately does not force. `expanded` tracks
+ * `aria-expanded` on the open row so the chevron never contradicts what the row
+ * announces. The collapsed row still spells out `aria-expanded="false"` — ARIA
+ * requires the attribute be explicit, not merely absent, on a treeitem that
+ * owns a group — but omits `expanded`, which already defaults to false.
  */
 export const ComposedTree: Story = {
   render: () => (
     <ul role="tree" aria-label="Workloads" className="w-72">
       <TreeItem
         render={<li role="treeitem" aria-expanded="true" />}
+        expanded
         hasIcon
         icon={<FolderIcon size={16} />}
         title="All workloads"
@@ -348,6 +372,7 @@ function ExpandableWorkloadTree() {
           }
           className={branch ? 'cursor-pointer' : undefined}
           isExpandable={branch}
+          expanded={open}
           hasIcon
           icon={node.icon ?? <NodeTreeIcon size={16} />}
           title={node.label}
