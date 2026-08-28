@@ -18,6 +18,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
+  type ChartPalette,
 } from '../../chart';
 import { ChartWidget } from '../../chart-widget';
 import { ButtonIcon } from '../../button-icon';
@@ -68,7 +69,10 @@ const meta = {
     series,
     xKey: 'hours',
     yKey: 'score',
-    palette: 'diverging-teal-violet',
+    // Storybook's mapping converts the string key → ChartPalette object at render
+    // time; `as unknown as ChartPalette` satisfies TS while keeping the select
+    // control pre-populated with the right option.
+    palette: 'diverging-teal-violet' as unknown as ChartPalette,
     className: 'h-[360px] w-[520px]',
   },
   argTypes: {
