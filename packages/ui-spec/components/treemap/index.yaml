@@ -12,3 +12,6 @@ description: >-
   Themed through a custom cell renderer (recharts' default has no token hooks).
   Ported from the apps/demo `TreemapChartPlayground`.
 since: 0.58.0
+figma:
+  node: 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8999-72036'
+  codeConnect: packages/ui-react/src/components/ui/treemap/treemap.figma.tsx

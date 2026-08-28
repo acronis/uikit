@@ -12,17 +12,24 @@ tokens:
   - name: --ui-text-on-status-strong-neutral
     affects: cells
     description: >-
-      On-cell label text, both lines — the "text on a strong colored surface"
-      token (constant white in both themes), readable over the saturated series
-      colors. The hierarchy between the lines is carried by the title's weight, not
-      a second color: the on-strong *secondary* text token resolves to a dark grey
-      in dark mode, which a cell's fill stays saturated behind.
+      On-cell label text on dark/saturated fills (diverging a3/b3, sequential
+      stops 3–8, categorical, status) — white in both themes.
+  - name: --ui-text-on-status-strong-primary
+    affects: cells
+    description: >-
+      On-cell label text on sequential stops 7–8 whose fills invert across
+      themes (dark in light, pale in dark). The token is near-white in light
+      mode, near-black in dark — the exact inverse the mirrored fills need.
+  - name: --ui-text-on-surface-primary
+    affects: cells, tooltip-content
+    description: >-
+      On-cell label text on pale fills (diverging a2/b2/a1/b1, sequential
+      stops 1–2) — dark in light, light in dark. Together with the on-strong
+      tokens above, this implements the three-tone adaptive text color.
+      Also used as tooltip value text (text-foreground).
   - name: --ui-background-surface-primary
     affects: tooltip-content
     description: Tooltip surface (bg-background).
-  - name: --ui-text-on-surface-primary
-    affects: tooltip-content
-    description: Tooltip value text (text-foreground).
   - name: --ui-text-on-surface-secondary
     affects: tooltip-content, legend-content
     description: >-

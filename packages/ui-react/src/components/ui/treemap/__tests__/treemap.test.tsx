@@ -75,12 +75,13 @@ describe('Treemap', () => {
   it('wires each leaf color from config into a --color-* custom property', () => {
     const { container } = renderChart();
     const style = container.querySelector('style')?.innerHTML ?? '';
-    // Default palette is diverging blue-orange; data order React(0)→a3, Angular(3)→b1
+    // Default palette is diverging blue-orange; interleaved order a3-b3-a2-b2-a1-b1,
+    // so data order React(0)→a3, Vue(1)→b3, Svelte(2)→a2, Angular(3)→b2.
     expect(style).toContain(
       '--color-React: var(--ui-dataviz-diverging-blue-orange-a3)'
     );
     expect(style).toContain(
-      '--color-Angular: var(--ui-dataviz-diverging-blue-orange-b1)'
+      '--color-Angular: var(--ui-dataviz-diverging-blue-orange-b2)'
     );
   });
 
@@ -493,12 +494,13 @@ describe('TreemapCell', () => {
   });
 
   // Adaptive text color — diverging palette.
-  it('renders light text on dark stops (diverging a3 at index 0, b3 at index 5)', () => {
+  // Interleaved order: a3-b3-a2-b2-a1-b1 — with 2 series both land on dark stops.
+  it('renders light text on dark stops (diverging a3 at index 0, b3 at index 1)', () => {
     const { container } = renderChart({
       palette: { type: 'diverging', pair: 'blue-orange' },
       data: [
-        { name: 'first', size: 2400 }, // slot 0 = a3 = dark fill
-        { name: 'second', size: 1200 }, // slot 1 = a2 = pale fill
+        { name: 'first', size: 2400 }, // pool[0] = a3 = dark fill
+        { name: 'second', size: 1200 }, // pool[1] = b3 = dark fill
       ],
       config: {
         first: { label: 'First' },
@@ -508,24 +510,26 @@ describe('TreemapCell', () => {
     const blocks = Array.from(
       container.querySelectorAll<HTMLElement>('foreignObject > div')
     );
-    // slot 0 (a3) → dark fill → light text token
+    // pool[0] (a3) → dark fill → light text token
     expect(blocks[0]).toHaveClass(
       'text-[var(--ui-text-on-status-strong-neutral)]'
     );
-    // slot 1 (a2) → pale fill → dark text token
-    expect(blocks[1]).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
+    // pool[1] (b3) → dark fill → light text token
+    expect(blocks[1]).toHaveClass(
+      'text-[var(--ui-text-on-status-strong-neutral)]'
+    );
   });
 
-  it('renders dark text on pale stops (diverging a1/a2/b1/b2)', () => {
+  it('renders dark text on pale stops (diverging a2/b2/a1/b1)', () => {
     const { container } = renderChart({
       palette: { type: 'diverging', pair: 'blue-orange' },
       data: [
-        { name: 'd0', size: 2400 }, // slot 0 = a3 = dark
-        { name: 'd1', size: 2000 }, // slot 1 = a2 = pale
-        { name: 'd2', size: 1600 }, // slot 2 = a1 = pale
-        { name: 'd3', size: 1200 }, // slot 3 = b1 = pale
-        { name: 'd4', size: 800 },  // slot 4 = b2 = pale
-        { name: 'd5', size: 400 },  // slot 5 = b3 = dark
+        { name: 'd0', size: 2400 }, // pool[0] = a3 = dark
+        { name: 'd1', size: 2000 }, // pool[1] = b3 = dark
+        { name: 'd2', size: 1600 }, // pool[2] = a2 = pale
+        { name: 'd3', size: 1200 }, // pool[3] = b2 = pale
+        { name: 'd4', size: 800 },  // pool[4] = a1 = pale
+        { name: 'd5', size: 400 },  // pool[5] = b1 = pale
       ],
       config: {
         d0: { label: 'D0' },
@@ -541,12 +545,12 @@ describe('TreemapCell', () => {
     );
     const onStrong = 'text-[var(--ui-text-on-status-strong-neutral)]';
     const onSurface = 'text-[var(--ui-text-on-surface-primary)]';
-    expect(blocks[0]).toHaveClass(onStrong); // a3 — dark
-    expect(blocks[1]).toHaveClass(onSurface); // a2 — pale
-    expect(blocks[2]).toHaveClass(onSurface); // a1 — pale
-    expect(blocks[3]).toHaveClass(onSurface); // b1 — pale
-    expect(blocks[4]).toHaveClass(onSurface); // b2 — pale
-    expect(blocks[5]).toHaveClass(onStrong); // b3 — dark
+    expect(blocks[0]).toHaveClass(onStrong);  // a3 — dark
+    expect(blocks[1]).toHaveClass(onStrong);  // b3 — dark
+    expect(blocks[2]).toHaveClass(onSurface); // a2 — pale
+    expect(blocks[3]).toHaveClass(onSurface); // b2 — pale
+    expect(blocks[4]).toHaveClass(onSurface); // a1 — pale
+    expect(blocks[5]).toHaveClass(onSurface); // b1 — pale
   });
 
   it('preserves light text for categorical palette (all stops saturated)', () => {
@@ -561,28 +565,40 @@ describe('TreemapCell', () => {
     });
   });
 
-  it('renders dark text on sequential stops 1–2 (pale) and white on stop 3+', () => {
+  // Sequential ramp is darkest-first: index 0 = stop 8 (darkest), index 7 = stop 1
+  // (palest). Three fill tones:
+  //   • stops 7–8 (indices 0–1): "inverts" — dark in light, pale in dark →
+  //     text flips via light-dark().
+  //   • stops 3–6 (indices 2–5): "dark" — saturated in both themes → white text.
+  //   • stops 1–2 (indices 6–7): "pale" — pale in light, dark in dark →
+  //     on-surface-primary (dark in light, light in dark).
+  it('renders adaptive text across the sequential ramp (dark / inverts / pale)', () => {
     const { container } = renderChart({
       palette: { type: 'sequential', ramp: 'blue' },
-      data: [
-        { name: 'first', size: 2400 }, // stop 1 → pale → dark text
-        { name: 'second', size: 1600 }, // stop 2 → pale → dark text
-        { name: 'third', size: 1200 }, // stop 3 → darker → white text
-      ],
-      config: {
-        first: { label: 'First' },
-        second: { label: 'Second' },
-        third: { label: 'Third' },
-      },
+      data: Array.from({ length: 8 }, (_, i) => ({
+        name: `s${i}`,
+        size: 2400 - i * 250,
+      })),
+      config: Object.fromEntries(
+        Array.from({ length: 8 }, (_, i) => [`s${i}`, { label: `S${i}` }])
+      ),
     });
     const blocks = Array.from(
       container.querySelectorAll<HTMLElement>('foreignObject > div')
     );
-    expect(blocks[0]).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
-    expect(blocks[1]).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
-    expect(blocks[2]).toHaveClass(
-      'text-[var(--ui-text-on-status-strong-neutral)]'
-    );
+    const onStrong = 'text-[var(--ui-text-on-status-strong-neutral)]';
+    const onSurface = 'text-[var(--ui-text-on-surface-primary)]';
+    const inverts = 'text-[var(--ui-text-on-status-strong-primary)]';
+    // Indices 0–1 → stops 8–7 (inverts) → white in light, dark in dark
+    expect(blocks[0]).toHaveClass(inverts);
+    expect(blocks[1]).toHaveClass(inverts);
+    // Indices 2–5 → stops 6–3 (dark in both themes) → white text
+    for (let i = 2; i < 6; i++) {
+      expect(blocks[i]).toHaveClass(onStrong);
+    }
+    // Indices 6–7 → stops 2–1 (pale in light, dark in dark) → on-surface-primary
+    expect(blocks[6]).toHaveClass(onSurface);
+    expect(blocks[7]).toHaveClass(onSurface);
   });
 
   // "Degrade gracefully": the second line goes before the title does.

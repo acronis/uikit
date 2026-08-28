@@ -25,9 +25,10 @@ Cell colors come from the `palette` prop, not from `config` — see
 re-points it within the palette. `Treemap` resolves them into the
 `--color-<name>` custom properties its cells fill from.
 
-> On-cell labels still use `--ui-text-on-status-strong-neutral` — a generic "text
-> on a colored surface" color — over the palette's cell fills, so the palette owes
-> matched per-stop label colors.
+> On-cell labels adapt their text color to three fill tones: **dark** stops get
+> white text, **pale** stops get theme-adaptive text, and **inverting** stops
+> (sequential 7–8, whose fills mirror across themes) use
+> `--ui-text-on-status-strong-primary` — near-white in light, near-black in dark.
 
 ## Examples
 
@@ -81,11 +82,11 @@ Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip wit
 
 ## Cell labels
 
-Each cell is labelled with its leaf's name, anchored at the tile's bottom start
-corner. The name shown is the leaf's **`config` label**, not its raw `nameKey`
-value — that value becomes part of a `--color-<name>` custom property, so it has
-to be CSS-safe, and a leaf whose display name contains a space is keyed by a slug
-with the real name in its config entry (the same one the legend and tooltip show).
+Each cell is labelled with its leaf's name, centered in the tile by default. The
+name shown is the leaf's **`config` label**, not its raw `nameKey` value — that
+value becomes part of a `--color-<name>` custom property, so it has to be
+CSS-safe, and a leaf whose display name contains a space is keyed by a slug with
+the real name in its config entry (the same one the legend and tooltip show).
 
 `secondaryKeys` adds a second line built from any other fields on the row — a
 value, a count, or both — and `secondaryFormatter` formats each of them, receiving
@@ -107,11 +108,10 @@ different kinds:
 
 Labels degrade with the tile: a cell too short for two lines keeps just its name,
 a line wider than its cell is truncated with an ellipsis, and a tile too small for a
-label at all is left blank — which is the case the legend covers. The block hugs the
-tile's start edge, so it mirrors under `dir="rtl"` — which is why the corner
-values are named `bottom-start` / `top-start` rather than for a physical corner.
-Use `labelAlign` to anchor the block at the tile's opposite corner, or to center
-it in the tile:
+label at all is left blank — which is the case the legend covers. Use `labelAlign`
+to anchor the block at a corner instead of the default center — the corner values
+are named `bottom-start` / `top-start` (not physical corners) so they mirror
+under `dir="rtl"`:
 
 ```tsx
 <Treemap
@@ -119,7 +119,7 @@ it in the tile:
   data={data}
   dataKey="size"
   nameKey="name"
-  labelAlign="center"
+  labelAlign="bottom-start"
 />
 ```
 
