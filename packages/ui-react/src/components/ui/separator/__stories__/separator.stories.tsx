@@ -18,6 +18,16 @@ const meta = {
         category: 'Appearance',
       },
     },
+    size: {
+      control: 'inline-radio',
+      options: ['S1', 'S2', 'S3'],
+      description: 'Surrounding spacing baked into the rule (Figma: S1/S2/S3).',
+      table: {
+        type: { summary: "'S1' | 'S2' | 'S3'" },
+        defaultValue: { summary: 'S1' },
+        category: 'Appearance',
+      },
+    },
     className: {
       control: false,
       description: 'Additional classes (e.g. spacing).',
@@ -46,6 +56,20 @@ export const Default: Story = {
         <Separator orientation="vertical" />
         <div>Reports</div>
       </div>
+    </div>
+  ),
+};
+
+export const Sizes: Story = {
+  render: () => (
+    <div className="w-[300px]">
+      <p className="text-sm">S1 (no spacing)</p>
+      <Separator size="S1" />
+      <p className="text-sm">S2 (--ui-gap-4)</p>
+      <Separator size="S2" />
+      <p className="text-sm">S3 (--ui-gap-8)</p>
+      <Separator size="S3" />
+      <p className="text-sm">End</p>
     </div>
   ),
 };

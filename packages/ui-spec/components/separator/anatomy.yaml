@@ -4,14 +4,17 @@ component: Separator
 schematic: |
   horizontal: ─────────────────────────  (h-px w-full)
   vertical:   │  (h-full w-px)
-     line -> bg-border (--ui-border-on-surface-border)
+     line -> --ui-border-on-surface-divider
+     size=S2/S3 -> my-/mx-[--ui-gap-4 / --ui-gap-8]
 
 root:
   element: div
   role: separator
   description: >-
     A 1px rule (Base UI `Separator`). Horizontal by default (full width, 1px
-    tall); vertical swaps the dimensions. Colored with the shared divider token.
+    tall); vertical swaps the dimensions. Colored with the shared divider
+    token. `size` (S1/S2/S3) applies the surrounding spacing Figma bakes into
+    the rule itself.
 
 parts: []
 

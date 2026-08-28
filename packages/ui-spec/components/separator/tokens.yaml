@@ -1,13 +1,22 @@
 spec_version: '1.0'
 component: Separator
 
-# References only. Values live in @acronis-platform/tokens-pd. No `--ui-separator-*`
-# tier yet; the rule uses the shared divider token (bridged as bg-border).
+# References only. Values live in @acronis-platform/tokens-pd.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - {
-      name: --ui-border-on-surface-border,
+      name: --ui-border-on-surface-divider,
       affects: root,
-      description: Divider line color (bridged as bg-border),
+      description: Divider line color,
+    }
+  - {
+      name: --ui-gap-4,
+      affects: root,
+      description: 'Surrounding margin for size=S2',
+    }
+  - {
+      name: --ui-gap-8,
+      affects: root,
+      description: 'Surrounding margin for size=S3',
     }

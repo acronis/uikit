@@ -10,6 +10,14 @@ contract:
       description: >-
         Direction of the rule; sets aria-orientation and swaps the 1px
         dimension.
+    - name: size
+      type: "'S1' | 'S2' | 'S3'"
+      required: false
+      default: "'S1'"
+      description: >-
+        Surrounding spacing baked into the rule (Figma variant `Size`). `S1`
+        (default) has none; `S2`/`S3` apply `--ui-gap-4`/`--ui-gap-8` as
+        margin on the axis perpendicular to the line.
   events: []
   methods: []
 
@@ -21,6 +29,7 @@ adapters:
     example: |
       <Separator className="my-4" />
       <Separator orientation="vertical" />
+      <Separator size="S2" />
   vue:
     component: AvSeparator
     status: planned
