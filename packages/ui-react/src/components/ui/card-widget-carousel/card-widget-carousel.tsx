@@ -45,9 +45,13 @@ const CardWidgetCarousel = React.forwardRef<HTMLDivElement, CardWidgetCarouselPr
       track.addEventListener('scroll', updateScrollState, { passive: true });
       const ro = new ResizeObserver(updateScrollState);
       ro.observe(track);
+      // Re-check when children are added/removed (e.g. async data load).
+      const mo = new MutationObserver(updateScrollState);
+      mo.observe(track, { childList: true });
       return () => {
         track.removeEventListener('scroll', updateScrollState);
         ro.disconnect();
+        mo.disconnect();
       };
     }, [updateScrollState]);
 
@@ -60,7 +64,7 @@ const CardWidgetCarousel = React.forwardRef<HTMLDivElement, CardWidgetCarouselPr
     };
 
     const navBtn =
-      'pointer-events-auto flex size-12 shrink-0 items-center justify-center rounded-full border border-[var(--ui-border-on-surface-border)] bg-[var(--ui-background-surface-primary)] shadow-[0px_4px_8px_rgba(165,167,243,0.12)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]';
+      'pointer-events-auto flex size-12 shrink-0 items-center justify-center rounded-full border border-[var(--ui-border-on-surface-border)] bg-[var(--ui-background-surface-primary)] shadow-[var(--ui-shadow-md)] outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)]';
 
     return (
       <div ref={ref} className={cn('relative overflow-hidden', className)} {...props}>
@@ -71,31 +75,29 @@ const CardWidgetCarousel = React.forwardRef<HTMLDivElement, CardWidgetCarouselPr
           {children}
         </div>
 
-        {canScrollPrev && (
-          <div className="pointer-events-none absolute inset-y-0 start-0 flex w-[180px] items-center justify-start ps-4">
-            <button
-              type="button"
-              aria-label={prevLabel}
-              onClick={() => scroll('prev')}
-              className={navBtn}
-            >
-              <ChevronLeftIcon size={16} className="rtl:rotate-180" />
-            </button>
-          </div>
-        )}
+        <div className="pointer-events-none absolute inset-y-0 start-0 flex w-[180px] items-center justify-start ps-4">
+          <button
+            type="button"
+            aria-label={prevLabel}
+            aria-disabled={!canScrollPrev || undefined}
+            onClick={() => { if (canScrollPrev) scroll('prev'); }}
+            className={cn(navBtn, !canScrollPrev && 'pointer-events-none opacity-0')}
+          >
+            <ChevronLeftIcon size={16} className="rtl:rotate-180" />
+          </button>
+        </div>
 
-        {canScrollNext && (
-          <div className="pointer-events-none absolute inset-y-0 end-0 flex w-[180px] items-center justify-end pe-4">
-            <button
-              type="button"
-              aria-label={nextLabel}
-              onClick={() => scroll('next')}
-              className={navBtn}
-            >
-              <ChevronRightIcon size={16} className="rtl:rotate-180" />
-            </button>
-          </div>
-        )}
+        <div className="pointer-events-none absolute inset-y-0 end-0 flex w-[180px] items-center justify-end pe-4">
+          <button
+            type="button"
+            aria-label={nextLabel}
+            aria-disabled={!canScrollNext || undefined}
+            onClick={() => { if (canScrollNext) scroll('next'); }}
+            className={cn(navBtn, !canScrollNext && 'pointer-events-none opacity-0')}
+          >
+            <ChevronRightIcon size={16} className="rtl:rotate-180" />
+          </button>
+        </div>
       </div>
     );
   }

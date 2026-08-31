@@ -18,11 +18,11 @@ provides floating Previous/Next chevron buttons to navigate the view.
 
 ## Parts
 
-| Part          | Description                                                                                                                                                        |
-| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `track`       | Horizontally scrollable flex row. Pass cards as direct children.                                                                                                   |
-| `prev-button` | Circular 48 × 48 px `<button>` overlaid at the leading edge. Retreats the track by one card (288 px) + one gap (16 px). Visible only when scrolled past the start. |
-| `next-button` | Circular 48 × 48 px `<button>` overlaid at the trailing edge. Advances the track by one card (288 px) + one gap (16 px). Visible only when more cards remain.      |
+| Part          | Description                                                                                                                                                                                 |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `track`       | Horizontally scrollable flex row. Pass cards as direct children.                                                                                                                            |
+| `prev-button` | Circular 48 × 48 px `<button>` overlaid at the leading edge. Retreats the track by one card (288 px) + one gap (16 px). Disabled and invisible (`aria-disabled`, `opacity-0`) at the start. |
+| `next-button` | Circular 48 × 48 px `<button>` overlaid at the trailing edge. Advances the track by one card (288 px) + one gap (16 px). Disabled and invisible at the end.                                 |
 
 ## Usage
 
@@ -59,17 +59,18 @@ import { CardWidgetCarousel, CardWidget } from '@acronis-platform/ui-react';
 
 ### CardWidget props
 
-| Prop          | Type                              | Default  | Description                                         |
-| ------------- | --------------------------------- | -------- | --------------------------------------------------- |
-| `status`      | `'danger' \| 'warning' \| 'info'` | `'info'` | Semantic status — drives the icon-box colors.       |
-| `icon`        | `ReactNode`                       | —        | 16 px icon inside the status-colored box.           |
-| `header`      | `string`                          | —        | Card header title.                                  |
-| `title`       | `string`                          | —        | Insight title (14 px, semibold).                    |
-| `description` | `string`                          | —        | Supporting text (12 px).                            |
-| `metric`      | `ReactNode`                       | —        | Primary value (24 px, semibold).                    |
-| `caption`     | `string`                          | —        | Small caption beside the metric (12 px).            |
-| `skeleton`    | `boolean`                         | `false`  | Animated placeholder lines instead of body content. |
-| `footer`      | `ReactNode`                       | —        | Action buttons in the card footer.                  |
+| Prop           | Type                              | Default     | Description                                         |
+| -------------- | --------------------------------- | ----------- | --------------------------------------------------- |
+| `status`       | `'danger' \| 'warning' \| 'info'` | `'info'`    | Semantic status — drives the icon-box colors.       |
+| `icon`         | `ReactNode`                       | —           | 16 px icon inside the status-colored box.           |
+| `header`       | `string`                          | —           | Card header title.                                  |
+| `title`        | `string`                          | —           | Insight title (14 px, semibold).                    |
+| `description`  | `string`                          | —           | Supporting text (12 px).                            |
+| `metric`       | `ReactNode`                       | —           | Primary value (24 px, semibold).                    |
+| `caption`      | `string`                          | —           | Small caption beside the metric (12 px).            |
+| `skeleton`     | `boolean`                         | `false`     | Animated placeholder lines instead of body content. |
+| `loadingLabel` | `string`                          | `'Loading'` | `aria-label` for the skeleton loading indicator.    |
+| `footer`       | `ReactNode`                       | —           | Action buttons in the card footer.                  |
 
 ## Child card sizing
 

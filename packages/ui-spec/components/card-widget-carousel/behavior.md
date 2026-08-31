@@ -26,17 +26,28 @@ so that the previous card slides into view from the end edge.
 
 ## Button visibility
 
+Both navigation buttons are always present in the DOM to preserve keyboard
+focus. At scroll boundaries they are `aria-disabled="true"` and visually
+hidden (`opacity-0`, `pointer-events-none`).
+
 **Given** the track is at the start (scroll position = 0)
 **When** the carousel renders
-**Then** only the Next button is visible; the Previous button is hidden.
+**Then** the Next button is enabled; the Previous button is disabled and invisible.
 
 **Given** the track is scrolled partway through
 **When** the carousel renders
-**Then** both the Previous and Next buttons are visible.
+**Then** both the Previous and Next buttons are enabled and visible.
 
 **Given** the track is scrolled to the end (scroll position + client width >= scroll width)
 **When** the carousel renders
-**Then** only the Previous button is visible; the Next button is hidden.
+**Then** the Previous button is enabled; the Next button is disabled and invisible.
+
+## Dynamic children
+
+**Given** a `CardWidgetCarousel` whose children change at runtime (e.g. async data load)
+**When** children are added or removed from the track
+**Then** the button disabled/visible state updates automatically via a
+`MutationObserver` watching the track's `childList`.
 
 ## Overflow behavior
 

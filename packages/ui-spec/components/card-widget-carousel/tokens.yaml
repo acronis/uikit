@@ -12,6 +12,10 @@ tokens:
     affects: prev-button, next-button
     description: Border color of the navigation chevron buttons.
 
+  - name: --ui-shadow-md
+    affects: prev-button, next-button
+    description: Elevation shadow on the navigation chevron buttons.
+
   - name: --ui-focus-primary
     affects: prev-button, next-button
     description: Focus ring color on the navigation buttons when keyboard-focused.

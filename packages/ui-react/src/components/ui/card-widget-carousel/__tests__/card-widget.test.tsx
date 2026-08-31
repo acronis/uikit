@@ -40,6 +40,11 @@ describe('CardWidget', () => {
     expect(screen.getByRole('status', { name: 'Loading' })).toBeInTheDocument();
   });
 
+  it('renders a custom loadingLabel on the skeleton', () => {
+    render(<CardWidget skeleton loadingLabel="Cargando" />);
+    expect(screen.getByRole('status', { name: 'Cargando' })).toBeInTheDocument();
+  });
+
   it('renders the footer slot', () => {
     render(<CardWidget footer={<button>Review</button>} />);
     expect(screen.getByRole('button', { name: 'Review' })).toBeInTheDocument();
@@ -93,9 +98,8 @@ describe('CardWidget', () => {
 
   it('skeleton bars use the card status background color', () => {
     render(<CardWidget data-testid="item" status="danger" skeleton />);
-    const bars = screen
-      .getByTestId('item')
-      .querySelectorAll<HTMLElement>('[aria-label="Loading"] > div');
+    const statusContainer = screen.getByRole('status', { name: 'Loading' });
+    const bars = statusContainer.querySelectorAll<HTMLElement>(':scope > div');
     expect(bars.length).toBe(4);
     bars.forEach((bar) => {
       expect(bar.style.background).toContain('--ui-background-status-danger');

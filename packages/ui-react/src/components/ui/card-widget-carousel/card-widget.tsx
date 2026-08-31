@@ -41,6 +41,11 @@ export interface CardWidgetProps extends React.HTMLAttributes<HTMLDivElement> {
    */
   skeleton?: boolean;
   /**
+   * Accessible label for the skeleton loading indicator (`aria-label`).
+   * Defaults to `'Loading'`. Localize when deploying in a non-English context.
+   */
+  loadingLabel?: string;
+  /**
    * Content rendered in the card footer (action buttons). Omit the prop to
    * hide the footer entirely.
    */
@@ -59,6 +64,7 @@ const CardWidget = React.forwardRef<HTMLDivElement, CardWidgetProps>(
       metric,
       caption,
       skeleton = false,
+      loadingLabel = 'Loading',
       footer,
       ...props
     },
@@ -86,7 +92,7 @@ const CardWidget = React.forwardRef<HTMLDivElement, CardWidgetProps>(
           </div>
 
           {skeleton ? (
-            <div role="status" aria-label="Loading" className="flex flex-col gap-4 pt-1">
+            <div role="status" aria-label={loadingLabel} className="flex flex-col gap-4 pt-1">
               {[100, 80, 59, 29].map((pct) => (
                 <div
                   key={pct}

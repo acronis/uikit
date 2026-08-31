@@ -27,16 +27,18 @@ parts:
     element: div
   - id: prev-btn
     description: >-
-      A circular `<button>` (48 × 48 px) overlaid on the leading edge. Visible
-      only when the track is scrolled past the start. On activation it calls
+      A circular `<button>` (48 × 48 px) overlaid on the leading edge. Always
+      present in the DOM; `aria-disabled="true"` and visually hidden (`opacity-0`)
+      when the track is at the start. On activation it calls
       `scrollBy({ left: -304, behavior: 'smooth' })` on the track (one card
       width + gap backwards). Has hover and focus-visible states.
     element: button
     role: button
   - id: next-btn
     description: >-
-      A circular `<button>` (48 × 48 px) overlaid on the trailing edge. Visible
-      only when the track has not reached the end. On activation it calls
+      A circular `<button>` (48 × 48 px) overlaid on the trailing edge. Always
+      present in the DOM; `aria-disabled="true"` and visually hidden (`opacity-0`)
+      when the track has reached the end. On activation it calls
       `scrollBy({ left: 304, behavior: 'smooth' })` on the track (one card
       width + gap). Has hover and focus-visible states.
     element: button

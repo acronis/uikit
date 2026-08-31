@@ -28,7 +28,8 @@ contract:
         `CardWidget` provides a status-colored icon box, optional skeleton
         loading state, and a flexible footer slot; its props are `status`
         (`'danger' | 'warning' | 'info'`), `icon`, `header`, `title`,
-        `description`, `metric`, `caption`, `skeleton`, and `footer`.
+        `description`, `metric`, `caption`, `skeleton`, `loadingLabel`, and
+        `footer`.
 
 adapters:
   react:
