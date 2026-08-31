@@ -198,7 +198,7 @@ export const ItemsOnly: Story = {
   name: 'Items only (no header, no footer)',
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false} resizable={false}>
+      <SidebarSecondary collapsible={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
@@ -223,7 +223,7 @@ export const HeaderAndItems: Story = {
   name: 'Header + items (no footer)',
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false} resizable={false}>
+      <SidebarSecondary collapsible={false}>
         <SidebarSecondaryHeader label="Protection" />
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
@@ -282,7 +282,7 @@ export const Selected: Story = {
   name: 'Selected vs unselected',
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false} resizable={false}>
+      <SidebarSecondary collapsible={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
@@ -307,7 +307,7 @@ export const ExpandableSectionOpenClosed: Story = {
   name: 'Expandable section (open + closed)',
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false} resizable={false}>
+      <SidebarSecondary collapsible={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection expandable>
             <SidebarSecondarySectionLabel>Open section</SidebarSecondarySectionLabel>
@@ -337,7 +337,7 @@ export const ExpandableSectionOpenClosed: Story = {
 export const WithExtras: Story = {
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false} resizable={false}>
+      <SidebarSecondary collapsible={false}>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
