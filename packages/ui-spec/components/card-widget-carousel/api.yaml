@@ -1,0 +1,51 @@
+spec_version: '1.0'
+component: CardWidgetCarousel
+
+contract:
+  properties:
+    - name: nextLabel
+      type: string
+      required: false
+      default: "'Next'"
+      description: >-
+        Accessible label for the Next chevron button (`aria-label`). Localize
+        when deploying in a non-English context.
+    - name: prevLabel
+      type: string
+      required: false
+      default: "'Previous'"
+      description: >-
+        Accessible label for the Previous chevron button (`aria-label`). Localize
+        when deploying in a non-English context.
+
+  content:
+    - name: children
+      description: >-
+        The individual action cards — typically `CardWidget` instances (the
+        companion component exported from the same barrel) or any card-shaped
+        `ReactNode`. Each card should have a fixed width of 288 px so the
+        carousel's scroll step (304 px = 288 + 16 gap) aligns correctly.
+        `CardWidget` provides a status-colored icon box, optional skeleton
+        loading state, and a flexible footer slot; its props are `status`
+        (`'danger' | 'warning' | 'info'`), `icon`, `header`, `title`,
+        `description`, `metric`, `caption`, `skeleton`, `loadingLabel`, and
+        `footer`.
+
+adapters:
+  react:
+    component: CardWidgetCarousel
+    status: implemented
+    import: "import { CardWidgetCarousel, CardWidget } from '@acronis-platform/ui-react'"
+    example: |
+      <CardWidgetCarousel nextLabel="Next" prevLabel="Previous">
+        <CardWidget
+          header="Phishing attacks"
+          status="danger"
+          icon={<WarningIcon size={16} />}
+          title="Phishing attack detected"
+          metric="$15K"
+          caption="Projected new MRR"
+          footer={<Button variant="ghost">Review</Button>}
+        />
+        <CardWidget header="Loading…" status="info" skeleton />
+      </CardWidgetCarousel>

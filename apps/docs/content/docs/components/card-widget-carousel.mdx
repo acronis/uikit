@@ -1,0 +1,99 @@
+---
+title: CardWidgetCarousel
+description: A horizontal scroll carousel for AI action-widget cards, with a floating "Next" button and a companion CardWidget for status-colored content and skeleton loading.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { CardWidgetCarouselDemo } from '@/components/demos-react/card-widget-carousel';
+
+## Usage
+
+```tsx
+import {
+  CardWidgetCarousel,
+  CardWidget,
+} from '@acronis-platform/ui-react';
+
+<CardWidgetCarousel nextLabel="Next">
+  <CardWidget
+    header="Phishing attacks"
+    status="danger"
+    icon={<DiamondWarningRedIcon size={16} />}
+    title="Phishing attack detected"
+    description="3 senior users targeted by phishing"
+    metric="$15K"
+    caption="Projected new MRR"
+    footer={<Button variant="ghost"><AiIcon size={16} />Review and take action</Button>}
+  />
+  {/* more cards… */}
+</CardWidgetCarousel>
+```
+
+`CardWidgetCarousel` is the scroll container — it clips overflow and overlays a floating
+"Next" chevron button on the trailing edge. `CardWidget` is the companion card:
+it composes `Card` + `CardHeader` + `CardContent` + `CardFooter`, fixing its width
+at 288 px, and adds a status-colored icon box, optional skeleton loading state,
+and a flexible footer slot for action buttons.
+
+<DemoReact>
+  <CardWidgetCarouselDemo />
+</DemoReact>
+
+The demo shows two rows: the **top row** displays cards with live data and a ghost CTA button;
+the **bottom row** shows the same cards in the empty/skeleton state — two cards with real
+content and placeholder footer buttons, and a third card in full skeleton mode.
+
+## Skeleton state
+
+Pass `skeleton` on a `CardWidget` to show animated placeholder lines instead of the
+body content. The skeleton bars take the same background color as the icon box, so
+each status reads as a coherent unit while data loads.
+
+```tsx
+<CardWidget
+  header="Insights loading…"
+  status="info"
+  icon={<CircleClockBlueIcon size={16} />}
+  skeleton
+  footer={
+    <>
+      <Button variant="secondary">Primary</Button>
+      <Button variant="ghost">Secondary</Button>
+    </>
+  }
+/>
+```
+
+## Status colors
+
+The `status` prop drives both the icon-box background and the icon
+glyph color via semantic `--ui-*` tokens. Use a `stroke-mono` icon
+so the glyph color is inherited via CSS `color`; multicolor icons render
+their own palette regardless.
+
+| `status` | Background token | Glyph token |
+|----------|-----------------|-------------|
+| `danger` | `--ui-background-status-danger` | `--ui-glyph-on-status-danger` |
+| `warning` | `--ui-background-status-warning` | `--ui-glyph-on-status-warning` |
+| `info` | `--ui-background-status-info` | `--ui-glyph-on-status-info` |
+
+## RTL
+
+The carousel's chevron icon flips (`rtl:rotate-180`) and `scrollBy` direction reverses
+when an ancestor sets `dir="rtl"`. `CardWidget` uses logical Tailwind utilities throughout.
+
+## API Reference
+
+### CardWidgetCarousel
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card-widget-carousel/card-widget-carousel.tsx"
+  name="CardWidgetCarouselProps"
+/>
+
+### CardWidget
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/card-widget-carousel/card-widget.tsx"
+  name="CardWidgetProps"
+/>

@@ -1,0 +1,55 @@
+spec_version: '1.0'
+component: CardWidgetCarousel
+source: '@acronis-platform/tokens-pd'
+
+tokens:
+  # CardWidgetCarousel navigation buttons
+  - name: --ui-background-surface-primary
+    affects: prev-button, next-button
+    description: Background fill of the navigation chevron buttons.
+
+  - name: --ui-border-on-surface-border
+    affects: prev-button, next-button
+    description: Border color of the navigation chevron buttons.
+
+  - name: --ui-shadow-md
+    affects: prev-button, next-button
+    description: Elevation shadow on the navigation chevron buttons.
+
+  - name: --ui-focus-primary
+    affects: prev-button, next-button
+    description: Focus ring color on the navigation buttons when keyboard-focused.
+
+  # CardWidget — status icon box
+  - name: --ui-background-status-danger
+    affects: card-widget icon-box
+    description: Icon-box background for `status="danger"`.
+
+  - name: --ui-background-status-warning
+    affects: card-widget icon-box
+    description: Icon-box background for `status="warning"`.
+
+  - name: --ui-background-status-info
+    affects: card-widget icon-box
+    description: Icon-box background for `status="info"`.
+
+  - name: --ui-glyph-on-status-danger
+    affects: card-widget icon-box
+    description: Icon glyph color for `status="danger"`.
+
+  - name: --ui-glyph-on-status-warning
+    affects: card-widget icon-box
+    description: Icon glyph color for `status="warning"`.
+
+  - name: --ui-glyph-on-status-info
+    affects: card-widget icon-box
+    description: Icon glyph color for `status="info"`.
+
+  # CardWidget — text
+  - name: --ui-text-on-surface-primary
+    affects: card-widget title, metric
+    description: Primary text color for the card title and metric value.
+
+  - name: --ui-text-on-surface-secondary
+    affects: card-widget description, caption
+    description: Secondary text color for the card description and caption.
