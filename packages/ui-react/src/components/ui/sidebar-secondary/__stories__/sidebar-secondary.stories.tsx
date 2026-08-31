@@ -68,6 +68,16 @@ const meta = {
         category: 'Behavior',
       },
     },
+    collapsible: {
+      control: 'boolean',
+      description:
+        'Allow the user to collapse/expand the panel (resize-edge click, drag past the collapse threshold, keyboard, and the footer collapse trigger). When `false` those interactions never change `expanded` and the footer trigger renders `disabled`; dragging still resizes, clamped to the minimum width.',
+      table: {
+        type: { summary: 'boolean' },
+        defaultValue: { summary: 'true' },
+        category: 'Behavior',
+      },
+    },
     width: { table: { disable: true } },
     onWidthChange: { table: { disable: true } },
     render: {
@@ -98,13 +108,13 @@ const meta = {
     resizeTooltipExpanded: {
       control: false,
       description:
-        'Tooltip content shown when the sidebar is expanded. Pass `null` to hide the tooltip entirely.',
+        'Tooltip content shown when the sidebar is expanded. Pass `null` to hide the tooltip entirely. The default omits the "Collapse: Click" line when `collapsible` is `false`.',
       table: { type: { summary: 'ReactNode' }, category: 'i18n' },
     },
     resizeTooltipCollapsed: {
       control: false,
       description:
-        'Tooltip content shown when the sidebar is collapsed. Pass `null` to hide the tooltip entirely.',
+        'Tooltip content shown when the sidebar is collapsed. Pass `null` to hide the tooltip entirely. When `collapsible` is `false` the default narrows to "Reset size: Double click".',
       table: { type: { summary: 'ReactNode' }, category: 'i18n' },
     },
     children: {
@@ -179,6 +189,31 @@ export const Default: Story = {
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
         </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
+export const ItemsOnly: Story = {
+  name: 'Not collapsible (no header, no footer)',
+  render: () => (
+    <Shell>
+      <SidebarSecondary collapsible={false}>
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
+                Devices
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
+                Policies
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
       </SidebarSecondary>
     </Shell>
   ),
@@ -643,6 +678,71 @@ export const Localized: Story = {
           <SidebarSecondaryMenu>
             <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} expandTooltip="Expandir" extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
               Contraer
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
+export const NotCollapsible: Story = {
+  name: 'Not collapsible',
+  render: () => (
+    <Shell height={600}>
+      <SidebarSecondary collapsible={false}>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>
+              Overview
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
+                Devices
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
+                Policies
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
+export const NotCollapsibleWithFooter: Story = {
+  name: 'Not collapsible (disabled collapse trigger)',
+  render: () => (
+    <Shell height={600}>
+      <SidebarSecondary collapsible={false}>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>
+              Overview
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
+                Devices
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
+                Policies
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+              Collapse
             </SidebarSecondaryCollapseTrigger>
           </SidebarSecondaryMenu>
         </SidebarSecondaryFooter>

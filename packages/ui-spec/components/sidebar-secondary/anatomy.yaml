@@ -169,3 +169,10 @@ states:
     kind: pseudo
     pseudo: ':focus-visible'
     affects: [menu-item, menu-sub-trigger, menu-sub-item]
+  - id: disabled
+    trigger: >-
+      the collapse trigger is natively disabled — either its own `disabled`
+      prop is set or the panel is `collapsible: false`
+    kind: pseudo
+    pseudo: ':disabled'
+    affects: [collapse-trigger]

@@ -3,8 +3,8 @@ title: SidebarSecondary
 description: The secondary navigation panel, with collapsible sections and a resizable width.
 ---
 
-import { DemoReact } from "@/components/DemoReact";
-import { SidebarSecondaryDemo } from "@/components/demos-react/sidebar-secondary";
+import { DemoReact } from '@/components/DemoReact';
+import { SidebarSecondaryDemo } from '@/components/demos-react/sidebar-secondary';
 
 ## Usage
 
@@ -45,7 +45,6 @@ stays identifiable.
 
 ## Examples
 
-
 <DemoReact>
   <SidebarSecondaryDemo />
 </DemoReact>
@@ -74,9 +73,7 @@ A panel with two sections and a footer collapse trigger:
         <SidebarSecondaryMenuItem href="#" icon={<BoxIcon />} selected>
           Backups
         </SidebarSecondaryMenuItem>
-        <SidebarSecondaryMenuItem href="#">
-          Archived
-        </SidebarSecondaryMenuItem>
+        <SidebarSecondaryMenuItem href="#">Archived</SidebarSecondaryMenuItem>
       </SidebarSecondaryMenu>
     </SidebarSecondarySection>
   </SidebarSecondaryContent>
@@ -106,11 +103,15 @@ own expanded/collapsed width:
 Controlled collapse:
 
 ```tsx
-const [expanded, setExpanded] = React.useState(true);
+function ProtectionNav() {
+  const [expanded, setExpanded] = React.useState(true);
 
-<SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
-  {/* … */}
-</SidebarSecondary>
+  return (
+    <SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
+      {/* … */}
+    </SidebarSecondary>
+  );
+}
 ```
 
 ## Resizing
@@ -135,7 +136,10 @@ override of the token's value.
 | <kbd>Home</kbd>                     | Expands (if collapsed) and resets to the default width     |
 
 Arrow keys follow the writing direction — under `dir="rtl"` <kbd>←</kbd> grows
-and <kbd>→</kbd> shrinks.
+and <kbd>→</kbd> shrinks. The rows above assume the default
+`collapsible={true}`; see
+[Locking the collapse state](#locking-the-collapse-state) for how each one
+behaves when collapsing is disabled.
 
 The edge is labelled `'Resize sidebar'` and its hover tooltip explains the
 drag/click/double-click gestures. All of that copy is English by default and
@@ -157,6 +161,76 @@ must be localized by the consumer — or suppressed with `null`:
 
 To opt out of resizing entirely, pass `resizable={false}` — the edge is not
 rendered and the width follows the tokens alone.
+
+## Locking the collapse state
+
+`collapsible` defaults to **`true`**. Pass `collapsible={false}` to stop the
+user changing the panel's expanded/collapsed state:
+
+```tsx
+<SidebarSecondary collapsible={false}>{/* … */}</SidebarSecondary>
+```
+
+Every interaction in the [Resizing](#resizing) table that would collapse or
+expand the panel becomes inert, and the footer
+`SidebarSecondaryCollapseTrigger` renders natively `disabled` (with no
+`aria-expanded`, since it has no state to flip):
+
+| Interaction                                   | With `collapsible={false}`                   |
+| --------------------------------------------- | -------------------------------------------- |
+| Drag past half the min width (while expanded) | Clamps to 256px instead of collapsing        |
+| Drag the edge (while collapsed)               | Nothing                                      |
+| Click the edge                                | Nothing                                      |
+| Double-click the edge                         | Still resets the width; never expands        |
+| <kbd>←</kbd> (shrink, while expanded)         | Clamps to 256px instead of collapsing        |
+| <kbd>←</kbd> (shrink, while collapsed)        | Nothing                                      |
+| <kbd>→</kbd> (grow, while collapsed)          | Nothing                                      |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>           | Nothing                                      |
+| <kbd>Home</kbd>                               | Resets to the default width; does not expand |
+| Footer collapse trigger                       | `disabled`, and shows no Expand tooltip      |
+
+While the panel is **expanded**, resizing itself stays fully live — only the
+collapse transition is suppressed. Combine with `resizable={false}` to lock the
+width outright.
+
+`collapsible` does not force `expanded` to a value: `collapsible={false}` with
+`defaultExpanded={false}` renders a permanently collapsed rail, and a controlled
+`expanded` prop keeps full authority either way.
+
+In that permanently-collapsed state the resize edge remains a focusable tab stop
+with its accessible name, but it is mostly inert: dragging it, clicking it and
+both Arrow keys do nothing observable, and <kbd>Enter</kbd> / <kbd>Space</kbd>
+are fully inert.
+
+Two gestures survive — <kbd>Home</kbd> and a **double-click on the edge**. Both
+reset the stored width to `defaultWidth`; neither is gated on `collapsible` (in
+the double-click handler, only the expand is). They fire `onWidthChange` **only
+when `defaultWidth` differs from the current stored width** — a width write that
+resolves to the current value is a no-op, so on a panel whose width has never
+moved these two gestures write nothing at all. When the width _has_ moved, nothing
+moves back on screen at that moment — the rail stays collapsed — but a
+controlled consumer sees the new width, and it applies as soon as the panel is
+expanded via the `expanded` prop.
+
+With `collapsible={false}` every tooltip on the panel is adjusted for you, so
+the copy never advertises a gesture that does nothing:
+
+- **The footer collapse trigger** — its `expandTooltip` is suppressed outright.
+  The button is `disabled`, so an "Expand" hint would promise an action the user
+  can't take. This one is not overridable: passing `expandTooltip` explicitly
+  does not bring the tooltip back.
+
+The two resize-edge tooltip defaults narrow instead:
+
+- **Expanded** — the default drops the "**Collapse:** Click" line and reads
+  "**Resize:** Drag" / "**Reset size:** Double click". Both of those still work.
+- **Collapsed** — the default narrows to "**Reset size:** Double click" alone.
+  Dragging the edge only ever tries to expand (gated off) and clicking bails, so
+  the double-click is the one pointer gesture still worth describing.
+
+An explicit `resizeTooltipExpanded` / `resizeTooltipCollapsed` value always wins
+over the default, `collapsible` notwithstanding — pass `null` to suppress a
+tooltip, or a node to replace the default copy.
 
 ## API Reference
 
@@ -225,8 +299,11 @@ static sections.
 
 A single `icon` covers both directions — it rotates 180° between the expanded
 and collapsed states. While collapsed the button's label is `sr-only` and
-`expandTooltip` (default `'Expand'`, so localize it) is shown on hover instead.
-`extras` is the same trailing slot as on a menu item, for a shortcut hint.
+`expandTooltip` (default `'Expand'`, so localize it) is shown on hover instead —
+unless the panel is `collapsible={false}`, in which case the trigger is
+`disabled` and no tooltip is shown at all, even if you pass an explicit
+`expandTooltip`. `extras` is the same trailing slot as on a menu item, for a
+shortcut hint.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"

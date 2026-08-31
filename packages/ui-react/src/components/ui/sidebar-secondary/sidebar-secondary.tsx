@@ -92,6 +92,16 @@ const defaultResizeTooltipExpanded = (
   </>
 );
 
+// `collapsible={false}` + expanded: `handleClick` bails, so clicking the edge
+// can no longer collapse the panel. Drag and double-click still resize.
+const defaultResizeTooltipExpandedNonCollapsible = (
+  <>
+    <span className="font-semibold">Resize:</span> Drag
+    <br />
+    <span className="font-semibold">Reset size:</span> Double click
+  </>
+);
+
 const defaultResizeTooltipCollapsed = (
   <>
     <span className="font-semibold">Resize:</span> Drag
@@ -100,10 +110,28 @@ const defaultResizeTooltipCollapsed = (
   </>
 );
 
+// `collapsible={false}` + collapsed: double-click is the one live POINTER
+// gesture — `handleDoubleClick` resets the width unconditionally (only its
+// `toggleExpanded()` call is gated on `collapsible`), mirroring `Home` as the
+// live keyboard gesture. The other two lines would be false claims here:
+// clicking bails in `handleClick`, and the collapsed drag branch only ever
+// calls the gated `toggleExpanded()` — it never writes a width.
+const defaultResizeTooltipCollapsedNonCollapsible = (
+  <>
+    <span className="font-semibold">Reset size:</span> Double click
+  </>
+);
+
 interface SidebarSecondaryContextValue {
   expanded: boolean;
   /** Flip the panel width — drives the controlled/uncontrolled `expanded` state. */
   toggleExpanded: () => void;
+  /**
+   * Whether user-initiated collapse/expand is allowed. When `false`, drag,
+   * click, keyboard and the footer trigger never flip `expanded`; resizing
+   * itself stays live.
+   */
+  collapsible: boolean;
   /** Whether resize is enabled. */
   resizable: boolean;
   /** Current width in px (only meaningful when resizable + expanded). */
@@ -142,6 +170,7 @@ function useSidebarSecondaryContext(): SidebarSecondaryContextValue {
     React.useContext(SidebarSecondaryContext) ?? {
       expanded: true,
       toggleExpanded: () => {},
+      collapsible: true,
       resizable: false,
       width: SIDEBAR_EXPANDED_WIDTH,
       setWidth: () => {},
@@ -191,6 +220,14 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
   /** Fires when the expanded state changes (e.g. a consumer toggle). */
   onExpandedChange?: (expanded: boolean) => void;
   /**
+   * Allow the user to collapse/expand the panel (resize-edge click, drag past
+   * the collapse threshold, keyboard, and the footer collapse trigger).
+   * When `false` those interactions never change `expanded` and the footer
+   * trigger renders `disabled`; dragging still resizes the panel, clamped to
+   * the minimum width. Defaults to `true`.
+   */
+  collapsible?: boolean;
+  /**
    * Enable the draggable resize edge on the right border.
    * When `true`, the sidebar can be resized between the expanded-width token
    * and twice that value.
@@ -202,9 +239,17 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
   onWidthChange?: (width: number) => void;
   /** Accessible label for the resize edge (`role="separator"`). Defaults to `'Resize sidebar'`. */
   resizeAriaLabel?: string;
-  /** Tooltip content shown when the sidebar is expanded. Pass `null` to hide the tooltip entirely. */
+  /**
+   * Tooltip content shown when the sidebar is expanded. Pass `null` to hide
+   * the tooltip entirely. The default omits the "Collapse: Click" line when
+   * `collapsible` is `false`, since that gesture does nothing then.
+   */
   resizeTooltipExpanded?: React.ReactNode;
-  /** Tooltip content shown when the sidebar is collapsed. Pass `null` to hide the tooltip entirely. */
+  /**
+   * Tooltip content shown when the sidebar is collapsed. Pass `null` to hide
+   * the tooltip entirely. When `collapsible` is `false` the default narrows to
+   * "Reset size: Double click" — the one gesture that still has an effect.
+   */
   resizeTooltipCollapsed?: React.ReactNode;
   /**
    * Replace the rendered `<nav>` with another element or component
@@ -224,7 +269,7 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
 
 function SidebarSecondaryResizeEdge() {
   const ctx = useSidebarSecondaryContext();
-  const { expanded, toggleExpanded, resizable } = ctx;
+  const { expanded, toggleExpanded, resizable, collapsible } = ctx;
   const dir = useDocDir();
 
   // Mutable ref so the closure-captured pointermove handler always reads
@@ -282,18 +327,20 @@ function SidebarSecondaryResizeEdge() {
       const newWidth = isRtl
         ? sidebarRect.right - ev.clientX
         : ev.clientX - sidebarRect.left;
-      const { expanded: isExpanded } = ctxRef.current;
+      const { expanded: isExpanded, collapsible: canCollapse } = ctxRef.current;
 
       if (isExpanded) {
-        if (newWidth < collapseThreshold) {
+        if (newWidth < collapseThreshold && canCollapse) {
           ctxRef.current.toggleExpanded();
         } else {
+          // Not collapsible: dragging below the threshold clamps to minWidth
+          // instead of collapsing, so resize stays live either way.
           ctxRef.current.setWidth(
             Math.min(Math.max(newWidth, minWidth), maxWidth)
           );
         }
       } else {
-        if (newWidth > collapseThreshold) {
+        if (newWidth > collapseThreshold && canCollapse) {
           ctxRef.current.toggleExpanded();
         }
       }
@@ -312,13 +359,19 @@ function SidebarSecondaryResizeEdge() {
   };
 
   const handleClick = () => {
+    // A click on the resize edge only ever toggles collapse — nothing to do
+    // when collapsing is disabled.
+    if (!collapsible) return;
     // Suppress click when the interaction was a drag.
     if (didDragRef.current) return;
     // Cancel any pending click timer (dblclick fires two clicks).
     if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-    // Wait to see if a double-click follows.
+    // Wait to see if a double-click follows. Re-read `collapsible` from the
+    // ref when the timer fires — the render-time value captured above is stale
+    // if the prop flipped during the 250ms delay.
     clickTimerRef.current = setTimeout(() => {
-      toggleExpanded();
+      if (!ctxRef.current.collapsible) return;
+      ctxRef.current.toggleExpanded();
     }, 250);
   };
 
@@ -328,7 +381,7 @@ function SidebarSecondaryResizeEdge() {
       clearTimeout(clickTimerRef.current);
       clickTimerRef.current = null;
     }
-    if (!expanded) toggleExpanded();
+    if (!expanded && collapsible) toggleExpanded();
     ctxRef.current.setWidth(ctxRef.current.defaultWidth);
   };
 
@@ -341,6 +394,7 @@ function SidebarSecondaryResizeEdge() {
       setWidth: sw,
       expanded: exp,
       toggleExpanded: te,
+      collapsible: canCollapse,
     } = ctxRef.current;
     const step = 16;
     const growKey = dir === 'rtl' ? 'ArrowLeft' : 'ArrowRight';
@@ -350,21 +404,23 @@ function SidebarSecondaryResizeEdge() {
       sw(Math.min(w + step, maxWidth));
     } else if (e.key === growKey && !exp) {
       e.preventDefault();
-      te();
+      if (canCollapse) te();
     } else if (e.key === shrinkKey && exp) {
       e.preventDefault();
       const next = w - step;
       if (next < minWidth) {
-        te();
+        // Not collapsible: clamp at the minimum instead of collapsing.
+        if (canCollapse) te();
+        else sw(minWidth);
       } else {
         sw(next);
       }
     } else if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      te();
+      if (canCollapse) te();
     } else if (e.key === 'Home') {
       e.preventDefault();
-      if (!exp) te();
+      if (!exp && canCollapse) te();
       sw(defaultWidth);
     }
   };
@@ -418,12 +474,20 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       expanded: expandedProp,
       defaultExpanded = true,
       onExpandedChange,
+      collapsible: collapsibleProp = true,
       resizable: resizableProp = true,
       width: widthProp,
       onWidthChange,
       resizeAriaLabel = 'Resize sidebar',
-      resizeTooltipExpanded = defaultResizeTooltipExpanded,
-      resizeTooltipCollapsed = defaultResizeTooltipCollapsed,
+      // Both tooltip defaults are resolved here (not at the render site) so an
+      // explicit prop value — including `null` to hide the tooltip — always
+      // wins regardless of `collapsible`.
+      resizeTooltipExpanded = collapsibleProp
+        ? defaultResizeTooltipExpanded
+        : defaultResizeTooltipExpandedNonCollapsible,
+      resizeTooltipCollapsed = collapsibleProp
+        ? defaultResizeTooltipCollapsed
+        : defaultResizeTooltipCollapsedNonCollapsible,
       'aria-label': ariaLabel = 'Section navigation',
       render,
       children,
@@ -441,12 +505,16 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
     const [width, setWidthState] = React.useState(SIDEBAR_EXPANDED_WIDTH);
     const isWidthControlled = widthProp !== undefined;
     const currentWidth = isWidthControlled ? widthProp : width;
+    // No-op when the width is unchanged: the drag and Arrow-key clamps both
+    // keep calling this with the already-current min/max value, which would
+    // otherwise emit a stream of redundant `onWidthChange` events.
     const setWidth = React.useCallback(
       (next: number) => {
+        if (next === currentWidth) return;
         if (!isWidthControlled) setWidthState(next);
         onWidthChange?.(next);
       },
-      [isWidthControlled, onWidthChange]
+      [isWidthControlled, onWidthChange, currentWidth]
     );
 
     // Collapse is driven by the consumer through the layout context — the
@@ -464,6 +532,7 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       () => ({
         expanded,
         toggleExpanded: () => setExpanded(!expanded),
+        collapsible: collapsibleProp,
         resizable: resizableProp,
         width: currentWidth,
         setWidth,
@@ -481,6 +550,7 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       [
         expanded,
         setExpanded,
+        collapsibleProp,
         resizableProp,
         currentWidth,
         setWidth,
@@ -1099,7 +1169,11 @@ export interface SidebarSecondaryCollapseTriggerProps extends Omit<
 > {
   /** Leading 16px icon (e.g. a panel-left glyph). Rotates 180° between expanded/collapsed — same as `SidebarPrimaryCollapseTrigger`. */
   icon?: React.ReactNode;
-  /** Tooltip text shown when the sidebar is collapsed. Defaults to `'Expand'`. */
+  /**
+   * Tooltip text shown when the sidebar is collapsed. Defaults to `'Expand'`.
+   * Not shown when the panel is `collapsible={false}` — the trigger is
+   * disabled then, so the copy would advertise an action that can't run.
+   */
   expandTooltip?: React.ReactNode;
   /** Trailing extras (e.g. a keyboard shortcut hint), same slot as `SidebarSecondaryMenuItem`. */
   extras?: React.ReactNode;
@@ -1122,11 +1196,13 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
       extras,
       children,
       onClick,
+      disabled,
       ...props
     },
     ref
   ) => {
-    const { expanded, toggleExpanded } = useSidebarSecondaryContext();
+    const { expanded, toggleExpanded, collapsible } =
+      useSidebarSecondaryContext();
     const dir = useDocDir();
     const buttonRef = React.useRef<HTMLButtonElement>(null);
     const labelRef = React.useRef<HTMLSpanElement>(null);
@@ -1140,15 +1216,22 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
           else if (ref) ref.current = node;
         }}
         type="button"
-        aria-expanded={expanded}
+        // A non-collapsible panel's trigger has no state to expose or flip:
+        // native `disabled` gives the a11y + styling semantics for free.
+        aria-expanded={collapsible ? expanded : undefined}
+        disabled={disabled || !collapsible}
         className={cn(
           sidebarSecondaryMenuItemVariants({ variant: 'unselected' }),
           'text-start',
+          // The row classes are written for an interactive item; a
+          // non-collapsible (or explicitly disabled) trigger must not keep the
+          // pointer cursor or the hover/active fill it can no longer act on.
+          'disabled:cursor-not-allowed disabled:text-[var(--ui-text-on-surface-disabled)] disabled:[&_svg]:text-[var(--ui-text-on-surface-disabled)] disabled:hover:bg-[var(--ui-sidebar-secondary-menu-item-unselected-container-color-idle)] disabled:active:bg-[var(--ui-sidebar-secondary-menu-item-unselected-container-color-idle)]',
           className
         )}
         onClick={(event) => {
           onClick?.(event);
-          if (!event.defaultPrevented) toggleExpanded();
+          if (!event.defaultPrevented && collapsible) toggleExpanded();
         }}
         {...props}
       >
@@ -1183,7 +1266,9 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
 
     return (
       <li className="contents">
-        <Tooltip disabled={expanded}>
+        {/* The collapsed-mode tooltip advertises an action; a non-collapsible
+            trigger can't perform it, so suppress the copy there too. */}
+        <Tooltip disabled={expanded || !collapsible}>
           <TooltipTrigger render={button} />
           <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
             {expandTooltip}

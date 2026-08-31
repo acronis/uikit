@@ -36,7 +36,7 @@ breadcrumb rail.
 | `SidebarSecondaryMenuSubContent`      | `Collapsible.Panel` `<div><ul>`      | Level-2 child list                                                                     |
 | `SidebarSecondaryMenuSubItem`         | `<li><a>`                            | Level-2 indented leaf                                                                  |
 | `SidebarSecondaryMenuItemExtras`      | `<span>`                             | Trailing shortcut / external-link / tag                                                |
-| `SidebarSecondaryCollapseTrigger`     | `<li><button>`                       | Footer "Collapse menu" button; toggles `expanded`                                      |
+| `SidebarSecondaryCollapseTrigger`     | `<li><button>`                       | Footer "Collapse menu" button; toggles `expanded` (`disabled` when not collapsible)    |
 
 ## Quick Examples
 
@@ -117,6 +117,44 @@ Author both the `SidebarSecondaryContent` (section list) and the
 `SidebarSecondaryCollapsedBreadcrumb`. Visibility is toggled by the panel's
 `expanded` state via CSS — both stay in the DOM, so the breadcrumb is
 SSR-present and no JS branch is needed.
+
+## Locking the collapse state
+
+`collapsible` defaults to `true`. Pass `collapsible={false}` when the surface
+must not let the user change the panel's expanded/collapsed state. It locks that
+toggle only — **not the width**, which the user can still change by dragging or
+Arrow-shrinking while the panel is expanded. `resizable={false}` is what locks
+the width value itself; the two props are independent and compose:
+
+```tsx
+<SidebarSecondary collapsible={false}>{/* … */}</SidebarSecondary>
+```
+
+- Every user-initiated collapse/expand path is blocked — resize-edge click,
+  double-click-to-expand, drag past the collapse threshold, the resize edge's
+  Arrow/Enter/Space/Home keys, and the footer
+  `SidebarSecondaryCollapseTrigger` (which renders natively `disabled` and
+  shows no `expandTooltip`).
+- **Resizing still works while the panel is expanded.** A drag or Arrow-shrink
+  that would have collapsed the panel clamps to the minimum width instead. Pass
+  `resizable={false}` as well to lock the width outright.
+- It does **not** force `expanded`. `collapsible={false}` with
+  `defaultExpanded={false}` is valid and renders a permanently collapsed rail; a
+  controlled `expanded` prop still has full authority. On that permanently
+  collapsed rail the resize edge stays focusable and keeps its accessible name,
+  but it is inert — drag, click and the Arrow keys do nothing observable, and
+  only `Home` (or a double-click) still writes the default width, invisibly.
+- Every tooltip is adjusted for you, so the copy never advertises an inert
+  gesture. The footer collapse trigger's `expandTooltip` is suppressed outright
+  (a disabled control cannot expand anything; an explicit value does not bring
+  it back). The two resize-edge defaults narrow: **Expanded**, the default drops
+  the
+  "Collapse: Click" line and reads "Resize: Drag" / "Reset size: Double click".
+  **Collapsed**, the default narrows to "Reset size: Double click" alone —
+  dragging and clicking a permanently collapsed rail do nothing, but a
+  double-click still resets the width. An explicit `resizeTooltipExpanded` /
+  `resizeTooltipCollapsed` value always wins, including `null` to suppress the
+  tooltip entirely.
 
 ## Spec Files
 

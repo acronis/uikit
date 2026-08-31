@@ -56,6 +56,111 @@
 > DOM; visibility is toggled purely by `data-[state]` selectors (SSR-safe, no JS
 > branch).
 
+### `collapsible={false}` blocks every user collapse/expand path
+
+**Given** a SidebarSecondary with `collapsible={false}`
+**When** the user clicks the resize edge, double-clicks it while collapsed,
+drags it past the collapse threshold, presses the shrink Arrow at the minimum
+width, presses the grow Arrow while collapsed, presses Enter/Space on the resize
+edge, presses Home while collapsed, or activates the footer
+`SidebarSecondaryCollapseTrigger`
+**Then** `expanded` never changes and `data-state` stays as it was
+**And** the footer collapse trigger renders natively `disabled`
+
+> **The width reset is not inert while collapsed.** Blocking the expand does not
+> block the width reset: on the resize edge of a `collapsible={false}`, collapsed
+> panel, **`Home` and a double-click** both still reset the stored width to
+> `defaultWidth` — neither write is gated on `collapsible` (in
+> `handleDoubleClick`, only its `toggleExpanded()` call is). `onWidthChange`
+> fires **only when `defaultWidth` differs from the current stored width**:
+> `setWidth` returns early on `next === currentWidth`, so a width write that
+> resolves to the current value is a no-op, and on a panel whose width has never
+> moved these two gestures emit nothing. When the width _has_ moved, nothing
+> changes visually at that moment (the rail stays collapsed), but a
+> controlled consumer observes the new width, and it takes effect the moment the
+> panel is expanded by other means (a controlled `expanded` prop). Every _other_
+> expand-triggering gesture — a single click, a drag, the grow Arrow, Enter/Space
+> — is genuinely inert in that state.
+
+### A disabled collapse trigger looks inert
+
+**Given** a SidebarSecondary with `collapsible={false}` (or an explicitly
+`disabled` `SidebarSecondaryCollapseTrigger`)
+**When** the footer collapse trigger renders
+**Then** it shows a `not-allowed` cursor instead of the pointer cursor
+**And** its label and icon use the disabled on-surface foreground token
+**And** hovering or pressing it produces no highlight — the hover and active
+fills stay pinned to the row's idle container color
+**And** this is in addition to the native `disabled` attribute above, so the
+row reads as visually inert exactly where it is functionally inert
+
+### Resizing stays live and clamps at the minimum
+
+**Given** an expanded, `resizable` SidebarSecondary with `collapsible={false}`
+**When** the user drags the resize edge below the collapse threshold, or presses
+the shrink Arrow so the next step would fall under `minWidth`
+**Then** the width clamps to `minWidth` (the expanded-width token's shipped
+default, 256px) instead of collapsing
+**And** drag/Arrow resizing between `minWidth` and `maxWidth` behaves exactly as
+it does when `collapsible` is `true`
+
+### A permanently collapsed rail is a valid combination
+
+**Given** `collapsible={false}` together with `defaultExpanded={false}`
+**When** the panel renders
+**Then** it renders as the collapsed breadcrumb rail (`data-state="collapsed"`)
+**And** no user interaction can expand it — only a controlled `expanded` prop can
+**And** the resize edge stays focusable and keeps its accessible name, but is
+inert: dragging it, clicking it, and the grow/shrink Arrow keys produce no
+observable change
+**And** the one exception is the width reset — `Home` **and** a double-click on
+the edge both still write `defaultWidth` while the rail stays visually
+unchanged, firing `onWidthChange` only when `defaultWidth` differs from the
+current stored width (see the width-reset note above)
+
+> `collapsible` never forces `expanded` to a value; it only gates the
+> user-initiated transitions. A controlled `expanded` prop keeps full authority
+> either way.
+
+### The expanded default tooltip drops the click gesture
+
+**Given** `collapsible={false}`, an **expanded** panel, and no
+`resizeTooltipExpanded` override
+**When** the user hovers the resize edge
+**Then** the tooltip reads "**Resize:** Drag" and "**Reset size:** Double click"
+— the "**Collapse:** Click" line the `collapsible={true}` default carries is
+omitted, because clicking the edge can no longer collapse the panel
+**And** an explicit `resizeTooltipExpanded` value still wins, including `null`
+to suppress the tooltip
+
+### A permanently collapsed rail's tooltip advertises only the double-click
+
+**Given** `collapsible={false}`, a **collapsed** panel, and no
+`resizeTooltipCollapsed` override
+**When** the user hovers the resize edge
+**Then** the tooltip reads "**Reset size:** Double click" — and nothing else
+**And** the other two lines the `collapsible={true}` collapsed default carries
+are dropped, because neither gesture is live: clicking the edge bails in
+`handleClick`, and the collapsed drag branch only ever calls `toggleExpanded()`
+(itself gated off) and never writes a width, so both "**Resize:** Drag" and
+"**Expand:** Click" would be false claims
+**And** the double-click line _is_ honest: `handleDoubleClick` writes
+`defaultWidth` unconditionally, so it stays a live pointer gesture — the pointer
+counterpart of `Home`
+**And** an explicit `resizeTooltipCollapsed` value still wins, including `null`
+to suppress the tooltip entirely
+
+### The collapse trigger shows no tooltip at all
+
+**Given** `collapsible={false}` and a footer `SidebarSecondaryCollapseTrigger`
+**When** the user hovers or focuses that trigger while the panel is collapsed
+**Then** no tooltip appears — the trigger's own `Tooltip` is disabled whenever
+the panel is expanded **or** not collapsible
+**And** this holds even when an explicit `expandTooltip` value is passed, unlike
+the two resize-edge tooltips where an override still wins: the trigger is
+natively `disabled` here, so any "Expand" copy would advertise an action the
+user cannot perform
+
 ---
 
 ## Disclosure (expandable sections)
