@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 import { BarChart as RechartsBarChart } from 'recharts';
@@ -10,6 +10,9 @@ import {
   dropHeadroomSeries,
   NormalizedTooltipContent,
   withSeriesColor,
+  type BarChartHorizontalProps,
+  type BarChartItem,
+  type BarChartVerticalProps,
 } from '../bar-chart';
 import { ChartContainer, ChartTooltipContent, type ChartConfig,
   resolveAnimation,
@@ -35,7 +38,7 @@ const config = {
   mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
-function renderChart(props: Partial<React.ComponentProps<typeof BarChart>> = {}) {
+function renderChart(props: Partial<BarChartVerticalProps> = {}) {
   return render(
     <BarChart
       config={config}
@@ -67,21 +70,13 @@ describe('BarChart axes and grid', () => {
     for (const tick of ticks) expect(tick).toMatch(/^\$/);
   });
 
-  // Each unit belongs to the numeric axis, which `orientation` moves: Y for the
-  // default vertical bars, X once they grow sideways. Setting the wrong one is
-  // silent — recharts drops a `unit` on a category axis — so both are asserted
-  // on the orientation that owns them.
-  it('appends the axis units to their ticks', () => {
-    const vertical = renderChart({ yUnit: 'k' });
-    const yTicks = axisTickLabels(vertical.container, 'y');
+  // The unit belongs to the numeric axis, which is Y. Setting it on the
+  // category axis is silent — recharts drops a `unit` there.
+  it('appends the value-axis unit to its ticks', () => {
+    const { container } = renderChart({ yUnit: 'k' });
+    const yTicks = axisTickLabels(container, 'y');
     expect(yTicks.length).toBeGreaterThan(0);
     for (const tick of yTicks) expect(tick).toMatch(/k$/);
-    vertical.unmount();
-
-    const horizontal = renderChart({ orientation: 'horizontal', xUnit: '$' });
-    const xTicks = axisTickLabels(horizontal.container, 'x');
-    expect(xTicks.length).toBeGreaterThan(0);
-    for (const tick of xTicks) expect(tick).toMatch(/\$$/);
   });
 
   it('thins the value axis to the requested tick count', () => {
@@ -106,23 +101,16 @@ describe('BarChart axes and grid', () => {
     expect(axisTickLabels(floored.container, 'y')[0]).toBe('0');
   });
 
-  it('renders the axis titles as their own labels, in both orientations', () => {
-    const axis = { xAxisLabel: 'Month', yAxisLabel: 'Sessions' };
-    const titlesOf = (container: Element) =>
+  it('renders the axis titles as their own labels', () => {
+    const { container } = renderChart({
+      xAxisLabel: 'Month',
+      yAxisLabel: 'Sessions',
+    });
+    expect(
       [...container.querySelectorAll('.recharts-label')].map(
         (label) => label.textContent
-      );
-
-    const vertical = renderChart(axis);
-    expect(titlesOf(vertical.container)).toEqual(
-      expect.arrayContaining(['Month', 'Sessions'])
-    );
-    vertical.unmount();
-
-    const horizontal = renderChart({ ...axis, orientation: 'horizontal' });
-    expect(titlesOf(horizontal.container)).toEqual(
-      expect.arrayContaining(['Month', 'Sessions'])
-    );
+      )
+    ).toEqual(expect.arrayContaining(['Month', 'Sessions']));
   });
 
   it('draws only the grid direction it was asked for', () => {
@@ -139,11 +127,25 @@ describe('BarChart axes and grid', () => {
     ).toHaveLength(0);
   });
 
-  it('dashes the grid on request', () => {
-    const { container } = renderChart({ gridDashed: true });
+  it('hides vertical grid lines by default', () => {
+    const { container } = renderChart();
+    expect(
+      container.querySelectorAll('.recharts-cartesian-grid-vertical line')
+    ).toHaveLength(0);
+  });
+
+  it('dashes the grid by default', () => {
+    const { container } = renderChart();
     expect(
       container.querySelector('.recharts-cartesian-grid-horizontal line')
     ).toHaveAttribute('stroke-dasharray', '3 3');
+  });
+
+  it('renders solid grid when gridDashed is false', () => {
+    const { container } = renderChart({ gridDashed: false });
+    expect(
+      container.querySelector('.recharts-cartesian-grid-horizontal line')
+    ).not.toHaveAttribute('stroke-dasharray');
   });
 });
 
@@ -167,13 +169,10 @@ describe('BarChart', () => {
     expect(root).toHaveAttribute('data-layout', 'grouped');
   });
 
-  it('reflects the orientation and layout variants on the root', () => {
-    const { container } = renderChart({
-      orientation: 'horizontal',
-      layout: 'stacked',
-    });
+  it('reflects the layout variant on the root', () => {
+    const { container } = renderChart({ layout: 'stacked' });
     const root = container.firstElementChild;
-    expect(root).toHaveAttribute('data-orientation', 'horizontal');
+    expect(root).toHaveAttribute('data-orientation', 'vertical');
     expect(root).toHaveAttribute('data-layout', 'stacked');
   });
 
@@ -188,6 +187,11 @@ describe('BarChart', () => {
     expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
     // The bars themselves survive the chrome going away.
     expect(barsOf(container)).toHaveLength(6);
+  });
+
+  it('applies barRadius=8 by default (arc commands in path)', () => {
+    const { container } = renderChart();
+    expect(barsOf(container)[0].getAttribute('d')).toMatch(/[aA]/);
   });
 
   it('rounds the bar tops unless barRadius squares them', () => {
@@ -264,6 +268,199 @@ describe('BarChart', () => {
     ).toEqual([]);
   });
 
+});
+
+// `orientation="horizontal"` is a different component behind one name: no
+// recharts at all, just one Base UI `Meter` row per item. The percentage and the
+// `max` fallback are the two things a caller can't see any other way.
+describe('BarChart orientation="horizontal"', () => {
+  const items: BarChartItem[] = [
+    { label: 'Critical', value: 6, color: 'red' },
+    { label: 'High', value: 9, color: 'orange' },
+  ];
+
+  function renderHorizontal(
+    props: Partial<Omit<BarChartHorizontalProps, 'orientation'>> = {}
+  ) {
+    return render(
+      <BarChart
+        orientation="horizontal"
+        items={items}
+        max={29}
+        showTooltip={false}
+        {...props}
+      />
+    );
+  }
+
+  it('renders one meter per item', () => {
+    renderHorizontal();
+    expect(screen.getAllByRole('meter')).toHaveLength(2);
+  });
+
+  it('sets aria-valuenow and aria-valuemax on each row', () => {
+    renderHorizontal();
+    const meters = screen.getAllByRole('meter');
+    expect(meters[0]).toHaveAttribute('aria-valuenow', '6');
+    expect(meters[0]).toHaveAttribute('aria-valuemax', '29');
+    expect(meters[1]).toHaveAttribute('aria-valuenow', '9');
+  });
+
+  it('renders the label and the value of each row', () => {
+    renderHorizontal();
+    expect(screen.getByText('Critical')).toBeInTheDocument();
+    expect(screen.getByText('High')).toBeInTheDocument();
+    expect(screen.getByText('6')).toBeInTheDocument();
+  });
+
+  it('shows each value as a share of max', () => {
+    renderHorizontal();
+    expect(screen.getByText('21%')).toBeInTheDocument();
+    expect(screen.getByText('31%')).toBeInTheDocument();
+  });
+
+  it('falls back to the sum of the item values when max is omitted', () => {
+    renderHorizontal({ max: undefined });
+    expect(screen.getAllByRole('meter')[0]).toHaveAttribute(
+      'aria-valuemax',
+      '15'
+    );
+  });
+
+  it('runs the value through the caller formatter', () => {
+    renderHorizontal({ valueFormatter: (value) => `${value} items` });
+    expect(screen.getByText('6 items')).toBeInTheDocument();
+  });
+
+  it('marks the root with the orientation and forwards a ref to it', () => {
+    const ref = React.createRef<HTMLDivElement>();
+    const { container } = renderHorizontal({ ref });
+    expect(ref.current).toBeInstanceOf(HTMLDivElement);
+    expect(container.firstElementChild).toHaveAttribute(
+      'data-orientation',
+      'horizontal'
+    );
+  });
+
+  it('renders no recharts chart at all', () => {
+    const { container } = renderHorizontal();
+    expect(container.querySelector('[data-slot="chart"]')).toBeNull();
+    expect(container.querySelector('.recharts-responsive-container')).toBeNull();
+  });
+
+  it('resolves item color from palette+tone when no color is supplied', () => {
+    const { container } = render(
+      <BarChart
+        orientation="horizontal"
+        palette={{ type: 'status' }}
+        items={[{ label: 'A', value: 5, tone: { status: 'danger' } }]}
+        max={10}
+        showTooltip={false}
+      />
+    );
+    const indicators = container.querySelectorAll('[role="meter"]');
+    expect(indicators).toHaveLength(1);
+    // The indicator's style must contain a non-empty backgroundColor driven by
+    // the palette resolution — not blank or the fallback empty string.
+    const indicatorEl = container.querySelector('[role="meter"] [style*="background"]') as HTMLElement | null;
+    expect(indicatorEl?.style.backgroundColor).toBeTruthy();
+  });
+
+  it('explicit color overrides palette+tone resolution', () => {
+    const { container } = render(
+      <BarChart
+        orientation="horizontal"
+        palette={{ type: 'status' }}
+        items={[{ label: 'A', value: 5, color: 'rgb(255, 0, 0)', tone: { status: 'danger' } }]}
+        max={10}
+        showTooltip={false}
+      />
+    );
+    const indicatorEl = container.querySelector('[role="meter"] [style*="background"]') as HTMLElement | null;
+    expect(indicatorEl?.style.backgroundColor).toBe('rgb(255, 0, 0)');
+  });
+});
+
+describe('BarChart orientation="horizontal" forecast', () => {
+  const forecastItems: BarChartItem[] = [
+    { label: 'Critical', value: 6, color: 'red', forecast: 10 },
+    { label: 'High', value: 9, color: 'orange', forecast: 12 },
+  ];
+
+  it('renders a forecast bar for each item that has one', () => {
+    const { container } = render(
+      <BarChart
+        orientation="horizontal"
+        items={forecastItems}
+        max={29}
+        showTooltip={false}
+      />
+    );
+    expect(container.querySelectorAll('[data-forecast]')).toHaveLength(2);
+  });
+
+  it('does not render a forecast bar when forecast is omitted', () => {
+    const { container } = render(
+      <BarChart
+        orientation="horizontal"
+        items={[{ label: 'Critical', value: 6, color: 'red' }]}
+        max={29}
+        showTooltip={false}
+      />
+    );
+    expect(container.querySelectorAll('[data-forecast]')).toHaveLength(0);
+  });
+
+  it('does not render a forecast bar when forecast <= value', () => {
+    const { container } = render(
+      <BarChart
+        orientation="horizontal"
+        items={[{ label: 'Critical', value: 10, color: 'red', forecast: 5 }]}
+        max={29}
+        showTooltip={false}
+      />
+    );
+    expect(container.querySelectorAll('[data-forecast]')).toHaveLength(0);
+  });
+
+  it('includes "forecast" in aria-valuetext when forecast is present', () => {
+    render(
+      <BarChart
+        orientation="horizontal"
+        items={forecastItems}
+        max={29}
+        showTooltip={false}
+      />
+    );
+    const meter = screen.getAllByRole('meter')[0];
+    expect(meter.getAttribute('aria-valuetext')).toContain('forecast');
+  });
+
+  it('keeps aria-valuenow as the actual value, not the forecast', () => {
+    render(
+      <BarChart
+        orientation="horizontal"
+        items={forecastItems}
+        max={29}
+        showTooltip={false}
+      />
+    );
+    expect(screen.getAllByRole('meter')[0]).toHaveAttribute('aria-valuenow', '6');
+  });
+
+  it('sizes the forecast bar wider than the actual indicator', () => {
+    const { container } = render(
+      <BarChart
+        orientation="horizontal"
+        items={[{ label: 'Test', value: 6, color: 'red', forecast: 10 }]}
+        max={29}
+        showTooltip={false}
+      />
+    );
+    // forecast/max = 10/29 ≈ 34.48% — the style includes "34"
+    const forecastBar = container.querySelector('[data-forecast]');
+    expect(forecastBar?.getAttribute('style')).toContain('34');
+  });
 });
 
 // The motion itself is a visual-regression concern; what matters here is that
@@ -359,7 +556,7 @@ describe('BarChart styling knobs', () => {
   // recharts measures text to lay a tick out, which happy-dom can't do, so every
   // tick renders empty here — the accent styling is covered by the
   // ForecastRange VR story. This guards the prop path instead.
-  it('renders a highlighted range in both orientations without throwing', () => {
+  it('renders a highlighted range without throwing, accented or not', () => {
     expect(
       renderChart({
         referenceArea: { from: 'Feb' },
@@ -367,7 +564,6 @@ describe('BarChart styling knobs', () => {
     ).toBeInTheDocument();
     expect(
       renderChart({
-        orientation: 'horizontal',
         referenceArea: { from: 'Feb', highlightTicks: false },
       }).container.querySelector('.recharts-reference-area')
     ).toBeInTheDocument();
@@ -448,19 +644,9 @@ describe('BarChart styling knobs', () => {
     const ruled = renderChart({ referenceArea: { from: 'Feb', divider: true } });
     const rule = ruled.container.querySelector('.recharts-reference-area line');
     expect(rule).toHaveAttribute('stroke-dasharray', '4 4');
-    // Vertical bars put the categories on X, so the rule is a vertical line.
+    // The categories run along X, so the rule is a vertical line.
     expect(rule?.getAttribute('x1')).toBe(rule?.getAttribute('x2'));
     expect(rule?.getAttribute('y1')).not.toBe(rule?.getAttribute('y2'));
-  });
-
-  it('rules the top edge of a band on a horizontal chart', () => {
-    const { container } = renderChart({
-      orientation: 'horizontal',
-      referenceArea: { from: 'Feb', divider: true },
-    });
-    const rule = container.querySelector('.recharts-reference-area line');
-    expect(rule?.getAttribute('y1')).toBe(rule?.getAttribute('y2'));
-    expect(rule?.getAttribute('x1')).not.toBe(rule?.getAttribute('x2'));
   });
 
   it('rounds every corner for the pill shape', () => {
@@ -691,7 +877,7 @@ describe('BarChart styling knobs', () => {
   // gating that on the bar styling made a paint-server shape silently reorder
   // the legend.
   it('keeps the legend in dataKeys order whatever the bar styling', () => {
-    const labels = (props: Partial<React.ComponentProps<typeof BarChart>>) =>
+    const labels = (props: Partial<BarChartVerticalProps>) =>
       Array.from(
         renderChart({ dataKeys: ['mobile', 'desktop'], ...props }).container
           .querySelectorAll('.recharts-legend-wrapper > div > div')

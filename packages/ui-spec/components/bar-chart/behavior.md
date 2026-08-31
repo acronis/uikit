@@ -15,18 +15,45 @@ Scenario: Render bars from data and config
 
 ```gherkin
 Scenario: Vertical orientation (default)
-  Given orientation is "vertical"
-  Then bars grow upward
+  Given orientation is omitted or "vertical"
+  Then the recharts chart renders
+  And bars grow upward
   And the category axis (xKey) is the x-axis and the value axis is the y-axis
   And the grid draws horizontal lines
 ```
 
 ```gherkin
 Scenario: Horizontal orientation
-  Given orientation is "horizontal"
-  Then bars extend rightward (recharts layout="vertical")
-  And the category axis (xKey) is the y-axis and the value axis is the x-axis
-  And the grid draws vertical lines
+  Given orientation is "horizontal" and items is a list of { label, value, color }
+  Then no chart renders — one labelled bar row renders per item
+  And each row shows its label, its formatted value, and its share of max
+  And each row exposes role="meter" with aria-valuenow and aria-valuemax
+  And the track fills to value/max in the item's own color
+```
+
+```gherkin
+Scenario: Horizontal orientation without an explicit max
+  Given orientation is "horizontal" and max is omitted
+  Then max falls back to the sum of every items[].value
+  And each row's percentage is its share of that total
+```
+
+```gherkin
+Scenario: Horizontal item with forecast
+  Given orientation is "horizontal" and an item has forecast greater than value
+  Then a translucent bar (30% opacity) extends from the actual value to the forecast
+  And the actual bar renders solid on top
+  And aria-valuetext includes the forecast value
+  And aria-valuenow reflects the actual value only
+  But when forecast is omitted or less than or equal to value, no forecast bar renders
+```
+
+```gherkin
+Scenario: Horizontal palette-driven colors
+  Given orientation is "horizontal" and a palette is set
+  Then each item's color is resolved through the palette machinery
+  And an item with a tone resolves to the palette's tone-specific token
+  And an explicit item.color still overrides the resolved palette color
 ```
 
 ```gherkin
@@ -62,9 +89,8 @@ Scenario: Legend
 ```gherkin
 Scenario: Fixed reference line
   Given referenceLine is { value: 250, label: "Target" }
-  Then a dashed line draws across the value axis at 250
+  Then a horizontal dashed line draws across the value (y) axis at 250
   And it is captioned "Target"
-  And for horizontal orientation the line is vertical (on the x-axis), else horizontal (on the y-axis)
 ```
 
 ```gherkin
@@ -141,7 +167,7 @@ Scenario: Address a range by index or by value
 Scenario: Mark the hand-off into a forecast
   Given a referenceArea entry sets divider: true
   Then a dashed rule draws on the band's leading edge
-  And it follows the category axis — the band's left edge for vertical bars, its top edge for horizontal ones
+  And it follows the category (x) axis — the band's left edge
 ```
 
 ```gherkin

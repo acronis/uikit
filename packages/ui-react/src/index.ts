@@ -70,7 +70,6 @@ export * from './components/ui/label';
 export * from './components/ui/line-chart';
 export * from './components/ui/link';
 export * from './components/ui/loading';
-export * from './components/ui/meter';
 export * from './components/ui/metric';
 export * from './components/ui/number-field';
 export * from './components/ui/page-content';

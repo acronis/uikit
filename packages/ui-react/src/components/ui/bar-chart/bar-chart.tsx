@@ -18,8 +18,10 @@ import {
 } from 'recharts';
 
 import type { BarShapeProps } from 'recharts/types/cartesian/Bar';
+import { Meter as MeterPrimitive } from '@base-ui/react/meter';
 
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 import {
   CHART_LABEL_FONT_SIZE,
   ChartContainer,
@@ -39,10 +41,12 @@ import {
   resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
+  resolveChartColors,
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
   type ChartPalette,
+  type ChartStatusTone,
   type ChartReferenceLine,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -54,15 +58,17 @@ import {
   type CartesianLabelPosition,
 } from '../chart';
 
-// A typed recharts composition over the shared `Chart` primitives. The two CVA
-// axes are the design's Bar-chart variant set (B2): `orientation` (which way the
-// bars grow) and `layout` (grouped side-by-side vs stacked). The classes stay
-// empty because the recharts SVG — not CSS — draws the bars: the same two props
-// drive recharts' `layout` prop, the axis roles, the `stackId`, and the corner
-// radius below. CVA is kept so the variant set is a first-class, spec-conformant
-// part of the API (matched against ui-spec's api.yaml enums) and exposed via
-// `VariantProps`; the resolved values are also mirrored onto `data-orientation`
-// / `data-layout` for styling hooks and tests.
+// The two CVA axes are the design's Bar-chart variant set (B2): `orientation`
+// and `layout` (grouped side-by-side vs stacked). `orientation` is the
+// discriminant for *which component this is*: `vertical` renders the typed
+// recharts composition over the shared `Chart` primitives (bars rising from a
+// category X axis), `horizontal` renders the labelled proportional bar list
+// below, which has no axes, grid, or recharts at all. The classes stay empty
+// because neither mode is styled by a variant class — the recharts SVG draws
+// the vertical bars, and the horizontal list carries its own layout. CVA is
+// kept so the variant set is a first-class, spec-conformant part of the API
+// (matched against ui-spec's api.yaml enums); the resolved values are mirrored
+// onto `data-orientation` / `data-layout` for styling hooks and tests.
 const barChartVariants = cva('', {
   variants: {
     orientation: {
@@ -360,27 +366,21 @@ function resolveBarShapes({
 }
 
 /**
- * Draw a highlight band plus a dashed rule on its leading edge: the left edge
- * for vertical bars (the category axis runs along X), the top edge otherwise.
+ * Draw a highlight band plus a dashed rule on its leading edge — the left edge,
+ * since the category axis runs along X.
  *
  * The band's own paint comes from the props recharts hands the shape — a
  * `<ReferenceArea shape>` still receives the element's `fill`/`fillOpacity`
  * (`ReferenceArea.js` `renderRect`), so hardcoding them here would quietly
  * ignore whatever the caller set.
  */
-function renderBandWithDivider({
-  band,
-  vertical,
-}: {
-  band: {
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-    fill?: string;
-    fillOpacity?: number;
-  };
-  vertical: boolean;
+function renderBandWithDivider(band: {
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
+  fill?: string;
+  fillOpacity?: number;
 }) {
   const { x = 0, y = 0, width = 0, height = 0, fill, fillOpacity } = band;
   return (
@@ -397,8 +397,8 @@ function renderBandWithDivider({
       <line
         x1={x}
         y1={y}
-        x2={vertical ? x : x + width}
-        y2={vertical ? y + height : y}
+        x2={x}
+        y2={y + height}
         stroke="var(--ui-border-on-surface-border)"
         strokeDasharray="4 4"
       />
@@ -412,16 +412,9 @@ function renderBandWithDivider({
  * `ReferenceLine` would sit on the tick's centre, and only the band knows where
  * its own edge is.
  */
-function resolveBandShape({
-  divider,
-  vertical,
-}: {
-  divider: boolean | undefined;
-  vertical: boolean;
-}) {
+function resolveBandShape(divider: boolean | undefined) {
   if (!divider) return undefined;
-  return (band: { x?: number; y?: number; width?: number; height?: number }) =>
-    renderBandWithDivider({ band, vertical });
+  return renderBandWithDivider;
 }
 
 /**
@@ -452,13 +445,10 @@ function BarPaintServers({
   id,
   dataKeys,
   shapes,
-  horizontal,
 }: {
   id: string;
   dataKeys: string[];
   shapes: ReadonlySet<BarChartBarShape>;
-  /** Bars grow along X, so a gradient runs left-to-right instead of top-down. */
-  horizontal: boolean;
 }) {
   const hasGradient = shapes.has('gradient');
   const hasPattern = shapes.has('pattern');
@@ -468,14 +458,9 @@ function BarPaintServers({
     <defs>
       {dataKeys.map((key) => (
         <React.Fragment key={key}>
+          {/* Bars grow up, so a gradient runs top-down. */}
           {hasGradient && (
-            <linearGradient
-              id={`${id}-gradient-${key}`}
-              x1="0"
-              y1="0"
-              x2={horizontal ? '1' : '0'}
-              y2={horizontal ? '0' : '1'}
-            >
+            <linearGradient id={`${id}-gradient-${key}`} x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="0%"
                 stopColor={`var(--color-${key})`}
@@ -602,13 +587,20 @@ function rangeCells({
   });
 }
 
-export interface BarChartProps
+/**
+ * The recharts bar chart: bars rising from a category X axis, with axes, grid,
+ * tooltip and legend. This is the default — `orientation` is only spelled out
+ * to discriminate it from the horizontal mode below.
+ */
+export interface BarChartVerticalProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
-    VariantProps<typeof barChartVariants>,
+    Omit<VariantProps<typeof barChartVariants>, 'orientation'>,
     CartesianChartProps,
     ChartAnimationProps,
     ChartBrushProps,
     ChartDataLabelProps {
+  /** Selects the recharts bar chart. Omit it — this is the default. */
+  orientation?: 'vertical';
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -627,9 +619,9 @@ export interface BarChartProps
   /** Category axis key (the shared dimension across rows, e.g. `"month"`). */
   xKey: string;
   /**
-   * One or more dashed reference/average lines on the value axis (Y for vertical
-   * bars, X for horizontal). Each is driven by a fixed `value` or a computed
-   * series `average`. Pass a single object or an array to draw several at once.
+   * One or more dashed reference/average lines on the value (Y) axis. Each is
+   * driven by a fixed `value` or a computed series `average`. Pass a single
+   * object or an array to draw several at once.
    */
   referenceLine?: ChartReferenceLine | ChartReferenceLine[];
   /**
@@ -643,8 +635,6 @@ export interface BarChartProps
    * normally.
    */
   barSettings?: Record<string, BarChartBarSettings>;
-  /** Unit suffix on X-axis tick values (recharts `unit`) — applies when the X axis is numeric (`orientation="horizontal"`). */
-  xUnit?: string;
   /** Corner radius applied to the growing end of each bar. */
   barRadius?: number;
   /** How every bar is painted. Per-range overrides come from `barSettings`. */
@@ -678,15 +668,250 @@ export interface BarChartProps
   };
   showLegend?: boolean;
   /**
-   * Position of the value labels when `showLabels` is on. Defaults to the growing
-   * end — `top` for vertical bars, `right` for horizontal.
+   * Position of the value labels when `showLabels` is on. Defaults to the bar's
+   * growing end (`top`), or the segment centre when the layout is stacked.
    */
   labelPosition?: CartesianLabelPosition;
 }
 
-const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
+/** One row of the horizontal bar list. */
+export interface BarChartItem {
+  /** Row label, shown at the start of the row. */
+  label: string;
+  /** The value this row represents. */
+  value: number;
+  /**
+   * Fill color — any CSS color; prefer an existing `--ui-*` token. Required
+   * when no `palette` is passed to the chart. Omit when supplying `tone`
+   * together with `palette`.
+   */
+  color?: string;
+  /**
+   * Palette tone for this row. Resolved against the `palette` prop on the
+   * enclosing `BarChart`; ignored when `palette` is omitted and `color` is set.
+   */
+  tone?: { status: ChartStatusTone };
+  /**
+   * Projected/forecast total value. When set and greater than `value`, renders
+   * a translucent bar (same color, 30% opacity) extending from the actual
+   * value's edge to the forecast value. The actual bar renders solid on top.
+   * ARIA values always reflect the actual value; `aria-valuetext` also
+   * mentions the forecast value. Ignored when `<= value`.
+   */
+  forecast?: number;
+}
+
+/**
+ * The labelled proportional bar list: one row per `items` entry carrying its
+ * label, value, share of `max`, and a track bar. No axes, grid, or recharts.
+ */
+export interface BarChartHorizontalProps
+  extends Omit<React.ComponentProps<'div'>, 'children'> {
+  /** Selects the labelled bar list. */
+  orientation: 'horizontal';
+  /** Rows to render — one labelled bar per item. */
+  items: BarChartItem[];
+  /** Upper bound the values are shares of. Defaults to the sum of every item's value. */
+  max?: number;
+  /** Format the numeric value in the label. Defaults to `toLocaleString()`. */
+  valueFormatter?: (value: number) => string;
+  /** Show the hover tooltip per row. On by default. */
+  showTooltip?: boolean;
+  /** Tooltip content shared by every row (replaces the default). Ignored when `showTooltip` is false. */
+  tooltip?: React.ReactNode;
+  /**
+   * Dataviz palette to resolve each item's color from. When provided, each
+   * `items` entry should carry a `tone` (and can omit `color`). The colors are
+   * resolved in the same order and with the same tone rules as the vertical
+   * chart — `status` tones pick a specific palette stop, slot-less items
+   * consume the next available stop.
+   */
+  palette?: ChartPalette;
+}
+
+/**
+ * Unified BarChart props — `orientation` selects what gets rendered:
+ * - omitted / `'vertical'`: the recharts bar chart (axes, grid, legend).
+ * - `'horizontal'`: the labelled proportional bar list.
+ */
+export type BarChartProps = BarChartVerticalProps | BarChartHorizontalProps;
+
+const defaultFormat = (value: number) => value.toLocaleString();
+
+/**
+ * One labelled bar. Base UI's `Meter` primitive supplies `role="meter"` and the
+ * indicator's proportional width; the row is not a control, so the only reason
+ * it takes focus is to make the tooltip reachable without a pointer.
+ */
+function HorizontalBarRow({
+  item,
+  resolvedColor,
+  max,
+  valueFormatter,
+  showTooltip,
+  tooltip,
+}: {
+  item: BarChartItem;
+  resolvedColor: string;
+  max: number;
+  valueFormatter: (value: number) => string;
+  showTooltip: boolean;
+  tooltip?: React.ReactNode;
+}) {
+  const { label, value, forecast } = item;
+  const color = resolvedColor;
+  const pct = max > 0 ? Math.round((value / max) * 100) : 0;
+  const hasForecast = forecast != null && forecast > value;
+
+  const root = (
+    <MeterPrimitive.Root
+      value={value}
+      max={max}
+      aria-valuemax={max}
+      aria-valuetext={
+        hasForecast
+          ? `${valueFormatter(value)} of ${valueFormatter(max)} (${pct}%), forecast ${valueFormatter(forecast)}`
+          : `${valueFormatter(value)} of ${valueFormatter(max)} (${pct}%)`
+      }
+      tabIndex={showTooltip ? 0 : undefined}
+      className="flex w-full flex-col gap-1.5"
+    >
+      <div className="flex items-baseline justify-between gap-2 text-sm leading-none">
+        <MeterPrimitive.Label className="truncate font-semibold">
+          {label}
+        </MeterPrimitive.Label>
+        <span className="shrink-0 tabular-nums">
+          <span className="font-semibold text-[var(--ui-text-on-surface-link-idle)]">
+            {valueFormatter(value)}
+          </span>
+          <span className="text-muted-foreground"> {pct}%</span>
+        </span>
+      </div>
+      <MeterPrimitive.Track className="relative h-2 w-full overflow-hidden rounded-full bg-[var(--ui-background-status-neutral-pressed)]">
+        {hasForecast && (
+          <div
+            data-forecast
+            className="absolute inset-y-0 start-0 rounded-full"
+            style={{
+              backgroundColor: color,
+              opacity: 0.3,
+              width: `${(forecast / max) * 100}%`,
+            }}
+          />
+        )}
+        <MeterPrimitive.Indicator
+          className="relative rounded-full"
+          style={{ backgroundColor: color }}
+        />
+      </MeterPrimitive.Track>
+    </MeterPrimitive.Root>
+  );
+
+  if (!showTooltip) return root;
+
+  return (
+    <Tooltip>
+      <TooltipTrigger render={root} />
+      <TooltipContent
+        className={cn(
+          'border border-border bg-background text-foreground shadow-md',
+          !tooltip && 'flex items-center gap-2'
+        )}
+      >
+        {tooltip ?? (
+          <>
+            <span
+              className="size-2.5 shrink-0 rounded-full"
+              style={{ backgroundColor: color }}
+            />
+            <span className="font-semibold">{label}</span>
+            <span className="text-muted-foreground">
+              {valueFormatter(value)} of {valueFormatter(max)} · {pct}%
+            </span>
+          </>
+        )}
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
+const HorizontalBarLayout = React.forwardRef<
+  HTMLDivElement,
+  Omit<BarChartHorizontalProps, 'orientation'>
+>(
   (
     {
+      items,
+      max,
+      palette,
+      valueFormatter = defaultFormat,
+      showTooltip = true,
+      tooltip,
+      className,
+      ...props
+    },
+    ref
+  ) => {
+    // A max of 0 (or a negative one) would make every share meaningless, so it
+    // falls back to the total — and to 1 when even that is 0, so the rows read
+    // as empty rather than dividing by zero.
+    const safeMax =
+      max !== undefined && max > 0
+        ? max
+        : items.reduce((sum, item) => sum + item.value, 0) || 1;
+
+    // When a palette is supplied, resolve each item's color through the same
+    // palette machinery as the vertical chart — a synthetic config maps each
+    // item's index key to its tone (or explicit color as a pinned stop).
+    const resolvedColors = React.useMemo(() => {
+      if (!palette) return null;
+      // Items with an explicit `color` bypass the palette; items with `tone`
+      // (or neither) are resolved through `resolveChartColors`.
+      const config: ChartConfig = Object.fromEntries(
+        items.map((item, i) => [
+          `item${i}`,
+          { label: item.label, ...(item.tone ? { tone: item.tone } : {}) },
+        ])
+      );
+      const resolved = resolveChartColors(config, palette);
+      return items.map((item, i) => item.color ?? resolved[`item${i}`]?.color ?? '');
+    }, [items, palette]);
+
+    return (
+      <div
+        ref={ref}
+        data-orientation="horizontal"
+        className={cn('flex flex-col gap-4', className)}
+        {...props}
+      >
+        {items.map((item, i) => (
+          <HorizontalBarRow
+            key={`${i}-${item.label}`}
+            item={item}
+            resolvedColor={resolvedColors ? (resolvedColors[i] ?? '') : (item.color ?? '')}
+            max={safeMax}
+            valueFormatter={valueFormatter}
+            showTooltip={showTooltip}
+            tooltip={tooltip}
+          />
+        ))}
+      </div>
+    );
+  }
+);
+HorizontalBarLayout.displayName = 'HorizontalBarLayout';
+
+const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
+  (rawProps, ref) => {
+    // useId must be called unconditionally before any early return (Rules of Hooks).
+    const instanceId = React.useId().replace(/:/g, '');
+
+    if (rawProps.orientation === 'horizontal') {
+      const { orientation: _orientation, ...horizontalProps } = rawProps;
+      return <HorizontalBarLayout {...horizontalProps} ref={ref} />;
+    }
+
+    const {
       className,
       config,
       palette,
@@ -698,15 +923,16 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       barSettings,
       xAxisLabel,
       yAxisLabel,
-      xUnit,
       yUnit,
+      // Consumed rather than spread: a literal `orientation` attribute on the
+      // wrapper `<div>` is not a valid DOM prop.
       orientation = 'vertical',
       layout = 'grouped',
-      barRadius = 4,
+      barRadius = 8,
       barShape = 'rounded',
-      barSize,
+      barSize = 8,
       maxBarSize,
-      barGap,
+      barGap = 4,
       barCategoryGap,
       minPointSize,
       showBackground = false,
@@ -724,7 +950,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       xAxisInterval,
       yAxisTickCount,
       yAxisDomain,
-      gridDashed,
+      gridDashed = true,
       gridHorizontal,
       gridVertical,
       tooltipContent,
@@ -739,24 +965,24 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       brushHeight,
       brushAriaLabel,
       ...props
-    },
-    ref
-  ) => {
+    } = rawProps;
+
     const animation = resolveAnimation({
       animate,
       animationDuration,
       animationBegin,
       animationEasing,
     });
-    // Our `orientation` is bar-direction; recharts' `layout` is the opposite axis.
-    const rechartsLayout = orientation === 'horizontal' ? 'vertical' : 'horizontal';
+    // recharts' `layout` names the axis the *categories* run along, which for
+    // bars rising out of an X axis is its `'horizontal'`.
+    const rechartsLayout = 'horizontal';
     const isStacked = layout === 'stacked';
-    // Labels sit at the growing end of the bar: above vertical bars, to the
-    // right of horizontal ones — or centred in the segment when stacked.
+    // Labels sit at the growing end of the bar — above it — or centred in the
+    // segment when stacked.
     const barLabelPosition = resolveCartesianLabelPosition({
       labelPosition,
       isStacked,
-      growingEnd: orientation === 'horizontal' ? 'right' : 'top',
+      growingEnd: 'top',
     });
 
     const referenceLines = toReferenceLineList(referenceLine);
@@ -845,10 +1071,8 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           payload: { value: string | number };
           index: number;
         }) => {
-          const formatter =
-            orientation === 'horizontal' ? yTickFormatter : xTickFormatter;
-          const value = formatter
-            ? formatter(payload.value as never, index)
+          const value = xTickFormatter
+            ? xTickFormatter(payload.value as never, index)
             : payload.value;
           return (
             <Text
@@ -878,7 +1102,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
 
     // `gradient` and `pattern` paint from an SVG def, so the ids have to be
     // unique per chart instance — same guard the shared container applies.
-    const defsId = `bar-${React.useId().replace(/:/g, '')}`;
+    const defsId = `bar-${instanceId}`;
     const usedShapes = new Set<BarChartBarShape>([barShape]);
     settingsByKey.forEach(({ settings }) => {
       if (settings.shape) usedShapes.add(settings.shape);
@@ -917,11 +1141,13 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
 
     const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
-    // Round only the growing end: top for vertical bars, right for horizontal.
-    const endRadius: [number, number, number, number] =
-      orientation === 'horizontal'
-        ? [0, barRadius, barRadius, 0]
-        : [barRadius, barRadius, 0, 0];
+    // Round only the growing end — the top of the bar.
+    const endRadius: [number, number, number, number] = [
+      barRadius,
+      barRadius,
+      0,
+      0,
+    ];
     // A pill rounds every corner; recharts clamps the radius to half the bar's
     // shorter side, so an oversized number gives a true capsule at any width.
     const radiusFor = (shape: BarChartBarShape, rounded: boolean) =>
@@ -946,75 +1172,40 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
     // above), so what they return has to stay a *direct* child — an array or a
     // fragment is flattened, a component wrapper would not be.
 
-    // `orientation` decides which axis is numeric, and with it which axis the
-    // value props (unit/tickCount/domain) and the category props (dataKey/tick)
-    // belong to — recharts ignores each set on the other axis. Both branches
-    // stay spelled out because what differs is the prop *set*, not a couple of
-    // values: folding them into one shared props object would trade a readable
-    // fork for a merge whose per-axis prop list has to be re-derived by eye.
-    const renderAxes = () =>
-      orientation === 'horizontal' ? (
-        <>
-          {/* Horizontal bars put the values on X, so the value-axis props
-              (tickCount/domain) belong here — recharts ignores both on the
-              category axis. */}
-          <XAxis
-            type="number"
-            hide={!showXAxis}
-            tickLine={false}
-            axisLine={false}
-            unit={xUnit}
-            tickFormatter={xTickFormatter}
-            angle={xAxisAngle}
-            interval={xAxisInterval}
-            textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-            tickCount={yAxisTickCount}
-            domain={yDomain}
-            height={xAxisHeight}
-            label={xAxisTitle}
-          />
-          <YAxis
-            dataKey={xKey}
-            type="category"
-            hide={!showYAxis}
-            tickLine={false}
-            axisLine={false}
-            tick={categoryTick}
-            tickFormatter={yTickFormatter}
-            width={yAxisLabel ? 96 : 80}
-            label={yAxisTitle}
-          />
-        </>
-      ) : (
-        <>
-          <XAxis
-            dataKey={xKey}
-            type="category"
-            hide={!showXAxis}
-            tickLine={false}
-            axisLine={false}
-            tick={categoryTick}
-            tickFormatter={xTickFormatter}
-            angle={xAxisAngle}
-            interval={xAxisInterval}
-            textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-            height={xAxisHeight}
-            label={xAxisTitle}
-          />
-          <YAxis
-            type="number"
-            hide={!showYAxis}
-            tickLine={false}
-            axisLine={false}
-            unit={yUnit}
-            tickFormatter={yTickFormatter}
-            tickCount={yAxisTickCount}
-            domain={yDomain}
-            width={yAxisLabel ? 72 : undefined}
-            label={yAxisTitle}
-          />
-        </>
-      );
+    // The categories run along X and the values along Y, so the category props
+    // (dataKey/tick) belong to the X axis and the value props
+    // (unit/tickCount/domain) to the Y axis — recharts ignores each set on the
+    // other axis.
+    const renderAxes = () => (
+      <>
+        <XAxis
+          dataKey={xKey}
+          type="category"
+          hide={!showXAxis}
+          tickLine={false}
+          axisLine={false}
+          tick={categoryTick}
+          tickFormatter={xTickFormatter}
+          angle={xAxisAngle}
+          interval={xAxisInterval}
+          textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
+          height={xAxisHeight}
+          label={xAxisTitle}
+        />
+        <YAxis
+          type="number"
+          hide={!showYAxis}
+          tickLine={false}
+          axisLine={false}
+          unit={yUnit}
+          tickFormatter={yTickFormatter}
+          tickCount={yAxisTickCount}
+          domain={yDomain}
+          width={yAxisLabel ? 72 : undefined}
+          label={yAxisTitle}
+        />
+      </>
+    );
 
     const renderSeries = () =>
       dataKeys.map((key, index) => {
@@ -1094,23 +1285,16 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
     const renderReferenceAreas = () =>
       referenceAreas.map(({ area, range }, index) => {
         const [start, end] = range;
-        // Bands run along the category axis: X for vertical bars, Y for
-        // horizontal ones.
-        const bounds =
-          orientation === 'horizontal'
-            ? { y1: data[start]?.[xKey], y2: data[end]?.[xKey] }
-            : { x1: data[start]?.[xKey], x2: data[end]?.[xKey] };
         return (
           <ReferenceArea
             key={`${area.label ?? 'area'}-${index}`}
-            {...bounds}
+            // Bands run along the category axis, which is X.
+            x1={data[start]?.[xKey]}
+            x2={data[end]?.[xKey]}
             fill="var(--ui-background-surface-secondary)"
             fillOpacity={0.6}
             ifOverflow="extendDomain"
-            shape={resolveBandShape({
-              divider: area.divider,
-              vertical: orientation !== 'horizontal',
-            })}
+            shape={resolveBandShape(area.divider)}
             label={resolveBandLabel(area.label)}
           />
         );
@@ -1123,15 +1307,12 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         return (
           <ReferenceLine
             key={`${ref.label ?? 'ref'}-${index}`}
-            // Draw on the value axis: Y for vertical bars, X for horizontal.
-            {...(orientation === 'horizontal' ? { x: value } : { y: value })}
-            // By default the caption sits at the top of the line: above the
-            // right end of a horizontal line (vertical bars), or above the
-            // top of a vertical line (horizontal bars).
+            // Drawn on the value axis, which is Y.
+            y={value}
+            // By default the caption sits above the line's right end.
             {...resolveReferenceLineProps(
               ref.label,
-              ref.labelPosition ??
-                (orientation === 'horizontal' ? 'top' : 'insideTopRight')
+              ref.labelPosition ?? 'insideTopRight'
             )}
           />
         );
@@ -1158,16 +1339,11 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             barGap={barGap}
             barCategoryGap={barCategoryGap}
           >
-            <BarPaintServers
-              id={defsId}
-              dataKeys={dataKeys}
-              shapes={usedShapes}
-              horizontal={orientation === 'horizontal'}
-            />
+            <BarPaintServers id={defsId} dataKeys={dataKeys} shapes={usedShapes} />
             {showGrid && (
               <CartesianGrid
-                horizontal={gridHorizontal ?? orientation === 'vertical'}
-                vertical={gridVertical ?? orientation === 'horizontal'}
+                horizontal={gridHorizontal ?? true}
+                vertical={gridVertical ?? false}
                 strokeDasharray={gridDashed ? '3 3' : undefined}
               />
             )}
@@ -1180,11 +1356,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             {showBrush && (
               <Brush
                 dataKey={xKey}
-                // The brush slices rows by index, so its captions come from
-                // whichever axis holds the categories — Y for horizontal bars.
-                tickFormatter={
-                  orientation === 'horizontal' ? yTickFormatter : xTickFormatter
-                }
+                // The brush slices rows by index, so its captions come from the
+                // axis holding the categories — X.
+                tickFormatter={xTickFormatter}
                 {...resolveBrushProps({ brushHeight, brushAriaLabel })}
               />
             )}

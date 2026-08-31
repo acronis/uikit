@@ -185,33 +185,26 @@ describe.each(CHARTS)(
 );
 
 describe('BarChart range-brush captions', () => {
-  // The brush slices rows by index, so its captions have to come from whichever
-  // axis holds the categories — X for vertical bars, Y for horizontal ones.
-  // recharts only paints them while a handle is focused/dragged, so focus one.
-  function captionsFor(orientation: 'vertical' | 'horizontal') {
+  // The brush slices rows by index, so its captions have to come from the axis
+  // holding the categories — X. recharts only paints them while a handle is
+  // focused/dragged, so focus one.
+  it('formats the captions from the X (category) axis formatter', () => {
     const { container } = render(
       <BarChart
         config={config}
         data={data}
         dataKeys={['desktop']}
         xKey="month"
-        orientation={orientation}
         showBrush
         xTickFormatter={(value) => `x:${value}`}
         yTickFormatter={(value) => `y:${value}`}
       />
     );
     fireEvent.focusIn(container.querySelector('.recharts-brush-traveller')!);
-    return [...container.querySelectorAll('.recharts-brush-texts text')].map(
-      (node) => node.textContent
-    );
-  }
-
-  it('formats vertical-bar captions from the X (category) axis formatter', () => {
-    expect(captionsFor('vertical')).toEqual(['x:W1', 'x:W12']);
-  });
-
-  it('formats horizontal-bar captions from the Y (category) axis formatter', () => {
-    expect(captionsFor('horizontal')).toEqual(['y:W1', 'y:W12']);
+    expect(
+      [...container.querySelectorAll('.recharts-brush-texts text')].map(
+        (node) => node.textContent
+      )
+    ).toEqual(['x:W1', 'x:W12']);
   });
 });

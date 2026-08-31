@@ -40,7 +40,7 @@ A metric with an icon badge, value, unit, trend, and a supporting note:
 Use `trend` to render a `TrendIndicator` automatically. Sentiment follows
 direction: `up` → positive (green), `down` → negative (red), `stable` → neutral.
 
-Compose with `Card` for a standalone dashboard tile; drop a chart, `Meter`
+Compose with `Card` for a standalone dashboard tile; drop a chart, a labelled
 breakdown, `Separator`, or insight line into `children` to build the body:
 
 ```tsx
@@ -52,7 +52,12 @@ breakdown, `Separator`, or insight line into `children` to build the body:
     trend="down"
     trendValue="1 this week"
   >
-    <Meter label="Healthy" value={46} max={54} color="..." showTooltip={false} />
+    <BarChart
+      orientation="horizontal"
+      items={[{ label: 'Healthy', value: 46, color: '...' }]}
+      max={54}
+      showTooltip={false}
+    />
     <Separator className="my-3" />
     <p>+3 customers predicted at-risk within 30 days.</p>
   </Metric>

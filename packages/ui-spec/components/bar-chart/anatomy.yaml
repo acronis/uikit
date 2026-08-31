@@ -2,12 +2,14 @@ spec_version: '1.0'
 component: BarChart
 
 schematic: |
-  root: <div data-orientation data-layout>          (variant wrapper)
+  orientation="vertical" (default) — the chart
+
+  root: <div data-orientation="vertical" data-layout>   (variant wrapper)
     container: <ChartContainer>                     (themed, sized, responsive)
-      plot: recharts <BarChart layout=…>
-        grid:    <CartesianGrid>                    (one axis of lines)
-        x-axis:  <XAxis>   category or number by orientation
-        y-axis:  <YAxis>   number or category by orientation
+      plot: recharts <BarChart layout="horizontal">
+        grid:    <CartesianGrid>                    (horizontal lines)
+        x-axis:  <XAxis>   the category axis (xKey)
+        y-axis:  <YAxis>   the numeric value axis
         band:    <ReferenceArea> per referenceArea entry (behind the bars)
         series:  one <Bar> per dataKey (grouped side-by-side or stacked)
           bar-track: <path> full-height track behind a bar (optional)
@@ -15,13 +17,24 @@ schematic: |
         legend:  <ChartLegend>  → legend-content    (per-series swatch + label)
         brush:   <Brush>                            (only when showBrush)
 
+  orientation="horizontal" — the labelled bar list
+
+  root: <div data-orientation="horizontal">         (variant wrapper)
+    bar-row: one per items entry                    (role="meter")
+      bar-row-label:  the item label
+      bar-row-value:  the formatted value + its share of max
+      bar-row-track:  the track, filled to value/max in the item color
+      tooltip-content: <TooltipContent>             (hover/focus card)
+
 root:
   element: div
   description: >-
-    The variant wrapper. Carries the CVA `orientation` / `layout` classes and
-    mirrors the resolved values onto `data-orientation` / `data-layout`, then
-    renders the shared `ChartContainer` (sized to fill the wrapper) around the
-    recharts `BarChart`.
+    The variant wrapper. Mirrors the resolved variants onto `data-orientation` /
+    `data-layout` (`data-layout` only in the vertical mode). Under
+    `orientation="vertical"` it renders the shared `ChartContainer` (sized to
+    fill the wrapper) around the recharts `BarChart`; under
+    `orientation="horizontal"` it is a plain column of `bar-row`s and carries no
+    chart at all.
 
 parts:
   - id: container
@@ -32,23 +45,17 @@ parts:
   - id: plot
     element: svg
     description: >-
-      The recharts `BarChart`. Its `layout` is the opposite axis of our
-      `orientation` (vertical bars → recharts `horizontal`).
+      The recharts `BarChart`. Its `layout` names the axis the categories run
+      along, which for bars rising out of an X axis is its `horizontal`.
   - id: grid
     element: g
-    description: >-
-      `CartesianGrid` — horizontal lines for vertical bars, vertical lines for
-      horizontal bars.
+    description: '`CartesianGrid` — horizontal lines, one per value tick.'
   - id: x-axis
     element: g
-    description: >-
-      `XAxis` — the category axis for vertical bars (`xKey`), the numeric value
-      axis for horizontal bars.
+    description: '`XAxis` — the category axis (`xKey`).'
   - id: y-axis
     element: g
-    description: >-
-      `YAxis` — the numeric value axis for vertical bars, the category axis
-      (`xKey`) for horizontal bars.
+    description: '`YAxis` — the numeric value axis.'
   - id: series
     element: g
     description: >-
@@ -87,13 +94,35 @@ parts:
       `<Brush>` — the range selector rendered beneath the plot when `showBrush`
       is set. `brushHeight` sizes the strip; the handles and the range captions
       take the muted text token, the strip its secondary-surface background.
+  - id: bar-row
+    element: div
+    description: >-
+      `orientation="horizontal"` only. One row per `items` entry — Base UI's
+      `Meter.Root`, so `role="meter"` with `aria-valuenow` / `aria-valuemax` and
+      an `aria-valuetext` reading the value, the max, and the percentage. It
+      takes focus only when `showTooltip` is on, so the tooltip is reachable
+      without a pointer.
+  - id: bar-row-label
+    element: span
+    description: >-
+      `Meter.Label` — the item's label, truncated when the row is too narrow.
+  - id: bar-row-value
+    element: span
+    description: >-
+      The formatted value (`valueFormatter`) followed by its share of `max`,
+      rounded to a whole percent.
+  - id: bar-row-track
+    element: div
+    description: >-
+      `Meter.Track` + `Meter.Indicator` — a rounded track filled to `value/max`
+      in the item's own `color`.
 
 states:
   - id: orientation-variant
-    trigger: the orientation prop selects vertical or horizontal bars
+    trigger: the orientation prop selects the chart or the labelled bar list
     kind: prop
     prop: orientation
-    affects: [plot, grid, x-axis, y-axis, series]
+    affects: [container, plot, grid, x-axis, y-axis, series, bar-row]
   - id: layout-variant
     trigger: the layout prop selects grouped or stacked bars
     kind: prop

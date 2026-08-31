@@ -1,5 +1,8 @@
 # BarChart — accessibility
 
+Everything below the "Horizontal" heading applies to
+`orientation="horizontal"`; the rest describes the default chart.
+
 - recharts' `accessibilityLayer` is **on by default** (recharts v3), giving the
   chart keyboard focus and an accessible description of the plotted points.
 - The **range brush** (`showBrush`) is the only interactive control these charts
@@ -46,7 +49,24 @@
 - Watch recharts issue [#4809](https://github.com/recharts/recharts/issues/4809)
   on the a11y layer for heavily-customized charts.
 
+## Horizontal
+
+- Each row is Base UI's `Meter.Root`, so it carries `role="meter"` with
+  `aria-valuenow` / `aria-valuemax` and an `aria-valuetext` reading the
+  formatted value, the max, and the percentage — the numbers are in the
+  accessibility tree, not only in the picture.
+- The row's accessible name comes from its `Meter.Label`, which renders the
+  caller's `label`. There is no fallback string to localize.
+- A row takes focus (`tabindex="0"`) **only** when `showTooltip` is on, so the
+  tooltip is reachable without a pointer. A meter is not a control, so it is
+  deliberately out of the tab order when there is nothing to reveal.
+- The percentage and the value are rendered as text next to every bar, so the
+  track's fill is never the only channel carrying the number. `color` is
+  caller-supplied — it still needs 3:1 against the track, and it must not be the
+  only thing telling two rows apart.
+
 ## Contrast
 
 Chart chrome meets contrast in both themes via the semantic tokens. Bar fills
-come from `config` and are the caller's responsibility.
+come from `config` (vertical) or `items[].color` (horizontal) and are the
+caller's responsibility.

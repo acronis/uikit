@@ -20,8 +20,8 @@ Segment colors come from the `palette` prop — a dataviz palette resolving to t
 
 ## When not to use
 
-- Ranked single values that each need their own labelled row — use `Meter`
-  stacked into a bar list.
+- Ranked single values that each need their own labelled row — use
+  `BarChart` with `orientation="horizontal"`.
 - Precise value comparison across many categories — a bar chart reads better.
 - A flow across two or more levels — use `SankeyChart`.
 - More than ~6 segments, or very uneven values — thin slivers become unreadable;

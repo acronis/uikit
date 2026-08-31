@@ -28,3 +28,21 @@ export function BarChartDemo() {
     />
   );
 }
+
+const breakdown = [
+  { label: 'Critical', value: 6, color: 'var(--ui-background-status-strong-danger)' },
+  { label: 'High', value: 9, color: 'var(--ui-background-status-strong-warning)' },
+  { label: 'Medium', value: 8, color: 'var(--ui-background-status-strong-info)' },
+  { label: 'Low', value: 6, color: 'var(--ui-background-status-strong-success)' },
+];
+
+export function BarChartHorizontalDemo() {
+  return (
+    <BarChart
+      orientation="horizontal"
+      items={breakdown}
+      max={breakdown.reduce((sum, item) => sum + item.value, 0)}
+      style={{ width: 360 }}
+    />
+  );
+}

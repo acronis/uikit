@@ -73,7 +73,7 @@ component _is_, not by where its files live:
   buttons, inputs, overlays, layout primitives, navigation, feedback.
 - **`Widgets/<Component>`** — dashboard/data-display widgets: every chart
   (`Chart` primitives + the per-type charts), plus the small dashboard readouts
-  built to sit next to them (`Meter`, `Metric`, `TrendIndicator`, `CategoryBar`,
+  built to sit next to them (`Metric`, `TrendIndicator`, `CategoryBar`,
   `ChartState`). These are read-only data presentations composed for a dashboard
   surface, not controls a user operates.
 - **`Foundations/*`**, **`Themes/*`**, **`Icons/*`** — token/theme/icon

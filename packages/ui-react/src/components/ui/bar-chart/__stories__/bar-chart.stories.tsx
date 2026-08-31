@@ -1,8 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import * as React from 'react';
-import { Bar, BarChart as RechartsBarChart, CartesianGrid, Cell, XAxis } from 'recharts';
+import { Bar, BarChart as RechartsBarChart, CartesianGrid, XAxis } from 'recharts';
+import { EllipsisIcon, SquareDashedIcon } from '@acronis-platform/icons-react/stroke-mono';
 
-import { BarChart, dropHeadroomSeries } from '../bar-chart';
+import {
+  BarChart,
+  type BarChartItem,
+  type BarChartVerticalProps,
+} from '../bar-chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
@@ -11,6 +15,9 @@ import {
   formatCompactNumber,
   type ChartConfig,
 } from '../../chart';
+import { ButtonIcon } from '../../button-icon';
+import { ChartWidget } from '../../chart-widget';
+import { Metric } from '../../metric';
 
 // Series colors are supplied by the caller via `config`. There is no chart token
 // tier yet, so these reference the shared semantic brand/status tokens (a
@@ -26,9 +33,9 @@ const data = [
 ];
 
 const config = {
-  desktop: { label: 'Desktop' },
-  mobile: { label: 'Mobile' },
-  tablet: { label: 'Tablet' },
+  desktop: { label: 'Desktop', tone: { status: 'info' as const } },
+  mobile: { label: 'Mobile', tone: { status: 'success' as const } },
+  tablet: { label: 'Tablet', tone: { status: 'warning' as const } },
 } satisfies ChartConfig;
 
 const meta = {
@@ -36,52 +43,160 @@ const meta = {
   component: BarChart,
   tags: ['autodocs'],
   parameters: { layout: 'centered' },
-  // The ChartContainer is transparent by design (it inherits the surface it sits
-  // on — usually a Card). Render the stories on a themed surface so the chart is
-  // legible in both light and dark; without it, dark mode flips the token-driven
-  // text/grid but leaves the backdrop unthemed.
-  decorators: [
-    (Story) => (
-      <div className="rounded-lg border border-border bg-background p-6 text-foreground">
-        <Story />
-      </div>
-    ),
-  ],
   args: {
+    // Figma canonical: status palette — each series is colored by its tone.
+    palette: { type: 'status' },
     config,
     data,
     dataKeys: ['desktop', 'mobile', 'tablet'],
     xKey: 'month',
-    barRadius: 4,
-    showGrid: true,
-    showTooltip: true,
-    showLegend: true,
     className: 'h-[320px] w-[560px]',
   },
   argTypes: {
+    // Override the shared default so the Controls panel shows `status`.
     ...paletteArgTypes,
-    orientation: {
-      control: 'inline-radio',
-      options: ['vertical', 'horizontal'],
+    palette: {
+      ...paletteArgTypes.palette,
+      table: {
+        ...paletteArgTypes.palette.table,
+        defaultValue: { summary: 'status' },
+      },
     },
-    layout: { control: 'inline-radio', options: ['grouped', 'stacked'] },
-    barRadius: { control: { type: 'number', min: 0, max: 20 } },
+
+    // --- Bar shape ---
+    layout: {
+      control: 'inline-radio',
+      options: ['grouped', 'stacked'],
+      description: 'Side-by-side bars (`grouped`) or segments stacked on a shared column (`stacked`).',
+      table: { defaultValue: { summary: "'grouped'" } },
+    },
+    barRadius: {
+      control: { type: 'number', min: 0, max: 20 },
+      description: 'Corner radius on the growing end of each bar. `0` gives square corners.',
+      table: { defaultValue: { summary: '8' } },
+    },
+    barShape: {
+      control: 'inline-radio',
+      options: ['rounded', 'pill', 'gradient', 'pattern'],
+      description:
+        'How bars are painted: rounded end, full capsule, color fade, or diagonal hatching. Per-range overrides come from `barSettings`.',
+      table: { defaultValue: { summary: "'rounded'" } },
+    },
+    barSize: {
+      control: { type: 'number', min: 1 },
+      description: 'Fixed bar thickness in px. Unset — recharts sizes bars from the available width.',
+      table: { defaultValue: { summary: '8' } },
+    },
+    maxBarSize: {
+      control: { type: 'number', min: 1 },
+      description: 'Upper bound on the computed bar thickness in px.',
+    },
+    barGap: {
+      control: { type: 'number' },
+      description: 'Gap between bars of one category, in px (or a percentage string).',
+      table: { defaultValue: { summary: '4' } },
+    },
+    barCategoryGap: {
+      control: { type: 'number' },
+      description: 'Gap between category groups, in px (or a percentage string).',
+    },
+    minPointSize: {
+      control: { type: 'number', min: 0 },
+      description: 'Minimum rendered length for a non-zero bar in px — keeps tiny values visible.',
+    },
+
+    // --- Background / active ---
+    showBackground: {
+      control: 'boolean',
+      description: 'Draw a full-height track behind every bar.',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    backgroundFill: {
+      control: 'text',
+      description: 'Fill for the track background (any CSS color).',
+      table: { defaultValue: { summary: "'var(--ui-background-surface-secondary)'" } },
+    },
+    showActiveBar: {
+      control: 'boolean',
+      description: 'Highlight the hovered bar.',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    activeBar: { control: false },
+
+    // --- Grid ---
+    showGrid: {
+      control: 'boolean',
+      description: 'Render the CartesianGrid.',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    gridDashed: {
+      control: 'boolean',
+      description: 'Draw grid lines dashed instead of solid.',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    gridHorizontal: {
+      control: 'boolean',
+      description: 'Show horizontal grid lines. Defaults to `true` for vertical bars.',
+    },
+    gridVertical: {
+      control: 'boolean',
+      description: 'Show vertical grid lines. Defaults to `false` for vertical bars.',
+    },
+
+    // --- Axes ---
+    showXAxis: {
+      control: 'boolean',
+      description: 'Render the X axis (ticks + title).',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    showYAxis: {
+      control: 'boolean',
+      description: 'Render the Y axis (ticks + title).',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    xAxisLabel: { control: 'text', description: 'Title rendered beneath the X axis.' },
+    yAxisLabel: { control: 'text', description: 'Title rendered beside the Y axis (rotated).' },
+    yUnit: { control: 'text', description: 'Unit suffix appended to Y-axis tick values.' },
+    xAxisAngle: {
+      control: { type: 'number', min: -90, max: 90 },
+      description: 'Rotate X-axis tick labels by this many degrees (negative = tilt up-right).',
+    },
+    yAxisTickCount: {
+      control: { type: 'number', min: 2, max: 10 },
+      description: 'Desired number of Y-axis ticks (a hint — recharts may adjust).',
+    },
+    yAxisDomain: {
+      control: 'inline-radio',
+      options: ['auto', 'dataMin-dataMax', 'zero'],
+      description:
+        '`zero` anchors the axis at 0 (recharts default). `auto` fits the data at both ends. `dataMin-dataMax` is tight to the data with no padding.',
+    },
+
+    // --- Tooltip & legend ---
+    showTooltip: {
+      control: 'boolean',
+      description: 'Render the hover tooltip.',
+      table: { defaultValue: { summary: 'true' } },
+    },
+    showLegend: {
+      control: 'boolean',
+      description: 'Render the legend.',
+      table: { defaultValue: { summary: 'true' } },
+    },
+
+    // --- Reference lines ---
     referenceLine: {
       control: 'object',
       description:
         'One line or an array. Each: `{ value }` (fixed) or `{ average: true | "<key>" }`, with an optional `{ label }`. The object editor needs **strict JSON** (double-quoted keys) — e.g. `[{ "value": 300, "label": "Target" }]` — then click the submit arrow.',
     },
-    xAxisLabel: { control: 'text' },
-    yAxisLabel: { control: 'text' },
-    xUnit: { control: 'text' },
-    yUnit: { control: 'text' },
-    showGrid: { control: 'boolean' },
-    showTooltip: { control: 'boolean' },
-    showLegend: { control: 'boolean' },
-    showBrush: { control: 'boolean' },
-    brushHeight: { control: { type: 'number', min: 16, max: 80 } },
-    brushAriaLabel: { control: 'text' },
-    showLabels: { control: 'boolean' },
+
+    // --- Labels ---
+    showLabels: {
+      control: 'boolean',
+      description: 'Render a value label on each bar segment.',
+      table: { defaultValue: { summary: 'false' } },
+    },
     labelPosition: {
       control: 'select',
       options: [
@@ -97,29 +212,180 @@ const meta = {
         'insideStart',
         'insideEnd',
       ],
+      description:
+        'Where value labels sit. Defaults to the bar\'s growing end (top for vertical bars), or center when stacked.',
     },
-    animate: { control: 'boolean' },
-    animationDuration: { control: { type: 'number' } },
-    animationBegin: { control: { type: 'number' } },
+
+    // --- Animation ---
+    animate: {
+      control: 'boolean',
+      description: 'Enable entrance animation. Off by default so VR baselines are stable.',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    animationDuration: {
+      control: { type: 'number', min: 0 },
+      description: 'Animation duration in ms.',
+    },
+    animationBegin: {
+      control: { type: 'number', min: 0 },
+      description: 'Delay before the animation starts in ms.',
+    },
     animationEasing: {
       control: 'select',
       options: ['ease', 'ease-in', 'ease-out', 'ease-in-out', 'linear'],
+      description: 'Easing curve for the entrance animation.',
+      table: { defaultValue: { summary: "'ease'" } },
+    },
+
+    // --- Brush ---
+    showBrush: {
+      control: 'boolean',
+      description: 'Render a range brush beneath the chart to zoom the series.',
+      table: { defaultValue: { summary: 'false' } },
+    },
+    brushHeight: {
+      control: { type: 'number', min: 16, max: 80 },
+      description: 'Height of the brush strip in px.',
+      table: { defaultValue: { summary: '28' } },
+    },
+    brushAriaLabel: {
+      control: 'text',
+      description: 'Accessible name for the brush range handles.',
+      table: { defaultValue: { summary: "'Chart range selector'" } },
     },
   },
-} satisfies Meta<typeof BarChart>;
+} satisfies Meta<BarChartVerticalProps>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<BarChartVerticalProps>;
 
-// New shared axis/grid knobs: rotated X ticks, a zero-anchored Y domain, a
-// fixed Y tick count, and a dashed grid. See "Formatting and hiding axes".
+export const Default: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `
+import { BarChart, type ChartConfig } from '@acronis-platform/ui-react';
+
+const config = {
+  desktop: { label: 'Desktop', tone: { status: 'info' } },
+  mobile:  { label: 'Mobile',  tone: { status: 'success' } },
+  tablet:  { label: 'Tablet',  tone: { status: 'warning' } },
+} satisfies ChartConfig;
+
+const data = [
+  { month: 'Jan', desktop: 186, mobile:  80, tablet: 40 },
+  { month: 'Feb', desktop: 305, mobile: 200, tablet: 90 },
+  { month: 'Mar', desktop: 237, mobile: 120, tablet: 60 },
+  { month: 'Apr', desktop:  73, mobile: 190, tablet: 30 },
+  { month: 'May', desktop: 209, mobile: 130, tablet: 70 },
+  { month: 'Jun', desktop: 214, mobile: 140, tablet: 80 },
+];
+
+<BarChart
+  palette={{ type: 'status' }}
+  config={config}
+  data={data}
+  dataKeys={['desktop', 'mobile', 'tablet']}
+  xKey="month"
+  className="h-[320px] w-[560px]"
+/>`,
+      },
+    },
+  },
+};
+
+// Axis and grid knobs: rotated X ticks, a zero-anchored Y domain, a fixed Y
+// tick count. gridDashed is true by default; this story shows the solid override.
 export const AxisAndGridConfig: Story = {
   args: {
     xAxisAngle: -45,
     yAxisDomain: 'zero',
     yAxisTickCount: 4,
-    gridDashed: true,
+    gridDashed: false,
   },
+};
+
+const widgetConfig = {
+  desktop: { label: 'Desktop', tone: { status: 'info' as const } },
+  tablet: { label: 'Tablet', tone: { status: 'warning' as const } },
+  mobile: { label: 'Mobile', tone: { status: 'success' as const } },
+} satisfies ChartConfig;
+
+const widgetData = [
+  { month: 'Jan', desktop: 186, tablet: 40, mobile: 80 },
+  { month: 'Feb', desktop: 305, tablet: 90, mobile: 200 },
+  { month: 'Mar', desktop: 237, tablet: 60, mobile: 120 },
+  { month: 'Apr', desktop: 73, tablet: 30, mobile: 190 },
+  { month: 'May', desktop: 209, tablet: 70, mobile: 130 },
+  { month: 'Jun', desktop: 214, tablet: 80, mobile: 140 },
+];
+
+// Matches Figma forecast widget node 8982:26898 — 3 series, dashed divider at
+// Apr, translucent bars from Apr onward (no label, no background tracks, no
+// dashed outlines on the projected bars). Reuses widgetConfig/widgetData.
+export const ForecastWidget: Story = {
+  render: () => (
+    <div className="w-[592px] h-[297px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric icon={<SquareDashedIcon />} value="125" unit="Label" />
+        }
+      >
+        <BarChart
+          palette={{ type: 'status' }}
+          config={widgetConfig}
+          data={widgetData}
+          dataKeys={['desktop', 'tablet', 'mobile']}
+          xKey="month"
+          referenceArea={{ from: 'Apr', divider: true }}
+          barSettings={{
+            desktop: { from: 'Apr', opacity: 0.35 },
+            tablet: { from: 'Apr', opacity: 0.35 },
+            mobile: { from: 'Apr', opacity: 0.35 },
+          }}
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
+// Matches Figma widget node 8804:170837 — full widget composition (592 × 297 px).
+export const WidgetVertical: Story = {
+  render: () => (
+    <div className="w-[592px] h-[297px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={
+          <Metric icon={<SquareDashedIcon />} value="125" unit="Label" />
+        }
+      >
+        <BarChart
+          palette={{ type: 'status' }}
+          config={widgetConfig}
+          data={widgetData}
+          dataKeys={['desktop', 'tablet', 'mobile']}
+          xKey="month"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
 };
 
 // Data labels on each bar (T15): the value at the growing end, formatted with the
@@ -138,16 +404,8 @@ export const VerticalGrouped: Story = {
   args: { orientation: 'vertical', layout: 'grouped' },
 };
 
-export const HorizontalGrouped: Story = {
-  args: { orientation: 'horizontal', layout: 'grouped' },
-};
-
 export const VerticalStacked: Story = {
   args: { orientation: 'vertical', layout: 'stacked' },
-};
-
-export const HorizontalStacked: Story = {
-  args: { orientation: 'horizontal', layout: 'stacked' },
 };
 
 // A fixed target line on the value axis, captioned.
@@ -177,7 +435,7 @@ export const MultipleReferenceLines: Story = {
   },
 };
 
-// Response times in ms — real units, so `yUnit`/`xUnit` read truthfully. (The
+// Response times in ms — real units, so `yUnit` reads truthfully. (The
 // session-count data above has no unit; the former `yUnit="k"` was an
 // abbreviation masquerading as one.)
 const latencyData = [
@@ -190,7 +448,7 @@ const latencyData = [
 ];
 
 const latencyConfig = {
-  p95: { label: 'p95 latency' },
+  p95: { label: 'p95 latency', tone: { status: 'info' as const } },
 } satisfies ChartConfig;
 
 // Axis titles + a Y-axis unit suffix, forwarded to recharts' native
@@ -204,36 +462,6 @@ export const AxisLabels: Story = {
     xAxisLabel: 'Month',
     yAxisLabel: 'Response time',
     yUnit: 'ms',
-  },
-};
-
-// Axis titles on the horizontal orientation, where the axes swap: the value axis
-// is the (numeric) X axis, so the unit suffix rides `xUnit`. Covers the mirrored
-// label/unit wiring that the vertical `AxisLabels` baseline can't.
-export const HorizontalAxisLabels: Story = {
-  args: {
-    orientation: 'horizontal',
-    config: latencyConfig,
-    data: latencyData,
-    dataKeys: ['p95'],
-    xAxisLabel: 'Response time',
-    yAxisLabel: 'Month',
-    xUnit: 'ms',
-  },
-};
-
-// Horizontal bars put the values on X, so the value-axis props have to reach the
-// numeric X axis — `yAxisDomain`/`yAxisTickCount` are routed there. Recharts
-// silently ignores both on a category axis, so this baseline is what catches a
-// regression back to the category axis.
-export const HorizontalValueAxisDomain: Story = {
-  args: {
-    orientation: 'horizontal',
-    config: latencyConfig,
-    data: latencyData,
-    dataKeys: ['p95'],
-    yAxisDomain: 'dataMin-dataMax',
-    yAxisTickCount: 3,
   },
 };
 
@@ -253,14 +481,14 @@ export const NoChrome: Story = {
 // statically for the visual-regression baseline (see the skill's VR note).
 export const TooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={config} className="h-[320px] w-[560px]">
+    <ChartContainer palette={{ type: 'status' }} config={config} className="h-[320px] w-[560px]">
       <RechartsBarChart data={data}>
         <CartesianGrid horizontal vertical={false} />
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip defaultIndex={2} active content={<ChartTooltipContent />} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} isAnimationActive={false} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} isAnimationActive={false} />
-        <Bar dataKey="tablet" fill="var(--color-tablet)" radius={4} isAnimationActive={false} />
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} isAnimationActive={false} />
+        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={8} isAnimationActive={false} />
+        <Bar dataKey="tablet" fill="var(--color-tablet)" radius={8} isAnimationActive={false} />
       </RechartsBarChart>
     </ChartContainer>
   ),
@@ -301,14 +529,14 @@ export const CustomTooltip: Story = {
 // statically otherwise) with the shared custom content wired in.
 export const CustomTooltipOpen: Story = {
   render: () => (
-    <ChartContainer config={config} className="h-[320px] w-[560px]">
+    <ChartContainer palette={{ type: 'status' }} config={config} className="h-[320px] w-[560px]">
       <RechartsBarChart data={data}>
         <CartesianGrid horizontal vertical={false} />
         <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <ChartTooltip defaultIndex={2} active content={customTooltipContent} />
-        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={4} isAnimationActive={false} />
-        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={4} isAnimationActive={false} />
-        <Bar dataKey="tablet" fill="var(--color-tablet)" radius={4} isAnimationActive={false} />
+        <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8} isAnimationActive={false} />
+        <Bar dataKey="mobile" fill="var(--color-mobile)" radius={8} isAnimationActive={false} />
+        <Bar dataKey="tablet" fill="var(--color-tablet)" radius={8} isAnimationActive={false} />
       </RechartsBarChart>
     </ChartContainer>
   ),
@@ -327,7 +555,7 @@ const revenueData = [
 ];
 
 const revenueConfig = {
-  revenue: { label: 'Revenue' },
+  revenue: { label: 'Revenue', tone: { status: 'info' as const } },
 } satisfies ChartConfig;
 
 export const CompactValueAxis: Story = {
@@ -389,35 +617,14 @@ const weeklyData = Array.from({ length: 24 }, (_, index) => ({
 
 // `showBrush` adds a range selector under the plot: drag a handle (or the
 // selected window itself) to zoom the series into a slice of the data.
+// 24 categories × 2 series: barSize=4 prevents bar groups from overflowing
+// their slots at the fully-zoomed-out view.
 export const RangeBrush: Story = {
   args: {
     data: weeklyData,
     dataKeys: ['desktop', 'mobile'],
     showBrush: true,
-  },
-};
-
-// The brush always reads left-to-right, but for horizontal bars the categories
-// live on the Y axis — so its captions come from `yTickFormatter`, not `x`.
-export const RangeBrushHorizontal: Story = {
-  args: {
-    data: weeklyData,
-    dataKeys: ['desktop'],
-    orientation: 'horizontal',
-    showBrush: true,
-  },
-};
-// The acceptance case for the styling knobs: the tail of the series reads as a
-// projection — translucent, dashed, over its own ghost track — inside a shaded
-// band whose category ticks pick up the accent styling.
-export const ForecastRange: Story = {
-  args: {
-    dataKeys: ['desktop', 'mobile'],
-    referenceArea: { from: 'Apr', label: 'Forecast', divider: true },
-    barSettings: {
-      desktop: { from: 'Apr', opacity: 0.35, dashed: true, background: true },
-      mobile: { from: 'Apr', opacity: 0.35, dashed: true, background: true },
-    },
+    barSize: 4,
   },
 };
 
@@ -428,17 +635,6 @@ export const HighlightedRange: Story = {
     dataKeys: ['desktop'],
     referenceArea: { from: 2, to: 3 },
     barSettings: { desktop: { from: 2, to: 3, fill: 'var(--ui-background-status-strong-warning)' } },
-  },
-};
-
-// A band on a horizontal chart runs along the category axis (Y here), and the
-// tick accent follows it.
-export const HorizontalForecastRange: Story = {
-  args: {
-    orientation: 'horizontal',
-    dataKeys: ['desktop'],
-    referenceArea: { from: 'Apr', label: 'Forecast' },
-    barSettings: { desktop: { from: 'Apr', opacity: 0.35, dashed: true } },
   },
 };
 
@@ -491,168 +687,169 @@ export const MinPointSize: Story = {
   },
 };
 
+// --- orientation="horizontal": the labelled proportional bar list ---
+//
+// These render explicitly rather than through `args`: the meta supplies the
+// recharts data contract (`config`/`data`/`dataKeys`/`xKey`) to every story,
+// and the horizontal mode spreads whatever it doesn't consume onto its root
+// `<div>` — so inherited args would land on the DOM as invalid attributes.
 
-// The Intelligence "churn vs new customers" widget, reproduced: six months of
-// actuals, then a three-month projection that reads as provisional — translucent
-// and dashed, each bar carrying the headroom up to its upper bound — inside a
-// shaded band whose ticks pick up the accent styling.
-const churnRows: Array<Record<string, string | number>> = [
-  { month: 'Feb', new: 9, churned: 3.9 },
-  { month: 'Mar', new: 8, churned: 2.9 },
-  { month: 'Apr', new: 7, churned: 3.9 },
-  { month: 'May', new: 9, churned: 4.9 },
-  { month: 'Jun', new: 11, churned: 3.9 },
-  { month: 'Jul', new: 12, churned: 2.9 },
-  { month: 'Aug', new: 12.6, churned: 2.7, newMax: 14.6, churnedMax: 4.1 },
-  { month: 'Sep', new: 13.3, churned: 2.4, newMax: 16, churnedMax: 4.4 },
-  { month: 'Oct', new: 13.9, churned: 2.2, newMax: 17.2, churnedMax: 4.7 },
+const horizontalItems: BarChartItem[] = [
+  { label: 'Critical', value: 6, tone: { status: 'danger' } },
+  { label: 'High', value: 9, tone: { status: 'warning' } },
+  { label: 'Medium', value: 8, tone: { status: 'info' } },
+  { label: 'Low', value: 6, tone: { status: 'success' } },
 ];
 
-// The component synthesizes the headroom fields from `background: '<field>'`;
-// the raw open-tooltip composition below has to plot them directly.
-const churnData: Array<Record<string, string | number>> = churnRows.map(
-  (row) => {
-    const withHeadroom: Record<string, string | number> = { ...row };
-    (
-      [
-        ['new', 'newMax'],
-        ['churned', 'churnedMax'],
-      ] as const
-    ).forEach(([key, upperKey]) => {
-      const value = row[key];
-      const upper = row[upperKey];
-      if (typeof value === 'number' && typeof upper === 'number') {
-        withHeadroom[`__headroom_${key}`] = upper - value;
-      }
-    });
-    return withHeadroom;
-  }
-);
+const horizontalTotal = horizontalItems.reduce((sum, item) => sum + item.value, 0);
 
-const churnConfig = {
-  new: { label: 'New' },
-  churned: { label: 'Churned' },
-} satisfies ChartConfig;
+export const Horizontal: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `
+import { BarChart } from '@acronis-platform/ui-react';
 
-// The forecast months read as estimates in the tooltip too: the header says so
-// and each value carries a tilde. Shared by the example and its open-tooltip
-// baseline below. The locale is pinned so the baseline can't drift with the
-// renderer's default.
-const FORECAST_FROM = 'Aug';
-const isForecast = (month: string) =>
-  churnRows.findIndex((row) => row.month === month) >=
-  churnRows.findIndex((row) => row.month === FORECAST_FROM);
+const items = [
+  { label: 'Critical', value: 6, tone: { status: 'danger'  } },
+  { label: 'High',     value: 9, tone: { status: 'warning' } },
+  { label: 'Medium',   value: 8, tone: { status: 'info'    } },
+  { label: 'Low',      value: 6, tone: { status: 'success' } },
+];
 
-const churnLabelFormatter = (label: unknown) =>
-  isForecast(String(label)) ? `${label} · forecast` : String(label);
-
-// Loose parameter types so the same function satisfies both the library's
-// `formatter` signature and recharts' own.
-const churnValueFormatter = (
-  value: unknown,
-  name: unknown,
-  item: { color?: string; payload?: Record<string, unknown> }
-) => (
-  <div className="flex w-full items-center gap-2">
-    <span
-      className="size-2.5 shrink-0 rounded-[2px]"
-      style={{ backgroundColor: item.color }}
-    />
-    <span className="text-muted-foreground">
-      {churnConfig[name as keyof typeof churnConfig]?.label ?? String(name)}
-    </span>
-    <span className="ms-auto font-medium tabular-nums">
-      {isForecast(String(item.payload?.month)) ? '~' : ''}
-      {Number(value).toLocaleString('en-US')}
-    </span>
-  </div>
-);
-
-const churnTooltipContent = (
-  <ChartTooltipContent
-    labelFormatter={churnLabelFormatter}
-    formatter={churnValueFormatter}
-  />
-);
-
-export const ChurnVsNewCustomers: Story = {
-  args: {
-    config: churnConfig,
-    data: churnData,
-    dataKeys: ['new', 'churned'],
-    xKey: 'month',
-    barSize: 14,
-    barGap: 2,
-    yAxisDomain: 'zero',
-    yAxisTickCount: 5,
-    referenceArea: { from: 'Aug', divider: true },
-    tooltipContent: churnTooltipContent,
-    barSettings: {
-      new: { from: 'Aug', opacity: 0.35, dashed: true, background: 'newMax' },
-      churned: { from: 'Aug', opacity: 0.35, dashed: true, background: 'churnedMax' },
+<BarChart
+  orientation="horizontal"
+  palette={{ type: 'status' }}
+  items={items}
+  max={29}
+  className="w-[360px]"
+/>`,
+      },
     },
-    className: 'h-[320px] w-[640px]',
   },
-  render: (args) => (
-    <div className="flex flex-col gap-4">
-      <div className="flex items-baseline justify-between">
-        <span className="text-sm uppercase tracking-wide text-muted-foreground">
-          Churn vs new customers
-        </span>
-        <span className="text-sm text-muted-foreground">Per month</span>
-      </div>
-      <BarChart {...args} />
+  render: () => (
+    <BarChart
+      orientation="horizontal"
+      palette={{ type: 'status' }}
+      items={horizontalItems}
+      max={horizontalTotal}
+      className="w-[360px]"
+    />
+  ),
+};
+
+// The same rows sorted high-to-low — the ranked breakdown a dashboard widget
+// puts under its headline metric.
+export const HorizontalRankedBreakdown: Story = {
+  render: () => (
+    <BarChart
+      orientation="horizontal"
+      palette={{ type: 'status' }}
+      items={[...horizontalItems].sort((a, b) => b.value - a.value)}
+      max={horizontalTotal}
+      className="w-[360px]"
+    />
+  ),
+};
+
+// Matches Figma widget node 8804:170580 — the horizontal bar list inside the
+// same widget shell as `WidgetVertical`.
+export const WidgetHorizontal: Story = {
+  render: () => (
+    <div className="w-[592px] h-[297px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={<Metric icon={<SquareDashedIcon />} value="125" unit="Label" />}
+      >
+        <div className="px-4 pb-4">
+          <BarChart
+            orientation="horizontal"
+            palette={{ type: 'status' }}
+            items={horizontalItems}
+            max={horizontalTotal}
+            className="w-full"
+          />
+        </div>
+      </ChartWidget>
     </div>
   ),
 };
 
-// The example's tooltip, on a forecast month. Like the other open-tooltip
-// stories this renders the raw composition, since recharts only opens a tooltip
-// statically through its own `defaultIndex`.
-export const ChurnVsNewCustomersTooltipOpen: Story = {
+// Three categories with forecast extensions. The forecast bar (translucent,
+// 30% opacity) extends beyond the actual solid bar to show the projected total.
+const forecastItems: BarChartItem[] = [
+  { label: 'Category 1', value: 21, tone: { status: 'danger' }, forecast: 28 },
+  { label: 'Category 2', value: 39, tone: { status: 'warning' }, forecast: 46 },
+  { label: 'Category 3', value: 65, tone: { status: 'success' }, forecast: 73 },
+];
+const forecastMax = 125;
+
+export const HorizontalForecast: Story = {
+  parameters: {
+    docs: {
+      source: {
+        code: `
+import { BarChart } from '@acronis-platform/ui-react';
+
+const items = [
+  { label: 'Category 1', value: 21, tone: { status: 'danger'  }, forecast: 28 },
+  { label: 'Category 2', value: 39, tone: { status: 'warning' }, forecast: 46 },
+  { label: 'Category 3', value: 65, tone: { status: 'success' }, forecast: 73 },
+];
+
+<BarChart
+  orientation="horizontal"
+  palette={{ type: 'status' }}
+  items={items}
+  max={125}
+  className="w-[360px]"
+/>`,
+      },
+    },
+  },
   render: () => (
-    <ChartContainer config={churnConfig} className="h-[320px] w-[640px]">
-      <RechartsBarChart data={churnData} barSize={14} barGap={2}>
-        <CartesianGrid horizontal vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
-        <ChartTooltip
-          defaultIndex={6}
-          active
-          content={(props) => (
-            <ChartTooltipContent
-              {...props}
-              payload={dropHeadroomSeries(props.payload) as never}
-              labelFormatter={churnLabelFormatter}
-              formatter={churnValueFormatter}
-            />
-          )}
-        />
-        {(['new', 'churned'] as const).map((key) => (
-          <React.Fragment key={key}>
-            <Bar dataKey={key} stackId={key} fill={`var(--color-${key})`} isAnimationActive={false}>
-              {churnData.map((row) => (
-                <Cell
-                  key={String(row.month)}
-                  fillOpacity={isForecast(String(row.month)) ? 0.35 : 1}
-                  stroke={isForecast(String(row.month)) ? `var(--color-${key})` : undefined}
-                  strokeDasharray={isForecast(String(row.month)) ? '4 3' : undefined}
-                  radius={isForecast(String(row.month)) ? undefined : 4}
-                />
-              ))}
-            </Bar>
-            <Bar
-              dataKey={`__headroom_${key}`}
-              stackId={key}
-              fill={`var(--color-${key})`}
-              fillOpacity={0.25}
-              radius={4}
-              legendType="none"
-              tooltipType="none"
-              isAnimationActive={false}
-            />
-          </React.Fragment>
-        ))}
-      </RechartsBarChart>
-    </ChartContainer>
+    <BarChart
+      orientation="horizontal"
+      palette={{ type: 'status' }}
+      items={forecastItems}
+      max={forecastMax}
+      className="w-[360px]"
+    />
+  ),
+};
+
+// Matches Figma widget node 8982:27501 — horizontal forecast inside a widget shell.
+export const ForecastWidgetHorizontal: Story = {
+  render: () => (
+    <div className="w-[592px] h-[297px]">
+      <ChartWidget
+        header={{
+          title: 'Title',
+          actions: (
+            <ButtonIcon variant="ghost" aria-label="Widget actions">
+              <EllipsisIcon size={16} />
+            </ButtonIcon>
+          ),
+        }}
+        metric={<Metric icon={<SquareDashedIcon />} value="125" unit="Label" />}
+      >
+        <div className="px-4 pb-4">
+          <BarChart
+            orientation="horizontal"
+            palette={{ type: 'status' }}
+            items={forecastItems}
+            max={forecastMax}
+            className="w-full"
+          />
+        </div>
+      </ChartWidget>
+    </div>
   ),
 };
