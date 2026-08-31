@@ -1,11 +1,14 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { ChartPieIcon, EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
+import type { ColumnDef } from '@tanstack/react-table';
+import { ChartPieIcon, EllipsisIcon, TagIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { DotBlueIcon, DotGreenIcon } from '@acronis-platform/icons-react/stroke-multi';
 
 import { ChartWidget } from '../chart-widget';
 import { AreaChart } from '../../area-chart';
 import { BarChart } from '../../bar-chart';
 import { ButtonIcon } from '../../button-icon';
+import { DataTable } from '../../data-table';
 import { FunnelChart } from '../../funnel-chart';
 import { PieChart } from '../../pie-chart';
 import { Tag } from '../../tag';
@@ -354,5 +357,122 @@ export const MetricHorizontal: Story = {
         />
       </ChartWidget>
     </Dashboard>
+  ),
+};
+
+type WidgetTableRow = {
+  col1: string;
+  tags: Array<{ label: string; variant: 'info' | 'neutral' }>;
+  col3: string;
+  status: 'success' | 'info';
+  col5: string;
+};
+
+const widgetTableData: WidgetTableRow[] = [
+  {
+    col1: 'Simple value',
+    tags: [
+      { label: 'Label', variant: 'info' },
+      { label: '+4', variant: 'neutral' },
+    ],
+    col3: 'Simple value',
+    status: 'success',
+    col5: 'Simple value',
+  },
+  {
+    col1: 'Simple value',
+    tags: [{ label: 'Label', variant: 'info' }],
+    col3: 'Simple value',
+    status: 'info',
+    col5: 'Simple value',
+  },
+  {
+    col1: 'Simple value',
+    tags: [{ label: 'Label', variant: 'info' }],
+    col3: 'Simple value',
+    status: 'info',
+    col5: 'Simple value',
+  },
+  {
+    col1: 'Simple value',
+    tags: [{ label: 'Label', variant: 'info' }],
+    col3: 'Simple value',
+    status: 'info',
+    col5: 'Simple value',
+  },
+  {
+    col1: 'Simple value',
+    tags: [{ label: 'Label', variant: 'info' }],
+    col3: 'Simple value',
+    status: 'info',
+    col5: 'Simple value',
+  },
+];
+
+const tableHeader = () => <span className="whitespace-nowrap">Table header</span>;
+
+const widgetTableColumns: ColumnDef<WidgetTableRow>[] = [
+  {
+    accessorKey: 'col1',
+    header: tableHeader,
+    cell: ({ row }) => <span className="truncate">{row.original.col1}</span>,
+  },
+  {
+    accessorKey: 'tags',
+    header: tableHeader,
+    cell: ({ row }) => (
+      <div className="flex min-w-0 gap-2 overflow-hidden">
+        {row.original.tags.map(({ label, variant }) => (
+          <Tag key={label} variant={variant} icon={variant === 'info' ? <TagIcon /> : undefined}>
+            {label}
+          </Tag>
+        ))}
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'col3',
+    header: tableHeader,
+    cell: ({ row }) => <span className="truncate">{row.original.col3}</span>,
+  },
+  {
+    accessorKey: 'status',
+    header: tableHeader,
+    cell: ({ row }) => (
+      <div className="flex min-w-0 items-center gap-2 overflow-hidden">
+        {row.original.status === 'success' ? (
+          <DotGreenIcon size={16} />
+        ) : (
+          <DotBlueIcon size={16} />
+        )}
+        <span className="truncate">Simple value</span>
+      </div>
+    ),
+  },
+  {
+    accessorKey: 'col5',
+    header: tableHeader,
+    cell: ({ row }) => <span className="truncate">{row.original.col5}</span>,
+  },
+];
+
+/**
+ * A `DataTable` inside a `ChartWidget`. `bodyClassName="p-0"` removes the
+ * card body padding so the table fills edge-to-edge. Figma: node 8982:34522.
+ */
+export const WithDataTable: Story = {
+  render: () => (
+    <div className="w-[592px]">
+      <ChartWidget
+        header={{ title: 'Title', actions: <MoreActions /> }}
+        bodyClassName="p-0"
+      >
+        <DataTable
+          columns={widgetTableColumns}
+          data={widgetTableData}
+          hideActionColumn
+        />
+      </ChartWidget>
+    </div>
   ),
 };
