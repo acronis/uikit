@@ -26,11 +26,17 @@ contract:
       required: false
       default: false
       description: Disables interaction; applies the disabled form tokens.
+    # Known gap, not yet ratified: no dedicated visual affordance for the
+    # required state (compare InputSelect's `*` marker on InputSelectLabel).
+    # See behavior.md's "Required participates in form validation" scenario.
     - name: required
       type: boolean
       required: false
       default: false
       description: Marks the control as required in a form.
+    # Known gap, not yet ratified: no dedicated visual affordance for the
+    # read-only state beyond aria-readonly. See behavior.md's "Read-only
+    # blocks the state change but not focus" scenario.
     - name: read-only
       type: boolean
       required: false

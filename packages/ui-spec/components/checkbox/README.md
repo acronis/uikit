@@ -53,8 +53,13 @@ them for a bare box, and name it with `aria-label`:
 | Checked       | `checked` / `default-checked` | Active fill + check glyph                         |
 | Indeterminate | `indeterminate`               | Active fill + minus glyph, `mixed`                |
 | Disabled      | `disabled`                    | Disabled tokens; not interactive                  |
-| Read-only     | `read-only`                   | Still shows hover/active feedback; not toggleable |
-| Required      | `required`                    | Unchanged visuals; `aria-required`                |
+| Read-only ⚠   | `read-only`                   | Still shows hover/active feedback; not toggleable |
+| Required ⚠    | `required`                    | Unchanged visuals; `aria-required`                |
+
+⚠ **Known gap, not yet ratified:** neither state has a dedicated visual
+affordance beyond its ARIA attribute — this is current behavior, not a
+signed-off design decision. See the caveats in `behavior.md` (pending
+design-lead sign-off before treated as final).
 
 ## Spec Files
 

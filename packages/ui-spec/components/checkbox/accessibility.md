@@ -5,13 +5,19 @@ via Base UI's Checkbox primitive.
 
 ## ARIA Roles and Attributes
 
-| Attribute       | Value                        | Reason                                       |
-| --------------- | ---------------------------- | -------------------------------------------- |
-| `role`          | `"checkbox"`                 | Identifies the control                       |
-| `aria-checked`  | `"true" / "false" / "mixed"` | Reflects checked / unchecked / indeterminate |
-| `aria-disabled` | present when disabled        | Conveyed via the disabled state              |
-| `aria-required` | present when `required`      | Announces that the box must be ticked        |
-| `aria-readonly` | present when `read-only`     | Announces that the state cannot be changed   |
+| Attribute       | Value                        | Reason                                          |
+| --------------- | ---------------------------- | ----------------------------------------------- |
+| `role`          | `"checkbox"`                 | Identifies the control                          |
+| `aria-checked`  | `"true" / "false" / "mixed"` | Reflects checked / unchecked / indeterminate    |
+| `aria-disabled` | present when disabled        | Conveyed via the disabled state                 |
+| `aria-required` | present when `required`      | Announces that the box must be ticked [^1]      |
+| `aria-readonly` | present when `read-only`     | Announces that the state cannot be changed [^1] |
+
+[^1]:
+    Known gap, not yet ratified: no dedicated sighted visual affordance
+    exists for this state beyond the ARIA attribute — this is current
+    behavior, not a signed-off design decision, pending design-lead sign-off
+    (see `behavior.md`).
 
 The control must have an **accessible name** — provide a visible `<label>`
 associated with it, or an `aria-label` / `aria-labelledby` when used standalone.
@@ -25,7 +31,8 @@ associated with it, or an `aria-label` / `aria-labelledby` when used standalone.
 
 The box is focusable in its enabled state and removed from the tab order when
 disabled. A **read-only** box stays focusable and in the tab order — Space
-simply does not change its state.
+simply does not change its state, with no sighted visual cue distinguishing
+it from an editable box (see the known-gap footnote above).
 
 ## Screen Reader Requirements
 

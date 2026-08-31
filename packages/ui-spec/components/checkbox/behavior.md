@@ -107,3 +107,14 @@ consumer should pair it with copy that explains why it can't be changed
 **When** it renders
 **Then** `aria-required="true"` is set
 **And** the hidden native input marks the field as required for submission
+**And** the box itself renders no dedicated required-state token — nothing in
+`packages/tokens-pd/css/Checkbox/*.css` distinguishes a required box from an
+optional one beyond `aria-required`
+
+> Known gap, not yet ratified: the absence of a required visual affordance is
+> the current behavior, not a signed-off design decision. It needs
+> design-lead sign-off before it is treated as final. Compare InputSelect,
+> where `required` on `InputSelectLabel` renders a visual `*` marker
+> (`--ui-input-select-global-required-color`) — design HAS modeled a required
+> affordance for a sibling component, so Checkbox's lack of one is a gap, not
+> a considered choice to omit it everywhere.

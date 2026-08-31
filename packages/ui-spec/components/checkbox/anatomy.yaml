@@ -79,6 +79,10 @@ transitions:
     state: checked
     on: click / Space
     to: toggle (!checked)
+    # `read-only` (and `required`) gate interaction/validation only — neither
+    # appears in the `states:` block below (no read-only/required entry there).
+    # Known gap, not yet ratified: see behavior.md for the pending design-lead
+    # sign-off.
     guard: not disabled and not read-only
     effect: emits checked-change(next)
     when_controlled: >-

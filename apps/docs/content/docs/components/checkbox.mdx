@@ -76,7 +76,12 @@ changing the state, while keeping the box focusable and in the tab order.
 Neither prop has a visual treatment of its own — a read-only box still shows
 its normal hover/active feedback and cursor, it just silently ignores the
 click — so pair it with surrounding copy (or a `description`) that explains
-why it cannot be changed.
+why it cannot be changed. **This is a known gap, not a final design
+decision:** the absence of a dedicated visual affordance for `readOnly` and
+`required` is current behavior pending design-lead sign-off, not something
+design has ratified as intentional — unlike `InputSelect`, whose `required`
+label renders a visual `*` marker. Treat the lack of a Checkbox affordance as
+provisional rather than a pattern to copy elsewhere.
 
 ## API Reference
 
