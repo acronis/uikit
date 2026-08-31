@@ -176,9 +176,9 @@ already anchored at 0 — so `zero` is the explicit form of the default rather t
 change to it. Use `auto` when you want the axis to fit the data instead.
 
 `yAxisTickCount` and `yAxisDomain` apply to whichever axis carries the *values*.
-That's Y for every chart except `BarChart` with `orientation="horizontal"`, where
-the bars grow along X — there they drive the X axis, and `xUnit` (not `yUnit`)
-carries the unit suffix.
+That's Y for every chart except `ComposedChart` with `orientation="horizontal"`,
+where the bars grow along X — there they drive the X axis, and `xUnit` (not
+`yUnit`) carries the unit suffix.
 
 ```tsx
 <BarChart
@@ -281,7 +281,8 @@ HTML in the kit.
 
 This is what mainstream charting libraries do by default too: the plot keeps its
 physical orientation and only the surrounding UI mirrors. The non-SVG widgets —
-[CategoryBar](/components/category-bar), [Meter](/components/meter),
+[CategoryBar](/components/category-bar),
+[BarChart `orientation="horizontal"`](/components/bar-chart#horizontal),
 [Metric](/components/metric), [TrendIndicator](/components/trend-indicator) —
 sit outside the surface entirely, are plain DOM, and mirror fully instead.
 

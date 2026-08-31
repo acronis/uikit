@@ -1,10 +1,13 @@
 ---
 title: BarChart
-description: A typed bar chart — grouped or stacked, vertical or horizontal.
+description: A typed bar chart — grouped or stacked — plus a labelled proportional bar list.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
-import { BarChartDemo } from '@/components/demos-react/bar-chart';
+import {
+  BarChartDemo,
+  BarChartHorizontalDemo,
+} from '@/components/demos-react/bar-chart';
 
 ## Usage
 
@@ -13,11 +16,18 @@ import { BarChart } from '@acronis-platform/ui-react';
 import type { ChartConfig } from '@acronis-platform/ui-react';
 ```
 
-`BarChart` is a typed composition over the shared [`Chart`](/components/chart)
-primitives. Give it `data`, a per-series `config`, the series to plot
-(`dataKeys`), and the category key (`xKey`) — it renders a themed recharts bar
-chart (tooltip, legend, axes, grid included), so you don't hand-compose recharts
-children.
+`BarChart` is two renderings behind one name, selected by `orientation`.
+
+The default, `orientation="vertical"`, is a typed composition over the shared
+[`Chart`](/components/chart) primitives. Give it `data`, a per-series `config`,
+the series to plot (`dataKeys`), and the category key (`xKey`) — it renders a
+themed recharts bar chart (tooltip, legend, axes, grid included), so you don't
+hand-compose recharts children.
+
+`orientation="horizontal"` renders something else entirely: a labelled
+proportional bar list, one row per `items` entry, with no axes or grid. See
+[Horizontal](#horizontal). Everything on this page other than that section
+describes the default chart.
 
 Series colors come from the `palette` prop, not from `config` — see
 [Palettes](/components/chart#palettes). Each `config` entry maps a data key to a
@@ -60,13 +70,6 @@ Stack the series by setting `layout="stacked"`:
 <BarChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" layout="stacked" />
 ```
 
-Lay the bars on their side with `orientation="horizontal"` (the category moves to
-the y-axis):
-
-```tsx
-<BarChart config={config} data={data} dataKeys={['desktop', 'mobile']} xKey="month" orientation="horizontal" />
-```
-
 Toggle the chrome and corner rounding with `showGrid` / `showTooltip` /
 `showLegend` / `barRadius`:
 
@@ -104,9 +107,8 @@ of every plotted series when `true`). An optional `label` captions it. Pass an
 ```
 
 Add axis titles and a unit suffix with `xAxisLabel` / `yAxisLabel` / `yUnit`
-(`xUnit` also applies in `orientation="horizontal"`, where the x-axis is
-numeric). The titles inherit the theme token, so they stay legible in both
-modes:
+(the y-axis is the numeric one). The titles inherit the theme token, so they
+stay legible in both modes:
 
 ```tsx
 <BarChart
@@ -132,6 +134,7 @@ in the series color, which reads without relying on hue):
 
 Size the bars with `barSize` / `maxBarSize` and the spacing with `barGap`
 (between the bars of one category) / `barCategoryGap` (between categories).
+Defaults: `barSize={8}`, `barGap={4}`, `barRadius={8}`.
 `minPointSize` keeps a near-zero value visible as a sliver, and `showBackground`
 draws a full-height track behind every bar (`backgroundFill` recolors it):
 
@@ -289,9 +292,8 @@ same formatters as the axes, so a label and its axis read alike:
 <BarChart config={config} data={data} dataKeys={['desktop']} xKey="month" showLabels labelFormatter={formatCompactNumber} />
 ```
 
-`labelPosition` moves them; the default is the series' growing end (`top`, or
-`right` for horizontal bars). Under `layout="stacked"` that end is covered by the
-next segment, so each value centres inside its own segment instead — and switches
+`labelPosition` moves them; the default is the series' growing end (`top`).
+Under `layout="stacked"` that end is covered by the next segment, so each value centres inside its own segment instead — and switches
 to a token that stays legible over the fill:
 
 ```tsx
@@ -312,9 +314,9 @@ sizes the strip (28px by default):
 <BarChart config={config} data={data} dataKeys={['desktop']} xKey="month" showBrush />
 ```
 
-The brush indexes rows, so it slices whichever axis holds the categories — the Y
-axis under `orientation="horizontal"`. It is independent of `showXAxis`, so a
-chart with its category axis hidden still gets a working brush. The two range
+The brush indexes rows, so it slices the category (x) axis. It is independent of
+`showXAxis`, so a chart with its category axis hidden still gets a working
+brush. The two range
 captions appear on the strip while you hover, drag, or focus a handle.
 
 Both handles are focusable `role="slider"` elements: Tab reaches them, and the
@@ -388,8 +390,8 @@ layout built from logical CSS utilities. The plot area itself deliberately stays
 left-to-right: recharts lays every mark out in physical SVG coordinates, so a
 mirrored category axis would flip the reading order of the data without flipping
 the geometry that encodes it. This is what mainstream charting libraries do by
-default, and it holds for `orientation="horizontal"` too: the bars keep growing
-rightward.
+default. `orientation="horizontal"` is not part of this: it renders no SVG at
+all, so its rows are ordinary flow layout and mirror with the page.
 
 `ChartContainer` pins `.recharts-surface` to `direction: ltr` so that holds
 whatever the page inherits, and the pin is load-bearing rather than a
@@ -402,6 +404,85 @@ overflows the surface. Text anchored `middle` is direction-immune either way:
 unrotated X-axis ticks, axis titles, and the values `showLabels` draws. Because
 the pin stops at the surface, the tooltip and the legend — HTML outside it —
 still mirror. [`Chart`](/components/chart) carries the measured detail.
+
+## Horizontal
+
+Pass `orientation="horizontal"` to render labelled proportional bars instead of
+a chart — one row per `items` entry showing its label, its value, its share of
+`max`, and a track filled to that share. There are no axes, no grid, and no
+recharts: each row is Base UI's `Meter` primitive, so it carries `role="meter"`
+and its numbers reach the accessibility tree.
+
+<DemoReact>
+  <BarChartHorizontalDemo />
+</DemoReact>
+
+```tsx
+import { BarChart } from '@acronis-platform/ui-react';
+
+<BarChart
+  orientation="horizontal"
+  palette={{ type: 'status' }}
+  items={[
+    { label: 'Critical', value: 6, tone: { status: 'danger' } },
+    { label: 'High', value: 9, tone: { status: 'warning' } },
+  ]}
+  max={29}
+/>;
+```
+
+Each item takes either a `color` (any CSS color string) or a `tone` together
+with a `palette`. The `palette` prop works the same way as in the vertical chart
+— `{ type: 'status' }` maps each `tone.status` value (`'danger'`, `'warning'`,
+`'info'`, `'success'`, `'neutral'`) to its corresponding status color. When
+both are provided, `color` takes precedence.
+
+`max` defaults to the sum of all `items[].value` when omitted — which gives each
+row its own share of the whole. Pass an explicit `max` when the rows are shares
+of a total they don't add up to.
+
+`valueFormatter` formats the number next to each label (`toLocaleString()` by
+default). `showTooltip` toggles the per-row hover card — a row is focusable only
+while it is on, so the tooltip stays reachable from the keyboard — and `tooltip`
+replaces its content:
+
+```tsx
+<BarChart
+  orientation="horizontal"
+  palette={{ type: 'status' }}
+  items={items}
+  max={29}
+  valueFormatter={(value) => `${value} alerts`}
+  showTooltip={false}
+/>;
+```
+
+### Forecast
+
+Add a `forecast` value to any item to render a translucent projection bar
+extending beyond the actual value. The actual bar renders solid on top; text
+and percentages always reflect the actual value:
+
+```tsx
+<BarChart
+  orientation="horizontal"
+  palette={{ type: 'status' }}
+  items={[
+    { label: 'Critical', value: 6, tone: { status: 'danger' }, forecast: 10 },
+    { label: 'High', value: 9, tone: { status: 'warning' }, forecast: 12 },
+  ]}
+  max={29}
+/>;
+```
+
+The forecast bar is the same color at 30% opacity; `aria-valuenow` reflects the
+actual value and `aria-valuetext` also mentions the forecast. `forecast` is
+ignored when `<= value`.
+
+None of the chart props above apply here: `data` / `config` / `dataKeys` /
+`xKey`, the axis and grid knobs, `layout`, `barShape`, `referenceLine`,
+`referenceArea`, `barSettings` and the brush are all `orientation="vertical"`
+only.
 
 ## API Reference
 

@@ -16,8 +16,9 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '../tooltip';
 
 // A category bar: a single horizontal bar split into proportional colored
 // segments — one part-to-whole across a handful of categories, in one row
-// (onboarding stages, certification status, a rating scale). Unlike `Meter`
-// (one value per row, stacked into a bar list), all segments share the same bar.
+// (onboarding stages, certification status, a rating scale). Unlike
+// `BarChart orientation="horizontal"` (one value per labelled row, stacked into
+// a bar list), all segments share the same bar.
 // It's a plain flex composition, not a recharts chart: each segment's width is
 // `value / total`, so exact proportions and the count/% legend are direct DOM,
 // with no axes/grid to hide. Segment colors come from the `palette` prop, the

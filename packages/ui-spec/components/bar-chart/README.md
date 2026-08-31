@@ -18,6 +18,8 @@ Series colors come from the `palette` prop — a dataviz palette resolving to th
 
 ## When not to use
 
+- A ranked breakdown where each row needs its own label, value, and percentage
+  — that is `orientation="horizontal"`, not a chart.
 - A single metric or KPI — use a `Tag`, `Badge`, or plain text.
 - Trends over a continuous dimension — prefer a line/area chart.
 - Part-to-whole of a single total — consider a pie/donut chart.
@@ -25,10 +27,48 @@ Series colors come from the `palette` prop — a dataviz palette resolving to th
 
 ## Variants
 
-| Axis          | Values                    | Effect                                                 |
-| ------------- | ------------------------- | ------------------------------------------------------ |
-| `orientation` | `vertical` · `horizontal` | Bars grow up (category on x) vs right (category on y). |
-| `layout`      | `grouped` · `stacked`     | Series side-by-side vs summed on a shared stack.       |
+| Axis          | Values                    | Effect                                                    |
+| ------------- | ------------------------- | --------------------------------------------------------- |
+| `orientation` | `vertical` · `horizontal` | The recharts chart vs the labelled proportional bar list. |
+| `layout`      | `grouped` · `stacked`     | Vertical only: series side-by-side vs summed on a stack.  |
+
+`orientation` is not a direction knob on one drawing — it picks which of two
+renderings you get, and the two take different props. See **Horizontal** below.
+
+## Horizontal
+
+`orientation="horizontal"` renders a labelled proportional bar list instead of a
+chart: one row per `items` entry (`{ label, value, color }`), each showing its
+label, its formatted value, its share of `max`, and a track filled to that
+share. There are no axes, no grid, and no recharts — just Base UI's `Meter`
+primitive per row, so each carries `role="meter"` and its numbers reach the
+accessibility tree.
+
+`max` defaults to the sum of every `items[].value`, which makes each row its
+share of the whole. Pass an explicit `max` when the rows are shares of a total
+they do not add up to. `valueFormatter` formats the number, `showTooltip`
+toggles the per-row hover card, and `tooltip` replaces its content.
+
+```tsx
+<BarChart
+  orientation="horizontal"
+  items={[
+    {
+      label: 'Critical',
+      value: 6,
+      color: 'var(--ui-background-status-strong-danger)',
+    },
+    {
+      label: 'High',
+      value: 9,
+      color: 'var(--ui-background-status-strong-warning)',
+    },
+  ]}
+  max={29}
+/>
+```
+
+Everything below applies to the default (`vertical`) chart only.
 
 ## Highlighting a range
 

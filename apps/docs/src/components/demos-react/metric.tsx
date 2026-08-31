@@ -1,10 +1,10 @@
 'use client';
 
 import {
+  BarChart,
   Card,
   Metric,
   Tag,
-  Meter,
   Separator,
 } from '@acronis-platform/ui-react';
 import { ChartPieIcon } from '@acronis-platform/icons-react/stroke-mono';
@@ -43,29 +43,29 @@ export function MetricDemo() {
           trend="up"
           trendValue="1 this week"
         >
-          <div className="mt-3 flex flex-col gap-2.5">
-            <Meter
-              label="Healthy"
-              value={46}
-              max={54}
-              color="var(--ui-background-status-strong-success)"
-              showTooltip={false}
-            />
-            <Meter
-              label="Unhealthy"
-              value={5}
-              max={54}
-              color="var(--ui-background-status-strong-warning)"
-              showTooltip={false}
-            />
-            <Meter
-              label="At risk"
-              value={3}
-              max={54}
-              color="var(--ui-background-status-strong-critical)"
-              showTooltip={false}
-            />
-          </div>
+          <BarChart
+            orientation="horizontal"
+            className="mt-3 gap-2.5"
+            max={54}
+            showTooltip={false}
+            items={[
+              {
+                label: 'Healthy',
+                value: 46,
+                color: 'var(--ui-background-status-strong-success)',
+              },
+              {
+                label: 'Unhealthy',
+                value: 5,
+                color: 'var(--ui-background-status-strong-warning)',
+              },
+              {
+                label: 'At risk',
+                value: 3,
+                color: 'var(--ui-background-status-strong-critical)',
+              },
+            ]}
+          />
           <Separator className="my-3" />
           <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
             <AcronisAiMultiIcon size={16} aria-hidden className="mt-0.5 shrink-0" />

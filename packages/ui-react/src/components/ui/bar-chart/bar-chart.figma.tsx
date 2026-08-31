@@ -1,27 +1,18 @@
-// Figma Code Connect — status: NEEDS_FIGMA_URL
-// Ported from the apps/demo BarChartPlayground without a "ready for dev" Figma
-// node (design-pending v1). BarChart is a recharts composition over the shared
-// Chart primitives; a Figma node would map a representative bar-chart frame with
-// its orientation / layout variants. Replace 'FIGMA_NODE_URL' and flip to
-// COMPLETE via `/figma-component BarChart <url> --update` once mockups land.
+// Figma Code Connect — status: COMPLETE
 import figma from '@figma/code-connect';
 
 import { BarChart } from './bar-chart';
 
-figma.connect(BarChart, 'FIGMA_NODE_URL', {
+// Vertical mode (Layout=Grouped / Stacked) — node 8804-170895
+figma.connect(BarChart, 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8804-170895&m=dev', {
   props: {
-    orientation: figma.enum('Orientation', {
-      Vertical: 'vertical',
-      Horizontal: 'horizontal',
-    }),
     layout: figma.enum('Layout', {
       Grouped: 'grouped',
       Stacked: 'stacked',
     }),
   },
-  example: ({ orientation, layout }) => (
+  example: ({ layout }) => (
     <BarChart
-      orientation={orientation}
       layout={layout}
       xKey="month"
       dataKeys={['desktop', 'mobile']}
@@ -30,6 +21,38 @@ figma.connect(BarChart, 'FIGMA_NODE_URL', {
         mobile: { label: 'Mobile' },
       }}
       data={[{ month: 'Jan', desktop: 186, mobile: 80 }]}
+    />
+  ),
+});
+
+// Horizontal mode (labelled proportional bars) — node 8804-170619
+figma.connect(BarChart, 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8804-170619&m=dev', {
+  props: {},
+  example: () => (
+    <BarChart
+      orientation="horizontal"
+      palette={{ type: 'status' }}
+      items={[
+        { label: 'Category 1', value: 21, tone: { status: 'danger' } },
+        { label: 'Category 2', value: 39, tone: { status: 'warning' } },
+      ]}
+      max={125}
+    />
+  ),
+});
+
+// Horizontal mode with forecast — node 8982-27501
+figma.connect(BarChart, 'https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=8982-27501&m=dev', {
+  props: {},
+  example: () => (
+    <BarChart
+      orientation="horizontal"
+      palette={{ type: 'status' }}
+      items={[
+        { label: 'Category 1', value: 21, tone: { status: 'danger' }, forecast: 28 },
+        { label: 'Category 2', value: 39, tone: { status: 'warning' }, forecast: 46 },
+      ]}
+      max={125}
     />
   ),
 });

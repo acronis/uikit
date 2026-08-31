@@ -2,8 +2,10 @@ spec_version: '1.0'
 component: BarChart
 
 # Framework-agnostic contract. `orientation` and `layout` are the CVA variant
-# axes (conformance-checked against the ui-react cva keys). `data` / `config` /
-# `dataKeys` / `xKey` are the data contract; the rest toggle chrome.
+# axes (conformance-checked against the ui-react cva keys). `orientation` also
+# selects which of the two renderings applies: `vertical` takes the
+# `data` / `config` / `dataKeys` / `xKey` chart contract plus the chrome
+# toggles, `horizontal` takes `items` / `max` / `valueFormatter` / `tooltip`.
 contract:
   properties:
     - name: orientation
@@ -11,43 +13,97 @@ contract:
       required: false
       default: "'vertical'"
       description: >-
-        Direction the bars grow. `vertical` = bars rise (category on the x-axis);
-        `horizontal` = bars extend rightward (category on the y-axis).
+        Which of the two renderings to use. `vertical` (the default) draws the
+        chart: bars rising from a category x-axis, with axes, grid, tooltip and
+        legend. `horizontal` draws a labelled proportional bar list instead —
+        one row per `items` entry, no axes or grid. The two modes take different
+        props: `data`/`config`/`dataKeys`/`xKey` and every chart knob below
+        apply only to `vertical`; `items`, `max`, `valueFormatter` and `tooltip`
+        only to `horizontal`.
+    - name: items
+      type: 'Array<{ label: string; value: number; color?: string; tone?: { status: ChartStatusTone }; forecast?: number }>'
+      required: false
+      description: >-
+        Required when `orientation="horizontal"`. One row per entry — each
+        renders as a labelled proportional bar carrying its value and share of
+        `max`. Provide `color` (any CSS color; prefer a `--ui-*` token) when no
+        `palette` is used, or `tone` together with `palette` to resolve the
+        color from the palette. `color` and `tone` may both be set; `color`
+        takes precedence. Optional `forecast`: projected total value — renders a
+        translucent bar (30% opacity) extending beyond the actual value; the
+        actual bar renders solid on top. Ignored when `forecast <= value`. ARIA
+        values reflect the actual value; `aria-valuetext` also mentions the
+        forecast. Ignored when `orientation="vertical"`.
+    - name: max
+      type: number
+      required: false
+      description: >-
+        `orientation="horizontal"` only. Upper bound the item values are shares
+        of. Defaults to the sum of every `items[].value`.
+    - name: valueFormatter
+      type: '(value: number) => string'
+      required: false
+      description: >-
+        `orientation="horizontal"` only. Formats the numeric value in each row's
+        label. Defaults to `toLocaleString()`.
+    - name: tooltip
+      type: ReactNode
+      required: false
+      description: >-
+        `orientation="horizontal"` only. Tooltip content shared by every row,
+        replacing the default (swatch + label + value of max + percentage).
+        Ignored when `showTooltip` is false.
+    - name: palette
+      type: ChartPalette
+      required: false
+      description: >-
+        `orientation="horizontal"` only. Dataviz palette to resolve each item's
+        color from. When provided, each `items` entry should carry a `tone`
+        (and can omit `color`). Colors are resolved in the same order and with
+        the same tone rules as the vertical chart — `status` tones pick a
+        specific stop, slot-less items consume the next available stop.
     - name: layout
       type: "'grouped' | 'stacked'"
       required: false
       default: "'grouped'"
       description: >-
-        How multiple series are arranged. `grouped` = side-by-side bars;
-        `stacked` = segments summed on a shared `stackId`.
+        Vertical only. How multiple series are arranged. `grouped` =
+        side-by-side bars; `stacked` = segments summed on a shared `stackId`.
     - name: data
       type: ReadonlyArray<Record<string, string | number>>
-      required: true
-      description: Row-per-category data — each row holds `xKey` plus one numeric field per series.
+      required: false
+      description: >-
+        Required when `orientation="vertical"`. Row-per-category data — each row
+        holds `xKey` plus one numeric field per series.
     - name: config
       type: ChartConfig
-      required: true
+      required: false
       description: >-
-        Series take their colour from the container's `palette`; each entry maps
-        a data key to a `label` and an optional `tone`. Resolved into the
-        `--color-<key>` custom properties the bars fill from.
+        Required when `orientation="vertical"`. Series take their colour from
+        the container's `palette`; each entry maps a data key to a `label` and
+        an optional `tone`. Resolved into the `--color-<key>` custom properties
+        the bars fill from.
     - name: dataKeys
       type: string[]
-      required: true
-      description: Series to plot — one bar per key. Each must exist in `config` and every data row.
+      required: false
+      description: >-
+        Required when `orientation="vertical"`. Series to plot — one bar per
+        key. Each must exist in `config` and every data row.
     - name: xKey
       type: string
-      required: true
-      description: The category dimension key shared across rows.
+      required: false
+      description: >-
+        Required when `orientation="vertical"`. The category dimension key
+        shared across rows.
     - name: referenceLine
       type: 'Line | Line[]  where Line = { value?: number; average?: boolean | string; label?: string }'
       required: false
       description: >-
-        One or more dashed reference/average lines on the value axis (Y for
-        vertical bars, X for horizontal). Pass a single object or an array. Per
-        line, a fixed `value` wins; otherwise the mean of one series
+        One or more dashed reference/average lines on the value (Y) axis. Pass a
+        single object or an array. Per line, a fixed `value` wins; otherwise the
+        mean of one series
         (`average: '<key>'`) or of every plotted series (`average: true`). An
-        optional `label` captions each.
+        optional `label` captions each. Vertical only.
     - name: xAxisLabel
       type: string
       required: false
@@ -56,18 +112,12 @@ contract:
       type: string
       required: false
       description: Title rendered beside the vertical (Y) axis (rotated).
-    - name: xUnit
-      type: string
-      required: false
-      description: >-
-        Unit suffix appended to X-axis tick values (recharts `unit`); applies
-        when the X axis is numeric (horizontal orientation).
     - name: yUnit
       type: string
       required: false
       description: >-
-        Unit suffix appended to Y-axis tick values (recharts `unit`); applies
-        when the Y axis is numeric (vertical orientation).
+        Unit suffix appended to Y-axis tick values (recharts `unit`) — the Y
+        axis is the numeric one.
     - name: referenceArea
       type: 'Area | Area[]  where Area = { from?: string | number; to?: string | number; label?: string; highlightTicks?: boolean; divider?: boolean }'
       required: false
@@ -91,7 +141,7 @@ contract:
     - name: barRadius
       type: number
       required: false
-      default: '4'
+      default: '8'
       description: Corner radius on the growing end of each bar (0 for square corners).
     - name: barShape
       type: "'rounded' | 'pill' | 'gradient' | 'pattern'"
@@ -104,6 +154,7 @@ contract:
     - name: barSize
       type: number
       required: false
+      default: '8'
       description: Fixed bar thickness in px; unset, recharts sizes bars from the available width.
     - name: maxBarSize
       type: number
@@ -112,6 +163,7 @@ contract:
     - name: barGap
       type: number | string
       required: false
+      default: '4'
       description: Gap between the bars of one category, in px or a percentage string.
     - name: barCategoryGap
       type: number | string
@@ -149,7 +201,9 @@ contract:
       type: boolean
       required: false
       default: 'true'
-      description: Render the hover tooltip.
+      description: >-
+        Render the hover tooltip — recharts' for `vertical`, the per-row tooltip
+        for `horizontal`.
     - name: showLegend
       type: boolean
       required: false
@@ -200,9 +254,8 @@ contract:
       type: number
       required: false
       description: >-
-        Desired number of ticks on the value axis (recharts tickCount; a hint, not
-        exact). Applies to whichever axis holds the values — Y for most charts, X
-        for BarChart with orientation="horizontal".
+        Desired number of ticks on the value (Y) axis (recharts tickCount; a
+        hint, not exact).
     - name: yAxisDomain
       type: "'auto' | 'dataMin-dataMax' | 'zero'"
       required: false
@@ -210,11 +263,11 @@ contract:
         Value-axis domain preset — auto (fit the data at both ends; the axis need
         not include 0), zero (anchor the axis at 0, which is also recharts'
         behaviour when the prop is omitted), or dataMin-dataMax (tight to the
-        data, no padding). Applies to whichever axis holds the values — Y for most
-        charts, X for BarChart with orientation="horizontal".
+        data, no padding). Applies to the value (Y) axis.
     - name: gridDashed
       type: boolean
       required: false
+      default: 'true'
       description: Draw grid lines dashed instead of solid.
     - name: gridHorizontal
       type: boolean
@@ -252,8 +305,8 @@ contract:
       type: "'top' | 'bottom' | 'left' | 'right' | 'center' | 'insideTop' | 'insideBottom' | 'insideLeft' | 'insideRight' | 'insideStart' | 'insideEnd'"
       required: false
       description: >-
-        Where the value labels sit. Defaults to the bar's growing end — top for
-        vertical bars, right for horizontal — or center when layout is stacked.
+        Where the value labels sit. Defaults to the bar's growing end (top), or
+        center when layout is stacked.
     - name: labelFormatter
       type: '(value) => string'
       required: false
@@ -293,9 +346,18 @@ adapters:
         data={data}
         dataKeys={['desktop', 'mobile']}
         xKey="month"
-        orientation="vertical"
         layout="grouped"
         className="h-[320px] w-[560px]"
+      />
+
+      <BarChart
+        orientation="horizontal"
+        palette={{ type: 'status' }}
+        items={[
+          { label: 'Critical', value: 6, tone: { status: 'danger' } },
+          { label: 'High', value: 9, tone: { status: 'warning' } },
+        ]}
+        max={29}
       />
   vue:
     component: AvBarChart

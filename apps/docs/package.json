@@ -13,6 +13,7 @@
     "start": "next start",
     "test": "echo \"no tests in this workspace\" && exit 0",
     "test:watch": "echo \"no tests in this workspace\" && exit 0",
+    "pretypecheck": "pnpm --filter @acronis-platform/ui-react build",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

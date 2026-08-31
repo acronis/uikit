@@ -29,7 +29,7 @@ GROSS MARGIN                 [Last 30 days]   ← label + caption
 ## Composition
 
 Metric is a Card. Put the trend in the `trend` slot (a `TrendIndicator`), a
-timeframe in `caption` (a `Tag`), and drop a chart / `Meter` breakdown /
+timeframe in `caption` (a `Tag`), and drop a chart / labelled-bar breakdown /
 `Separator` / insight line into `children`:
 
 ```tsx
@@ -48,11 +48,16 @@ timeframe in `caption` (a `Tag`), and drop a chart / `Meter` breakdown /
     />
   }
 >
-  <Meter
-    label="Healthy"
-    value={46}
+  <BarChart
+    orientation="horizontal"
+    items={[
+      {
+        label: 'Healthy',
+        value: 46,
+        color: 'var(--ui-background-status-strong-success)',
+      },
+    ]}
     max={54}
-    color="var(--ui-background-status-strong-success)"
   />
   <Separator className="my-3" />
   <p>+3 customers predicted at-risk within 30 days.</p>

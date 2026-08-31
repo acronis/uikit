@@ -46,6 +46,5 @@ tokens:
     affects: band
     description: >-
       Accent for the category ticks a `referenceArea` covers, so the highlighted
-      range reads on the axis too (fill-primary). The ticks are the x-axis ones
-      for vertical bars and the y-axis ones when `orientation="horizontal"` —
-      whichever axis carries the categories.
+      range reads on the axis too (fill-primary). The ticks are the x-axis ones,
+      which is the axis carrying the categories.

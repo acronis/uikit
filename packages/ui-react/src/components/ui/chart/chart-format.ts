@@ -45,7 +45,7 @@ export interface CartesianChartProps {
   yAxisLabel?: string;
   /**
    * Unit suffix appended to the Y axis's tick values (recharts `unit`) — applies
-   * when the Y axis is the numeric one. `BarChart` with
+   * when the Y axis is the numeric one. `ComposedChart` with
    * `orientation="horizontal"` puts the values on X instead; use `xUnit` there.
    */
   yUnit?: string;
