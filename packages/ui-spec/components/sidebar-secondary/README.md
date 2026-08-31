@@ -131,15 +131,23 @@ must not let the user change the panel width state:
   double-click-to-expand, drag past the collapse threshold, the resize edge's
   Arrow/Enter/Space/Home keys, and the footer
   `SidebarSecondaryCollapseTrigger` (which renders natively `disabled`).
-- **Resizing still works.** A drag or Arrow-shrink that would have collapsed the
-  panel clamps to the minimum width instead. Pass `resizable={false}` as well to
-  lock the width outright.
+- **Resizing still works while the panel is expanded.** A drag or Arrow-shrink
+  that would have collapsed the panel clamps to the minimum width instead. Pass
+  `resizable={false}` as well to lock the width outright.
 - It does **not** force `expanded`. `collapsible={false}` with
   `defaultExpanded={false}` is valid and renders a permanently collapsed rail; a
-  controlled `expanded` prop still has full authority.
-- The default resize tooltips still say "Collapse: Click" / "Expand: Click".
-  Override `resizeTooltipExpanded` / `resizeTooltipCollapsed` (or pass `null`)
-  so the copy matches the gestures that apply.
+  controlled `expanded` prop still has full authority. On that permanently
+  collapsed rail the resize edge stays focusable and keeps its accessible name,
+  but it is inert — drag, click and the Arrow keys do nothing observable, and
+  only `Home` (or a double-click) still writes the default width, invisibly.
+- Both resize-edge tooltip defaults are adjusted for you, so the copy never
+  advertises an inert gesture. **Expanded**, the default drops the
+  "Collapse: Click" line and reads "Resize: Drag" / "Reset size: Double click".
+  **Collapsed**, the default narrows to "Reset size: Double click" alone —
+  dragging and clicking a permanently collapsed rail do nothing, but a
+  double-click still resets the width. An explicit `resizeTooltipExpanded` /
+  `resizeTooltipCollapsed` value always wins, including `null` to suppress the
+  tooltip entirely.
 
 ## Spec Files
 

@@ -3,7 +3,6 @@ title: SidebarSecondary
 description: The secondary navigation panel, with collapsible sections and a resizable width.
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
 import { DemoReact } from '@/components/DemoReact';
 import { SidebarSecondaryDemo } from '@/components/demos-react/sidebar-secondary';
 
@@ -173,36 +172,50 @@ expand the panel becomes inert, and the footer
 `SidebarSecondaryCollapseTrigger` renders natively `disabled` (with no
 `aria-expanded`, since it has no state to flip):
 
-| Interaction                          | With `collapsible={false}`                   |
-| ------------------------------------ | -------------------------------------------- |
-| Drag past half the min width         | Clamps to 256px instead of collapsing        |
-| Click the edge                       | Nothing                                      |
-| Double-click the edge                | Still resets the width; never expands        |
-| <kbd>←</kbd> (shrink)                | Clamps to 256px instead of collapsing        |
-| <kbd>→</kbd> (grow, while collapsed) | Nothing                                      |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>  | Nothing                                      |
-| <kbd>Home</kbd>                      | Resets to the default width; does not expand |
-| Footer collapse trigger              | `disabled`                                   |
+| Interaction                            | With `collapsible={false}`                   |
+| -------------------------------------- | -------------------------------------------- |
+| Drag past half the min width           | Clamps to 256px instead of collapsing        |
+| Click the edge                         | Nothing                                      |
+| Double-click the edge                  | Still resets the width; never expands        |
+| <kbd>←</kbd> (shrink, while expanded)  | Clamps to 256px instead of collapsing        |
+| <kbd>←</kbd> (shrink, while collapsed) | Nothing                                      |
+| <kbd>→</kbd> (grow, while collapsed)   | Nothing                                      |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>    | Nothing                                      |
+| <kbd>Home</kbd>                        | Resets to the default width; does not expand |
+| Footer collapse trigger                | `disabled`                                   |
 
-Resizing itself stays fully live — only the collapse transition is suppressed.
-Combine with `resizable={false}` to lock the width outright.
+While the panel is **expanded**, resizing itself stays fully live — only the
+collapse transition is suppressed. Combine with `resizable={false}` to lock the
+width outright.
 
 `collapsible` does not force `expanded` to a value: `collapsible={false}` with
 `defaultExpanded={false}` renders a permanently collapsed rail, and a controlled
 `expanded` prop keeps full authority either way.
 
-In that permanently-collapsed state the grow Arrow and <kbd>Enter</kbd> /
-<kbd>Space</kbd> are fully inert, but <kbd>Home</kbd> is not: it still resets the
-stored width to `defaultWidth` and fires `onWidthChange`. Nothing moves at that
-moment — the rail stays collapsed — but a controlled consumer sees the new width,
-and it applies as soon as the panel is expanded via the `expanded` prop.
+In that permanently-collapsed state the resize edge remains a focusable tab stop
+with its accessible name, but it is mostly inert: dragging it, clicking it and
+both Arrow keys do nothing observable, and <kbd>Enter</kbd> / <kbd>Space</kbd>
+are fully inert.
 
-<Callout type="warn">
-  The default resize tooltip copy still reads "**Collapse:** Click" /
-  "**Expand:** Click" when `collapsible={false}`, even though clicking is inert.
-  Override `resizeTooltipExpanded` / `resizeTooltipCollapsed` with copy that
-  matches the gestures that apply — or pass `null` to suppress the tooltip.
-</Callout>
+Two gestures survive — <kbd>Home</kbd> and a **double-click on the edge**. Both
+reset the stored width to `defaultWidth` and fire `onWidthChange` (the
+double-click handler writes the width unconditionally; only its expand is gated
+on `collapsible`). Nothing moves at that moment — the rail stays collapsed — but
+a controlled consumer sees the new width, and it applies as soon as the panel is
+expanded via the `expanded` prop.
+
+With `collapsible={false}` both resize-edge tooltip defaults are adjusted for
+you, so the copy never advertises a gesture that does nothing:
+
+- **Expanded** — the default drops the "**Collapse:** Click" line and reads
+  "**Resize:** Drag" / "**Reset size:** Double click". Both of those still work.
+- **Collapsed** — the default narrows to "**Reset size:** Double click" alone.
+  Dragging the edge only ever tries to expand (gated off) and clicking bails, so
+  the double-click is the one pointer gesture still worth describing.
+
+An explicit `resizeTooltipExpanded` / `resizeTooltipCollapsed` value always wins
+over the default, `collapsible` notwithstanding — pass `null` to suppress a
+tooltip, or a node to replace the default copy.
 
 ## API Reference
 

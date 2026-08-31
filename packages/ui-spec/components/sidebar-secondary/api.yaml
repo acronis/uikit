@@ -104,9 +104,12 @@ contract:
         past the collapse threshold, keyboard, and the footer collapse
         trigger). When `false` those interactions never change `expanded` and
         the footer collapse trigger renders natively disabled with no
-        `aria-expanded`; dragging still resizes the panel, clamped to the
-        minimum width. Independent of `expanded` — pair it with
-        `defaultExpanded: false` for a permanently collapsed rail.
+        `aria-expanded`; while the panel is expanded, dragging still resizes it,
+        clamped to the minimum width. Independent of `expanded` — pair it with
+        `defaultExpanded: false` for a permanently collapsed rail, on which the
+        resize edge stays focusable but is inert apart from the (invisible)
+        width reset, which `Home` and a double-click on the edge both still
+        perform.
     - name: resizeAriaLabel
       type: string
       required: false
@@ -117,17 +120,24 @@ contract:
     - name: resizeTooltipExpanded
       type: ReactNode
       required: false
-      default: '(English tooltip: Resize/Collapse/Reset)'
+      default: '(English tooltip: Resize/Collapse/Reset; Resize/Reset when not collapsible)'
       description: >-
-        Tooltip content shown when the sidebar is expanded. Pass `null` to hide
-        the tooltip entirely. Consumers should localize for i18n.
+        Tooltip content shown when the sidebar is expanded. The default depends
+        on `collapsible`: with `collapsible: false` it drops the
+        "Collapse: Click" line, since clicking the edge can no longer collapse
+        the panel. Pass `null` to hide the tooltip entirely. Consumers should
+        localize for i18n.
     - name: resizeTooltipCollapsed
       type: ReactNode
       required: false
-      default: '(English tooltip: Resize/Expand)'
+      default: "(English tooltip: Resize/Expand; 'Reset size: Double click' only when not collapsible)"
       description: >-
-        Tooltip content shown when the sidebar is collapsed. Pass `null` to hide
-        the tooltip entirely. Consumers should localize for i18n.
+        Tooltip content shown when the sidebar is collapsed. The default depends
+        on `collapsible`: with `collapsible: false` it narrows to the single
+        "Reset size: Double click" line, because dragging and clicking a
+        permanently collapsed rail have no effect while a double-click still
+        resets the width. Pass `null` to hide the tooltip entirely, or an
+        explicit node to replace it. Consumers should localize for i18n.
     - name: expandTooltip
       type: ReactNode
       required: false

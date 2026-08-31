@@ -77,30 +77,41 @@ No roving tabindex — this is a list of links plus disclosure buttons, not a
 Arrow keys follow the writing direction: the **grow** key is `ArrowRight` in LTR
 and `ArrowLeft` in RTL; the **shrink** key is the mirror.
 
-| Key         | `collapsible: true`                                    | `collapsible: false`                                    |
-| ----------- | ------------------------------------------------------ | ------------------------------------------------------- |
-| Grow key    | Expanded: +16px. Collapsed: expands the panel          | Expanded: +16px. Collapsed: **inert**                   |
-| Shrink key  | −16px; below the minimum width it collapses the panel  | −16px; **clamps at the minimum width**, never collapses |
-| Enter/Space | Toggles expanded/collapsed                             | **Inert**                                               |
-| Home        | Expands (if collapsed) and resets to the default width | Resets to the default width; never expands              |
+| Key         | `collapsible: true`                                                                   | `collapsible: false`                                                                    |
+| ----------- | ------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| Grow key    | Expanded: +16px. Collapsed: expands the panel                                         | Expanded: +16px. Collapsed: **inert**                                                   |
+| Shrink key  | Expanded: −16px; below the minimum width it collapses the panel. Collapsed: **inert** | Expanded: −16px, **clamps at the minimum width**, never collapses. Collapsed: **inert** |
+| Enter/Space | Toggles expanded/collapsed                                                            | **Inert**                                                                               |
+| Home        | Expands (if collapsed) and resets to the default width                                | Resets to the default width; never expands                                              |
 
 With `collapsible={false}` the edge stays focusable and keeps its accessible
-name — resizing is still a real operation, only the collapse transition is
-suppressed. In the `collapsible={false}` + permanently-collapsed case every
-**expand-triggering** key is inert: the grow key and Enter/Space fire no
-`toggleExpanded`, so `data-state` stays `collapsed`. **Home is the exception** —
-it still resets the stored width to `defaultWidth` and fires `onWidthChange`,
-even though the rail is collapsed and looks unchanged at that moment. The reset
-only becomes visible if the panel is later expanded by other means (a controlled
-`expanded` prop flip), so a controlled consumer that mirrors `onWidthChange` must
-expect a width update while the panel is collapsed.
+name. **While the panel is expanded**, resizing is still a real operation — only
+the collapse transition is suppressed. **While the panel is permanently
+collapsed** (`collapsible={false}` + collapsed) the edge is a focusable but
+visually inert tab stop: it keeps its `role="separator"` and accessible name,
+yet dragging, clicking, and both Arrow keys produce no observable change. Every
+**expand-triggering** gesture is inert here: dragging, a single click, the grow
+key and Enter/Space all fire no `toggleExpanded`, so `data-state` stays
+`collapsed`. **Two gestures remain live** — `Home` on the keyboard and a
+**double-click** on the edge. Both reset the stored width to `defaultWidth` and
+fire `onWidthChange`, even though the rail is collapsed and looks unchanged at
+that moment (`handleDoubleClick` writes the width unconditionally; only its
+`toggleExpanded()` call is gated on `collapsible`). The reset only becomes
+visible if the panel is later expanded by other means (a controlled `expanded`
+prop flip), so a controlled consumer that mirrors `onWidthChange` must expect a
+width update while the panel is collapsed.
 
-> **Caveat — tooltip copy.** The resize edge's default hover tooltip still reads
-> "**Collapse:** Click" / "**Expand:** Click" when `collapsible={false}`, even
-> though clicking is inert. The component does not rewrite it; consumers should
-> pass `resizeTooltipExpanded` / `resizeTooltipCollapsed` copy matching the
-> gestures that actually apply (or `null` to suppress it). Those strings are
-> English by default and must be localized regardless.
+> **Tooltip copy.** With `collapsible={false}` both resize-edge tooltip defaults
+> are adjusted for you, so the copy never advertises a gesture that is inert.
+> **Expanded**, the default drops the "**Collapse:** Click" line and reads
+> "**Resize:** Drag" / "**Reset size:** Double click". **Collapsed**, the default
+> narrows to the single line "**Reset size:** Double click" — dragging and
+> clicking a permanently collapsed rail do nothing, but a double-click still
+> writes the default width, so that is the one pointer gesture the tooltip can
+> honestly advertise. An explicit `resizeTooltipExpanded` /
+> `resizeTooltipCollapsed` value always wins over the default (including `null`
+> to suppress the tooltip entirely), `collapsible` notwithstanding. All of these
+> strings are English by default and must be localized regardless.
 
 ---
 
@@ -147,6 +158,8 @@ A keyboard-focused row shows a visible focus ring using the shared
 - [ ] With `collapsible={false}`: the footer collapse trigger is `disabled` and
       exposes no `aria-expanded`; Enter/Space on the resize edge does not change
       `data-state`; the shrink key clamps at the minimum width
-- [ ] With `collapsible={false}` while collapsed: Home leaves `data-state`
-      `collapsed` but still resets the stored width (`onWidthChange` fires with
-      `defaultWidth`)
+- [ ] With `collapsible={false}` while collapsed: Home **and a double-click on
+      the edge** leave `data-state` `collapsed` but still reset the stored width
+      (`onWidthChange` fires with `defaultWidth`)
+- [ ] With `collapsible={false}` while collapsed: the default resize tooltip
+      reads "Reset size: Double click" only

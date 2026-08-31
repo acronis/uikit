@@ -108,13 +108,13 @@ const meta = {
     resizeTooltipExpanded: {
       control: false,
       description:
-        'Tooltip content shown when the sidebar is expanded. Pass `null` to hide the tooltip entirely.',
+        'Tooltip content shown when the sidebar is expanded. Pass `null` to hide the tooltip entirely. The default omits the "Collapse: Click" line when `collapsible` is `false`.',
       table: { type: { summary: 'ReactNode' }, category: 'i18n' },
     },
     resizeTooltipCollapsed: {
       control: false,
       description:
-        'Tooltip content shown when the sidebar is collapsed. Pass `null` to hide the tooltip entirely.',
+        'Tooltip content shown when the sidebar is collapsed. Pass `null` to hide the tooltip entirely. When `collapsible` is `false` the default narrows to "Reset size: Double click".',
       table: { type: { summary: 'ReactNode' }, category: 'i18n' },
     },
     children: {
@@ -739,6 +739,42 @@ export const NotCollapsible: Story = {
             </SidebarSecondaryMenu>
           </SidebarSecondarySection>
         </SidebarSecondaryContent>
+      </SidebarSecondary>
+    </Shell>
+  ),
+};
+
+export const NotCollapsibleWithFooter: Story = {
+  name: 'Not collapsible (disabled collapse trigger)',
+  render: () => (
+    <Shell height={600}>
+      <SidebarSecondary collapsible={false}>
+        <SidebarSecondaryHeader label="Protection" />
+        <SidebarSecondaryContent>
+          <SidebarSecondarySection>
+            <SidebarSecondarySectionLabel>
+              Overview
+            </SidebarSecondarySectionLabel>
+            <SidebarSecondaryMenu>
+              <SidebarSecondaryMenuItem href="#" icon={<LayoutGridIcon />} selected>
+                Dashboard
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<DatabaseIcon />}>
+                Devices
+              </SidebarSecondaryMenuItem>
+              <SidebarSecondaryMenuItem href="#" icon={<SquareIcon />}>
+                Policies
+              </SidebarSecondaryMenuItem>
+            </SidebarSecondaryMenu>
+          </SidebarSecondarySection>
+        </SidebarSecondaryContent>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger icon={<ChevronsLeftIcon />} extras={<SidebarSecondaryMenuItemExtras variant="shortcut" shortcut="⌘?" />}>
+              Collapse
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
       </SidebarSecondary>
     </Shell>
   ),

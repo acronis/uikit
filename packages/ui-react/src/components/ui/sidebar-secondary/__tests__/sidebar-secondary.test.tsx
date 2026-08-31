@@ -762,6 +762,95 @@ describe('SidebarSecondary — collapsible={false}', () => {
     );
   });
 
+  it('keeps only "Reset size: Double click" in the collapsed tooltip when not collapsible', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel resizable collapsible={false} expanded={false} />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    // Positive assertion first: proves the tooltip machinery actually ran, so
+    // the negative assertions below can't pass vacuously.
+    expect(await screen.findByText('Reset size:')).toBeInTheDocument();
+    expect(screen.getByText(/Double click/)).toBeInTheDocument();
+    expect(screen.queryByText('Resize:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Expand:')).not.toBeInTheDocument();
+    expect(screen.queryByText('Collapse:')).not.toBeInTheDocument();
+  });
+
+  it('drops the "Collapse: Click" line from the expanded resize tooltip', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel resizable collapsible={false} />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Resize:')).toBeInTheDocument();
+    expect(screen.getByText('Reset size:')).toBeInTheDocument();
+    expect(screen.queryByText('Collapse:')).not.toBeInTheDocument();
+  });
+
+  it('still shows "Collapse: Click" in the expanded tooltip when collapsible', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel resizable />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Collapse:')).toBeInTheDocument();
+  });
+
+  it('honours an explicit expanded tooltip override when not collapsible', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel
+          resizable
+          collapsible={false}
+          resizeTooltipExpanded="Ancho ajustable"
+        />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Ancho ajustable')).toBeInTheDocument();
+  });
+
+  it('still shows "Expand: Click" in the collapsed tooltip when collapsible', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel resizable expanded={false} />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Expand:')).toBeInTheDocument();
+  });
+
+  it('honours an explicit collapsed tooltip override when not collapsible', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel
+          resizable
+          collapsible={false}
+          expanded={false}
+          resizeTooltipCollapsed="Ancho fijo"
+        />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Ancho fijo')).toBeInTheDocument();
+  });
+
   it('defaults to collapsible: the collapse trigger stays enabled and toggles', async () => {
     const onChange = vi.fn();
     render(<CollapsiblePanel onExpandedChange={onChange} />);

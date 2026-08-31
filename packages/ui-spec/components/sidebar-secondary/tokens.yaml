@@ -221,6 +221,11 @@ tokens:
       affects: menu-item,
       description: Unselected container (active),
     }
+  - {
+      name: --ui-text-on-surface-disabled,
+      affects: menu-item,
+      description: Disabled collapse-trigger label/icon color,
+    }
   # ── extras ──
   - {
       name: --ui-sidebar-secondary-menu-item-extras-global-container-gap,

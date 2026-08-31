@@ -67,14 +67,16 @@ edge, presses Home while collapsed, or activates the footer
 **Then** `expanded` never changes and `data-state` stays as it was
 **And** the footer collapse trigger renders natively `disabled`
 
-> **Home is not fully inert while collapsed.** Blocking the expand does not block
-> the width reset: pressing Home on the resize edge of a `collapsible={false}`,
-> collapsed panel still resets the stored width to `defaultWidth` and fires
-> `onWidthChange`. Nothing changes visually at that moment (the rail stays
-> collapsed), but a controlled consumer observes the new width, and it takes
-> effect the moment the panel is expanded by other means (a controlled `expanded`
-> prop). Every _other_ expand-triggering key — the grow Arrow, Enter/Space — is
-> genuinely inert in that state.
+> **The width reset is not inert while collapsed.** Blocking the expand does not
+> block the width reset: on the resize edge of a `collapsible={false}`, collapsed
+> panel, **`Home` and a double-click** both still reset the stored width to
+> `defaultWidth` and fire `onWidthChange` (`handleDoubleClick` writes the width
+> unconditionally — only its `toggleExpanded()` call is gated on `collapsible`).
+> Nothing changes visually at that moment (the rail stays collapsed), but a
+> controlled consumer observes the new width, and it takes effect the moment the
+> panel is expanded by other means (a controlled `expanded` prop). Every _other_
+> expand-triggering gesture — a single click, a drag, the grow Arrow, Enter/Space
+> — is genuinely inert in that state.
 
 ### A disabled collapse trigger looks inert
 
@@ -104,20 +106,44 @@ it does when `collapsible` is `true`
 **When** the panel renders
 **Then** it renders as the collapsed breadcrumb rail (`data-state="collapsed"`)
 **And** no user interaction can expand it — only a controlled `expanded` prop can
+**And** the resize edge stays focusable and keeps its accessible name, but is
+inert: dragging it, clicking it, and the grow/shrink Arrow keys produce no
+observable change
+**And** the one exception is the width reset — `Home` **and** a double-click on
+the edge both still write `defaultWidth` and fire `onWidthChange` while the rail
+stays visually unchanged (see the width-reset note above)
 
 > `collapsible` never forces `expanded` to a value; it only gates the
 > user-initiated transitions. A controlled `expanded` prop keeps full authority
 > either way.
 
-### Caveat — the resize tooltip copy is not adjusted automatically
+### The expanded default tooltip drops the click gesture
 
-**Given** `collapsible={false}` and the default resize-edge tooltips
+**Given** `collapsible={false}`, an **expanded** panel, and no
+`resizeTooltipExpanded` override
 **When** the user hovers the resize edge
-**Then** the tooltip still reads "**Collapse:** Click" (expanded) or
-"**Expand:** Click" (collapsed), even though clicking is inert
-**And** consumers are expected to override `resizeTooltipExpanded` /
-`resizeTooltipCollapsed` with copy that describes only the gestures that apply
-(or pass `null` to suppress the tooltip)
+**Then** the tooltip reads "**Resize:** Drag" and "**Reset size:** Double click"
+— the "**Collapse:** Click" line the `collapsible={true}` default carries is
+omitted, because clicking the edge can no longer collapse the panel
+**And** an explicit `resizeTooltipExpanded` value still wins, including `null`
+to suppress the tooltip
+
+### A permanently collapsed rail's tooltip advertises only the double-click
+
+**Given** `collapsible={false}`, a **collapsed** panel, and no
+`resizeTooltipCollapsed` override
+**When** the user hovers the resize edge
+**Then** the tooltip reads "**Reset size:** Double click" — and nothing else
+**And** the other two lines the `collapsible={true}` collapsed default carries
+are dropped, because neither gesture is live: clicking the edge bails in
+`handleClick`, and the collapsed drag branch only ever calls `toggleExpanded()`
+(itself gated off) and never writes a width, so both "**Resize:** Drag" and
+"**Expand:** Click" would be false claims
+**And** the double-click line _is_ honest: `handleDoubleClick` writes
+`defaultWidth` unconditionally, so it stays a live pointer gesture — the pointer
+counterpart of `Home`
+**And** an explicit `resizeTooltipCollapsed` value still wins, including `null`
+to suppress the tooltip entirely
 
 ---
 

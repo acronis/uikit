@@ -92,11 +92,33 @@ const defaultResizeTooltipExpanded = (
   </>
 );
 
+// `collapsible={false}` + expanded: `handleClick` bails, so clicking the edge
+// can no longer collapse the panel. Drag and double-click still resize.
+const defaultResizeTooltipExpandedNonCollapsible = (
+  <>
+    <span className="font-semibold">Resize:</span> Drag
+    <br />
+    <span className="font-semibold">Reset size:</span> Double click
+  </>
+);
+
 const defaultResizeTooltipCollapsed = (
   <>
     <span className="font-semibold">Resize:</span> Drag
     <br />
     <span className="font-semibold">Expand:</span> Click
+  </>
+);
+
+// `collapsible={false}` + collapsed: double-click is the one live POINTER
+// gesture — `handleDoubleClick` resets the width unconditionally (only its
+// `toggleExpanded()` call is gated on `collapsible`), mirroring `Home` as the
+// live keyboard gesture. The other two lines would be false claims here:
+// clicking bails in `handleClick`, and the collapsed drag branch only ever
+// calls the gated `toggleExpanded()` — it never writes a width.
+const defaultResizeTooltipCollapsedNonCollapsible = (
+  <>
+    <span className="font-semibold">Reset size:</span> Double click
   </>
 );
 
@@ -217,9 +239,17 @@ export interface SidebarSecondaryProps extends React.ComponentPropsWithoutRef<'n
   onWidthChange?: (width: number) => void;
   /** Accessible label for the resize edge (`role="separator"`). Defaults to `'Resize sidebar'`. */
   resizeAriaLabel?: string;
-  /** Tooltip content shown when the sidebar is expanded. Pass `null` to hide the tooltip entirely. */
+  /**
+   * Tooltip content shown when the sidebar is expanded. Pass `null` to hide
+   * the tooltip entirely. The default omits the "Collapse: Click" line when
+   * `collapsible` is `false`, since that gesture does nothing then.
+   */
   resizeTooltipExpanded?: React.ReactNode;
-  /** Tooltip content shown when the sidebar is collapsed. Pass `null` to hide the tooltip entirely. */
+  /**
+   * Tooltip content shown when the sidebar is collapsed. Pass `null` to hide
+   * the tooltip entirely. When `collapsible` is `false` the default narrows to
+   * "Reset size: Double click" — the one gesture that still has an effect.
+   */
   resizeTooltipCollapsed?: React.ReactNode;
   /**
    * Replace the rendered `<nav>` with another element or component
@@ -446,8 +476,15 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
       width: widthProp,
       onWidthChange,
       resizeAriaLabel = 'Resize sidebar',
-      resizeTooltipExpanded = defaultResizeTooltipExpanded,
-      resizeTooltipCollapsed = defaultResizeTooltipCollapsed,
+      // Both tooltip defaults are resolved here (not at the render site) so an
+      // explicit prop value — including `null` to hide the tooltip — always
+      // wins regardless of `collapsible`.
+      resizeTooltipExpanded = collapsibleProp
+        ? defaultResizeTooltipExpanded
+        : defaultResizeTooltipExpandedNonCollapsible,
+      resizeTooltipCollapsed = collapsibleProp
+        ? defaultResizeTooltipCollapsed
+        : defaultResizeTooltipCollapsedNonCollapsible,
       'aria-label': ariaLabel = 'Section navigation',
       render,
       children,
