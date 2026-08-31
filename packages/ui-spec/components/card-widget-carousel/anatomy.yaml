@@ -1,0 +1,76 @@
+spec_version: '1.0'
+component: CardWidgetCarousel
+
+schematic: |
+  +--------------------------------------------------------------+ ← root (div, overflow-hidden)
+  |        +--------+  +--------+  +--------+  +--------+       |
+  | +----+ | card 1 |  | card 2 |  | card 3 |  | card 4 | +----+|
+  | |prev| +--------+  +--------+  +--------+  +--------+ |next||
+  | |-btn|                                       (track)   |-btn||
+  | +----+                                                 +----+|
+  +--------------------------------------------------------------+
+  track:    horizontally scrollable flex row holding the children
+  prev-btn: circular button overlaid at the start edge; scrolls backwards
+  next-btn: circular button overlaid at the end edge; advances the track
+
+root:
+  element: div
+  description: >-
+    Overflow-hidden container with `position: relative`. Wraps the scrollable
+    track and the absolutely positioned navigation-button overlays.
+
+parts:
+  - id: track
+    description: >-
+      A horizontally scrollable `div` (`overflow-x: auto`, scrollbar hidden) that
+      holds `children` in a flex row with a 16px gap between items.
+    element: div
+  - id: prev-btn
+    description: >-
+      A circular `<button>` (48 × 48 px) overlaid on the leading edge. Visible
+      only when the track is scrolled past the start. On activation it calls
+      `scrollBy({ left: -304, behavior: 'smooth' })` on the track (one card
+      width + gap backwards). Has hover and focus-visible states.
+    element: button
+    role: button
+  - id: next-btn
+    description: >-
+      A circular `<button>` (48 × 48 px) overlaid on the trailing edge. Visible
+      only when the track has not reached the end. On activation it calls
+      `scrollBy({ left: 304, behavior: 'smooth' })` on the track (one card
+      width + gap). Has hover and focus-visible states.
+    element: button
+    role: button
+
+layout:
+  type: overlay
+
+states:
+  - {
+      id: prev-hover,
+      trigger: pointer hover over prev-btn,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [prev-btn],
+    }
+  - {
+      id: prev-focus-visible,
+      trigger: keyboard focus on prev-btn,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [prev-btn],
+    }
+  - {
+      id: next-hover,
+      trigger: pointer hover over next-btn,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [next-btn],
+    }
+  - {
+      id: next-focus-visible,
+      trigger: keyboard focus on next-btn,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [next-btn],
+    }

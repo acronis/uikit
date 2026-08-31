@@ -22,6 +22,7 @@ export * from './components/ui/calendar-panel';
 export * from './components/ui/card';
 export * from './components/ui/card-filter';
 export * from './components/ui/card-section';
+export * from './components/ui/card-widget-carousel';
 export * from './components/ui/category-bar';
 export * from './components/ui/chart';
 export * from './components/ui/chart-state';

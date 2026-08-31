@@ -1,0 +1,15 @@
+spec_version: '1.0'
+component: CardWidgetCarousel
+name: card-widget-carousel
+status: ready
+category: data-display
+description: >-
+  A horizontal scroll carousel that holds a row of action-widget cards and
+  exposes floating Previous/Next chevron buttons to navigate the view. The
+  carousel shell manages scroll; the individual cards are passed as `children`.
+  Ships with a companion `CardWidget` component (same barrel) — a
+  status-colored card with icon box, optional skeleton, and footer slot.
+since: 5.1.0
+figma:
+  node: '9031-135455'
+  codeConnect: packages/ui-react/src/components/ui/card-widget-carousel/card-widget-carousel.figma.tsx
