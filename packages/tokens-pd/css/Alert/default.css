@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Alert */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-alert-critical-border-color: light-dark(rgb(240 112 0), rgb(255 153 51));
   --ui-alert-critical-left-line: light-dark(rgb(255 128 0), rgb(255 128 0));
   --ui-alert-danger-border-color: light-dark(rgb(217 38 38), rgb(237 94 94));

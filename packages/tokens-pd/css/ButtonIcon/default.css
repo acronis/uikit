@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: ButtonIcon */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-button-icon-global-container-border-radius: 4px;
   --ui-button-icon-global-container-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-button-icon-global-container-color-disabled: light-dark(transparent, transparent);

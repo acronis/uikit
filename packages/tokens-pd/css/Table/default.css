@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Table */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-table-data-cell-color-active: light-dark(rgb(226 235 245), rgb(48 50 54));
   --ui-table-data-cell-color-hover: light-dark(rgb(238 242 247), rgb(46 47 50));
   --ui-table-data-cell-color-idle: light-dark(transparent, transparent);

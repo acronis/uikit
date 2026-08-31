@@ -371,8 +371,11 @@ describe('serializeCss', () => {
       vars: new Map([['ui-x', 'red']]),
       classes: new Map(),
     });
-    expect(css).toContain('color-scheme: light dark;');
+    expect(css).not.toContain('color-scheme: light dark;');
+    expect(css).toContain("[data-theme='light']");
+    expect(css).toContain('color-scheme: light;');
     expect(css).toContain("[data-theme='dark']");
+    expect(css).toContain('color-scheme: dark;');
   });
 
   it('targets both :root and :host so tokens resolve in shadow roots', () => {

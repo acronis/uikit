@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Avatar */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-avatar-color-blue: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-avatar-color-gray: light-dark(rgb(215 217 219), rgb(61 63 67));
   --ui-avatar-color-green: light-dark(rgb(209 240 214), rgb(15 87 33));

@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Stepper */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-stepper-breakpoint-default-label-color: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-stepper-breakpoint-default-line-gap: 4px;
   --ui-stepper-breakpoint-default-value-color: light-dark(rgb(24 25 27), rgb(244 245 245));

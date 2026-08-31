@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Dialog */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-dialog-body-gap: 12px;
   --ui-dialog-body-height-min: 72px;
   --ui-dialog-body-padding-y: 16px;

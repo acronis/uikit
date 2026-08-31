@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Switch */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-switch-global-box-border-color-active: light-dark(transparent, transparent);
   --ui-switch-global-box-border-color-disabled: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-switch-global-box-border-color-hover: light-dark(transparent, transparent);

@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Tooltip */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-tooltip-container-border-radius: 4px;
   --ui-tooltip-container-color: light-dark(rgb(25 27 35), rgb(255 255 255));
   --ui-tooltip-container-padding-x: 12px;

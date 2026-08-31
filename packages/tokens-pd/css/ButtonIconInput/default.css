@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: ButtonIconInput */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-button-icon-input-error-container-color-active: light-dark(rgb(251 218 218), rgb(130 23 23));
   --ui-button-icon-input-error-container-color-disabled: light-dark(transparent, transparent);
   --ui-button-icon-input-error-container-color-hover: light-dark(rgb(253 237 237), rgb(87 15 15));

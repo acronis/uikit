@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: AlertRibbon */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-alert-ribbon-critical-background: light-dark(rgb(255 240 230), rgb(77 35 0));
   --ui-alert-ribbon-critical-carousel: light-dark(rgb(255 240 230), rgb(77 35 0));
   --ui-alert-ribbon-critical-divider: light-dark(rgb(255 204 153), rgb(153 69 0));

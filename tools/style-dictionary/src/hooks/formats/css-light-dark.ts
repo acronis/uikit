@@ -193,9 +193,13 @@ export function serializeCss({
 
   // Base files declare the light/dark shell; override files only restate the
   // changed custom properties (they layer on top of the imported base).
+  // color-scheme is only set by the explicit [data-theme] blocks below. A
+  // bare `:host { color-scheme: light dark }` lets the browser pick a
+  // scheme from the OS preference independent of the host's actual
+  // [data-theme] attribute, which fights shadow-DOM theming.
   const root = isOverride
     ? `:root, :host {\n${varLines}\n}`
-    : `:root, :host {\n  color-scheme: light dark;\n\n${varLines}\n}\n\n` +
+    : `:root, :host {\n${varLines}\n}\n\n` +
       `[data-theme='light'], :host([data-theme='light']) {\n  color-scheme: light;\n}\n\n` +
       `[data-theme='dark'], :host([data-theme='dark']) {\n  color-scheme: dark;\n}`;
 

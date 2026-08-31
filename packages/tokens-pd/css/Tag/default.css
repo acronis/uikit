@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Tag */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-tag-ai-container-border-color: linear-gradient(90deg, rgb(56 73 224) 20%, rgb(252 45 241) 100%);
   --ui-tag-ai-container-color: light-dark(rgb(249 245 251), rgb(62 15 62));
   --ui-tag-ai-icon-color: light-dark(rgb(130 23 130), rgb(250 209 250));

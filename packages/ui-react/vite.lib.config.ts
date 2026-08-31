@@ -29,21 +29,14 @@ export default defineConfig({
       fileName: (_format, entryName) => `${entryName}.js`,
     },
     rollupOptions: {
-      external: [
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
-        '@base-ui/react',
-        /^@base-ui\/react\//,
-        // Sibling published packages — consumers install them separately, so
-        // don't inline them into ui-react's bundle.
-        '@acronis-platform/icons-react',
-        /^@acronis-platform\/icons-react\//,
-        // recharts is a heavy, opt-in charting dep — keep it out of the bundle
-        // and let consumers resolve it (declared in dependencies).
-        'recharts',
-        /^recharts\//,
-      ],
+      // Every bare import (a real npm package, not our own `.`/`@/`-aliased
+      // source) is external. With `preserveModules: true`, bundling a
+      // dependency emits it as a chunk under its own resolved node_modules
+      // path — under pnpm that's the versioned `.pnpm/<pkg>@<version>/...`
+      // store path, which doesn't exist in a consumer's install. Keeping
+      // deps external avoids that entirely; they're all regular
+      // `dependencies` here, so npm/pnpm/yarn installs them for consumers.
+      external: (id) => !id.startsWith('.') && !id.startsWith('/') && !id.startsWith('@/'),
       output: {
         // Preserve module structure so consumers tree-shake unused components.
         preserveModules: true,

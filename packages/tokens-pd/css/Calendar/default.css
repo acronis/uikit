@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Calendar */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-calendar-body-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-calendar-body-border-style: solid;
   --ui-calendar-body-border-width: 1px;

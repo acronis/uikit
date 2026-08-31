@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Link */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-link-global-container-gap: 4px;
   --ui-link-global-container-height: 32px;
   --ui-link-global-text-decoration-active: none;

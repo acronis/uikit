@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: ButtonMenu */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-button-menu-dropdown-container-border-color: light-dark(rgb(23 99 207), rgb(81 157 246));
   --ui-button-menu-dropdown-container-border-radius: 4px;
   --ui-button-menu-dropdown-container-border-width: 1px;

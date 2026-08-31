@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: InputDatePicker */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-input-date-picker-error-box-border-color-active: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-date-picker-error-box-border-color-hover: light-dark(rgb(226 54 54), rgb(229 77 77));
   --ui-input-date-picker-error-box-border-color-idle: light-dark(rgb(226 54 54), rgb(229 77 77));

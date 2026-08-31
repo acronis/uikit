@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: SidebarSecondary */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-sidebar-secondary-collapsed-breadcrumb-label-color: light-dark(rgb(97 101 107), rgb(135 139 146));
   --ui-sidebar-secondary-collapsed-container-content-gap: 4px;
   --ui-sidebar-secondary-collapsed-container-content-padding-y: 16px;

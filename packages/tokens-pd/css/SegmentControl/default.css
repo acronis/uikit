@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: SegmentControl */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-segment-control-box-icon-border-color: light-dark(rgb(214 228 245), rgb(48 50 54));
   --ui-segment-control-box-icon-border-style: solid;
   --ui-segment-control-box-icon-border-width: 1px;

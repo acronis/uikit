@@ -2,8 +2,6 @@
 /* Source: @acronis-platform/design-tokens • brand: default • tier: Carousel */
 
 :root, :host {
-  color-scheme: light dark;
-
   --ui-carousel-dialog-list-indicator-gap: 6px;
 }
 
