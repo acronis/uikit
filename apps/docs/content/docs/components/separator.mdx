@@ -15,7 +15,10 @@ import { Separator } from '@acronis-platform/ui-react';
 `Separator` is a 1px rule built on Base UI's Separator primitive (it sets the
 `separator` role and `aria-orientation`). It's `horizontal` by default; pass
 `orientation="vertical"` for a vertical divider (inside a height-bearing flex
-row). It uses the shared `bg-border` divider token.
+row). It uses the shared `--ui-border-on-surface-divider` token. `size`
+(`'S1'` | `'S2'` | `'S3'`, matching Figma's `DividerHorizontal` variant,
+default `'S1'`) applies the rule's own surrounding spacing — `S2`/`S3` add
+`--ui-gap-4`/`--ui-gap-8` on the axis perpendicular to the line.
 
 ## Examples
 
@@ -32,10 +35,17 @@ row). It uses the shared `bg-border` divider token.
   <Separator orientation="vertical" />
   <span>Recovery</span>
 </div>
+
+{/* built-in surrounding spacing instead of a manual className */}
+<Separator size="S3" />
 ```
 
 ## API Reference
 
-`Separator` accepts the standard `<div>` attributes plus **`orientation`**
-(`'horizontal'` | `'vertical'`, default `'horizontal'`), which sets
-`aria-orientation` and swaps the 1px dimension.
+`Separator` accepts the standard `<div>` attributes plus:
+
+- **`orientation`** (`'horizontal'` | `'vertical'`, default `'horizontal'`) —
+  sets `aria-orientation` and swaps the 1px dimension.
+- **`size`** (`'S1'` | `'S2'` | `'S3'`, default `'S1'`) — the rule's own
+  surrounding spacing. `S1` has none; `S2`/`S3` apply `--ui-gap-4`/`--ui-gap-8`
+  as margin on the axis perpendicular to the line.

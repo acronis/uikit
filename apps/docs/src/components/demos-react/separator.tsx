@@ -19,6 +19,10 @@ export function SeparatorDemo() {
         <Separator orientation="vertical" />
         <div>Reports</div>
       </div>
+      <Separator size="S3" />
+      <p className="text-sm text-muted-foreground">
+        size=&quot;S3&quot; applies its own surrounding spacing.
+      </p>
     </div>
   );
 }

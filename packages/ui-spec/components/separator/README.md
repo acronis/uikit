@@ -2,10 +2,10 @@
 
 A thin rule that divides content, horizontally or vertically.
 
-> **Status: draft (design-pending v1).** Ported from the legacy
-> `@acronis-platform/shadcn-uikit` `Separator`; uses the shared `bg-border`
-> divider token (no `--ui-separator-*` tier). Reconcile with
-> `/figma-component Separator <url> --update` once a mockup lands.
+> Ported from the legacy `@acronis-platform/shadcn-uikit` `Separator`; matched
+> to Figma's `DividerHorizontal` component set (node 788:15147). Uses the
+> shared `--ui-border-on-surface-divider` token directly (no `--ui-separator-*`
+> tier).
 
 ## When to use
 
@@ -29,4 +29,7 @@ import { Separator } from '@acronis-platform/ui-react';
   <Separator orientation="vertical" />
   <span>Recovery</span>
 </div>
+
+{/* size (S1/S2/S3, Figma default S1) applies built-in surrounding spacing */}
+<Separator size="S2" />
 ```

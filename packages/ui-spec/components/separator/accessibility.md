@@ -9,5 +9,5 @@
 
 ## Contrast
 
-The line uses `--ui-border-on-surface-border`, which meets non-text contrast
+The line uses `--ui-border-on-surface-divider`, which meets non-text contrast
 against the page surface in light and dark themes.
