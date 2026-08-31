@@ -1,5 +1,151 @@
 # @acronis-platform/ui-react
 
+## 5.1.0
+
+### Minor Changes
+
+- [#705](https://github.com/acronis/uikit/pull/705) [`7cf479d`](https://github.com/acronis/uikit/commit/7cf479d837860ea4811e2bd1aaf9f76e1bb7c579) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(charts): Figma-align AreaChart & LineChart defaults and add projection support
+  - AreaChart: changed `fill` default from `'gradient'` to `'solid'` (Figma shows flat translucent fill)
+  - LineChart: changed `showDots` default from `true` to `false` (Figma shows clean lines without dots)
+  - Added `projectionStart` prop to both: ticks past the boundary render in disabled color,
+    lines become dashed, and AreaChart fill is suppressed in the projection zone
+  - Added WidgetExample and WithProjections stories for both charts
+  - Updated Figma Code Connect URLs
+
+- [#714](https://github.com/acronis/uikit/pull/714) [`337ce50`](https://github.com/acronis/uikit/commit/337ce50e4da190d9e4360cfca048b5c1cca711b7) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(BarChart): unify BarChart + Meter, add palette support and horizontal forecast
+  - **BREAKING**: `orientation="horizontal"` now renders labelled proportional bars (label + value + percentage + track) instead of a recharts horizontal bar chart. Pass `items` (an array of `{ label, value, color }`) and an optional `max`.
+  - **BREAKING**: `Meter` removed — use `<BarChart orientation="horizontal" />`.
+  - **BREAKING**: `xUnit` removed. It only applied to the recharts horizontal orientation, whose numeric X axis is gone; the value axis is always Y, so use `yUnit`.
+  - **BREAKING**: `gridDashed` now defaults to `true` (pass `gridDashed={false}` for solid grid lines).
+  - New: `palette` prop on `BarChartHorizontalProps` — resolves item colors through the same palette machinery as the vertical chart. Items can now carry `tone` instead of (or alongside) `color`.
+  - New: `forecast` on `BarChartItem` — renders a translucent bar (30% opacity) extending beyond the actual value. `aria-valuetext` includes the forecast; `aria-valuenow` reflects the actual value only.
+  - New types: `BarChartItem`, `BarChartHorizontalProps`, `BarChartVerticalProps`. `BarChartProps` is now the discriminated union of the last two.
+  - Figma Code Connect maps vertical, horizontal, and horizontal-forecast Figma nodes.
+
+- [#717](https://github.com/acronis/uikit/pull/717) [`3700912`](https://github.com/acronis/uikit/commit/3700912db28235398d5bac127e78e1e6e3fd7b8c) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `CardWidgetCarousel` and `CardWidget`: a horizontal scroll carousel that holds a row of AI action-widget cards with floating Previous/Next chevron buttons to navigate the view, and a companion status card with icon box, optional skeleton loading, and a flexible footer slot. Supports RTL, accepts `nextLabel`/`prevLabel` for localization, and uses `--ui-*` tokens throughout.
+
+- [#709](https://github.com/acronis/uikit/pull/709) [`b80f335`](https://github.com/acronis/uikit/commit/b80f3355e7e7a0c2002690a0be25909a62aed63c) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - feat(charts): reverse sequential ramp order, interleave diverging stops, add per-series side override
+
+  Sequential ramps now run darkest-to-lightest (stop 8 first): the most prominent series gets the most saturated colour rather than the palest.
+
+  Diverging palettes now interleave their stops (`a3-b3-a2-b2-a1-b1`) instead of sequencing one hue then the other. Adjacent series in a multi-series diverging chart now come from opposite hues, maximising contrast between neighbours.
+
+  A new `side` discriminant on `ChartSeriesTone` (and new `ChartDivergingSide` export) lets a series under a diverging palette pin itself to the "a" or "b" hue family. `resolveChartColors` does a two-pass assign: sided series walk their side's three stops strongest-first (wrapping past three), then un-sided series walk the remaining interleaved stops. `listPaletteChoices` returns `[{ side: 'a' }, { side: 'b' }]` for diverging palettes so widget editors can surface the new control.
+
+- [#711](https://github.com/acronis/uikit/pull/711) [`b94158f`](https://github.com/acronis/uikit/commit/b94158f5ae92369c87e53783330fc226d7d083c9) Thanks [@madjorr](https://github.com/madjorr)! - Add a `TreeItem` `expanded` prop so the leading chevron can reflect the row's
+  expand/collapse state. Previously the chevron always pointed along the inline-end
+  direction, silently contradicting the `aria-expanded` the consumer publishes on
+  its own `render` element; `expanded` rotates it a quarter turn to point down.
+  Like `isExpandable` it is purely visual — the row still owns no expand state,
+  renders no nested list, and emits no change event. It defaults to `false` and has
+  no effect when `isExpandable` is false, so existing usage renders unchanged.
+
+- [#708](https://github.com/acronis/uikit/pull/708) [`5436838`](https://github.com/acronis/uikit/commit/5436838688b3278b9c915007c7d1e7168e252574) Thanks [@madjorr](https://github.com/madjorr)! - **Separator**: aligned with Figma's `DividerHorizontal` component (node `788:15147`).
+  - The rule now references `--ui-border-on-surface-divider` directly instead of
+    the `bg-border` bridge (`--ui-border-on-surface-divider` is the correct
+    semantic token for a divider line; it only happened to share `bg-border`'s
+    value today).
+  - New `size` prop (`'S1' | 'S2' | 'S3'`, default `'S1'`) applies the rule's own
+    surrounding spacing, matching Figma's `Size` variant — `S2`/`S3` add
+    `--ui-gap-4`/`--ui-gap-8` as margin on the axis perpendicular to the line.
+  - Added the Figma Code Connect mapping.
+
+- [#713](https://github.com/acronis/uikit/pull/713) [`5b683ce`](https://github.com/acronis/uikit/commit/5b683cecc7c095956d51600293a434bc23bfe8d7) Thanks [@madjorr](https://github.com/madjorr)! - **SidebarSecondary**: add a `collapsible` prop (default `true`). When set to
+  `false`, every user-initiated collapse/expand path is disabled — resize-edge
+  click, drag past the collapse threshold, keyboard (Arrow keys, Enter/Space,
+  Home) and the footer `SidebarSecondaryCollapseTrigger`, which renders natively
+  `disabled`, drops `aria-expanded`, and no longer shows its `expandTooltip` (an
+  "Expand" hint on a permanently disabled control is a false affordance — unlike
+  the resize-edge tooltips, this suppression is not overridable). While the panel
+  is expanded, resizing itself stays fully live: a drag or Arrow-shrink that would
+  have collapsed the panel now clamps to the minimum width instead, and that clamp
+  no longer re-fires `onWidthChange` once the width is already at the bound.
+
+  The dedup is not limited to clamping: **any** width write that resolves to the
+  current value is now a no-op, wherever it comes from — a drag or a held Arrow
+  key pinned against the minimum or maximum, **and** a `Home` / double-click reset
+  that lands on an already-current `defaultWidth` (on a panel whose width has
+  never moved, those two reset gestures now emit nothing at all). A consumer
+  counting invocations sees fewer calls than before in every one of those cases.
+
+  Both resize-edge tooltip defaults are adjusted when `collapsible={false}` so
+  they never advertise an inert gesture: the expanded default drops only its
+  "Collapse: Click" line (keeping "Resize: Drag" and "Reset size: Double click"),
+  and the collapsed default narrows to the single "Reset size: Double click"
+  line — dragging and clicking a permanently collapsed rail do nothing, but
+  double-click still resets the width. An explicit `resizeTooltipExpanded` /
+  `resizeTooltipCollapsed` value still wins in every state.
+
+  Footer composition is unaffected and the `collapsible` default preserves current
+  behavior. One intentional, spec'd visual change does reach existing code: the
+  `SidebarSecondaryCollapseTrigger` now renders a `not-allowed` cursor, the
+  disabled on-surface foreground token, and suppressed hover/active fills whenever
+  it is disabled — which includes a consumer already passing `disabled` directly
+  to the trigger, without adopting the new prop. That row was already functionally
+  inert; it now looks inert too.
+
+- [#711](https://github.com/acronis/uikit/pull/711) [`ff39de9`](https://github.com/acronis/uikit/commit/ff39de9720d8f310fb0a9ad8a284a7f02b128353) Thanks [@madjorr](https://github.com/madjorr)! - Add `TreeItem`: one flat row of a tree / nested-list UI, from the Figma
+  "TreeItem" node (`2092:2596`). Composes an optional expand chevron, an optional
+  `Checkbox`, an optional leading icon, a truncating title, and an optional
+  trailing extras slot for `children`.
+
+  Scoped deliberately to a single row: it renders no nested list and implements no
+  expand/collapse, so `isExpandable` is a visual affordance and `selected` is a
+  prop the consumer drives — matching the Figma node's actual property set. No
+  `role="treeitem"` and no tab stop are forced, since a row is only a valid tree
+  item inside a `role="tree"` owner; the `render` prop is how a consumer supplies
+  those semantics.
+
+  Colors come from the semantic token tier (`--ui-text-on-surface-primary`,
+  `--ui-glyph-on-surface-primary`, `--ui-background-surface-hover` /
+  `-active`, `--ui-focus-primary`) because `tokens-pd` ships no `Tree` component
+  tier yet.
+
+### Patch Changes
+
+- [#716](https://github.com/acronis/uikit/pull/716) [`2073f6a`](https://github.com/acronis/uikit/commit/2073f6a8fbe69b75b888adce6661bfab4f46ca6a) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add `WithDataTable` story to `ChartWidget` — demonstrates a `DataTable` inside
+  a `ChartWidget` card with tags and status-dot cells.
+  Figma: node `8982:34522`.
+
+- [#705](https://github.com/acronis/uikit/pull/705) [`7cf479d`](https://github.com/acronis/uikit/commit/7cf479d837860ea4811e2bd1aaf9f76e1bb7c579) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(charts): smooth projection rendering in AreaChart & LineChart
+  - Fixed sharp break at projection boundary — actual and projection segments
+    now connect smoothly via connectNulls
+  - Fixed legend duplication — projection series are filtered from the legend payload
+  - Fixed tooltip duplication — projection series are filtered from the tooltip payload
+  - Added a dashed vertical separator line at the projection boundary
+
+- [#707](https://github.com/acronis/uikit/pull/707) [`4981705`](https://github.com/acronis/uikit/commit/4981705515cbaa98030a51e29d9ae2e983d67653) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(ScatterChart): Figma-align grid defaults and palette
+  - **BREAKING**: grid lines are now dashed by default (pass `gridDashed={false}` for solid)
+  - **BREAKING**: vertical grid lines are now hidden by default (pass `gridVertical` to restore)
+  - **BREAKING**: default palette changed from `categorical` to `diverging teal-violet` (pass `palette={{ type: 'categorical' }}` to restore the old behavior)
+  - Add `Default` story, clean up meta.args (remove redundant default overrides)
+  - Add `WidgetExample` story matching the Figma widget frame
+  - Update Figma Code Connect URL
+
+- [#712](https://github.com/acronis/uikit/pull/712) [`e9b8898`](https://github.com/acronis/uikit/commit/e9b88982412480d99d3dc31db715e9f72769fd44) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - fix(treemap): Figma-align Treemap — adaptive tile text, centered labels, 14px font
+  - **BREAKING**: `labelAlign` now defaults to `'center'` (was `'bottom-start'`).
+    Pass `labelAlign="bottom-start"` to restore the old position.
+  - **BREAKING**: Tile label font changed from 12px semibold to 14px regular to
+    match the Figma design. Label geometry thresholds updated accordingly
+    (MIN_LABEL_HEIGHT 40→43px, MIN_TWO_LINE_HEIGHT 55→58px).
+  - Default palette changed to `{ type: 'diverging', pair: 'blue-orange' }` (was
+    categorical). A treemap is most commonly used to show two-sided distributions,
+    and the diverging palette's adaptive text works correctly out of the box.
+  - Tile corner radius removed (`CELL_RADIUS 6→0`) to match Figma.
+  - Tile text color is now adaptive, computed automatically from the resolved token
+    name suffix — no `darkFill` prop needed from callers:
+    - **Dark text**: diverging pale stops (a1, a2, b1, b2) and sequential stops 1–2.
+    - **White text**: diverging strong stops (a3, b3), sequential stops 3–8, all
+      categorical and status stops.
+  - Added `WidgetExample` story showing the treemap inside a `ChartWidget` with the
+    diverging blue-orange palette (matches Figma node 8999:72036).
+  - Added `DivergingPalette`, `SequentialPalette`, and `StatusPalette` stories.
+  - Repurposed `CenteredLabels` story to `BottomStartLabels` (since `center` is
+    now the default).
+  - Removed story decorator and redundant meta args (`aspectRatio`, `showLabels`,
+    `showTooltip`) that duplicated component defaults.
+  - Updated Figma Code Connect status to COMPLETE and wired the canonical node URL.
+
 ## 5.0.0
 
 ### Major Changes
