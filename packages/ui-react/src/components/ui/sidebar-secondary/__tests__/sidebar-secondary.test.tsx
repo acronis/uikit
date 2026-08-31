@@ -51,6 +51,37 @@ function Panel(props: React.ComponentProps<typeof SidebarSecondary>) {
   );
 }
 
+function CollapsiblePanel(props: React.ComponentProps<typeof SidebarSecondary>) {
+  return (
+    <SidebarSecondary {...props}>
+      <SidebarSecondaryHeader label="Protection" />
+      <SidebarSecondaryContent>
+        <SidebarSecondarySection>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryMenuItem href="/dashboard" selected>
+              Dashboard
+            </SidebarSecondaryMenuItem>
+          </SidebarSecondaryMenu>
+        </SidebarSecondarySection>
+      </SidebarSecondaryContent>
+      <SidebarSecondaryFooter>
+        <SidebarSecondaryMenu>
+          <SidebarSecondaryCollapseTrigger>
+            Collapse menu
+          </SidebarSecondaryCollapseTrigger>
+        </SidebarSecondaryMenu>
+      </SidebarSecondaryFooter>
+    </SidebarSecondary>
+  );
+}
+
+/** Simulates a drag on the resize edge to `clientX` and releases. */
+function dragEdgeTo(edge: HTMLElement, clientX: number) {
+  fireEvent.pointerDown(edge, { pointerId: 1, clientX: 256 });
+  fireEvent.pointerMove(window, { pointerId: 1, clientX });
+  fireEvent.pointerUp(window, { pointerId: 1, clientX });
+}
+
 describe('SidebarSecondary', () => {
   it('renders the composed panel without error', () => {
     render(<Panel />);
@@ -550,39 +581,6 @@ describe('Resize', () => {
 });
 
 describe('SidebarSecondary — collapsible={false}', () => {
-  function CollapsiblePanel(
-    props: React.ComponentProps<typeof SidebarSecondary>
-  ) {
-    return (
-      <SidebarSecondary {...props}>
-        <SidebarSecondaryHeader label="Protection" />
-        <SidebarSecondaryContent>
-          <SidebarSecondarySection>
-            <SidebarSecondaryMenu>
-              <SidebarSecondaryMenuItem href="/dashboard" selected>
-                Dashboard
-              </SidebarSecondaryMenuItem>
-            </SidebarSecondaryMenu>
-          </SidebarSecondarySection>
-        </SidebarSecondaryContent>
-        <SidebarSecondaryFooter>
-          <SidebarSecondaryMenu>
-            <SidebarSecondaryCollapseTrigger>
-              Collapse menu
-            </SidebarSecondaryCollapseTrigger>
-          </SidebarSecondaryMenu>
-        </SidebarSecondaryFooter>
-      </SidebarSecondary>
-    );
-  }
-
-  /** Simulates a drag on the resize edge to `clientX` and releases. */
-  function dragEdgeTo(edge: HTMLElement, clientX: number) {
-    fireEvent.pointerDown(edge, { pointerId: 1, clientX: 256 });
-    fireEvent.pointerMove(window, { pointerId: 1, clientX });
-    fireEvent.pointerUp(window, { pointerId: 1, clientX });
-  }
-
   it('blocks click-to-collapse on the resize edge', async () => {
     const onChange = vi.fn();
     render(
@@ -753,6 +751,8 @@ describe('SidebarSecondary — collapsible={false}', () => {
   it('gives the disabled collapse trigger a not-allowed cursor and no hover fill', () => {
     render(<CollapsiblePanel collapsible={false} />);
     const trigger = screen.getByRole('button', { name: 'Collapse menu' });
+    // The `disabled:` variants only bite if the element is actually disabled.
+    expect(trigger).toBeDisabled();
     expect(trigger).toHaveClass('disabled:cursor-not-allowed');
     expect(trigger).toHaveClass(
       'disabled:hover:bg-[var(--ui-sidebar-secondary-menu-item-unselected-container-color-idle)]'
@@ -760,6 +760,19 @@ describe('SidebarSecondary — collapsible={false}', () => {
     expect(trigger).toHaveClass(
       'disabled:text-[var(--ui-text-on-surface-disabled)]'
     );
+  });
+
+  it('suppresses the "Expand" trigger tooltip when not collapsible', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <CollapsiblePanel collapsible={false} expanded={false} />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('button', { name: 'Collapse menu' })
+    );
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(screen.queryByText('Expand')).not.toBeInTheDocument();
   });
 
   it('keeps only "Reset size: Double click" in the collapsed tooltip when not collapsible', async () => {
@@ -794,18 +807,6 @@ describe('SidebarSecondary — collapsible={false}', () => {
     expect(screen.queryByText('Collapse:')).not.toBeInTheDocument();
   });
 
-  it('still shows "Collapse: Click" in the expanded tooltip when collapsible', async () => {
-    render(
-      <TooltipProvider delay={0}>
-        <Panel resizable />
-      </TooltipProvider>
-    );
-    await userEvent.hover(
-      screen.getByRole('separator', { name: /resize sidebar/i })
-    );
-    expect(await screen.findByText('Collapse:')).toBeInTheDocument();
-  });
-
   it('honours an explicit expanded tooltip override when not collapsible', async () => {
     render(
       <TooltipProvider delay={0}>
@@ -820,18 +821,6 @@ describe('SidebarSecondary — collapsible={false}', () => {
       screen.getByRole('separator', { name: /resize sidebar/i })
     );
     expect(await screen.findByText('Ancho ajustable')).toBeInTheDocument();
-  });
-
-  it('still shows "Expand: Click" in the collapsed tooltip when collapsible', async () => {
-    render(
-      <TooltipProvider delay={0}>
-        <Panel resizable expanded={false} />
-      </TooltipProvider>
-    );
-    await userEvent.hover(
-      screen.getByRole('separator', { name: /resize sidebar/i })
-    );
-    expect(await screen.findByText('Expand:')).toBeInTheDocument();
   });
 
   it('honours an explicit collapsed tooltip override when not collapsible', async () => {
@@ -850,7 +839,9 @@ describe('SidebarSecondary — collapsible={false}', () => {
     );
     expect(await screen.findByText('Ancho fijo')).toBeInTheDocument();
   });
+});
 
+describe('SidebarSecondary — collapsible={true} (default)', () => {
   it('defaults to collapsible: the collapse trigger stays enabled and toggles', async () => {
     const onChange = vi.fn();
     render(<CollapsiblePanel onExpandedChange={onChange} />);
@@ -859,6 +850,90 @@ describe('SidebarSecondary — collapsible={false}', () => {
     expect(trigger).toHaveAttribute('aria-expanded', 'true');
     await userEvent.click(trigger);
     expect(onChange).toHaveBeenCalledWith(false);
+  });
+
+  it('honours an explicit `disabled` on the collapse trigger', async () => {
+    const onChange = vi.fn();
+    render(
+      <SidebarSecondary onExpandedChange={onChange}>
+        <SidebarSecondaryFooter>
+          <SidebarSecondaryMenu>
+            <SidebarSecondaryCollapseTrigger disabled>
+              Collapse menu
+            </SidebarSecondaryCollapseTrigger>
+          </SidebarSecondaryMenu>
+        </SidebarSecondaryFooter>
+      </SidebarSecondary>
+    );
+    const trigger = screen.getByRole('button', { name: 'Collapse menu' });
+    expect(trigger).toBeDisabled();
+    // The panel is still collapsible, so the state stays exposed.
+    expect(trigger).toHaveAttribute('aria-expanded', 'true');
+    await userEvent.click(trigger);
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('navigation')).toHaveAttribute(
+      'data-state',
+      'expanded'
+    );
+  });
+
+  it('collapses on a drag below the threshold', () => {
+    const onWidth = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <Panel resizable onWidthChange={onWidth} onExpandedChange={onChange} />
+    );
+    dragEdgeTo(screen.getByRole('separator', { name: /resize sidebar/i }), 20);
+    expect(onChange).toHaveBeenCalledWith(false);
+    expect(onWidth).not.toHaveBeenCalled();
+  });
+
+  it('collapses on ArrowLeft shrink past minWidth', async () => {
+    const onWidth = vi.fn();
+    const onChange = vi.fn();
+    render(
+      <Panel resizable onWidthChange={onWidth} onExpandedChange={onChange} />
+    );
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    edge.focus();
+    // Width starts at the 256px minimum, so a single step would drop below it.
+    await userEvent.keyboard('{ArrowLeft}');
+    expect(onChange).toHaveBeenCalledWith(false);
+    expect(onWidth).not.toHaveBeenCalled();
+  });
+
+  it('offers the "Expand" trigger tooltip when collapsed', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <CollapsiblePanel expanded={false} />
+      </TooltipProvider>
+    );
+    await userEvent.hover(screen.getByRole('button', { name: 'Collapse menu' }));
+    expect(await screen.findByText('Expand')).toBeInTheDocument();
+  });
+
+  it('shows "Collapse: Click" in the expanded resize tooltip', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel resizable />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Collapse:')).toBeInTheDocument();
+  });
+
+  it('shows "Expand: Click" in the collapsed resize tooltip', async () => {
+    render(
+      <TooltipProvider delay={0}>
+        <Panel resizable expanded={false} />
+      </TooltipProvider>
+    );
+    await userEvent.hover(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    expect(await screen.findByText('Expand:')).toBeInTheDocument();
   });
 });
 

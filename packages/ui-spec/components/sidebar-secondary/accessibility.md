@@ -43,14 +43,22 @@ When collapsed, the section list is hidden and a vertical breadcrumb is shown
 
 `SidebarSecondaryCollapseTrigger` is a `<button>` that toggles the panel width.
 
-| `collapsible` | Exposed as                                                           |
-| ------------- | -------------------------------------------------------------------- |
-| `true`        | `aria-expanded` mirrors the panel's `expanded` state; button enabled |
-| `false`       | **no** `aria-expanded`; button carries the native `disabled`         |
+| `collapsible` | Exposed as                                                                                                 | `expandTooltip` while collapsed |
+| ------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------- |
+| `true`        | `aria-expanded` mirrors the panel's `expanded` state; button enabled unless the consumer passes `disabled` | shown on hover/focus            |
+| `false`       | **no** `aria-expanded`; button carries the native `disabled`                                               | **suppressed** (no tooltip)     |
 
 When `collapsible` is `false` the button has no state to expose or flip, so
 `aria-expanded` is omitted rather than pinned to a value a user cannot change,
-and `disabled` communicates the unavailable action to assistive tech.
+and `disabled` communicates the unavailable action to assistive tech. Its
+`expandTooltip` is suppressed for the same reason — under `collapsible={false}`
+the panel can never be expanded by the user, so an "Expand" hint would be a
+false affordance. (The tooltip is likewise suppressed whenever the panel is
+expanded, in either mode: there is nothing to expand.)
+
+The suppression keys off `collapsible`, not off the button's disabled state:
+passing `disabled` directly to the trigger while `collapsible` is `true` still
+disables the button, but the `expandTooltip` keeps showing on hover.
 
 ### Resize edge
 
@@ -101,10 +109,14 @@ visible if the panel is later expanded by other means (a controlled `expanded`
 prop flip), so a controlled consumer that mirrors `onWidthChange` must expect a
 width update while the panel is collapsed.
 
-> **Tooltip copy.** With `collapsible={false}` both resize-edge tooltip defaults
-> are adjusted for you, so the copy never advertises a gesture that is inert.
-> **Expanded**, the default drops the "**Collapse:** Click" line and reads
-> "**Resize:** Drag" / "**Reset size:** Double click". **Collapsed**, the default
+> **Tooltip copy.** With `collapsible={false}` every tooltip on the panel is
+> adjusted for you, so the copy never advertises a gesture that is inert. The
+> footer collapse trigger's own `expandTooltip` is **suppressed outright** —
+> nothing can expand the panel, and an explicit value does not bring the
+> tooltip back — and both resize-edge tooltip defaults narrow.
+> **Expanded**, the resize-edge default drops the "**Collapse:** Click" line
+> and reads "**Resize:** Drag" / "**Reset size:** Double click". **Collapsed**,
+> the default
 > narrows to the single line "**Reset size:** Double click" — dragging and
 > clicking a permanently collapsed rail do nothing, but a double-click still
 > writes the default width, so that is the one pointer gesture the tooltip can
@@ -155,8 +167,9 @@ A keyboard-focused row shows a visible focus ring using the shared
 - [ ] Level-2 sub-items are indented and reachable via Tab when open
 - [ ] Collapsed rows keep an accessible name (sr-only label, not removed)
 - [ ] Resize edge is `role="separator"`, focusable, and has an overridable `aria-label`
-- [ ] With `collapsible={false}`: the footer collapse trigger is `disabled` and
-      exposes no `aria-expanded`; Enter/Space on the resize edge does not change
+- [ ] With `collapsible={false}`: the footer collapse trigger is `disabled`,
+      exposes no `aria-expanded`, and shows **no Expand tooltip** on hover or
+      focus; Enter/Space on the resize edge does not change
       `data-state`; the shrink key clamps at the minimum width
 - [ ] With `collapsible={false}` while collapsed: Home **and a double-click on
       the edge** leave `data-state` `collapsed` but still reset the stored width

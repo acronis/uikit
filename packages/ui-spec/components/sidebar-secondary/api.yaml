@@ -144,7 +144,10 @@ contract:
       default: "'Expand'"
       description: >-
         Tooltip text shown on the collapse trigger when the sidebar is collapsed.
-        Consumers should localize this string for i18n.
+        Suppressed entirely with `collapsible: false` — the trigger is disabled
+        then, so the copy would advertise an action that cannot run. An explicit
+        value does not override that suppression. Consumers should localize this
+        string for i18n.
     - name: extras-variant
       type: "'tag' | 'externalLink' | 'shortcut' | 'tag-externalLink'"
       required: true

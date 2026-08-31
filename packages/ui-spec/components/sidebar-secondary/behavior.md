@@ -145,6 +145,17 @@ counterpart of `Home`
 **And** an explicit `resizeTooltipCollapsed` value still wins, including `null`
 to suppress the tooltip entirely
 
+### The collapse trigger shows no tooltip at all
+
+**Given** `collapsible={false}` and a footer `SidebarSecondaryCollapseTrigger`
+**When** the user hovers or focuses that trigger while the panel is collapsed
+**Then** no tooltip appears — the trigger's own `Tooltip` is disabled whenever
+the panel is expanded **or** not collapsible
+**And** this holds even when an explicit `expandTooltip` value is passed, unlike
+the two resize-edge tooltips where an override still wins: the trigger is
+natively `disabled` here, so any "Expand" copy would advertise an action the
+user cannot perform
+
 ---
 
 ## Disclosure (expandable sections)

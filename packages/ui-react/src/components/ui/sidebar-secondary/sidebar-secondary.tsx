@@ -1162,7 +1162,11 @@ export interface SidebarSecondaryCollapseTriggerProps extends Omit<
 > {
   /** Leading 16px icon (e.g. a panel-left glyph). Rotates 180° between expanded/collapsed — same as `SidebarPrimaryCollapseTrigger`. */
   icon?: React.ReactNode;
-  /** Tooltip text shown when the sidebar is collapsed. Defaults to `'Expand'`. */
+  /**
+   * Tooltip text shown when the sidebar is collapsed. Defaults to `'Expand'`.
+   * Not shown when the panel is `collapsible={false}` — the trigger is
+   * disabled then, so the copy would advertise an action that can't run.
+   */
   expandTooltip?: React.ReactNode;
   /** Trailing extras (e.g. a keyboard shortcut hint), same slot as `SidebarSecondaryMenuItem`. */
   extras?: React.ReactNode;
@@ -1255,7 +1259,9 @@ const SidebarSecondaryCollapseTrigger = React.forwardRef<
 
     return (
       <li className="contents">
-        <Tooltip disabled={expanded}>
+        {/* The collapsed-mode tooltip advertises an action; a non-collapsible
+            trigger can't perform it, so suppress the copy there too. */}
+        <Tooltip disabled={expanded || !collapsible}>
           <TooltipTrigger render={button} />
           <TooltipContent side={dir === 'rtl' ? 'left' : 'right'}>
             {expandTooltip}

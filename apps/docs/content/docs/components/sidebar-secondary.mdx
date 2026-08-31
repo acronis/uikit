@@ -182,7 +182,7 @@ expand the panel becomes inert, and the footer
 | <kbd>→</kbd> (grow, while collapsed)   | Nothing                                      |
 | <kbd>Enter</kbd> / <kbd>Space</kbd>    | Nothing                                      |
 | <kbd>Home</kbd>                        | Resets to the default width; does not expand |
-| Footer collapse trigger                | `disabled`                                   |
+| Footer collapse trigger                | `disabled`, and shows no Expand tooltip      |
 
 While the panel is **expanded**, resizing itself stays fully live — only the
 collapse transition is suppressed. Combine with `resizable={false}` to lock the
@@ -204,8 +204,15 @@ on `collapsible`). Nothing moves at that moment — the rail stays collapsed —
 a controlled consumer sees the new width, and it applies as soon as the panel is
 expanded via the `expanded` prop.
 
-With `collapsible={false}` both resize-edge tooltip defaults are adjusted for
-you, so the copy never advertises a gesture that does nothing:
+With `collapsible={false}` every tooltip on the panel is adjusted for you, so
+the copy never advertises a gesture that does nothing:
+
+- **The footer collapse trigger** — its `expandTooltip` is suppressed outright.
+  The button is `disabled`, so an "Expand" hint would promise an action the user
+  can't take. This one is not overridable: passing `expandTooltip` explicitly
+  does not bring the tooltip back.
+
+The two resize-edge tooltip defaults narrow instead:
 
 - **Expanded** — the default drops the "**Collapse:** Click" line and reads
   "**Resize:** Drag" / "**Reset size:** Double click". Both of those still work.
@@ -284,8 +291,11 @@ static sections.
 
 A single `icon` covers both directions — it rotates 180° between the expanded
 and collapsed states. While collapsed the button's label is `sr-only` and
-`expandTooltip` (default `'Expand'`, so localize it) is shown on hover instead.
-`extras` is the same trailing slot as on a menu item, for a shortcut hint.
+`expandTooltip` (default `'Expand'`, so localize it) is shown on hover instead —
+unless the panel is `collapsible={false}`, in which case the trigger is
+`disabled` and no tooltip is shown at all, even if you pass an explicit
+`expandTooltip`. `extras` is the same trailing slot as on a menu item, for a
+shortcut hint.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-secondary/sidebar-secondary.tsx"

@@ -6,7 +6,10 @@
 `false`, every user-initiated collapse/expand path is disabled — resize-edge
 click, drag past the collapse threshold, keyboard (Arrow keys, Enter/Space,
 Home) and the footer `SidebarSecondaryCollapseTrigger`, which renders natively
-`disabled` and drops `aria-expanded`. While the panel is expanded, resizing
+`disabled`, drops `aria-expanded`, and no longer shows its `expandTooltip` (an
+"Expand" hint on a permanently disabled control is a false affordance — unlike
+the resize-edge tooltips, this suppression is not overridable). While the panel
+is expanded, resizing
 itself stays fully live: a drag or Arrow-shrink that would have collapsed the
 panel now clamps to the minimum width instead. Both resize-edge tooltip defaults
 are adjusted when `collapsible={false}` so they never advertise an inert
