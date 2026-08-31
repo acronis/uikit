@@ -13,7 +13,7 @@ export default {
         "button-primary-container-active": "light-dark(rgb(13 77 165), rgb(18 77 161))",
         "button-primary-container-disabled": "light-dark(rgb(214 228 245), rgb(48 50 54))",
         "button-primary-container-hover": "light-dark(rgb(19 84 174), rgb(23 99 207))",
-        "button-primary-container-idle": "light-dark(rgb(23 99 207), rgb(81 157 246))",
+        "button-primary-container-idle": "light-dark(rgb(23 99 207), rgb(10 112 230))",
         "button-secondary-container-active": "light-dark(rgb(226 235 245), rgb(48 50 54))",
         "button-secondary-container-disabled": "light-dark(transparent, transparent)",
         "button-secondary-container-hover": "light-dark(rgb(238 242 247), rgb(46 47 50))",

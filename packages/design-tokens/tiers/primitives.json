@@ -3042,6 +3042,14 @@
           "dark": { "colorSpace": "hsl", "components": [180, 4.76, 95.88] },
           "light": { "colorSpace": "hsl", "components": [215.29, 100, 10] }
         }
+      },
+      "aa-on-white": {
+        "$description": "PROVISIONAL — not Figma-sourced. Brand blue that meets WCAG AA (>= 4.5:1) behind a fixed-white label. `light` re-aliases {palette.blue.7} (unchanged, 5.64:1); `dark` is a hand-computed hsl(212 92% 47%) = rgb(10 112 230) = 4.69:1, because palette.blue.7's own dark value (rgb 81 157 246) only reaches 2.80:1 and fails AA (GH #630). Has no com.figma.variableId because no such Figma variable exists yet — replace this token with a real palette shade once the brand ramp gains an AA-safe dark blue. Consumed only by Button.primary.container.color.idle, and only in that token's `default` brand value — no other brand references this primitive.",
+        "platforms": ["PD"],
+        "values": {
+          "dark": { "colorSpace": "hsl", "components": [212, 92, 47] },
+          "light": "{palette.blue.7}"
+        }
       }
     },
     "electricblue": {
