@@ -11,7 +11,17 @@ import { usePortalContainer } from '@/lib/portal-container';
 // @acronis-platform/tokens-pd (ButtonMenu/default.css). Enter/exit animations
 // use `tw-animate-css` keyed to data-[open]/[closed]/[side].
 
-const DropdownMenu = MenuPrimitive.Root;
+export type DropdownMenuProps = Omit<MenuPrimitive.Root.Props, 'modal'>;
+
+// Base UI's Menu.Root defaults to `modal={true}`, which locks document scroll
+// and disables pointer interaction outside the menu. A dropdown menu is a
+// light-dismiss overlay, not a modal surface, so we always opt out — `modal` is
+// deliberately not part of this component's API.
+function DropdownMenu(props: DropdownMenuProps) {
+  return <MenuPrimitive.Root {...props} modal={false} />;
+}
+DropdownMenu.displayName = 'DropdownMenu';
+
 const DropdownMenuTrigger = MenuPrimitive.Trigger;
 const DropdownMenuGroup = React.forwardRef<
   React.ElementRef<typeof MenuPrimitive.Group>,

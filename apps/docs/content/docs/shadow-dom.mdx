@@ -150,8 +150,15 @@ that must overlay the entire viewport), pass `portalContainer` directly:
   root's stacking context, not the document's. This is usually desirable (popups
   stay inside the MFE), but means a shadow-hosted popup cannot overlay content
   outside the shadow root.
-- **Focus management**: Base UI's focus trapping and restoration work across
-  shadow boundaries in modern browsers (Chrome 90+, Firefox 96+, Safari 16.4+).
+- **Focus management**: Base UI's focus handling works across shadow boundaries
+  in modern browsers (Chrome 90+, Firefox 96+, Safari 16.4+) — both the focus
+  _restoration_ every portaled component performs on close, and the focus
+  _trapping_ that applies only to the components that actually run in a modal
+  state (`Dialog`, `SheetContent`, and `SelectContent` unless you opt out).
+  Don't read the table above as a list of focus traps — `DropdownMenu`,
+  for one, always renders `modal={false}` and has never trapped focus: it
+  light-dismisses instead of locking scroll or blocking interaction outside the
+  popup (see [DropdownMenu](/components/dropdown-menu)).
 
 ## API reference
 
