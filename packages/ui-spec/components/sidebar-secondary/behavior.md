@@ -70,9 +70,13 @@ edge, presses Home while collapsed, or activates the footer
 > **The width reset is not inert while collapsed.** Blocking the expand does not
 > block the width reset: on the resize edge of a `collapsible={false}`, collapsed
 > panel, **`Home` and a double-click** both still reset the stored width to
-> `defaultWidth` and fire `onWidthChange` (`handleDoubleClick` writes the width
-> unconditionally — only its `toggleExpanded()` call is gated on `collapsible`).
-> Nothing changes visually at that moment (the rail stays collapsed), but a
+> `defaultWidth` — neither write is gated on `collapsible` (in
+> `handleDoubleClick`, only its `toggleExpanded()` call is). `onWidthChange`
+> fires **only when `defaultWidth` differs from the current stored width**:
+> `setWidth` returns early on `next === currentWidth`, so a width write that
+> resolves to the current value is a no-op, and on a panel whose width has never
+> moved these two gestures emit nothing. When the width _has_ moved, nothing
+> changes visually at that moment (the rail stays collapsed), but a
 > controlled consumer observes the new width, and it takes effect the moment the
 > panel is expanded by other means (a controlled `expanded` prop). Every _other_
 > expand-triggering gesture — a single click, a drag, the grow Arrow, Enter/Space
@@ -110,8 +114,9 @@ it does when `collapsible` is `true`
 inert: dragging it, clicking it, and the grow/shrink Arrow keys produce no
 observable change
 **And** the one exception is the width reset — `Home` **and** a double-click on
-the edge both still write `defaultWidth` and fire `onWidthChange` while the rail
-stays visually unchanged (see the width-reset note above)
+the edge both still write `defaultWidth` while the rail stays visually
+unchanged, firing `onWidthChange` only when `defaultWidth` differs from the
+current stored width (see the width-reset note above)
 
 > `collapsible` never forces `expanded` to a value; it only gates the
 > user-initiated transitions. A controlled `expanded` prop keeps full authority

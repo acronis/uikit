@@ -366,9 +366,12 @@ function SidebarSecondaryResizeEdge() {
     if (didDragRef.current) return;
     // Cancel any pending click timer (dblclick fires two clicks).
     if (clickTimerRef.current) clearTimeout(clickTimerRef.current);
-    // Wait to see if a double-click follows.
+    // Wait to see if a double-click follows. Re-read `collapsible` from the
+    // ref when the timer fires — the render-time value captured above is stale
+    // if the prop flipped during the 250ms delay.
     clickTimerRef.current = setTimeout(() => {
-      toggleExpanded();
+      if (!ctxRef.current.collapsible) return;
+      ctxRef.current.toggleExpanded();
     }, 250);
   };
 
@@ -502,12 +505,16 @@ const SidebarSecondary = React.forwardRef<HTMLElement, SidebarSecondaryProps>(
     const [width, setWidthState] = React.useState(SIDEBAR_EXPANDED_WIDTH);
     const isWidthControlled = widthProp !== undefined;
     const currentWidth = isWidthControlled ? widthProp : width;
+    // No-op when the width is unchanged: the drag and Arrow-key clamps both
+    // keep calling this with the already-current min/max value, which would
+    // otherwise emit a stream of redundant `onWidthChange` events.
     const setWidth = React.useCallback(
       (next: number) => {
+        if (next === currentWidth) return;
         if (!isWidthControlled) setWidthState(next);
         onWidthChange?.(next);
       },
-      [isWidthControlled, onWidthChange]
+      [isWidthControlled, onWidthChange, currentWidth]
     );
 
     // Collapse is driven by the consumer through the layout context — the

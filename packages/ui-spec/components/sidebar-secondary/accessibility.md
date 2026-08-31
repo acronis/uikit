@@ -101,10 +101,14 @@ yet dragging, clicking, and both Arrow keys produce no observable change. Every
 **expand-triggering** gesture is inert here: dragging, a single click, the grow
 key and Enter/Space all fire no `toggleExpanded`, so `data-state` stays
 `collapsed`. **Two gestures remain live** — `Home` on the keyboard and a
-**double-click** on the edge. Both reset the stored width to `defaultWidth` and
-fire `onWidthChange`, even though the rail is collapsed and looks unchanged at
-that moment (`handleDoubleClick` writes the width unconditionally; only its
-`toggleExpanded()` call is gated on `collapsible`). The reset only becomes
+**double-click** on the edge. Both reset the stored width to `defaultWidth`, and
+neither is gated on `collapsible` (in `handleDoubleClick`, only the
+`toggleExpanded()` call is). They fire `onWidthChange` **only when
+`defaultWidth` differs from the current stored width** — `setWidth` returns
+early on `next === currentWidth`, so a width write that resolves to the current
+value is a no-op, and on a panel whose width has never moved these two gestures
+write nothing at all. When the width _has_ moved, the callback fires even though
+the rail is collapsed and looks unchanged at that moment; the reset only becomes
 visible if the panel is later expanded by other means (a controlled `expanded`
 prop flip), so a controlled consumer that mirrors `onWidthChange` must expect a
 width update while the panel is collapsed.
@@ -173,6 +177,7 @@ A keyboard-focused row shows a visible focus ring using the shared
       `data-state`; the shrink key clamps at the minimum width
 - [ ] With `collapsible={false}` while collapsed: Home **and a double-click on
       the edge** leave `data-state` `collapsed` but still reset the stored width
-      (`onWidthChange` fires with `defaultWidth`)
+      (`onWidthChange` fires with `defaultWidth` only if that differs from the
+      current stored width)
 - [ ] With `collapsible={false}` while collapsed: the default resize tooltip
       reads "Reset size: Double click" only

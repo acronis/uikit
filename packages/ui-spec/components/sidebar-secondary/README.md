@@ -118,10 +118,13 @@ Author both the `SidebarSecondaryContent` (section list) and the
 `expanded` state via CSS — both stay in the DOM, so the breadcrumb is
 SSR-present and no JS branch is needed.
 
-## Locking the width state (`collapsible`)
+## Locking the collapse state
 
 `collapsible` defaults to `true`. Pass `collapsible={false}` when the surface
-must not let the user change the panel width state:
+must not let the user change the panel's expanded/collapsed state. It locks that
+toggle only — **not the width**, which the user can still change by dragging or
+Arrow-shrinking while the panel is expanded. `resizable={false}` is what locks
+the width value itself; the two props are independent and compose:
 
 ```tsx
 <SidebarSecondary collapsible={false}>{/* … */}</SidebarSecondary>

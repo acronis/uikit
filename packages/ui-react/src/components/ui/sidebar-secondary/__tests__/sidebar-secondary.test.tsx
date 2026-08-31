@@ -527,13 +527,55 @@ describe('Resize', () => {
       <Panel resizable onWidthChange={onWidth} onExpandedChange={onChange} />
     );
     const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    // Move off the default width first — the reset is a no-op (and emits
+    // nothing) when the panel is already at `defaultWidth`.
+    dragEdgeTo(edge, 400);
+    expect(onWidth).toHaveBeenLastCalledWith(400);
     await userEvent.dblClick(edge);
     // Double-click resets to the token-derived defaultWidth.
     await waitFor(() => {
-      expect(onWidth).toHaveBeenCalled();
+      expect(onWidth).toHaveBeenLastCalledWith(256);
     });
     // Single-click should have been cancelled by the double-click.
     expect(onChange).not.toHaveBeenCalled();
+  });
+
+  it('drops a pending single-click toggle when collapsible flips to false before it fires', async () => {
+    const onChange = vi.fn();
+    const { rerender } = render(
+      <Panel resizable collapsible onExpandedChange={onChange} />
+    );
+    await userEvent.click(
+      screen.getByRole('separator', { name: /resize sidebar/i })
+    );
+    // The 250ms disambiguation timer is still pending here.
+    rerender(
+      <Panel resizable collapsible={false} onExpandedChange={onChange} />
+    );
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    expect(onChange).not.toHaveBeenCalled();
+    expect(screen.getByRole('navigation')).toHaveAttribute(
+      'data-state',
+      'expanded'
+    );
+  });
+
+  it('does not re-emit onWidthChange when a drag keeps clamping to the same width', () => {
+    const onWidth = vi.fn();
+    render(<Panel resizable onWidthChange={onWidth} />);
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    dragEdgeTo(edge, 400);
+    onWidth.mockClear();
+
+    // Three moves past the maximum all clamp to the same 512px value.
+    fireEvent.pointerDown(edge, { pointerId: 1, clientX: 400 });
+    fireEvent.pointerMove(window, { pointerId: 1, clientX: 900 });
+    fireEvent.pointerMove(window, { pointerId: 1, clientX: 1000 });
+    fireEvent.pointerMove(window, { pointerId: 1, clientX: 1100 });
+    fireEvent.pointerUp(window, { pointerId: 1, clientX: 1100 });
+
+    expect(onWidth).toHaveBeenCalledTimes(1);
+    expect(onWidth).toHaveBeenCalledWith(512);
   });
 
   it('does not apply inline width at default (CSS token drives width)', () => {
@@ -603,6 +645,8 @@ describe('SidebarSecondary — collapsible={false}', () => {
         resizable
         collapsible={false}
         expanded={false}
+        // Start off the default width so the reset actually changes something.
+        width={400}
         onWidthChange={onWidth}
         onExpandedChange={onChange}
       />
@@ -611,7 +655,7 @@ describe('SidebarSecondary — collapsible={false}', () => {
       screen.getByRole('separator', { name: /resize sidebar/i })
     );
     await waitFor(() => {
-      expect(onWidth).toHaveBeenCalled();
+      expect(onWidth).toHaveBeenCalledWith(256);
     });
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -659,7 +703,22 @@ describe('SidebarSecondary — collapsible={false}', () => {
     // Width starts at the 256px minimum, so a single step would drop below it.
     await userEvent.keyboard('{ArrowLeft}');
     expect(onChange).not.toHaveBeenCalled();
-    expect(onWidth).toHaveBeenLastCalledWith(256);
+    // Clamped to the width it already has — nothing changed, nothing emitted.
+    expect(onWidth).not.toHaveBeenCalled();
+  });
+
+  it('emits the clamped minWidth once when shrinking past it from a wider width', async () => {
+    const onWidth = vi.fn();
+    render(<Panel resizable collapsible={false} onWidthChange={onWidth} />);
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    dragEdgeTo(edge, 280);
+    expect(onWidth).toHaveBeenLastCalledWith(280);
+    onWidth.mockClear();
+
+    edge.focus();
+    // 280 → 264 → clamped 256 → already at the minimum, so no further events.
+    await userEvent.keyboard('{ArrowLeft}{ArrowLeft}{ArrowLeft}{ArrowLeft}');
+    expect(onWidth.mock.calls).toEqual([[264], [256]]);
   });
 
   it('clamps a drag below the collapse threshold to minWidth', () => {
@@ -673,10 +732,10 @@ describe('SidebarSecondary — collapsible={false}', () => {
         onExpandedChange={onChange}
       />
     );
-    dragEdgeTo(
-      screen.getByRole('separator', { name: /resize sidebar/i }),
-      20
-    );
+    const edge = screen.getByRole('separator', { name: /resize sidebar/i });
+    dragEdgeTo(edge, 400);
+    expect(onWidth).toHaveBeenLastCalledWith(400);
+    dragEdgeTo(edge, 20);
     expect(onChange).not.toHaveBeenCalled();
     expect(onWidth).toHaveBeenLastCalledWith(256);
   });
@@ -735,6 +794,8 @@ describe('SidebarSecondary — collapsible={false}', () => {
         resizable
         collapsible={false}
         defaultExpanded={false}
+        // Start off the default width so the reset actually changes something.
+        width={400}
         onWidthChange={onWidth}
       />
     );

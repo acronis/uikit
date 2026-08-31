@@ -103,11 +103,15 @@ own expanded/collapsed width:
 Controlled collapse:
 
 ```tsx
-const [expanded, setExpanded] = React.useState(true);
+function ProtectionNav() {
+  const [expanded, setExpanded] = React.useState(true);
 
-<SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
-  {/* … */}
-</SidebarSecondary>;
+  return (
+    <SidebarSecondary expanded={expanded} onExpandedChange={setExpanded}>
+      {/* … */}
+    </SidebarSecondary>
+  );
+}
 ```
 
 ## Resizing
@@ -172,17 +176,18 @@ expand the panel becomes inert, and the footer
 `SidebarSecondaryCollapseTrigger` renders natively `disabled` (with no
 `aria-expanded`, since it has no state to flip):
 
-| Interaction                            | With `collapsible={false}`                   |
-| -------------------------------------- | -------------------------------------------- |
-| Drag past half the min width           | Clamps to 256px instead of collapsing        |
-| Click the edge                         | Nothing                                      |
-| Double-click the edge                  | Still resets the width; never expands        |
-| <kbd>←</kbd> (shrink, while expanded)  | Clamps to 256px instead of collapsing        |
-| <kbd>←</kbd> (shrink, while collapsed) | Nothing                                      |
-| <kbd>→</kbd> (grow, while collapsed)   | Nothing                                      |
-| <kbd>Enter</kbd> / <kbd>Space</kbd>    | Nothing                                      |
-| <kbd>Home</kbd>                        | Resets to the default width; does not expand |
-| Footer collapse trigger                | `disabled`, and shows no Expand tooltip      |
+| Interaction                                   | With `collapsible={false}`                   |
+| --------------------------------------------- | -------------------------------------------- |
+| Drag past half the min width (while expanded) | Clamps to 256px instead of collapsing        |
+| Drag the edge (while collapsed)               | Nothing                                      |
+| Click the edge                                | Nothing                                      |
+| Double-click the edge                         | Still resets the width; never expands        |
+| <kbd>←</kbd> (shrink, while expanded)         | Clamps to 256px instead of collapsing        |
+| <kbd>←</kbd> (shrink, while collapsed)        | Nothing                                      |
+| <kbd>→</kbd> (grow, while collapsed)          | Nothing                                      |
+| <kbd>Enter</kbd> / <kbd>Space</kbd>           | Nothing                                      |
+| <kbd>Home</kbd>                               | Resets to the default width; does not expand |
+| Footer collapse trigger                       | `disabled`, and shows no Expand tooltip      |
 
 While the panel is **expanded**, resizing itself stays fully live — only the
 collapse transition is suppressed. Combine with `resizable={false}` to lock the
@@ -198,10 +203,13 @@ both Arrow keys do nothing observable, and <kbd>Enter</kbd> / <kbd>Space</kbd>
 are fully inert.
 
 Two gestures survive — <kbd>Home</kbd> and a **double-click on the edge**. Both
-reset the stored width to `defaultWidth` and fire `onWidthChange` (the
-double-click handler writes the width unconditionally; only its expand is gated
-on `collapsible`). Nothing moves at that moment — the rail stays collapsed — but
-a controlled consumer sees the new width, and it applies as soon as the panel is
+reset the stored width to `defaultWidth`; neither is gated on `collapsible` (in
+the double-click handler, only the expand is). They fire `onWidthChange` **only
+when `defaultWidth` differs from the current stored width** — a width write that
+resolves to the current value is a no-op, so on a panel whose width has never
+moved these two gestures write nothing at all. When the width _has_ moved, nothing
+moves back on screen at that moment — the rail stays collapsed — but a
+controlled consumer sees the new width, and it applies as soon as the panel is
 expanded via the `expanded` prop.
 
 With `collapsible={false}` every tooltip on the panel is adjusted for you, so

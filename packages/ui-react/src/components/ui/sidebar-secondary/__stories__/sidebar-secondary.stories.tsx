@@ -282,7 +282,7 @@ export const Selected: Story = {
   name: 'Selected vs unselected',
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false}>
+      <SidebarSecondary>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
@@ -307,7 +307,7 @@ export const ExpandableSectionOpenClosed: Story = {
   name: 'Expandable section (open + closed)',
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false}>
+      <SidebarSecondary>
         <SidebarSecondaryContent>
           <SidebarSecondarySection expandable>
             <SidebarSecondarySectionLabel>Open section</SidebarSecondarySectionLabel>
@@ -337,7 +337,7 @@ export const ExpandableSectionOpenClosed: Story = {
 export const WithExtras: Story = {
   render: () => (
     <Shell>
-      <SidebarSecondary collapsible={false}>
+      <SidebarSecondary>
         <SidebarSecondaryContent>
           <SidebarSecondarySection>
             <SidebarSecondaryMenu>
