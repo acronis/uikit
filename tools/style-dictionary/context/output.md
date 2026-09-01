@@ -22,28 +22,35 @@ the build derives them from the top-level keys of `semantics.json` via a shared
 ## Theming — `light-dark()` + `color-scheme`
 
 The modern, single-block approach (baseline-supported: Chrome 123+, Safari 17.5+,
-Firefox 120+). Every variable lives in `:root`; color values carry both modes
-inline and the browser resolves them from `color-scheme`:
+Firefox 120+). Every variable lives in `:root, :host`; color values carry both
+modes inline and the browser resolves them from `color-scheme`:
 
 ```css
-:root {
-  color-scheme: light dark;
-
+:root,
+:host {
   --ui-background-surface-primary: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-breadcrumb-gap: 4px;
 }
 
-[data-theme='light'] {
+[data-theme='light'],
+:host([data-theme='light']) {
   color-scheme: light;
 }
-[data-theme='dark'] {
+[data-theme='dark'],
+:host([data-theme='dark']) {
   color-scheme: dark;
 }
 ```
 
-By default the page follows the OS preference; setting `data-theme` on any
-ancestor (or `color-scheme` directly) forces a mode for that subtree. Only the
-**base** (`acronis`) files carry this shell; override files are bare `:root {}`.
+`color-scheme` is set **only** by the explicit `[data-theme]` rules above —
+there is no unconditional `color-scheme: light dark` shell on `:root` or
+`:host`. An unconditional shell was tried and reverted: it let the browser
+pick a scheme from the OS preference independent of the shadow host's actual
+`[data-theme]` attribute, fighting shadow-DOM theming. Setting `data-theme` on
+an ancestor (or `color-scheme` directly) is what activates a given mode for
+that subtree; without it, `light-dark()` resolves against the browser's
+`color-scheme: normal` default (light). Only the **base** (`acronis`) files
+carry this shell; override files are bare `:root, :host {}`.
 
 ## Brand model — base + override
 
