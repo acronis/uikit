@@ -47,6 +47,21 @@
 **And** `checked-change` does not fire
 **And** the disabled form tokens are applied
 
+### Read-only blocks the state change but not focus
+
+**Given** a Checkbox with `read-only`
+**When** the user clicks it (or presses Space while focused)
+**Then** the state does not change
+**And** `checked-change` does not fire
+**And** the box remains focusable and keeps its normal (non-disabled) hover/
+active/cursor styling — nothing in the current implementation visually
+distinguishes it from an editable box beyond `aria-readonly="true"`, so a
+consumer should pair it with copy that explains why it can't be changed
+
+> Known gap, not yet ratified: the absence of a read-only visual affordance is
+> the current behavior, not a signed-off design decision. It needs design-lead
+> sign-off before it is treated as final.
+
 ---
 
 ## States
@@ -85,3 +100,21 @@
 **Given** a Checkbox with `name` and `value` inside a form
 **When** the form is submitted while checked
 **Then** the field is included with its value
+
+### Required participates in form validation
+
+**Given** a Checkbox with `required`
+**When** it renders
+**Then** `aria-required="true"` is set
+**And** the hidden native input marks the field as required for submission
+**And** the box itself renders no dedicated required-state token — nothing in
+`packages/tokens-pd/css/Checkbox/*.css` distinguishes a required box from an
+optional one beyond `aria-required`
+
+> Known gap, not yet ratified: the absence of a required visual affordance is
+> the current behavior, not a signed-off design decision. It needs
+> design-lead sign-off before it is treated as final. Compare InputSelect,
+> where `required` on `InputSelectLabel` renders a visual `*` marker
+> (`--ui-input-select-global-required-color`) — design HAS modeled a required
+> affordance for a sibling component, so Checkbox's lack of one is a gap, not
+> a considered choice to omit it everywhere.

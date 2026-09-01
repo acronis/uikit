@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Checkbox as CheckboxPrimitive } from '@base-ui/react/checkbox';
 import {
-  CheckIcon,
-  MinusIcon,
+  CheckSmallIcon,
+  MinusSmallIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
@@ -83,9 +83,9 @@ const Checkbox = React.forwardRef<
     >
       <CheckboxPrimitive.Indicator className="flex items-center justify-center text-current">
         {indeterminate ? (
-          <MinusIcon size={16} className="text-current!" />
+          <MinusSmallIcon size={16} className="text-current!" />
         ) : (
-          <CheckIcon size={16} className="text-current!" />
+          <CheckSmallIcon size={16} className="text-current!" />
         )}
       </CheckboxPrimitive.Indicator>
     </CheckboxPrimitive.Root>

@@ -61,6 +61,7 @@ const NumberFieldDecrement = React.forwardRef<
     className={cn(stepperClassName, className)}
     {...props}
   >
+    {/* Full-size glyph swapped for a small variant in Checkbox/Combobox/InputSelect/DropdownMenu's selection-indicator role; this is a decrement affordance, not a selection indicator, so it stays until design rules on whether the inset glyph applies here too. */}
     {children ?? <MinusIcon size={16} />}
   </NumberFieldPrimitive.Decrement>
 ));

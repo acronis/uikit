@@ -128,7 +128,7 @@ export const WithSubmenu: Story = {
 };
 
 /**
- * Checkbox items — toggled state tracked locally; CheckIcon appears when checked.
+ * Checkbox items — toggled state tracked locally; CheckSmallIcon appears when checked.
  * The section label is `inset` so its text aligns with the item labels, which sit
  * after the indicator slot.
  */

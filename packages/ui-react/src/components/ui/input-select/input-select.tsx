@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Select as SelectPrimitive } from '@base-ui/react/select';
 import {
-  CheckIcon,
+  CheckSmallIcon,
   ChevronDownIcon,
   ChevronRightIcon,
   CircleWarningIcon,
@@ -454,7 +454,7 @@ const InputSelectItem = React.forwardRef<
           aria-hidden="true"
           className="flex size-[var(--ui-checkbox-global-box-size)] shrink-0 items-center justify-center rounded-[var(--ui-checkbox-global-box-border-radius)] border-[length:var(--ui-checkbox-global-box-border-width)] border-[var(--ui-checkbox-unchecked-box-border-color-idle)] bg-[var(--ui-checkbox-unchecked-box-color-idle)] text-transparent group-data-[selected]/item:border-[var(--ui-checkbox-checked-box-border-color-idle)] group-data-[selected]/item:bg-[var(--ui-checkbox-checked-box-color-idle)] group-data-[selected]/item:text-[var(--ui-checkbox-checked-icon-color-idle)]"
         >
-          <CheckIcon size={16} />
+          <CheckSmallIcon size={16} />
         </span>
       )}
       {typeof indent === 'number' && indent > 0 && (
@@ -474,7 +474,7 @@ const InputSelectItem = React.forwardRef<
       </SelectPrimitive.ItemText>
       {!multiple && (
         <SelectPrimitive.ItemIndicator className="flex shrink-0 items-center text-[var(--ui-input-select-dropdown-item-global-icon-checked)]">
-          <CheckIcon size={16} />
+          <CheckSmallIcon size={16} />
         </SelectPrimitive.ItemIndicator>
       )}
     </SelectPrimitive.Item>

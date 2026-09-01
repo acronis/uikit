@@ -10,8 +10,8 @@ description: >-
 since: 0.7.0
 dependencies:
   components:
-    - CheckIcon
-    - MinusIcon
+    - CheckSmallIcon
+    - MinusSmallIcon
 figma:
-  node: '2238-43890'
+  node: '725-2773'
   codeConnect: packages/ui-react/src/components/ui/checkbox/checkbox.figma.tsx

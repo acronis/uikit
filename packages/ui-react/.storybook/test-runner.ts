@@ -11,6 +11,16 @@ const config: TestRunnerConfig = {
   setup() {
     expect.extend({ toMatchImageSnapshot });
   },
+  async preVisit(page) {
+    // Reset the pointer to an off-canvas position before every story renders.
+    // preVisit runs unconditionally, before the story is in the DOM, regardless
+    // of whether the PREVIOUS story's postVisit assertion passed or threw — so
+    // a lingering :hover from a hoverSelector-driven story (see postVisit below)
+    // never leaks into the next story's screenshot. (-1, -1) is used rather than
+    // (0, 0) because layout: 'fullscreen' stories can render real, hoverable
+    // content starting at pixel (0,0).
+    await page.mouse.move(-1, -1);
+  },
   async postVisit(page, context) {
     // Wait for fonts and images to load before snapshotting.
     await page.waitForLoadState('networkidle');
@@ -101,6 +111,7 @@ const config: TestRunnerConfig = {
     expect(image).toMatchImageSnapshot({
       customSnapshotsDir: `${process.cwd()}/test/__snapshots__`,
       customSnapshotIdentifier: getSnapshotIdentifier(context.id, colorMode),
+      // Too coarse to catch a glyph-area change (a ~40-60px ink delta on a 1280x75 story is well under 0.5%) — this is how the Checkbox icon-geometry regression from the design-assets resync shipped undetected until manual review; known gap, not fixed here.
       failureThreshold: 0.005,
       failureThresholdType: 'percent',
     });

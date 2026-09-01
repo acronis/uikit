@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { CheckIcon, ChevronRightIcon } from '@acronis-platform/icons-react/stroke-mono';
+import { CheckSmallIcon, ChevronRightIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { usePortalContainer } from '@/lib/portal-container';
@@ -180,7 +180,7 @@ const DropdownMenuCheckboxItem = React.forwardRef<
   >
     <span className={indicatorSlotClassName}>
       <MenuPrimitive.CheckboxItemIndicator className="flex">
-        <CheckIcon className="size-4" />
+        <CheckSmallIcon size={16} />
       </MenuPrimitive.CheckboxItemIndicator>
     </span>
     {children}

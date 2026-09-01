@@ -178,9 +178,12 @@ describe('DropdownMenuCheckboxItem', () => {
         </DropdownMenuContent>
       </DropdownMenu>
     );
-    expect(
-      screen.getByRole('menuitemcheckbox', { name: 'On' }).querySelector('svg')
-    ).not.toBeNull();
+    const glyph = screen
+      .getByRole('menuitemcheckbox', { name: 'On' })
+      .querySelector('svg');
+    expect(glyph).not.toBeNull();
+    expect(glyph).toHaveAttribute('width', '16');
+    expect(glyph).toHaveAttribute('height', '16');
     expect(
       screen.getByRole('menuitemcheckbox', { name: 'Off' }).querySelector('svg')
     ).toBeNull();
