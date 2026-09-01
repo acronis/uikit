@@ -36,8 +36,8 @@
     "@types/js-yaml": "4.0.9",
     "@types/node": "catalog:",
     "ajv": "catalog:",
-    "js-yaml": "4.3.1",
-    "tsx": "4.22.3",
+    "js-yaml": "5.4.1",
+    "tsx": "4.23.12",
     "typescript": "catalog:",
     "vite": "catalog:",
     "vitest": "catalog:"
