@@ -12,7 +12,7 @@ since: 0.10.0
 dependencies:
   components:
     - ChevronDownIcon
-    - CheckIcon
+    - CheckSmallIcon
 figma:
   node: '1846-1815'
   codeConnect: packages/ui-react/src/components/ui/select/select.figma.tsx

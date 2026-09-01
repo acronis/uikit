@@ -56,7 +56,7 @@ parts:
       item is non-interactive.
     element: div
   - id: indicator
-    description: A check mark (CheckIcon) shown on the selected item.
+    description: A check mark (CheckSmallIcon) shown on the selected item.
     element: span
   - id: group
     description: An optional labelled section grouping related items.
