@@ -371,11 +371,24 @@ describe('serializeCss', () => {
       vars: new Map([['ui-x', 'red']]),
       classes: new Map(),
     });
-    expect(css).not.toContain('color-scheme: light dark;');
+    expect(css).toContain('color-scheme: light dark;');
     expect(css).toContain("[data-theme='light']");
     expect(css).toContain('color-scheme: light;');
     expect(css).toContain("[data-theme='dark']");
     expect(css).toContain('color-scheme: dark;');
+  });
+
+  it('sets the unconditional light-dark shell on :root only, not :host', () => {
+    const css = serializeCss({
+      brand: 'acronis',
+      tier: 'semantics',
+      isOverride: false,
+      vars: new Map([['ui-x', 'red']]),
+      classes: new Map(),
+    });
+    expect(css).toContain(':root {\n  color-scheme: light dark;\n}');
+    expect(css).not.toContain(':host {\n  color-scheme: light dark;\n}');
+    expect(css).not.toContain(':root, :host {\n  color-scheme: light dark;\n}');
   });
 
   it('targets both :root and :host so tokens resolve in shadow roots', () => {

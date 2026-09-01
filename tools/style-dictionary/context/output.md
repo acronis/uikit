@@ -26,6 +26,10 @@ Firefox 120+). Every variable lives in `:root, :host`; color values carry both
 modes inline and the browser resolves them from `color-scheme`:
 
 ```css
+:root {
+  color-scheme: light dark;
+}
+
 :root,
 :host {
   --ui-background-surface-primary: light-dark(rgb(255 255 255), rgb(0 0 0));
@@ -42,15 +46,16 @@ modes inline and the browser resolves them from `color-scheme`:
 }
 ```
 
-`color-scheme` is set **only** by the explicit `[data-theme]` rules above —
-there is no unconditional `color-scheme: light dark` shell on `:root` or
-`:host`. An unconditional shell was tried and reverted: it let the browser
-pick a scheme from the OS preference independent of the shadow host's actual
-`[data-theme]` attribute, fighting shadow-DOM theming. Setting `data-theme` on
-an ancestor (or `color-scheme` directly) is what activates a given mode for
-that subtree; without it, `light-dark()` resolves against the browser's
-`color-scheme: normal` default (light). Only the **base** (`acronis`) files
-carry this shell; override files are bare `:root, :host {}`.
+`color-scheme: light dark` on `:root` is unconditional, so an unthemed document
+follows the OS preference by default. It is deliberately **not** repeated on
+the bare `:host` rule: a shadow host would then re-declare `light dark`
+locally, overriding the scheme it should otherwise inherit from the document —
+making shadow-DOM content follow the OS instead of the app's `[data-theme]`
+attribute on `<html>` ([#674](https://github.com/acronis/uikit/issues/674)).
+Explicit `[data-theme='light'|'dark']` still sets `color-scheme` on both
+`:root` and `:host`, so a themed shadow host (or a themed document) always
+wins over the OS default. Only the **base** (`acronis`) files carry this
+shell; override files are bare `:root, :host {}`.
 
 ## Brand model — base + override
 
