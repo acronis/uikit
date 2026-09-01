@@ -42,6 +42,15 @@ them around a `DataTable` (or your own `<Table>`), passing the same instance.
 Pass that same instance to `DataTable`'s own `table` prop to have it render
 from it too (see **Server-driven usage** below).
 
+The TanStack types these props reference are re-exported from
+`@acronis-platform/ui-react`, so a consumer never needs a direct
+`@tanstack/react-table` import to type them: `Column`, `ColumnDef`, `Row`,
+`OnChangeFn`, `TanstackTable` (TanStack's `Table`, aliased to avoid clashing
+with the `Table` primitive), and the `SortingState` / `VisibilityState` /
+`RowSelectionState` / `ColumnOrderState` / `ColumnSizingState` state types.
+`DataTableColumnHeaderProps` is exported alongside them, so a wrapper around
+`DataTableColumnHeader` can type its own props.
+
 ## Server-driven usage
 
 - **External `table`** — pass an externally-built TanStack `table` instance
@@ -98,8 +107,11 @@ from it too (see **Server-driven usage** below).
 ## Example
 
 ```tsx
-import { DataTable, DataTableColumnHeader } from '@acronis-platform/ui-react';
-import type { ColumnDef } from '@tanstack/react-table';
+import {
+  DataTable,
+  DataTableColumnHeader,
+  type ColumnDef,
+} from '@acronis-platform/ui-react';
 
 const columns: ColumnDef<Payment>[] = [
   {

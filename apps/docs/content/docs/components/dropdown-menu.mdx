@@ -136,12 +136,23 @@ pattern — the consumer supplies `value` / `onValueChange`:
   name="DropdownMenuContentProps"
 />
 
-`DropdownMenu` (root) accepts the Base UI Menu root props — `open` /
-`defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuLabel` /
+`DropdownMenu` (root) accepts the Base UI Menu root props **except `modal`** —
+`open` / `defaultOpen`, `onOpenChange`. `DropdownMenuItem` / `DropdownMenuLabel` /
 `DropdownMenuSubTrigger` take an `inset` flag. `DropdownMenuCheckboxItem` takes
 `checked` / `onCheckedChange`; `DropdownMenuRadioGroup` takes `value` /
 `onValueChange`. Items also accept Base UI's `closeOnClick` — pass
 `closeOnClick={false}` to keep the menu open while the user toggles several rows
 (this is how `TableViewOptions` builds its column-visibility panel). See the
 [Base UI Menu docs](https://base-ui.com/react/components/menu) for the full prop
-surface of each part.
+surface of each part, keeping the `modal` exception below in mind.
+
+<Callout type="warn" title="modal is not configurable">
+  Base UI's `Menu.Root` defaults to `modal={true}`, which locks document scroll
+  and renders an interaction-blocking backdrop. A dropdown menu is a
+  light-dismiss overlay, not a modal surface, so `DropdownMenu` always renders
+  `modal={false}` and `modal` is omitted from `DropdownMenuProps` — passing it
+  is a type error. The menu therefore never scroll-locks the page and never
+  blocks pointer events outside the popup; it light-dismisses on outside press
+  or `Escape`. Reach for `Dialog` or `Sheet` when you need genuinely modal
+  behaviour.
+</Callout>

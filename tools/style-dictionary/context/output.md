@@ -22,28 +22,40 @@ the build derives them from the top-level keys of `semantics.json` via a shared
 ## Theming — `light-dark()` + `color-scheme`
 
 The modern, single-block approach (baseline-supported: Chrome 123+, Safari 17.5+,
-Firefox 120+). Every variable lives in `:root`; color values carry both modes
-inline and the browser resolves them from `color-scheme`:
+Firefox 120+). Every variable lives in `:root, :host`; color values carry both
+modes inline and the browser resolves them from `color-scheme`:
 
 ```css
 :root {
   color-scheme: light dark;
+}
 
+:root,
+:host {
   --ui-background-surface-primary: light-dark(rgb(255 255 255), rgb(0 0 0));
   --ui-breadcrumb-gap: 4px;
 }
 
-[data-theme='light'] {
+[data-theme='light'],
+:host([data-theme='light']) {
   color-scheme: light;
 }
-[data-theme='dark'] {
+[data-theme='dark'],
+:host([data-theme='dark']) {
   color-scheme: dark;
 }
 ```
 
-By default the page follows the OS preference; setting `data-theme` on any
-ancestor (or `color-scheme` directly) forces a mode for that subtree. Only the
-**base** (`acronis`) files carry this shell; override files are bare `:root {}`.
+`color-scheme: light dark` on `:root` is unconditional, so an unthemed document
+follows the OS preference by default. It is deliberately **not** repeated on
+the bare `:host` rule: a shadow host would then re-declare `light dark`
+locally, overriding the scheme it should otherwise inherit from the document —
+making shadow-DOM content follow the OS instead of the app's `[data-theme]`
+attribute on `<html>` ([#674](https://github.com/acronis/uikit/issues/674)).
+Explicit `[data-theme='light'|'dark']` still sets `color-scheme` on both
+`:root` and `:host`, so a themed shadow host (or a themed document) always
+wins over the OS default. Only the **base** (`acronis`) files carry this
+shell; override files are bare `:root, :host {}`.
 
 ## Brand model — base + override
 

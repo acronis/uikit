@@ -373,7 +373,7 @@ adapters:
   react:
     component: DataTable
     status: implemented
-    import: "import { DataTable } from '@acronis-platform/ui-react'"
+    import: "import { DataTable, type ColumnDef } from '@acronis-platform/ui-react'"
     example: |
       <DataTable columns={columns} data={rows} />
   vue:

@@ -3,7 +3,8 @@
 - Renders a real `<table>` via the Table primitives, so column headers and cells
   carry native table semantics for assistive tech.
 - The sort control is a real `<button>` that toggles the sort on a single click
-  (and Enter/Space); it carries an `aria-label` ("Sort by <title>") and the sort
+  (and Enter/Space); it carries an `aria-label` ("Sort by <title>", override via
+  `sortLabel` to localize) and the sort
   direction is conveyed by the arrow icon alongside the always-rendered text title.
 - Pagination controls are icon buttons with explicit labels ("Go to next page",
   etc.); the rows-per-page control is a labelled select.
