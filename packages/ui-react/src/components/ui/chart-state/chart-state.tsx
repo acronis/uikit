@@ -71,7 +71,12 @@ const ChartState = React.forwardRef<HTMLDivElement, ChartStateProps>(
       <div
         ref={ref}
         className={cn(
-          'flex size-full min-h-32 flex-col items-center justify-center gap-2 text-center text-sm leading-6 text-foreground',
+          'flex size-full min-h-32 flex-col items-center gap-2 text-center text-sm leading-6 text-foreground',
+          // Error: scroll long diagnostic text instead of overflowing the card.
+          // Loading/empty keep centered — their content is always compact.
+          state === 'error'
+            ? 'overflow-y-auto overflow-x-hidden'
+            : 'justify-center',
           className
         )}
         {...props}
@@ -101,14 +106,25 @@ const ChartState = React.forwardRef<HTMLDivElement, ChartStateProps>(
           // in a wide widget instead of a poster.
           <Illustration className="max-h-full w-full max-w-[220px] shrink text-[var(--ui-background-status-off)]" />
         )}
-        {state === 'error' && (
-          <CircleWarningIcon
-            size={24}
-            className="text-[var(--ui-glyph-on-status-warning)]"
-          />
+        {/* Error content is wrapped so `my-auto` can center it when the card
+            is tall (margins split the space) yet collapse to top-aligned when
+            the text overflows (margins collapse to 0 → scrollable from the
+            top). `justify-center` alone would push the icon above the visible
+            area on overflow; `justify-start` alone would top-align even short
+            messages.  `shrink-0` on the icon prevents flex from compressing it
+            when the description is long. */}
+        {state === 'error' ? (
+          <div className="my-auto flex w-full flex-col items-center gap-2">
+            <CircleWarningIcon
+              size={24}
+              className="shrink-0 text-[var(--ui-glyph-on-status-warning)]"
+            />
+            <p className="max-w-full break-words">{caption}</p>
+            {action}
+          </div>
+        ) : (
+          <p>{caption}</p>
         )}
-        <p>{caption}</p>
-        {state === 'error' && action}
       </div>
     );
   }

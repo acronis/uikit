@@ -51,5 +51,7 @@ function Sales({ status, data, config, refetch }) {
 ```
 
 The three states share one compact layout: a leading glyph (spinner / inbox /
-warning) over a centered label. Pass `message` to override a state's default
-label, and `action` to add a retry affordance to the error state.
+warning) over a centered label. Pass `description` to override a state's default
+label, and `action` to add a retry affordance to the error state. Long unbroken
+error descriptions (CTI paths, API URLs) wrap at word boundaries and scroll
+vertically when they exceed the slot height.
