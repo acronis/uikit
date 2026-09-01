@@ -40,25 +40,25 @@
     "url": "https://github.com/acronis/uikit/issues"
   },
   "devDependencies": {
-    "@changesets/changelog-github": "0.7.0",
-    "@changesets/cli": "2.31.0",
-    "@commitlint/cli": "21.0.2",
-    "@commitlint/config-conventional": "21.0.2",
-    "@eslint/js": "^9.38.0",
+    "@changesets/changelog-github": "1.0.0",
+    "@changesets/cli": "3.0.1",
+    "@commitlint/cli": "21.2.2",
+    "@commitlint/config-conventional": "21.2.2",
+    "@eslint/js": "^10.0.1",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-storybook": "10.4.1",
+    "eslint-plugin-storybook": "10.5.10",
     "eslint-plugin-unused-imports": "^4.3.0",
-    "globals": "^17.6.0",
+    "globals": "^17.11.0",
     "husky": "9.1.7",
-    "lint-staged": "17.0.5",
-    "prettier": "3.8.3",
+    "lint-staged": "17.4.1",
+    "prettier": "3.9.6",
     "typescript": "catalog:",
-    "typescript-eslint": "^8.60.0"
+    "typescript-eslint": "^8.68.0"
   },
   "lint-staged": {
     "apps/**/*.{js,jsx,ts,tsx,vue}": [
