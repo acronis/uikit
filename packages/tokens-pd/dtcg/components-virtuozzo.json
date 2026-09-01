@@ -1850,7 +1850,6 @@
             "$value": "{colors.background.brand.secondary-hover}"
           },
           "idle": {
-            "$description": "Brand-scoped divergence, described here once for all brands. Every brand except `default` resolves {colors.background.brand.secondary} to its own branding.*.ButtonPrimary.idle and is unaffected. The `default` brand alone skips the semantic tier and points at the PROVISIONAL {palette.blue.aa-on-white} (light unchanged, dark raised to 4.69:1), because in `default` that semantic lands on {palette.blue.7}, whose dark value only reaches 2.80:1 behind Button's fixed-white label and fails WCAG AA (GH #630). The override is scoped to this token rather than the semantic because the semantic is shared with ButtonMenu / Calendar / Checkbox / Radio. Re-point `default` at the semantic once the brand ramp gains an AA-safe dark blue in Figma.",
             "$extensions": {
               "com.figma.hiddenFromPublishing": true,
               "com.figma.scopes": [
