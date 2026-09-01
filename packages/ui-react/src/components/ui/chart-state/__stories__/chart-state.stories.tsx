@@ -74,6 +74,22 @@ export const ErrorWithRetry: Story = {
   },
 };
 
+/**
+ * Long unbroken CTI error paths stay inside the slot: `break-all` wraps the
+ * text and `overflow-y-auto` lets the user scroll when the message is taller
+ * than the card. The icon and "Try again" stay visible (top-aligned, not
+ * centered) so the user always sees the call-to-action.
+ */
+export const ErrorLongDescription: Story = {
+  decorators: [slot],
+  args: {
+    state: 'error',
+    description:
+      "failed to execute 'cti.a.p.dts.func.v1.0~a.ax_core.query.v1.0~a.ax_core.widget.v1.0~a.ax_core.daily_activity_table.v1.0': failed to execute node 'func': failed to build return: failed to execute expression '$func[cti.a.p.dts.func.v1.0~a.ax_core.platform.daily_activity_table.v1.0](query=$.params.query)': failed to execute module function 'Platform.GetDailyActivityTableQuery': failed to query daily_activity_table: unmarshaling error",
+    action: <Button variant="ghost">Try again</Button>,
+  },
+};
+
 // Empty state with no variant: no silhouette, just the default label.
 // Covers the path a caller that hasn't migrated to per-type empties still hits.
 export const EmptyNoVariant: Story = {

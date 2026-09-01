@@ -170,6 +170,27 @@ describe('ChartState', () => {
     });
   });
 
+  it('contains a long unbroken error description within the container', () => {
+    const longCtiPath =
+      "failed to execute 'cti.a.p.dts.func.v1.0~a.ax_core.query.v1.0~a.ax_core.widget.v1.0~a.ax_core.daily_activity_table.v1.0': failed to execute node 'func': failed to build return: failed to execute expression '$func[cti.a.p.dts.func.v1.0~a.ax_core.platform.daily_activity_table.v1.0](query=$.params.query)': failed to execute module function 'Platform.GetDailyActivityTableQuery': failed to query daily_activity_table: unmarshaling error";
+    const { container } = render(
+      <ChartState state="error" description={longCtiPath} />
+    );
+    const root = container.firstElementChild as HTMLElement;
+    // The description text must be present (not clipped from the DOM).
+    expect(screen.getByText(longCtiPath)).toBeInTheDocument();
+    // Error state allows vertical scroll for long text.
+    expect(root.className).toContain('overflow-y-auto');
+    expect(root.className).toContain('overflow-x-hidden');
+    // The <p> must have word-break so unbroken CTI paths wrap.
+    const p = root.querySelector('p');
+    expect(p?.className).toContain('break-words');
+    expect(p?.className).toContain('max-w-full');
+    // The icon must not shrink when the description is long.
+    const icon = root.querySelector('svg');
+    expect(icon?.closest('div[class*="my-auto"]')).toBeInTheDocument();
+  });
+
   it('forwards the ref', () => {
     const ref = createRef<HTMLDivElement>();
     render(<ChartState state="empty" ref={ref} />);

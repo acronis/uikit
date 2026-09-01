@@ -275,6 +275,47 @@ export const ChartTypes: Story = {
 };
 
 /**
+ * Long unbroken CTI error paths (API error messages, URLs) stay contained
+ * within the card. The text wraps at any character boundary, and when the
+ * message is taller than the card body the user can scroll vertically. The
+ * icon stays anchored at the top so it's always visible.
+ *
+ * Two sizes: a KPI-sized widget (200px tall, 300px wide — matching the bug
+ * report) and a standard dashboard cell (300px tall, 592px wide).
+ */
+export const ErrorLongDescription: Story = {
+  args: { children: area },
+  parameters: { snapshot: { fullPage: true } },
+  render: () => (
+    <div className="flex gap-4">
+      <ChartWidget
+        header={{ title: 'My widget' }}
+        state="error"
+        stateDescription="failed to execute 'cti.a.p.dts.func.v1.0~a.ax_core.query.v1.0~a.ax_core.widget.v1.0~a.ax_core.daily_activity_table.v1.0': failed to execute node 'func': failed to build return: failed to execute expression '$func[cti.a.p.dts.func.v1.0~a.ax_core.platform.daily_activity_table.v1.0](query=$.params.query)': failed to execute module function 'Platform.GetDailyActivityTableQuery': failed to query daily_activity_table: unmarshaling error"
+        stateAction={
+          <button type="button" className="text-sm underline">
+            Try again
+          </button>
+        }
+        className="h-[200px] w-[300px]"
+      />
+      <Dashboard className="w-[592px]">
+        <ChartWidget
+          header={{ title: 'Daily Activity', actions: <MoreActions /> }}
+          state="error"
+          stateDescription="failed to execute 'cti.a.p.dts.func.v1.0~a.ax_core.query.v1.0~a.ax_core.widget.v1.0~a.ax_core.daily_activity_table.v1.0': failed to execute node 'func': failed to build return: failed to execute expression '$func[cti.a.p.dts.func.v1.0~a.ax_core.platform.daily_activity_table.v1.0](query=$.params.query)': failed to execute module function 'Platform.GetDailyActivityTableQuery': failed to query daily_activity_table: unmarshaling error"
+          stateAction={
+            <button type="button" className="text-sm underline">
+              Try again
+            </button>
+          }
+        />
+      </Dashboard>
+    </div>
+  ),
+};
+
+/**
  * A header-less widget — the plot fills the whole card. For a dashboard tile
  * whose heading lives outside the card, or a chart inside a larger panel.
  */

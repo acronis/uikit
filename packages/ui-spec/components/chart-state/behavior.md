@@ -26,8 +26,19 @@
 ## Layout
 
 - **Given** any state, **when** placed in a sized slot (the same box a chart
-  would occupy), **then** the block fills it (`size-full`) and centers its
-  content, with a `min-h-32` floor so it stays legible in an unsized parent.
+  would occupy), **then** the block fills it (`size-full`) with a `min-h-32`
+  floor so it stays legible in an unsized parent.
+- **Given** `state="loading"` or `state="empty"`, **when** rendered, **then**
+  the content is vertically centered in the slot (`justify-center`).
+- **Given** `state="error"`, **when** the description is short enough to fit,
+  **then** the content is vertically centered via auto margins (`my-auto`).
+- **Given** `state="error"` with a long unbroken `description` (e.g. CTI error
+  paths, API URLs), **when** the text overflows the slot height, **then** the
+  auto margins collapse and the icon stays anchored at the top, with vertical
+  scroll (`overflow-y: auto`) so the full diagnostic text is accessible. Long
+  unbroken strings wrap at word boundaries (`overflow-wrap: break-word`),
+  breaking mid-word only when a single token cannot fit on one line.
+  `overflow-x: hidden` prevents any horizontal scrollbar.
 
 ## Per-type empty states
 

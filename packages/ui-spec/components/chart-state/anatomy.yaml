@@ -2,21 +2,28 @@ spec_version: '1.0'
 component: ChartState
 
 schematic: |
-  root: <div role="status|alert"> (centered column, fills the chart slot)
-    glyph: loading -> Spinner (lg) · empty -> the `variant`'s silhouette, or
-           nothing when no variant · error -> CircleWarningIcon
-    label: <p> one line — the `description` if supplied, else the per-state
-           default (overridable via `description` for all states)
-    action: error only — optional trailing node (e.g. a "Try again" button)
+  root: <div role="status|alert"> (flex column, fills the chart slot)
+    loading/empty: centered via `justify-center`
+      glyph: Spinner (lg) or variant silhouette
+      label: <p>
+    error: scrollable via `overflow-y: auto`
+      error-content: <div class="my-auto"> (centers when fits, top-aligns on overflow)
+        glyph: CircleWarningIcon (shrink-0)
+        label: <p class="break-words"> (wraps long unbroken strings)
+        action: optional trailing node (e.g. a "Try again" button)
 
 root:
   element: div
   role: status
   description: >-
-    Centered column that fills its slot (`size-full`, `min-h-32`). Announces as
-    a live region — `role="status"` (`aria-live="polite"`) for loading/empty and
-    `role="alert"` (`aria-live="assertive"`) for error. No `aria-busy` on the
-    region itself — it would risk suppressing the loading announcement.
+    Flex column that fills its slot (`size-full`, `min-h-32`). Loading/empty
+    center their content via `justify-center`. Error uses `overflow-y: auto` +
+    `overflow-x: hidden`, with content wrapped in a `my-auto` div that centers
+    short messages yet collapses to top-aligned when the description overflows.
+    Announces as a live region — `role="status"` (`aria-live="polite"`) for
+    loading/empty and `role="alert"` (`aria-live="assertive"`) for error. No
+    `aria-busy` on the region itself — it would risk suppressing the loading
+    announcement.
 
 parts:
   - id: glyph
