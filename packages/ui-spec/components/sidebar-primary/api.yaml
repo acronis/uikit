@@ -91,6 +91,36 @@ contract:
         Header content shown while the rail is collapsed (e.g. a monogram
         mark). Falls back to `logo` when omitted. React: the `collapsedLogo`
         prop on `SidebarPrimaryHeader`.
+    - name: logo-height
+      type: number
+      required: false
+      default: undefined
+      description: >-
+        Overrides the expanded-state logo height in pixels, for a consumer
+        logo asset authored taller than the design system's default 48px
+        slot (e.g. a tenant-branded logo). Omit to use the design system
+        default. Sizes only the expanded logo, but it can also change the
+        *collapsed* header row height: the header row is pinned — in both
+        rail states — to whichever state's (header padding-y × 2 + logo
+        height) sum is larger, so that the row can't jump while the two logo
+        graphics swap. With the defaults that is
+        `max(16×2 + 32, 8×2 + 48)` = 64px; at `logo-height` 64 it becomes
+        `max(16×2 + 32, 8×2 + 64)` = 80px in both states.
+        React: the `logoHeight` prop on `SidebarPrimaryHeader`.
+    - name: collapsed-logo-height
+      type: number
+      required: false
+      default: undefined
+      description: >-
+        Overrides the collapsed-state logo height in pixels. Omit to use the
+        design system default (32px). Sizes only the collapsed logo, but —
+        symmetrically with `logo-height` — it can also change the *expanded*
+        header row height, since the row is pinned in both states to the
+        larger (header padding-y × 2 + logo height) sum. The collapsed logo
+        is additionally width-capped by the collapsed rail's 32px content box
+        (48px rail width − 8px header padding-x per side), so a taller
+        collapsed logo should be authored portrait-or-narrower.
+        React: the `collapsedLogoHeight` prop on `SidebarPrimaryHeader`.
 
   events:
     - name: expanded-change
