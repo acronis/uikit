@@ -271,6 +271,80 @@ describe('SidebarPrimary', () => {
     });
   });
 
+  describe('SidebarPrimaryHeader logoHeight/collapsedLogoHeight override', () => {
+    it('overrides the expanded logo height custom property when logoHeight is given', () => {
+      render(
+        <SidebarPrimary expanded>
+          <SidebarPrimaryHeader logoHeight={64}>
+            <svg data-testid="logo" />
+          </SidebarPrimaryHeader>
+        </SidebarPrimary>
+      );
+      const header = screen.getByTestId('logo').parentElement!;
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-expanded-logo-height'
+      )).toBe('64px');
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-collapsed-logo-height'
+      )).toBe('');
+    });
+
+    it('overrides the collapsed logo height custom property when collapsedLogoHeight is given', () => {
+      render(
+        <SidebarPrimary expanded={false}>
+          <SidebarPrimaryHeader collapsedLogoHeight={40}>
+            <svg data-testid="logo" />
+          </SidebarPrimaryHeader>
+        </SidebarPrimary>
+      );
+      const header = screen.getByTestId('logo').parentElement!;
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-collapsed-logo-height'
+      )).toBe('40px');
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-expanded-logo-height'
+      )).toBe('');
+    });
+
+    it('merges a consumer-supplied style with the height override instead of clobbering it', () => {
+      render(
+        <SidebarPrimary expanded>
+          <SidebarPrimaryHeader
+            logoHeight={64}
+            style={{ opacity: 0.5 }}
+          >
+            <svg data-testid="logo" />
+          </SidebarPrimaryHeader>
+        </SidebarPrimary>
+      );
+      const header = screen.getByTestId('logo').parentElement!;
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-expanded-logo-height'
+      )).toBe('64px');
+      expect(header.style.opacity).toBe('0.5');
+    });
+
+    it('leaves no inline height override when neither prop is given (default token-driven height)', () => {
+      render(
+        <SidebarPrimary expanded>
+          <SidebarPrimaryHeader>
+            <svg data-testid="logo" />
+          </SidebarPrimaryHeader>
+        </SidebarPrimary>
+      );
+      const header = screen.getByTestId('logo').parentElement!;
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-expanded-logo-height'
+      )).toBe('');
+      expect(header.style.getPropertyValue(
+        '--ui-sidebar-primary-collapsed-logo-height'
+      )).toBe('');
+      expect(header).toHaveClass(
+        'group-data-[state=expanded]/sidebar:[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-expanded-logo-height)]'
+      );
+    });
+  });
+
   it('forwards refs to the underlying nav and anchor', () => {
     const navRef = createRef<HTMLElement>();
     const itemRef = createRef<HTMLAnchorElement>();

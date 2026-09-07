@@ -302,3 +302,118 @@ export const FullDemo: Story = {
     );
   },
 };
+
+// A tenant-branded logo authored taller than the design system's default
+// 48px/32px slot (e.g. a partner co-brand lockup at 64px expanded).
+// `logoHeight` overrides the slot instead of letting the default clamp
+// force-downscale it. The collapsed rail's 32px content box (48px container −
+// 8px padding each side) is a *width* constraint, not a height one, because
+// the logo renders at `w-auto`: a portrait mark can go past 32px tall as long
+// as height × (viewBox width / viewBox height) still fits. The collapsed mark
+// below is 20×40, so `collapsedLogoHeight={40}` renders 20px wide — inside the
+// 32px box — demonstrating a real >default collapsed override without
+// overflow.
+function TallBrandedLogo() {
+  return (
+    <svg
+      viewBox="0 0 180 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Branded tenant logo"
+    >
+      <rect width="180" height="64" rx="8" fill="currentColor" />
+      <text
+        x="90"
+        y="38"
+        textAnchor="middle"
+        fill="var(--ui-sidebar-primary-global-container-color)"
+        fontSize="20"
+        fontFamily="sans-serif"
+      >
+        Tenant
+      </text>
+    </svg>
+  );
+}
+
+function TallBrandedLogoCollapsed() {
+  return (
+    <svg
+      viewBox="0 0 20 40"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="Branded tenant mark"
+    >
+      <rect width="20" height="40" rx="6" fill="currentColor" />
+      <text
+        x="10"
+        y="26"
+        textAnchor="middle"
+        fill="var(--ui-sidebar-primary-global-container-color)"
+        fontSize="18"
+        fontFamily="sans-serif"
+      >
+        T
+      </text>
+    </svg>
+  );
+}
+
+// Shared body for the two override stories. A static VR screenshot only ever
+// captures one rail state, so each state gets its own export (below) rather
+// than relying on someone clicking the trigger.
+function TallBrandedLogoOverrideDemo({
+  defaultExpanded,
+}: {
+  defaultExpanded: boolean;
+}) {
+  return (
+    <Shell height={320}>
+      <TooltipProvider delay={0}>
+        <SidebarPrimary defaultExpanded={defaultExpanded}>
+          <SidebarPrimaryHeader
+            logo={<TallBrandedLogo />}
+            collapsedLogo={<TallBrandedLogoCollapsed />}
+            logoHeight={64}
+            collapsedLogoHeight={40}
+          />
+          <SidebarPrimaryContent>
+            <SidebarPrimarySection>
+              <SidebarPrimaryMenu>
+                <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
+                  Assets
+                </SidebarPrimaryMenuItem>
+                <SidebarPrimaryMenuItem href="#" icon={<BriefcaseIcon />}>
+                  Clients
+                </SidebarPrimaryMenuItem>
+              </SidebarPrimaryMenu>
+            </SidebarPrimarySection>
+          </SidebarPrimaryContent>
+          <SidebarPrimaryFooter>
+            <SidebarPrimaryMenu>
+              <SidebarPrimaryCollapseTrigger icon={<ChevronsLeftIcon />}>
+                Collapse menu
+              </SidebarPrimaryCollapseTrigger>
+            </SidebarPrimaryMenu>
+          </SidebarPrimaryFooter>
+        </SidebarPrimary>
+      </TooltipProvider>
+    </Shell>
+  );
+}
+
+export const TallBrandedLogoOverride: Story = {
+  name: 'Header - Taller Branded Logo (logoHeight override)',
+  render: function TallBrandedLogoOverrideStory() {
+    return <TallBrandedLogoOverrideDemo defaultExpanded />;
+  },
+};
+
+export const TallBrandedLogoOverrideCollapsed: Story = {
+  name: 'Header - Taller Branded Logo, Collapsed (collapsedLogoHeight override)',
+  render: function TallBrandedLogoOverrideCollapsedStory() {
+    return <TallBrandedLogoOverrideDemo defaultExpanded={false} />;
+  },
+};

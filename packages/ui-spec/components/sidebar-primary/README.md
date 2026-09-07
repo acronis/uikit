@@ -98,7 +98,22 @@ Render a menu item as a router link via the `render` prop:
 
 The product logo is a **consumer-provided child** of the header — the component
 does not ship a Logo part. The header just sizes whatever `img`/`svg` you slot
-in (32px collapsed, 48px expanded) and tints it via the logo-color token.
+in (32px collapsed, 48px expanded by default) and tints it via the logo-color
+token. A consumer logo authored taller than that default (e.g. a
+tenant-branded lockup) can override it in pixels via the `logoHeight`/
+`collapsedLogoHeight` props instead of being force-downscaled to fit.
+
+The two overrides are **not independent for header row height**. The header row
+is pinned to `max(collapsed padding-y × 2 + collapsed logo height, expanded
+padding-y × 2 + expanded logo height)` — unconditionally, across both rail
+states — so the row can't jump while the two logo graphics swap. Each prop
+sizes only its own state's logo, but whichever state yields the larger sum sets
+the row height for both. With the defaults that's `max(16×2 + 32, 8×2 + 48)` =
+64px; at `logoHeight={64}` it becomes `max(16×2 + 32, 8×2 + 64)` = 80px,
+growing the _collapsed_ header too even though its 32px mark is unchanged. The
+collapsed rail additionally caps the mark's width
+at a 32px content box (48px width − 8px padding each side), so a taller
+`collapsedLogo` should be authored portrait-or-narrower.
 
 ## Spec Files
 
