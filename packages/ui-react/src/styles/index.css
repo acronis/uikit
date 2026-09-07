@@ -9,6 +9,7 @@
    tier for every component this library ships, so its `--ui-<component>-*` tokens
    are defined. Add a line here whenever a new component with its own tier lands. */
 @import '@acronis-platform/tokens-pd/css/Alert/default.css';
+@import '@acronis-platform/tokens-pd/css/AlertRibbon/default.css';
 @import '@acronis-platform/tokens-pd/css/Avatar/default.css';
 @import '@acronis-platform/tokens-pd/css/Button/default.css';
 @import '@acronis-platform/tokens-pd/css/ButtonGroup/default.css';
@@ -16,6 +17,7 @@
 @import '@acronis-platform/tokens-pd/css/ButtonIcon/default.css';
 @import '@acronis-platform/tokens-pd/css/ButtonIconInput/default.css';
 @import '@acronis-platform/tokens-pd/css/CardFilter/default.css';
+@import '@acronis-platform/tokens-pd/css/Chat/default.css';
 @import '@acronis-platform/tokens-pd/css/Loading/default.css';
 @import '@acronis-platform/tokens-pd/css/Switch/default.css';
 @import '@acronis-platform/tokens-pd/css/Checkbox/default.css';
@@ -46,6 +48,8 @@
 @import '@acronis-platform/tokens-pd/css/Timeline/default.css';
 @import '@acronis-platform/tokens-pd/css/Timer/default.css';
 @import '@acronis-platform/tokens-pd/css/Stepper/default.css';
+@import '@acronis-platform/tokens-pd/css/SegmentControl/default.css';
+@import '@acronis-platform/tokens-pd/css/SideSheet/default.css';
 
 @layer base {
   *,

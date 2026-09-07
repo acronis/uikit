@@ -26,14 +26,22 @@ header). `dev`/`clean`/`lint`/`typecheck` are no-ops; `test` re-runs the build.
 
 ## Layout (all generated, all committed)
 
-Three top-level dirs — `css/`, `tailwind/`, `dtcg/`:
+Four top-level dirs — `css/`, `bundles/`, `tailwind/`, `dtcg/`:
 
 - `css/default.css` — semantic tier, default brand (full): `--ui-*` custom
   properties + `.ui-typography-*` and `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` (+ `.ui-mx-auto`)
   spacing utility classes.
 - `css/brand-b.css` — semantic tier, non-default brand: **override-only**.
-- `css/<component>/<brand>.css` — component tier, one dir per component
-  (`button/`, `breadcrumb/`, …); default brand full, others override-only.
+- `css/<Component>/<brand>.css` — component tier, one dir per component
+  (`Button/`, `Breadcrumb/`, …); default brand full, others override-only.
+- `bundles/<brand>.css` — **one full file per brand**: every tier's declarations
+  (semantic + every component) merged into a single `:root, :host {}` block, always
+  full (never override-only). This is the runtime re-theming entry point — swapping
+  only `css/<brand>.css` re-themes the semantic tier but silently leaves every
+  component on the default brand's colors, because the component tier's
+  override-only files are opt-in per component and never auto-loaded. Load
+  `bundles/<brand>.css` alone (in place of `css/<brand>.css` + every
+  `css/<Component>/<brand>.css`) to fully re-theme at runtime.
 - `tailwind/<brand>/tokens.js` (+ `.d.ts`) — Tailwind preset of the shared
   semantic vocabulary, **baked** values, consumed via `@config`.
 - `tailwind/<brand>/components/<component>.js` (+ `.d.ts`) — one preset per
@@ -50,8 +58,13 @@ Three top-level dirs — `css/`, `tailwind/`, `dtcg/`:
 - **Theming.** Colors are zipped into `light-dark()`; light/dark switches via the
   `[data-theme]` attribute + `color-scheme`. Base (`acronis`) files carry the
   `color-scheme` shell; override files are bare `:root {}` layered on top.
-- **Brand model.** Bare `:root` (no brand class). An app picks one brand by
-  importing the base + (optionally) that brand's override file — last import wins.
+- **Brand model.** Bare `:root` (no brand class). A build-time consumer picks one
+  brand by importing the semantic base + (optionally) each component's override
+  file it uses — last import wins per tier. A **runtime** consumer that needs to
+  switch brands after the fact (e.g. a multi-tenant shell) should load
+  `bundles/<brand>.css` instead: it is the only artifact that carries a brand's
+  full theme (semantics + every component) in one file, so it doesn't depend on
+  which component tiers happen to already be loaded.
 - **Override rule.** A non-default brand file contains a token only when its value
   **differs** from `acronis` or is **new** in that brand.
 - **Tailwind presets** carry baked literals (no `--ui-*` dependency), so a preset

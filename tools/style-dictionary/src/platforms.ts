@@ -64,6 +64,15 @@ export const componentDir = (component: string): string => path.join(cssDir(), c
 export const componentFile = (component: string, brand: string): string =>
   path.join(componentDir(component), `${brand}.css`);
 
+/**
+ * Full per-brand bundles live outside `css/` (they are a re-serialization of the
+ * same declarations, not a new tier) at `tokens-pd/bundles/`.
+ */
+export const bundlesDir = (): string => path.join(TOKENS_PD, 'bundles');
+
+/** One complete file per brand — semantic tier + every component tier, merged. */
+export const bundleFile = (brand: string): string => path.join(bundlesDir(), `${brand}.css`);
+
 /** Tailwind presets live under `tokens-pd/tailwind/`, partitioned per brand. */
 export const tailwindDir = (): string => path.join(TOKENS_PD, 'tailwind');
 
