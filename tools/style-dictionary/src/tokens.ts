@@ -13,6 +13,11 @@
 //      (`<brand>.css`), each component tier in its own dir
 //      (`<component>/<brand>.css`). The default brand gets full files;
 //      every other brand gets override-only files diffed against the default.
+//      It also emits one full bundle per brand (`bundles/<brand>.css`) — every
+//      tier's declarations merged into a single file — so a runtime consumer can
+//      fully re-theme (semantics + every component) by loading one file, instead
+//      of only swapping the semantic tier and leaving components on the default
+//      brand.
 
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
@@ -28,6 +33,8 @@ import { gapUtilityClasses, STATIC_GAP_CLASSES } from './hooks/formats/gap-utili
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
 import {
+  bundleFile,
+  bundlesDir,
   componentFile,
   cssDir,
   dtcgDir,
@@ -346,9 +353,10 @@ export function diffDecls(base: Decls, brand: Decls): Pick<Decls, 'vars' | 'clas
   return { vars, classes };
 }
 
-/** Remove the generated CSS tree (`tokens-pd/css/`) before a rebuild. */
+/** Remove the generated CSS tree (`tokens-pd/css/`, `tokens-pd/bundles/`) before a rebuild. */
 function cleanCssOutputs(): void {
   rmSync(cssDir(), { recursive: true, force: true });
+  rmSync(bundlesDir(), { recursive: true, force: true });
 }
 
 export async function buildCss(filter: Filter): Promise<void> {
@@ -423,5 +431,31 @@ export async function buildCss(filter: Filter): Promise<void> {
         serializeCss({ brand: brand.name, tier: slice, isOverride: true, vars, classes })
       );
     }
+  }
+
+  // One full bundle per brand: every slice's *full* (non-diffed) declarations
+  // merged into a single root block, so loading one file re-themes semantics and
+  // every component at once — unlike the per-tier files above, which rely on a
+  // consumer separately importing (and correctly overriding) each component tier
+  // it uses. Semantics first, then components alphabetically, purely so the
+  // generated file reads predictably; merge order has no effect on the result
+  // since slices never share a var/class name.
+  for (const brand of BRANDS) {
+    const decls = perBrand.get(brand.name) ?? new Map<string, Decls>();
+    const slices = [...decls.keys()].sort((a, b) =>
+      a === 'semantics' ? -1 : b === 'semantics' ? 1 : a.localeCompare(b)
+    );
+    const vars = new Map<string, string>();
+    const classes = new Map<string, string>();
+    for (const slice of slices) {
+      const d = decls.get(slice);
+      if (!d) continue;
+      for (const [name, value] of d.vars) vars.set(name, value);
+      for (const [selector, block] of d.classes) classes.set(selector, block);
+    }
+    write(
+      bundleFile(brand.name),
+      serializeCss({ brand: brand.name, tier: 'bundle', isOverride: false, vars, classes })
+    );
   }
 }

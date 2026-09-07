@@ -15,6 +15,7 @@
   },
   "files": [
     "css/**/*.css",
+    "bundles/**/*.css",
     "tailwind/**/*.js",
     "tailwind/**/*.d.ts",
     "dtcg/**/*.json",
@@ -23,6 +24,7 @@
   ],
   "exports": {
     "./package.json": "./package.json",
+    "./bundles/*": "./bundles/*",
     "./*": "./*"
   },
   "scripts": {
