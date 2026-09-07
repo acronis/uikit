@@ -125,7 +125,16 @@ out explicitly with `noIcon`:
 - Collapsed, labels stay in the DOM as `sr-only`, trailing extras are hidden,
   the header padding shrinks and the logo swaps to `collapsedLogo`. The header
   row keeps a constant height across the transition so the menu below it doesn't
-  jump while the two logo graphics swap.
+  jump while the two logo graphics swap. That height is the larger of the two
+  states' `padding-y × 2 + logo height` sums — with the defaults,
+  `max(16×2 + 32, 8×2 + 48)` = 64px in both states.
+- Because that clamp is unconditional, `logoHeight` and `collapsedLogoHeight`
+  are **not independent for row height**: each sizes only its own state's logo,
+  but whichever state produces the larger sum sets the row height for **both**
+  states. Raising `logoHeight` to 64, for instance, makes the shared row
+  `max(16×2 + 32, 8×2 + 64)` = 80px, so the _collapsed_ header grows too even
+  though its 32px mark is unchanged. That's deliberate — it's what keeps the
+  row from jumping — but budget for it when overriding either prop.
 - While collapsed, the trigger shows `expandTooltip` (defaults to `'Expand'`) —
   pass a localized string.
 
@@ -178,6 +187,38 @@ out explicitly with `noIcon`:
 `logo` and `collapsedLogo` let you swap distinct graphics per rail state (e.g.
 a full lockup vs. a monogram) instead of resizing/hiding one node. When
 neither is given, `children` renders in both states.
+
+The header sizes the logo slot to the design system default (48px expanded,
+32px collapsed) unless overridden. If a tenant-branded logo is authored taller
+than that default, pass `logoHeight`/`collapsedLogoHeight` (in pixels) instead
+of letting the default height force-downscale it. The anti-"jump" row-height
+clamp (see [Behavior](#collapsing-the-rail)) picks up the override
+automatically, so the header row still doesn't jump mid-transition — but note
+that it pins **both** states to the larger of the two
+`padding-y × 2 + logo height` sums. Each prop sizes only its own state's logo,
+yet either one can grow the _other_ state's header row:
+
+```tsx
+<SidebarPrimaryHeader
+  logo={<TenantLogo />}
+  collapsedLogo={<TenantMark />}
+  logoHeight={64}
+  collapsedLogoHeight={40}
+/>
+```
+
+Here the expanded sum is `8×2 + 64` = 80px and the collapsed sum is
+`16×2 + 40` = 72px, so **both** states get an 80px header row — 16px taller
+than the 64px row you'd get with no overrides at all (`max(16×2 + 32, 8×2 + 48)`).
+`logoHeight` alone accounts for all of that growth: drop
+`collapsedLogoHeight` back to its 32px default and the row is still 80px
+(`max(16×2 + 32, 8×2 + 64)`), because the expanded sum is the larger one
+either way.
+
+The collapsed rail also constrains the mark's **width**: at 48px wide with 8px
+of horizontal padding, the collapsed logo has a 32px content box. Give
+`collapsedLogo` a portrait-oriented mark — narrower than it is tall — so a
+taller `collapsedLogoHeight` doesn't push it past that box.
 
 <AutoTypeTable
   path="../../packages/ui-react/src/components/ui/sidebar-primary/sidebar-primary.tsx"

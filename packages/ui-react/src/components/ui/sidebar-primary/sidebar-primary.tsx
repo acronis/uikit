@@ -197,54 +197,102 @@ export interface SidebarPrimaryHeaderProps
    * Falls back to `logo` when omitted.
    */
   collapsedLogo?: React.ReactNode;
+  /**
+   * Overrides the expanded-state logo height in pixels, for a consumer logo
+   * asset authored taller than the design system's default 48px slot (e.g. a
+   * tenant-branded logo). Omit to use the design system default.
+   *
+   * Affects **both** rail states' header height: the header's row height is
+   * pinned to whichever state's (padding-y * 2 + logo height) sum is larger,
+   * so that the row doesn't visually jump during the collapse/expand
+   * transition. Raising this past the collapsed state's sum therefore grows
+   * the collapsed header row too, even though the collapsed logo itself is
+   * unchanged.
+   */
+  logoHeight?: number;
+  /**
+   * Overrides the collapsed-state logo height in pixels. Omit to use the
+   * design system default (32px).
+   *
+   * Affects **both** rail states' header height, for the same reason as
+   * `logoHeight`: the shared row height is the larger of the two states'
+   * (padding-y * 2 + logo height) sums, so raising this past the expanded
+   * state's sum grows the expanded header row as well.
+   */
+  collapsedLogoHeight?: number;
 }
 
 const SidebarPrimaryHeader = React.forwardRef<
   HTMLDivElement,
   SidebarPrimaryHeaderProps
->(({ className, logo, collapsedLogo, children, ...props }, ref) => {
-  // Hosts a consumer-provided logo (R7 — no Logo part is built). Padding and the
-  // logo height switch on expanded/collapsed; `[&_*]:h-…` sizes whatever the
-  // consumer slots in. The logo color token tints any `currentColor` mark.
-  const { expanded } = useSidebarPrimaryContext();
-  const hasTwinLogos = logo != null || collapsedLogo != null;
-  const content = hasTwinLogos
-    ? expanded
-      ? (logo ?? collapsedLogo)
-      : (collapsedLogo ?? logo)
-    : children;
+>(
+  (
+    {
+      className,
+      logo,
+      collapsedLogo,
+      logoHeight,
+      collapsedLogoHeight,
+      style,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    // Hosts a consumer-provided logo (R7 — no Logo part is built). Padding and the
+    // logo height switch on expanded/collapsed; `[&_*]:h-…` sizes whatever the
+    // consumer slots in. The logo color token tints any `currentColor` mark.
+    const { expanded } = useSidebarPrimaryContext();
+    const hasTwinLogos = logo != null || collapsedLogo != null;
+    const content = hasTwinLogos
+      ? expanded
+        ? (logo ?? collapsedLogo)
+        : (collapsedLogo ?? logo)
+      : children;
 
-  return (
-    <div
-      ref={ref}
-      className={cn(
-        'flex items-center shrink-0 text-[var(--ui-sidebar-primary-global-logo-color)] transition-[padding]',
-        'px-[var(--ui-sidebar-primary-collapsed-container-header-padding-x)] py-[var(--ui-sidebar-primary-collapsed-container-header-padding-y)]',
-        // `logo`/`collapsedLogo` are two separate elements swapped by a JS
-        // conditional (not one element whose size CSS-transitions) — the new
-        // one mounts at its final height instantly, while `padding-y` is
-        // still mid-transition. Since the two states' (padding*2 + logo
-        // height) sums only match at the transition's start/end, that instant
-        // pop makes the row briefly overshoot/undershoot its resting height
-        // and "jump". Pinning the row to the larger of the two sums makes the
-        // outer box's height constant across the whole transition regardless
-        // of that mismatch — padding/logo-height still animate cosmetically
-        // inside it.
-        'h-[max(calc(var(--ui-sidebar-primary-collapsed-container-header-padding-y)*2+var(--ui-sidebar-primary-collapsed-logo-height)),calc(var(--ui-sidebar-primary-expanded-container-header-padding-y)*2+var(--ui-sidebar-primary-expanded-logo-height)))]',
-        // Animate the logo's own height alongside the header's padding transition
-        // (both keyed off the same `data-state` flip) — without it the logo swaps
-        // size instantly while the rail width is still animating, reading as a jump.
-        '[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-collapsed-logo-height)] [&_:where(img,svg)]:w-auto [&_:where(img,svg)]:transition-[height]',
-        'group-data-[state=expanded]/sidebar:px-[var(--ui-sidebar-primary-expanded-container-header-padding-x)] group-data-[state=expanded]/sidebar:py-[var(--ui-sidebar-primary-expanded-container-header-padding-y)]',
-        'group-data-[state=expanded]/sidebar:[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-expanded-logo-height)]',
-        className
-      )}
-      {...props}
-    >
-      {content}
-    </div>
-  );
-});
+    return (
+      <div
+        ref={ref}
+        className={cn(
+          'flex items-center shrink-0 text-[var(--ui-sidebar-primary-global-logo-color)] transition-[padding]',
+          'px-[var(--ui-sidebar-primary-collapsed-container-header-padding-x)] py-[var(--ui-sidebar-primary-collapsed-container-header-padding-y)]',
+          // `logo`/`collapsedLogo` are two separate elements swapped by a JS
+          // conditional (not one element whose size CSS-transitions) — the new
+          // one mounts at its final height instantly, while `padding-y` is
+          // still mid-transition. Since the two states' (padding*2 + logo
+          // height) sums only match at the transition's start/end, that instant
+          // pop makes the row briefly overshoot/undershoot its resting height
+          // and "jump". Pinning the row to the larger of the two sums makes the
+          // outer box's height constant across the whole transition regardless
+          // of that mismatch — padding/logo-height still animate cosmetically
+          // inside it.
+          'h-[max(calc(var(--ui-sidebar-primary-collapsed-container-header-padding-y)*2+var(--ui-sidebar-primary-collapsed-logo-height)),calc(var(--ui-sidebar-primary-expanded-container-header-padding-y)*2+var(--ui-sidebar-primary-expanded-logo-height)))]',
+          // Animate the logo's own height alongside the header's padding transition
+          // (both keyed off the same `data-state` flip) — without it the logo swaps
+          // size instantly while the rail width is still animating, reading as a jump.
+          '[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-collapsed-logo-height)] [&_:where(img,svg)]:w-auto [&_:where(img,svg)]:transition-[height]',
+          'group-data-[state=expanded]/sidebar:px-[var(--ui-sidebar-primary-expanded-container-header-padding-x)] group-data-[state=expanded]/sidebar:py-[var(--ui-sidebar-primary-expanded-container-header-padding-y)]',
+          'group-data-[state=expanded]/sidebar:[&_:where(img,svg)]:h-[var(--ui-sidebar-primary-expanded-logo-height)]',
+          className
+        )}
+        style={
+          {
+            ...(logoHeight != null && {
+              '--ui-sidebar-primary-expanded-logo-height': `${logoHeight}px`,
+            }),
+            ...(collapsedLogoHeight != null && {
+              '--ui-sidebar-primary-collapsed-logo-height': `${collapsedLogoHeight}px`,
+            }),
+            ...style,
+          } as React.CSSProperties
+        }
+        {...props}
+      >
+        {content}
+      </div>
+    );
+  }
+);
 SidebarPrimaryHeader.displayName = 'SidebarPrimaryHeader';
 
 const SidebarPrimaryContent = React.forwardRef<
