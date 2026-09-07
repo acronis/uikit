@@ -10,13 +10,19 @@ Acronis UIKit uses generated `--ui-*` CSS custom properties from
 theme values — they are generated from the design system and resolved at paint
 time, so brand and light/dark switches need no rebuild.
 
-Load the default base, then (optionally) layer another brand override
-on top:
+Tokens ship in two tiers. The **semantic tier** (`css/<brand>.css`) holds the
+shared `--ui-*` vocabulary; the **per-component tier**
+(`css/<Component>/<brand>.css`) holds each component's own tokens, with values
+baked as literals per brand. `@acronis-platform/ui-react/styles` loads both —
+the semantic tier plus the component tier of every component the library ships:
 
 ```tsx
-import '@acronis-platform/ui-react/styles'; // includes tokens-pd/css/default.css
-import '@acronis-platform/tokens-pd/css/deep_sky_itkontoret.css'; // optional brand override
+import '@acronis-platform/ui-react/styles';
 ```
+
+Because component values are baked per brand, both tiers have to agree on the
+brand. That is what makes brand switching a two-part story — see
+[Theme switching](#theme-switching).
 
 ## Dark mode
 
@@ -29,12 +35,75 @@ the active scheme with `data-theme`:
 
 ## Theme switching
 
-Brand switching is import-order based (last import wins), not a class toggle:
+Brand switching is not a class toggle — which stylesheets you load decides the
+brand. Pick the approach that matches *when* you know the brand.
+
+### Build-time brand selection (recommended)
+
+If the app knows its brand when it builds, import that brand's semantic tier
+plus the component tier of every component you use. This is exactly what
+ui-react's own `src/styles/index.css` does:
 
 ```css
 @import '@acronis-platform/tokens-pd/css/default.css';
-@import '@acronis-platform/tokens-pd/css/deep_sky_itkontoret.css';
+@import '@acronis-platform/tokens-pd/css/Button/default.css';
+@import '@acronis-platform/tokens-pd/css/InputText/default.css';
+/* …one line per component you use */
 ```
+
+You only ship the components you actually render, so this stays the recommended
+path for a library or an app with a fixed brand.
+
+### Swapping the semantic file alone does not re-theme components
+
+Importing a brand's semantic tier over the default:
+
+```css
+@import '@acronis-platform/tokens-pd/css/default.css';
+@import '@acronis-platform/tokens-pd/css/telstra.css'; /* semantic tier only */
+```
+
+re-themes **only** the shared `--ui-*` vocabulary. Every component tier is still
+the `default` one, and because component values are baked literals rather than
+references to the semantic tokens, nothing re-resolves: buttons, inputs, and the
+rest **stay on the default brand's colors**. Nothing errors and nothing warns —
+the result is a half-themed UI. Do not brand-switch this way.
+
+### Runtime brand switching (one bundle per brand)
+
+When the brand is only known at runtime — a multi-tenant shell that resolves
+the tenant per request, say — load that brand's **bundle** instead. Each
+`bundles/<brand>.css` is a single self-contained file carrying the semantic tier
+*and* every component tier in one `:root, :host {}` block, so one file fully
+re-themes the UI:
+
+```html
+<link
+  rel="stylesheet"
+  href="/node_modules/@acronis-platform/tokens-pd/bundles/telstra.css"
+/>
+```
+
+A bundle is full-strength, not an override, so you **replace** it rather than
+layer it — point one `<link>` at the brand you want and swap its `href` to
+switch:
+
+```ts
+link.href = new URL(
+  `@acronis-platform/tokens-pd/bundles/${brand}.css`,
+  import.meta.url,
+).href;
+```
+
+Every brand has a bundle, `default` included, and each one also carries the
+`.ui-typography-*` utility classes and the `[data-theme]` light/dark blocks — so
+one bundle stands in for all the `css/` token imports above. It does **not**
+stand in for `@acronis-platform/ui-react/styles`, which also carries the
+library's Tailwind layer and `@theme` bridge; keep importing that, and let the
+bundle load after it.
+
+Reach for bundles only when the brand is genuinely a runtime decision: a bundle
+ships every component's tokens whether you render that component or not.
 
 ## Design tokens
 
