@@ -25,6 +25,7 @@ import {
   resolveYAxisTitle,
   type ChartConfig,
   type ChartPalette,
+  toCssKey,
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
@@ -208,7 +209,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
                 key={s.key}
                 name={s.key}
                 data={s.data as Record<string, number>[]}
-                fill={`var(--color-${s.key})`}
+                fill={`var(--color-${toCssKey(s.key)})`}
                 shape={shape}
                 {...animation}
               />

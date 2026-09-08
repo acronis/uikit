@@ -19,6 +19,7 @@ import {
   resolveAnimation,
   resolveChartColors,
   resolveLabelFillClass,
+  toCssKey,
   type ChartAnimationProps,
   type ChartConfig,
   type ChartPalette,
@@ -778,7 +779,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       return visible.map((row, index) => {
         const name = String(row[nameKey]);
         const fill =
-          stageSettings?.[name]?.color ?? `var(--color-${name})`;
+          stageSettings?.[name]?.color ?? `var(--color-${toCssKey(name)})`;
         const labelArgs = {
           name,
           value: row[dataKey],

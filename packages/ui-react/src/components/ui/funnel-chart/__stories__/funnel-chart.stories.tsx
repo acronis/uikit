@@ -16,6 +16,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  toCssKey,
   type ChartConfig,
   type ChartPalette,
 } from '../../chart';
@@ -268,7 +269,7 @@ const renderRawStage = ({
 
 const rawFunnelData = data.map((d) => ({
   ...d,
-  fill: `var(--color-${d.stage})`,
+  fill: `var(--color-${toCssKey(d.stage)})`,
 }));
 
 // The tooltip is hover-only, so a normal story never snapshots it. This renders
@@ -295,7 +296,7 @@ export const TooltipOpen: Story = {
           isAnimationActive={false}
         >
           {data.map((entry) => (
-            <Cell key={entry.stage} fill={`var(--color-${entry.stage})`} />
+            <Cell key={entry.stage} fill={`var(--color-${toCssKey(entry.stage)})`} />
           ))}
         </Funnel>
       </RechartsFunnelChart>
@@ -356,7 +357,7 @@ export const CustomTooltipOpen: Story = {
           isAnimationActive={false}
         >
           {data.map((entry) => (
-            <Cell key={entry.stage} fill={`var(--color-${entry.stage})`} />
+            <Cell key={entry.stage} fill={`var(--color-${toCssKey(entry.stage)})`} />
           ))}
         </Funnel>
       </RechartsFunnelChart>

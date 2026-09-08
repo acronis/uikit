@@ -23,6 +23,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   formatCompactNumber,
+  toCssKey,
   type ChartConfig,
 } from '../../chart';
 
@@ -169,7 +170,7 @@ export const TooltipOpen: Story = {
   render: () => (
     <ChartContainer config={config} className="h-[360px] w-[360px]">
       <RechartsRadialBarChart
-        data={data.map((d) => ({ ...d, fill: `var(--color-${d.browser})` }))}
+        data={data.map((d) => ({ ...d, fill: `var(--color-${toCssKey(d.browser)})` }))}
         dataKey="value"
         innerRadius={30}
         outerRadius={110}
@@ -183,7 +184,7 @@ export const TooltipOpen: Story = {
         />
         <RadialBar dataKey="value" background cornerRadius={4} isAnimationActive={false}>
           {data.map((entry) => (
-            <Cell key={entry.browser} fill={`var(--color-${entry.browser})`} />
+            <Cell key={entry.browser} fill={`var(--color-${toCssKey(entry.browser)})`} />
           ))}
         </RadialBar>
       </RechartsRadialBarChart>
@@ -228,7 +229,7 @@ export const CustomTooltipOpen: Story = {
   render: () => (
     <ChartContainer config={config} className="h-[360px] w-[360px]">
       <RechartsRadialBarChart
-        data={data.map((d) => ({ ...d, fill: `var(--color-${d.browser})` }))}
+        data={data.map((d) => ({ ...d, fill: `var(--color-${toCssKey(d.browser)})` }))}
         dataKey="value"
         innerRadius={30}
         outerRadius={110}
@@ -238,7 +239,7 @@ export const CustomTooltipOpen: Story = {
         <ChartTooltip defaultIndex={0} active content={customTooltipContent} />
         <RadialBar dataKey="value" background cornerRadius={4} isAnimationActive={false}>
           {data.map((entry) => (
-            <Cell key={entry.browser} fill={`var(--color-${entry.browser})`} />
+            <Cell key={entry.browser} fill={`var(--color-${toCssKey(entry.browser)})`} />
           ))}
         </RadialBar>
       </RechartsRadialBarChart>
@@ -364,7 +365,7 @@ export const MultiMetricTooltipOpen: Story = {
           <RadialBar
             key={key}
             dataKey={key}
-            fill={`var(--color-${key})`}
+            fill={`var(--color-${toCssKey(key)})`}
             background
             cornerRadius={4}
             isAnimationActive={false}

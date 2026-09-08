@@ -38,6 +38,7 @@ import {
   resolveXAxisTitle,
   resolveYAxisTitle,
   toLabelFormatter,
+  toCssKey,
   type ChartConfig,
   type ChartPalette,
   type ChartLegendContentProps,
@@ -709,7 +710,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
         : <ChartLegendContent verticalAlign={legendPosition} />;
 
     const renderSeries = (s: ComposedSeries, index: number) => {
-      const color = s.color ?? `var(--color-${s.key})`;
+      const color = s.color ?? `var(--color-${toCssKey(s.key)})`;
       const zIndex = SERIES_Z_INDEX_BASE + index;
       const axisBinding = valueAxisBinding(s.yAxis);
       const stackId =

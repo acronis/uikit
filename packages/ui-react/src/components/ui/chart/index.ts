@@ -6,6 +6,7 @@ export {
   ChartLegendContent,
   ChartStyle,
   resolveChartColors,
+  toCssKey,
 } from './chart';
 export type {
   ChartConfig,

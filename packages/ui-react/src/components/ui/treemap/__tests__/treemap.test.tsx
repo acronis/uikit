@@ -617,6 +617,38 @@ describe('TreemapCell', () => {
   });
 });
 
+describe('Treemap — CSS key sanitization', () => {
+  // Regression: a config key containing a space produced an invalid
+  // `--color-My Category` custom property (space in a CSS ident); the browser
+  // discarded it, and every affected cell rendered black.
+  it('emits a sanitized --color- property when a config key contains a space', () => {
+    const { container } = render(
+      <Treemap
+        config={{ 'My Category': { label: 'My Category' } }}
+        data={[{ name: 'My Category', size: 100 }]}
+        dataKey="size"
+        nameKey="name"
+      />
+    );
+    const style = container.querySelector('style');
+    expect(style?.textContent).toContain('--color-My-Category');
+    expect(style?.textContent).not.toContain('--color-My Category');
+  });
+
+  it('sets the rect fill to the sanitized var() reference', () => {
+    const { container } = render(
+      <Treemap
+        config={{ 'My Category': { label: 'My Category' } }}
+        data={[{ name: 'My Category', size: 100 }]}
+        dataKey="size"
+        nameKey="name"
+      />
+    );
+    const rect = container.querySelector('rect');
+    expect(rect?.getAttribute('style')).toContain('var(--color-My-Category)');
+  });
+});
+
 describe('treemapSecondaryLabel', () => {
   const row = { name: 'React', size: 2400, count: 24, blank: '' };
 

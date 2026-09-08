@@ -21,6 +21,7 @@ import {
   resolveXAxisTitle,
   resolveYAxisTitle,
   type ChartConfig,
+  toCssKey,
   type ChartPalette,
   type CartesianChartProps,
   type ChartAnimationProps,
@@ -221,7 +222,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
             )}
             <Bar
               dataKey={dataKey}
-              fill={`var(--color-${dataKey})`}
+              fill={`var(--color-${toCssKey(String(dataKey))})`}
               // A hairline in the surface color separates the contiguous bars so
               // they don't blend into one mass (same trick as the Treemap cells).
               stroke="var(--ui-background-surface-primary)"

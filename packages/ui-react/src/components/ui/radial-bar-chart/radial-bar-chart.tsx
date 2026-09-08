@@ -30,6 +30,7 @@ import {
   type ChartDataLabelProps,
   type ChartTooltipContentProps,
   type PolarLabelPosition,
+  toCssKey,
   type ResolvedAnimation,
   type TickFormatter,
 } from '../chart';
@@ -226,7 +227,7 @@ export function radialBarChartSegmentFill(
   // continuous arc, so it takes the same muted surface.
   return kind === 'track'
     ? 'var(--ui-border-on-status-neutral)'
-    : `var(--color-${colorName})`;
+    : `var(--color-${toCssKey(colorName)})`;
 }
 
 /**
@@ -307,7 +308,7 @@ export function RadialBarChartSegmentedTooltipContent({
         <>
           <div
             className="h-2.5 w-2.5 shrink-0 rounded-full"
-            style={{ backgroundColor: `var(--color-${colorName})` }}
+            style={{ backgroundColor: `var(--color-${toCssKey(colorName)})` }}
           />
           <div className="flex flex-1 items-center justify-between gap-2 leading-none">
             <span className="text-muted-foreground">{label}</span>
@@ -402,7 +403,7 @@ function RadialBarChartSeries({
     <RadialBar
       key={key}
       dataKey={key}
-      fill={isMultiMetric ? `var(--color-${key})` : undefined}
+      fill={isMultiMetric ? `var(--color-${toCssKey(key)})` : undefined}
       background={showBackground ? { fill: 'var(--ui-border-on-status-neutral)' } : false}
       cornerRadius={cornerRadius}
       minPointSize={minPointSize}
@@ -413,7 +414,7 @@ function RadialBarChartSeries({
           // Keyed by index, not the name: two arcs could share a nameKey
           // value, which would collide as a React key. Same-named arcs
           // intentionally share a color/config entry via `--color-<name>`.
-          <Cell key={index} fill={`var(--color-${entry[nameKey]})`} />
+          <Cell key={index} fill={`var(--color-${toCssKey(String(entry[nameKey]))})`} />
         ))}
       {seriesIndex === 0 && centerLabel && (
         <RadialBarChartCenterLabelContent centerLabel={centerLabel} />
@@ -520,8 +521,9 @@ export interface RadialBarChartProps
   /**
    * Label field that names each arc (drives the legend, tooltip, and
    * `--color-<name>` lookup). Values should be unique per chart (arcs sharing a
-   * name share one `config`/color entry) and CSS-safe — they become part of a
-   * custom-property name. In multi-metric mode it names the band rather than the
+   * name share one `config`/color entry); they are sanitized automatically to a
+   * valid CSS custom-property fragment (CSS-safe values are preferred to avoid
+   * dev-mode warnings). In multi-metric mode it names the band rather than the
    * arc, so the legend and colors come from `dataKeys` instead.
    */
   nameKey: string;
@@ -718,7 +720,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       ? (data as RadialBarChartDatum[])
       : data.map((row) => ({
           ...row,
-          fill: `var(--color-${row[nameKey]})`,
+          fill: `var(--color-${toCssKey(String(row[nameKey]))})`,
         }));
 
     // Each piece of the ring becomes a synthetic series on the one row, measured
@@ -761,7 +763,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
         return legendKeys.map((key) => ({
           value: key,
           dataKey: key,
-          color: resolvedConfigForLegend[key]?.color ?? `var(--color-${key})`,
+          color: resolvedConfigForLegend[key]?.color ?? `var(--color-${toCssKey(key)})`,
           type: 'rect' as const,
           payload: {} as Record<string, unknown>,
         }));
@@ -772,7 +774,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
         dataKey: nameKey,
         color:
           resolvedConfigForLegend[String(row[nameKey])]?.color ??
-          `var(--color-${String(row[nameKey])})`,
+          `var(--color-${toCssKey(String(row[nameKey]))})`,
         type: 'rect' as const,
         payload: row as Record<string, unknown>,
       }));

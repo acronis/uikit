@@ -8,6 +8,7 @@ import {
   CHART_DEFAULT_PALETTE,
   ChartStyle,
   resolveChartColors,
+  toCssKey,
   type ChartConfig,
   type ChartPalette,
   type ResolvedChartConfig,
@@ -202,7 +203,7 @@ const CategoryBar = React.forwardRef<HTMLDivElement, CategoryBarProps>(
         ? String(label)
         : key;
     };
-    const colorOf = (key: string) => `var(--color-${key})`;
+    const colorOf = (key: string) => `var(--color-${toCssKey(key)})`;
     const pctOf = (value: number) =>
       total > 0 ? Math.round((value / total) * 100) : 0;
 

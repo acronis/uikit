@@ -6,6 +6,7 @@ import {
   ChartContainer,
   ChartLegendContent,
   ChartTooltipContent,
+  toCssKey,
   type ChartConfig,
 } from '../index';
 
@@ -295,5 +296,72 @@ describe('Chart', () => {
       /useChart must be used within a <ChartContainer \/>/
     );
     spy.mockRestore();
+  });
+});
+
+describe('toCssKey', () => {
+  it('is identity for already-CSS-safe keys', () => {
+    expect(toCssKey('desktop')).toBe('desktop');
+    expect(toCssKey('myMetric')).toBe('myMetric');
+    expect(toCssKey('a-b_c')).toBe('a-b_c');
+  });
+
+  it('replaces spaces with hyphens', () => {
+    expect(toCssKey('My Category')).toBe('My-Category');
+  });
+
+  it('replaces special characters', () => {
+    expect(toCssKey('revenue (Q1)')).toBe('revenue-Q1');
+  });
+
+  it('collapses consecutive replaced characters into one hyphen', () => {
+    expect(toCssKey('a  b--c')).toBe('a-b-c');
+  });
+
+  it('strips leading and trailing hyphens', () => {
+    expect(toCssKey(' foo ')).toBe('foo');
+  });
+
+  it('preserves non-ASCII code points (valid CSS ident chars per CSS Syntax L3 §4.3.7)', () => {
+    expect(toCssKey('日本')).toBe('日本');       // CJK: 日本
+    expect(toCssKey('Москва')).toBe(  // Cyrillic: Москва
+      'Москва'
+    );
+    expect(toCssKey('Zürich')).toBe('Zürich');          // Extended Latin: Zürich
+    expect(toCssKey('日本 revenue')).toBe('日本-revenue'); // mixed
+  });
+
+  it('does not warn for non-ASCII keys', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    toCssKey('日本');
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
+  });
+
+  it('is idempotent', () => {
+    const cases = ['My Category', 'revenue (Q1)', 'a  b--c', ' foo ', 'desktop',
+      '日本', '日本 revenue'];
+    for (const c of cases) {
+      expect(toCssKey(toCssKey(c))).toBe(toCssKey(c));
+    }
+  });
+
+  it('emits a dev warning when a key is sanitized', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    toCssKey('My Category');
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('"My Category"')
+    );
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('"My-Category"')
+    );
+    warn.mockRestore();
+  });
+
+  it('does not warn for already-CSS-safe keys', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    toCssKey('desktop');
+    expect(warn).not.toHaveBeenCalled();
+    warn.mockRestore();
   });
 });

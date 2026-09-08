@@ -31,6 +31,7 @@ import {
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
+  toCssKey,
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
@@ -423,7 +424,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
 
     const renderForecastTick = createForecastTick(
       new Set(forecastX),
-      `var(--color-${plotted[0]?.actualKey})`,
+      `var(--color-${toCssKey(plotted[0]?.actualKey ?? '')})`,
       xTickFormatter
     );
 
@@ -574,7 +575,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           dataKey={bandKeyFor(aKey)}
           type="monotone"
           stroke="none"
-          fill={`var(--color-${aKey})`}
+          fill={`var(--color-${toCssKey(aKey)})`}
           fillOpacity={0.15}
           connectNulls={false}
           dot={false}
@@ -593,7 +594,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       const areaFill =
         actualType === 'line'
           ? undefined
-          : { fill: `var(--color-${aKey})`, fillOpacity: 0.15 };
+          : { fill: `var(--color-${toCssKey(aKey)})`, fillOpacity: 0.15 };
       // Observed points read as measured: LineChart's dot geometry (r 3, 2px
       // ring) filled with the metric hue. The ring is that same hue, so the
       // mark is solid — and wide enough against the 2px line not to read as a
@@ -603,9 +604,9 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       const dot = showDots
         ? {
             r: 3,
-            fill: `var(--color-${aKey})`,
+            fill: `var(--color-${toCssKey(aKey)})`,
             fillOpacity: 1,
-            stroke: `var(--color-${aKey})`,
+            stroke: `var(--color-${toCssKey(aKey)})`,
             strokeWidth: 2,
           }
         : false;
@@ -614,7 +615,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           key={aKey}
           dataKey={aKey}
           type="monotone"
-          stroke={`var(--color-${aKey})`}
+          stroke={`var(--color-${toCssKey(aKey)})`}
           strokeWidth={strokeWidth}
           {...areaFill}
           dot={dot}
@@ -644,7 +645,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         ? {
             r: 3,
             fill: 'var(--ui-background-surface-primary)',
-            stroke: `var(--color-${aKey})`,
+            stroke: `var(--color-${toCssKey(aKey)})`,
             strokeWidth: 2,
             strokeDasharray: 'none',
           }
@@ -654,7 +655,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           key={fKey}
           dataKey={fKey}
           type="monotone"
-          stroke={`var(--color-${aKey})`}
+          stroke={`var(--color-${toCssKey(aKey)})`}
           strokeWidth={strokeWidth}
           strokeDasharray="5 5"
           dot={dot}

@@ -27,6 +27,7 @@ import {
   type ChartAnimationProps,
   type ChartDataLabelProps,
   type CartesianLabelPosition,
+  toCssKey,
   type ResolvedAnimation,
 } from '../chart';
 
@@ -146,7 +147,7 @@ export function radarSeriesStyle(
   settings: RadarChartSeriesSettings | undefined,
   defaults: RadarSeriesDefaults
 ): RadarSeriesStyle {
-  const fill = settings?.color ?? `var(--color-${key})`;
+  const fill = settings?.color ?? `var(--color-${toCssKey(key)})`;
   const dot = settings?.dot ?? defaults.showDots;
   return {
     fill,

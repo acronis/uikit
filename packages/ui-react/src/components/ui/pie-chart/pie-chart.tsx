@@ -27,6 +27,7 @@ import {
   CHART_DEFAULT_PALETTE,
   CHART_LABEL_FILL_CLASS,
   CHART_LABEL_FONT_SIZE,
+  toCssKey,
   type ChartConfig,
   type ChartPalette,
   type ChartTooltipContentProps,
@@ -445,7 +446,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         dataKey: nameKey,
         color:
           resolvedConfigForLegend[String(row[nameKey])]?.color ??
-          `var(--color-${String(row[nameKey])})`,
+          `var(--color-${toCssKey(String(row[nameKey]))})`,
         type: 'rect' as const,
         payload: row as Record<string, unknown>,
       }));
@@ -557,7 +558,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
               key={index}
               fill={
                 sliceSettings?.[String(entry[nameKey])]?.color ??
-                `var(--color-${entry[nameKey]})`
+                `var(--color-${toCssKey(String(entry[nameKey]))})`
               }
             />
           ))}

@@ -50,6 +50,7 @@ import {
   type ChartReferenceLine,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
+  toCssKey,
   type CartesianChartProps,
   type ChartAnimationProps,
   type ChartBrushProps,
@@ -173,7 +174,7 @@ export function withSeriesColor<T extends { dataKey?: unknown; color?: string }>
 ): T[] | undefined {
   return payload?.map((item) =>
     item.color?.startsWith('url(')
-      ? { ...item, color: `var(--color-${String(item.dataKey)})` }
+      ? { ...item, color: `var(--color-${toCssKey(String(item.dataKey))})` }
       : item
   );
 }
@@ -463,12 +464,12 @@ function BarPaintServers({
             <linearGradient id={`${id}-gradient-${key}`} x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="0%"
-                stopColor={`var(--color-${key})`}
+                stopColor={`var(--color-${toCssKey(key)})`}
                 stopOpacity={1}
               />
               <stop
                 offset="100%"
-                stopColor={`var(--color-${key})`}
+                stopColor={`var(--color-${toCssKey(key)})`}
                 stopOpacity={0.35}
               />
             </linearGradient>
@@ -484,7 +485,7 @@ function BarPaintServers({
               <rect
                 width={6}
                 height={6}
-                fill={`var(--color-${key})`}
+                fill={`var(--color-${toCssKey(key)})`}
                 fillOpacity={0.25}
               />
               <line
@@ -492,7 +493,7 @@ function BarPaintServers({
                 y1={0}
                 x2={0}
                 y2={6}
-                stroke={`var(--color-${key})`}
+                stroke={`var(--color-${toCssKey(key)})`}
                 strokeWidth={3}
               />
             </pattern>
@@ -571,7 +572,7 @@ function rangeCells({
           on ? (fill ?? fillOf(seriesKey, shape)) : fillOf(seriesKey, barShape)
         }
         fillOpacity={on ? opacity : undefined}
-        stroke={on && dashed ? `var(--color-${seriesKey})` : undefined}
+        stroke={on && dashed ? `var(--color-${toCssKey(seriesKey)})` : undefined}
         strokeWidth={on && dashed ? 1 : undefined}
         strokeDasharray={on && dashed ? '4 3' : undefined}
         // Cell types `radius` as the SVG attribute, but it feeds recharts'
@@ -1129,7 +1130,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         ? `url(#${defsId}-gradient-${key})`
         : shape === 'pattern'
           ? `url(#${defsId}-pattern-${key})`
-          : `var(--color-${key})`;
+          : `var(--color-${toCssKey(key)})`;
 
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
     // the left gutter. Passed to recharts' native `label` (themed via the
@@ -1268,7 +1269,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
               <Bar
                 dataKey={`${HEADROOM_FIELD_PREFIX}${key}`}
                 stackId={key}
-                fill={`var(--color-${key})`}
+                fill={`var(--color-${toCssKey(key)})`}
                 fillOpacity={0.25}
                 radius={radiusFor(barShape, true)}
                 // Decoration for the bar below it — never its own row in the

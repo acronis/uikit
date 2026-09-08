@@ -8,6 +8,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  toCssKey,
   type ChartConfig,
 } from '../../chart';
 import { ButtonIcon } from '../../button-icon';
@@ -213,7 +214,7 @@ export const TooltipOpen: Story = {
           isAnimationActive={false}
         >
           {data.map((entry) => (
-            <Cell key={entry.browser} fill={`var(--color-${entry.browser})`} />
+            <Cell key={entry.browser} fill={`var(--color-${toCssKey(entry.browser)})`} />
           ))}
         </Pie>
       </RechartsPieChart>
@@ -267,7 +268,7 @@ export const CustomTooltipOpen: Story = {
           isAnimationActive={false}
         >
           {data.map((entry) => (
-            <Cell key={entry.browser} fill={`var(--color-${entry.browser})`} />
+            <Cell key={entry.browser} fill={`var(--color-${toCssKey(entry.browser)})`} />
           ))}
         </Pie>
       </RechartsPieChart>
@@ -383,7 +384,7 @@ export const TooltipValuePercentOpen: Story = {
           isAnimationActive={false}
         >
           {data.map((entry) => (
-            <Cell key={entry.browser} fill={`var(--color-${entry.browser})`} />
+            <Cell key={entry.browser} fill={`var(--color-${toCssKey(entry.browser)})`} />
           ))}
         </Pie>
       </RechartsPieChart>
