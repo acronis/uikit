@@ -13,6 +13,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
   resolveAnimation,
+  toCssKey,
   type ChartConfig,
   type ChartPalette,
   type ChartAnimationProps,
@@ -191,7 +192,7 @@ export function TreemapCell({
         width={tileWidth}
         height={tileHeight}
         rx={CELL_RADIUS}
-        style={{ fill: `var(--color-${name})` }}
+        style={{ fill: `var(--color-${toCssKey(name)})` }}
       />
       {canLabel && (
         // Decorative: the hover that opens the tooltip belongs to the tile, so the
@@ -265,8 +266,9 @@ export interface TreemapProps
   dataKey: string;
   /**
    * Label field that names each leaf (drives the on-cell label, legend, tooltip,
-   * and `--color-<name>` lookup). Values should be unique and CSS-safe (they
-   * become part of a custom-property name).
+   * and `--color-<name>` lookup). Values should be unique; they are sanitized
+   * automatically to a valid CSS custom-property fragment (CSS-safe keys are
+   * preferred to avoid dev-mode warnings).
    */
   nameKey: string;
   /** Width-to-height ratio the tiling targets. */
@@ -367,10 +369,10 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
               : undefined;
             // The on-cell name is the leaf's `config` label, so a cell reads like its
             // legend entry and tooltip row do. It matters more here than elsewhere:
-            // the raw `nameKey` value has to be CSS-safe (it becomes part of
-            // `--color-<name>`), so a leaf whose display name has a space in it is
-            // keyed by a slug — and the slug is not what belongs on the tile. Only a
-            // string label can go in SVG text; a `ReactNode` one falls back to the key.
+            // the raw `nameKey` value is sanitized before use in `--color-<name>`,
+            // so a leaf whose display name has a space in it can be keyed by that name
+            // while the human-readable label still comes from the `config` entry. Only
+            // a string label can go in SVG text; a `ReactNode` one falls back to the key.
             const label = config[name]?.label;
             const rawToken = (resolvedColors[name]?.color ?? '').replace(
               /^var\(|\)$/g,
@@ -389,7 +391,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
                 : 'dark';
             return {
               ...row,
-              fill: `var(--color-${name})`,
+              fill: `var(--color-${toCssKey(name)})`,
               fillTone,
               ...(typeof label === 'string' ? { primaryLabel: label } : {}),
               ...(secondaryLabel ? { secondaryLabel } : {}),

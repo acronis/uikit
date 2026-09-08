@@ -10,6 +10,7 @@ import {
   resolveChartColors,
   CHART_DEFAULT_PALETTE,
   ChartTooltip,
+  toCssKey,
   type ChartConfig,
   type ChartPalette,
 } from '../chart';
@@ -21,11 +22,12 @@ import {
 // carry no token hooks). No CVA variant: a Sankey's expressiveness is the
 // nodes/links graph + geometry (plain props), not a visual "mode".
 //
-// Node `name`s are the color keys: each must match a `config` entry, so they
-// must be CSS-safe (they become part of a `--color-<name>` custom property).
+// Node `name`s are the color keys: each must match a `config` entry. They are
+// sanitized automatically to a valid CSS custom-property fragment; CSS-safe
+// names are preferred to avoid dev-mode warnings.
 // The human-readable text comes from `config[name].label`.
 
-/** A node in the flow — `name` is its color/config key (CSS-safe, unique). */
+/** A node in the flow — `name` is its color/config key (unique; sanitized automatically to a CSS-safe fragment). */
 export interface SankeyChartNode {
   name: string;
 }
@@ -150,7 +152,7 @@ function makeNodeRenderer(
           y={y}
           width={width}
           height={height}
-          fill={`var(--color-${name})`}
+          fill={`var(--color-${toCssKey(name)})`}
           radius={2}
         />
         {showLabels && (
@@ -184,7 +186,7 @@ function SankeyLinkShape({
   payload,
 }: SankeyLinkShapeProps) {
   const targetName = String(payload.target.name);
-  const stroke = payload.color ?? `var(--color-${targetName})`;
+  const stroke = payload.color ?? `var(--color-${toCssKey(targetName)})`;
   return (
     <path
       d={`M${sourceX},${sourceY}C${sourceControlX},${sourceY} ${targetControlX},${targetY} ${targetX},${targetY}`}
@@ -225,7 +227,7 @@ export function makeSankeyTooltip(
     // Mirror the ribbon: an explicit color renders full-opacity; the default
     // target tint renders at 35%.
     styleByName.set(source + ' - ' + target, {
-      color: link.color ?? `var(--color-${target})`,
+      color: link.color ?? `var(--color-${toCssKey(target)})`,
       opacity: link.color ? 1 : 0.35,
     });
   }
@@ -245,7 +247,7 @@ export function makeSankeyTooltip(
     const parts = String(item?.name ?? '').split(' - ');
     const targetKey = parts[parts.length - 1];
     const linkStyle = styleByName.get(String(item?.name ?? ''));
-    const dotColor = linkStyle?.color ?? `var(--color-${targetKey})`;
+    const dotColor = linkStyle?.color ?? `var(--color-${toCssKey(targetKey)})`;
     const dotOpacity = linkStyle?.opacity ?? 1;
     const value = item?.value;
     return (
@@ -407,7 +409,7 @@ const SankeyChart = React.forwardRef<HTMLDivElement, SankeyChartProps>(
               <div key={name} className="flex items-center gap-2">
                 <span
                   className="size-2.5 shrink-0 rounded-sm"
-                  style={{ backgroundColor: `var(--color-${name})` }}
+                  style={{ backgroundColor: `var(--color-${toCssKey(name)})` }}
                 />
                 <span className="truncate text-muted-foreground">
                   {config[name]?.label ?? name}

@@ -49,6 +49,7 @@ import {
   type ChartCurveType,
   type ChartDataLabelProps,
   type ChartReferenceLine,
+  toCssKey,
   type CartesianLabelPosition,
 } from '../chart';
 
@@ -349,7 +350,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
     // A series' `color` override has to reach its gradient stops too, or a
     // gradient-filled chart would keep painting the `config` color.
     const colorFor = (key: string) =>
-      areaSettings?.[key]?.color ?? `var(--color-${key})`;
+      areaSettings?.[key]?.color ?? `var(--color-${toCssKey(key)})`;
 
     // The plot inset is needed as soon as *any* series carries outside labels —
     // a per-series `showLabel` counts, not only the chart-wide `showLabels`.

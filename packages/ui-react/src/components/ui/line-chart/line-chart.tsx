@@ -49,6 +49,7 @@ import {
   type ChartBrushProps,
   type ChartCurveType,
   type ChartDataLabelProps,
+  toCssKey,
   type ChartReferenceLine,
   type CartesianLabelPosition,
 } from '../chart';
@@ -394,7 +395,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
     // so the band keeps following the line it belongs to instead of the
     // chart-wide defaults.
     const colorFor = (key: string) =>
-      lineSettings?.[key]?.color ?? `var(--color-${key})`;
+      lineSettings?.[key]?.color ?? `var(--color-${toCssKey(key)})`;
     const curveFor = (key: string) =>
       lineSettings?.[key]?.curveType ?? curve ?? 'monotone';
 

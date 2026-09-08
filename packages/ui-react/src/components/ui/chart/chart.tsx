@@ -22,6 +22,43 @@ import {
   type ChartSeriesTone,
 } from './chart-palette';
 
+/**
+ * Normalize a config key / data name to a CSS-safe custom-property fragment.
+ *
+ * A `--color-<key>` custom property is invalid when `key` contains a space or
+ * other ASCII special character — the browser discards it, and the element
+ * falls back to SVG's default black. This function replaces every invalid ASCII
+ * character with a hyphen, collapses runs, and trims leading/trailing hyphens.
+ *
+ * Non-ASCII code points (U+0080+) are **preserved**: CSS Syntax Level 3
+ * §4.3.7 classifies them as valid ident-code-points, so `--color-日本` and
+ * `--color-Москва` are legal custom properties. Replacing them would collapse
+ * all-non-ASCII keys to the empty string and silently make distinct series
+ * collide on `--color-`.
+ *
+ * For an already-CSS-safe key (ASCII letters, digits, `-`, `_`) the output is
+ * identical (identity), so existing consumers are unaffected. If the entire
+ * input collapses to an empty string (e.g. all ASCII special characters),
+ * `--color-` is produced — an edge case with no worse outcome than before.
+ */
+export function toCssKey(key: string): string {
+  // Only strip ASCII characters that are not valid CSS ident chars.
+  // U+0080+ are preserved — they are valid per CSS Syntax L3 §4.3.7.
+  const safe = key
+    .replace(/[^-￿a-zA-Z0-9_-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+
+  if (process.env.NODE_ENV !== 'production' && safe !== key) {
+    console.warn(
+      `[ui-react] Chart config key "${key}" is not CSS-safe and was sanitized to "${safe}". ` +
+        `Use CSS-safe keys (ASCII letters, digits, hyphens, underscores, or non-ASCII characters) to avoid this.`
+    );
+  }
+
+  return safe;
+}
+
 export type ChartConfig = {
   [k in string]: {
     label?: React.ReactNode;
@@ -361,7 +398,7 @@ const ChartStyle = ({
   return (
     <style>
       {`[data-chart=${id}] {\n${entries
-        .map(([key, itemConfig]) => `  --color-${key}: ${itemConfig.color};`)
+        .map(([key, itemConfig]) => `  --color-${toCssKey(key)}: ${itemConfig.color};`)
         .join('\n')}\n}`}
     </style>
   );

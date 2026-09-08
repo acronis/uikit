@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { SankeyChart } from '../sankey-chart';
-import { type ChartConfig } from '../../chart';
+import { toCssKey, type ChartConfig } from '../../chart';
 import { paletteArgTypes } from '../../chart/__stories__/palette-control';
 
 // Default: a small, simple flow (sign-ups → active / churned) so the base stories
@@ -213,7 +213,7 @@ export const CustomTooltip: Story = {
         <div className="flex items-center gap-2 rounded-lg border border-border bg-background px-2.5 py-1.5 text-xs shadow-md">
           <span
             className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
-            style={{ backgroundColor: `var(--color-${targetKey})` }}
+            style={{ backgroundColor: `var(--color-${toCssKey(targetKey)})` }}
           />
           <span className="font-medium">
             {Number(payload[0]?.value).toLocaleString()} users
