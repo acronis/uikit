@@ -227,7 +227,7 @@ export function radialBarChartSegmentFill(
   // continuous arc, so it takes the same muted surface.
   return kind === 'track'
     ? 'var(--ui-border-on-status-neutral)'
-    : `var(--color-${toCssKey(colorName)})`;
+    : `var(--color-${toCssKey(String(colorName))})`;
 }
 
 /**
