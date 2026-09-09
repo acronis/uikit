@@ -266,7 +266,7 @@ function AreaFillGradients({
       {dataKeys.map((key) => (
         <linearGradient
           key={key}
-          id={`${gradientId}-${key}`}
+          id={`${gradientId}-${toCssKey(key)}`}
           x1="0"
           y1="0"
           x2="0"
@@ -561,7 +561,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                   strokeWidth={settings?.strokeWidth ?? strokeWidth}
                   strokeDasharray={settings?.dashed ? '5 5' : undefined}
                   fill={
-                    isGradient ? `url(#${gradientId}-${key})` : colorFor(key)
+                    isGradient ? `url(#${gradientId}-${toCssKey(key)})` : colorFor(key)
                   }
                   fillOpacity={
                     settings?.fillOpacity ?? (isGradient ? 1 : fillOpacity)
@@ -600,7 +600,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
                     strokeWidth={settings?.strokeWidth ?? strokeWidth}
                     strokeDasharray="5 5"
                     fill={
-                      isGradient ? `url(#${gradientId}-${key})` : colorFor(key)
+                      isGradient ? `url(#${gradientId}-${toCssKey(key)})` : colorFor(key)
                     }
                     fillOpacity={
                       settings?.fillOpacity ?? (isGradient ? 1 : fillOpacity)

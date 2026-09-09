@@ -145,6 +145,22 @@ describe('Chart', () => {
     expect(container.querySelector('style')).not.toBeInTheDocument();
   });
 
+  it('warns in dev when two config keys sanitize to the same CSS property name', () => {
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    render(
+      <ChartContainer
+        config={{ 'My/Cat': {}, 'My.Cat': {} }}
+        id="collision"
+      >
+        <BarChart data={[]} />
+      </ChartContainer>
+    );
+    expect(warn).toHaveBeenCalledWith(
+      expect.stringContaining('both sanitize to "--color-My-Cat"')
+    );
+    warn.mockRestore();
+  });
+
   it('renders a centered legend with 10px circular dot markers', () => {
     const { container } = render(
       <ChartContainer config={config} id="usage">
@@ -346,15 +362,20 @@ describe('toCssKey', () => {
     }
   });
 
-  it('emits a dev warning when a key is sanitized', () => {
+  it('emits a dev warning when a key is sanitized (first call only)', () => {
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    toCssKey('My Category');
+    // Use a key unlikely to have been seen by earlier tests in this module.
+    toCssKey('warn test key!');
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('"My Category"')
+      expect.stringContaining('"warn test key!"')
     );
     expect(warn).toHaveBeenCalledWith(
-      expect.stringContaining('"My-Category"')
+      expect.stringContaining('"warn-test-key"')
     );
+    // Second call for the same key must NOT warn again.
+    warn.mockClear();
+    toCssKey('warn test key!');
+    expect(warn).not.toHaveBeenCalled();
     warn.mockRestore();
   });
 

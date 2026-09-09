@@ -24,8 +24,10 @@ Node colors come from the `palette` prop, not from `config` — see
 [Palettes](/components/chart#palettes). Node `name`s are the color keys, **keyed
 into `config`**: each entry maps a node to a `label` and an optional `tone` that
 re-points it within the palette, and `SankeyChart` resolves them into the
-`--color-<name>` custom properties the node bars fill from. Names must be unique
-and CSS-safe.
+`--color-<name>` custom properties the node bars fill from. Names must be unique;
+they are sanitized automatically to a valid CSS custom-property fragment (prefer
+CSS-safe names — ASCII letters, digits, hyphens, underscores — to avoid dev-mode
+warnings about sanitized keys).
 
 ## Examples
 

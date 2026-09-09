@@ -461,7 +461,7 @@ function BarPaintServers({
         <React.Fragment key={key}>
           {/* Bars grow up, so a gradient runs top-down. */}
           {hasGradient && (
-            <linearGradient id={`${id}-gradient-${key}`} x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id={`${id}-gradient-${toCssKey(key)}`} x1="0" y1="0" x2="0" y2="1">
               <stop
                 offset="0%"
                 stopColor={`var(--color-${toCssKey(key)})`}
@@ -476,7 +476,7 @@ function BarPaintServers({
           )}
           {hasPattern && (
             <pattern
-              id={`${id}-pattern-${key}`}
+              id={`${id}-pattern-${toCssKey(key)}`}
               patternUnits="userSpaceOnUse"
               width={6}
               height={6}
@@ -1127,9 +1127,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
 
     const fillOf = (key: string, shape: BarChartBarShape) =>
       shape === 'gradient'
-        ? `url(#${defsId}-gradient-${key})`
+        ? `url(#${defsId}-gradient-${toCssKey(key)})`
         : shape === 'pattern'
-          ? `url(#${defsId}-pattern-${key})`
+          ? `url(#${defsId}-pattern-${toCssKey(key)})`
           : `var(--color-${toCssKey(key)})`;
 
     // Axis titles: the X title sits below the ticks; the Y title is rotated in
