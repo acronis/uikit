@@ -84,9 +84,10 @@ Change the tiling with `aspectRatio`, and hide the on-cell labels or tooltip wit
 
 Each cell is labelled with its leaf's name, centered in the tile by default. The
 name shown is the leaf's **`config` label**, not its raw `nameKey` value — that
-value becomes part of a `--color-<name>` custom property, so it has to be
-CSS-safe, and a leaf whose display name contains a space is keyed by a slug with
-the real name in its config entry (the same one the legend and tooltip show).
+value becomes part of a `--color-<name>` custom property, and is sanitized
+automatically to a valid CSS fragment, so a leaf's `nameKey` can contain spaces
+or other special characters. The human-readable name in the cell, legend, and
+tooltip comes from the matching `config` entry's `label` field.
 
 `secondaryKeys` adds a second line built from any other fields on the row — a
 value, a count, or both — and `secondaryFormatter` formats each of them, receiving

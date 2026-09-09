@@ -40,7 +40,13 @@ import {
  * identical (identity), so existing consumers are unaffected. If the entire
  * input collapses to an empty string (e.g. all ASCII special characters),
  * `--color-` is produced — an edge case with no worse outcome than before.
+ *
+ * The dev-mode warning fires **once per unique unsanitized key** per page load,
+ * so render loops (hover, re-render) do not flood the console.
  */
+// Tracks keys that have already triggered a dev warning — one per page load.
+const _toCssKeyWarned = new Set<string>();
+
 export function toCssKey(key: string): string {
   // Only strip ASCII characters that are not valid CSS ident chars.
   // U+0080+ are preserved — they are valid per CSS Syntax L3 §4.3.7.
@@ -49,7 +55,8 @@ export function toCssKey(key: string): string {
     .replace(/-+/g, '-')
     .replace(/^-|-$/g, '');
 
-  if (process.env.NODE_ENV !== 'production' && safe !== key) {
+  if (process.env.NODE_ENV !== 'production' && safe !== key && !_toCssKeyWarned.has(key)) {
+    _toCssKeyWarned.add(key);
     console.warn(
       `[ui-react] Chart config key "${key}" is not CSS-safe and was sanitized to "${safe}". ` +
         `Use CSS-safe keys (ASCII letters, digits, hyphens, underscores, or non-ASCII characters) to avoid this.`
@@ -395,6 +402,22 @@ const ChartStyle = ({
   // Rendered as a text child (not dangerouslySetInnerHTML): React sets it via
   // textContent, which the browser does not HTML-parse, so a `</style>` in a
   // colour can't break out of the tag.
+  if (process.env.NODE_ENV !== 'production') {
+    const seen = new Map<string, string>();
+    for (const [key] of entries) {
+      const safe = toCssKey(key);
+      const prior = seen.get(safe);
+      if (prior !== undefined) {
+        console.warn(
+          `[ui-react] Chart config keys "${prior}" and "${key}" both sanitize to "--color-${safe}". ` +
+            `One will overwrite the other — use unique CSS-safe keys.`
+        );
+      } else {
+        seen.set(safe, key);
+      }
+    }
+  }
+
   return (
     <style>
       {`[data-chart=${id}] {\n${entries
