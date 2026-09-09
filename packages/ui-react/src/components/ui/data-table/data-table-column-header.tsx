@@ -8,7 +8,7 @@ import {
 
 import { cn } from '@/lib/utils';
 
-interface DataTableColumnHeaderProps<TData, TValue>
+export interface DataTableColumnHeaderProps<TData, TValue>
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   column: Column<TData, TValue>;
   title: string;

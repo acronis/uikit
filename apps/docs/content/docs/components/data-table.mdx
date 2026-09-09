@@ -16,9 +16,21 @@ import {
   DataTablePagination,
   DataTableViewOptions,
   DataTableExpandTrigger,
+  type ColumnDef,
+  type Row,
 } from '@acronis-platform/ui-react';
-import type { ColumnDef } from '@tanstack/react-table';
 ```
+
+The TanStack types DataTable's props reference are re-exported from
+`@acronis-platform/ui-react`, so typing columns and state handlers needs no
+direct `@tanstack/react-table` import: `Column`, `ColumnDef`, `Row`,
+`OnChangeFn`, `TanstackTable` (TanStack's `Table`, aliased so it doesn't clash
+with the `Table` primitive), and the `SortingState` / `VisibilityState` /
+`RowSelectionState` / `ColumnOrderState` / `ColumnSizingState` state types.
+`DataTableColumnHeaderProps` is exported alongside them, so a wrapper around
+`DataTableColumnHeader` can type its own props. You still need
+`@tanstack/react-table` itself for `useReactTable` and the row-model factories
+when you build an external instance.
 
 `DataTable` is a data grid built on [TanStack react-table](https://tanstack.com/table)
 v8, composed over the `Table` primitives. Given `columns` and `data` it builds
@@ -532,7 +544,7 @@ Set on a `ColumnDef`, not on `DataTable` (ui-react augments TanStack's
 
 | Component                | Props                                                                                                                  |
 | ------------------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| `DataTableColumnHeader`  | `column` (required), `title` (required), plus any `button` attribute.                                                    |
+| `DataTableColumnHeader`  | `column` (required), `title` (required), `sortLabel` (default `` (title) => `Sort by ${title}` ``), plus any `button` attribute. |
 | `DataTableToolbar`       | `table` (required), `leading`, `searchKey`, `searchPlaceholder` (default `'Filter…'`), `children`, `filtersLabel` (default `'Filters'`), `getFilterChipLabel`. |
 | `DataTablePagination`    | `table` (required), `pageSizeOptions` (default `[10, 20, 30, 40, 50]`).                                                  |
 | `DataTableViewOptions`   | `table` (required), `iconOnly`, `triggerLabel` (default `'View'`), `triggerAriaLabel` (default `'Column settings'`).      |

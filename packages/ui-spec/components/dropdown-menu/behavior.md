@@ -20,10 +20,27 @@ Scenario: Selecting an item closes the menu
 ```
 
 ```gherkin
-Scenario: Dismissing
+Scenario: Dismissing with Escape
   Given an open menu
-  When the user presses Escape or presses outside the popup
+  When the user presses Escape
   Then the menu closes and focus returns to the trigger
+```
+
+```gherkin
+Scenario: Dismissing with an outside press
+  Given an open menu
+  When the user presses outside the popup
+  Then the menu closes
+  And focus returns to the trigger only if the press did not land on a
+    focusable element — otherwise focus stays where the user put it
+```
+
+```gherkin
+Scenario: The menu is non-modal
+  Given an open menu
+  Then the page behind it stays scrollable
+  And content outside the popup stays interactive
+  And a press on that content dismisses the menu (light dismiss)
 ```
 
 ## Keyboard

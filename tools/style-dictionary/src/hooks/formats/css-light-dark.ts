@@ -193,9 +193,18 @@ export function serializeCss({
 
   // Base files declare the light/dark shell; override files only restate the
   // changed custom properties (they layer on top of the imported base).
+  // `color-scheme: light dark` on `:root` lets an unthemed document follow
+  // the OS preference. It is deliberately NOT repeated on the bare `:host`
+  // rule: a shadow host would then re-declare `light dark` locally,
+  // overriding the scheme it should otherwise inherit from the document —
+  // making shadow-DOM content follow the OS instead of the app's
+  // [data-theme] attribute on <html> (#674). Explicit [data-theme] below
+  // still sets color-scheme on both :root and :host so a themed shadow
+  // host is unaffected.
   const root = isOverride
     ? `:root, :host {\n${varLines}\n}`
-    : `:root, :host {\n  color-scheme: light dark;\n\n${varLines}\n}\n\n` +
+    : `:root {\n  color-scheme: light dark;\n}\n\n` +
+      `:root, :host {\n${varLines}\n}\n\n` +
       `[data-theme='light'], :host([data-theme='light']) {\n  color-scheme: light;\n}\n\n` +
       `[data-theme='dark'], :host([data-theme='dark']) {\n  color-scheme: dark;\n}`;
 

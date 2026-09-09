@@ -133,6 +133,48 @@ describe('DropdownMenu', () => {
     expect(chevron).toHaveClass('self-center', 'ms-auto');
   });
 
+  // #585 — Base UI's Menu.Root defaults to `modal={true}`, which scroll-locks
+  // the document and renders an `InternalBackdrop` over the page so pointer
+  // events never reach anything behind the menu. A dropdown is a light-dismiss
+  // overlay, so DropdownMenu pins `modal={false}`. The backdrop is the only
+  // DOM-observable manifestation of that choice: `MenuPositioner` renders it
+  // (a `[role="presentation"][data-base-ui-inert]` div) exactly when
+  // `modal && lastOpenChangeReason !== 'trigger-hover'`. The scroll lock is
+  // structurally skipped for `modal={false}` too, but happy-dom has no real
+  // scrollbar and takes an early-return branch in `useScrollLock`, so no
+  // assertion on `document.body.style` would discriminate here.
+  it('opens non-modally, without the pointer-blocking modal backdrop', async () => {
+    const user = userEvent.setup();
+    render(<DemoMenu />);
+    await user.click(screen.getByRole('button', { name: 'Open menu' }));
+
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+    expect(
+      document.querySelectorAll('[role="presentation"][data-base-ui-inert]')
+    ).toHaveLength(0);
+  });
+
+  it('light-dismisses on an outside click, leaving outside controls interactive', async () => {
+    const user = userEvent.setup();
+    const onOutsideClick = vi.fn();
+    render(
+      <div>
+        <button type="button" onClick={onOutsideClick}>
+          Outside
+        </button>
+        <DemoMenu />
+      </div>
+    );
+
+    const outside = screen.getByRole('button', { name: 'Outside' });
+    await user.click(screen.getByRole('button', { name: 'Open menu' }));
+    expect(screen.getByRole('menu')).toBeInTheDocument();
+
+    await user.click(outside);
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(onOutsideClick).toHaveBeenCalledTimes(1);
+  });
+
   it('forwards the ref to the popup', () => {
     const ref = createRef<HTMLDivElement>();
     render(
