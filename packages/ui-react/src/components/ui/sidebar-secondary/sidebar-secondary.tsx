@@ -627,10 +627,19 @@ const SidebarSecondaryHeader = React.forwardRef<
   const { setHeaderLabel } = useSidebarSecondaryContext();
   const resolvedLabel = label ?? children;
 
+  // Keep a ref so the effect always reads the latest label without listing it
+  // as a dependency — React nodes are new objects on every render, which would
+  // otherwise re-fire the effect (and cause a "Maximum update depth exceeded"
+  // error) on each parent re-render.
+  const resolvedLabelRef = React.useRef(resolvedLabel);
+  resolvedLabelRef.current = resolvedLabel;
+
   // Register the header text so the collapsed breadcrumb can auto-display it.
   React.useEffect(() => {
-    setHeaderLabel(resolvedLabel);
-  }, [resolvedLabel, setHeaderLabel]);
+    setHeaderLabel(resolvedLabelRef.current);
+    return () => setHeaderLabel(undefined);
+     
+  }, [setHeaderLabel]);
 
   return (
     <div
@@ -1027,11 +1036,22 @@ const SidebarSecondaryMenuItem = React.forwardRef<
     const labelRef = React.useRef<HTMLSpanElement>(null);
     const isOverflowing = useIsOverflowing(labelRef, { enabled: expanded });
 
+    // Keep a ref so the effect always reads the latest label without listing
+    // it as a dependency — React nodes are new objects on every render, which
+    // would otherwise re-fire the effect (and cause a "Maximum update depth
+    // exceeded" error) on each parent re-render.
+    const childrenRef = React.useRef(children);
+    childrenRef.current = children;
+
     // Register this item's label when selected so the collapsed breadcrumb
-    // auto-displays the current page without manual props.
+    // auto-displays the current page without manual props. Clears on unmount
+    // so the breadcrumb doesn't keep a stale label after the item is removed.
     React.useEffect(() => {
-      if (selected) setSelectedLabel(children);
-    }, [selected, children, setSelectedLabel]);
+      if (!selected) return;
+      setSelectedLabel(childrenRef.current);
+      return () => setSelectedLabel(undefined);
+       
+    }, [selected, setSelectedLabel]);
 
     const inner = useRender({
       render,
