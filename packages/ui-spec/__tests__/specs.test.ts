@@ -260,6 +260,21 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
   });
 
+  it('SegmentControl: api.yaml variant enum matches the cva keys in ui-react', () => {
+    const source = readFileSync(
+      resolve(
+        HERE,
+        '../../ui-react/src/components/ui/segment-control/segment-control.tsx'
+      ),
+      'utf8'
+    );
+    const groups = extractCvaGroups(source);
+    const api = loadSpec('segment-control').api;
+
+    expect(Object.keys(groups)).toEqual(['variant']);
+    expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
+  });
+
   it('PieChart: api.yaml shape enum matches the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/pie-chart/pie-chart.tsx'),
