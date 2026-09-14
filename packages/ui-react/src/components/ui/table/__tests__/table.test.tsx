@@ -130,7 +130,7 @@ describe('Table', () => {
     );
   });
 
-  it('keeps the fixed row height and single line by default on a cell', () => {
+  it('keeps the fixed row height and truncates to one line by default on a cell', () => {
     render(
       <Table>
         <TableBody>
@@ -142,7 +142,7 @@ describe('Table', () => {
     );
     const cell = screen.getByTestId('cell');
     expect(cell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
-    expect(cell).not.toHaveClass('whitespace-normal');
+    expect(cell).toHaveClass('truncate');
   });
 
   it('transitions its background so hover fades in sync with the row', () => {
@@ -176,6 +176,7 @@ describe('Table', () => {
     );
     const cell = screen.getByTestId('cell');
     expect(cell).toHaveClass('whitespace-normal');
+    expect(cell).not.toHaveClass('truncate');
     expect(cell).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
   });
 
@@ -191,7 +192,10 @@ describe('Table', () => {
     );
     const header = screen.getByRole('columnheader', { name: /Very long/ });
     expect(header).toHaveClass('whitespace-normal');
-    expect(header).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(header).not.toHaveClass('truncate');
+    expect(header).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
+    );
   });
 
   it('drives a tri-state header checkbox across none/some/all row selection', async () => {
@@ -230,7 +234,10 @@ describe('Table', () => {
                     aria-label={`Select ${row}`}
                     checked={!!selected[row]}
                     onCheckedChange={(value) =>
-                      setSelected((previous) => ({ ...previous, [row]: !!value }))
+                      setSelected((previous) => ({
+                        ...previous,
+                        [row]: !!value,
+                      }))
                     }
                   />
                 </TableCell>
@@ -350,7 +357,9 @@ describe('Table structural cells', () => {
 
     const cell = screen.getByTestId('actions');
     expect(cell.tagName).toBe('TD');
-    expect(cell).toHaveClass('hover:bg-[var(--ui-table-data-cell-color-hover)]');
+    expect(cell).toHaveClass(
+      'hover:bg-[var(--ui-table-data-cell-color-hover)]'
+    );
     expect(cell).toHaveClass(
       'active:bg-[var(--ui-table-data-cell-color-active)]'
     );
@@ -443,7 +452,7 @@ describe('Table structural cells', () => {
 // that row's single-row actions disappear. The Table primitives don't own that
 // rule (there is no actions-column concept) — it's a composition rule, so this
 // pins the composition the stories/docs demonstrate.
-describe('row selection hides that row\'s actions', () => {
+describe("row selection hides that row's actions", () => {
   function Grid({ selected }: { selected: string[] }) {
     return (
       <Table>
@@ -453,7 +462,10 @@ describe('row selection hides that row\'s actions', () => {
             return (
               <TableRow key={name} selected={isSelected}>
                 <TableSelectCell>
-                  <Checkbox checked={isSelected} aria-label={`Select ${name}`} />
+                  <Checkbox
+                    checked={isSelected}
+                    aria-label={`Select ${name}`}
+                  />
                 </TableSelectCell>
                 <TableCell>{name}</TableCell>
                 <TableActionsCell>
@@ -479,7 +491,7 @@ describe('row selection hides that row\'s actions', () => {
     ).toBeInTheDocument();
   });
 
-  it('hides only the selected row\'s actions, keeping the cell in place', () => {
+  it("hides only the selected row's actions, keeping the cell in place", () => {
     render(<Grid selected={['alpha']} />);
     expect(
       screen.queryByRole('button', { name: 'Actions for alpha' })

@@ -39,7 +39,11 @@ import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 import { useIntersectionObserver } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ButtonIcon } from '../button-icon';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from '../dropdown-menu';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '../dropdown-menu';
 import {
   Table,
   TableActionsCell,
@@ -99,6 +103,10 @@ declare module '@tanstack/react-table' {
      * row height); mirrors the `Table` primitives' `wrap` prop on TableHead/TableCell.
      */
     wrap?: boolean;
+    /** Label shown for this column in the visibility dropdown. */
+    label?: string;
+    /** Optional visibility-dropdown category for this column. */
+    category?: string;
   }
 }
 
@@ -429,6 +437,12 @@ interface DataTableOwnProps<TData> {
    * Override to localize.
    */
   columnSettingsLabel?: string;
+  /** Placeholder and accessible name of the column-visibility search field. */
+  columnSearchPlaceholder?: string;
+  /** Label of the per-category action that reveals every column. */
+  showAllColumnsLabel?: ReactNode;
+  /** Empty state shown when the column search has no matches. */
+  noColumnsFoundLabel?: ReactNode;
   /**
    * Copy of the tooltip shown while a header cell is hovered/focused — one
    * line per capability that column actually has (sort/reorder/resize).
@@ -477,6 +491,9 @@ export function DataTable<TData, TValue = unknown>({
   renderRowActions,
   rowActionsLabel = 'Row actions',
   columnSettingsLabel,
+  columnSearchPlaceholder,
+  showAllColumnsLabel,
+  noColumnsFoundLabel,
   headerHints,
 }: DataTableProps<TData, TValue>) {
   const resolvedHeaderHints: DataTableHeaderHints = {
@@ -537,9 +554,7 @@ export function DataTable<TData, TValue = unknown>({
     onSortingChange?.(updater);
   };
 
-  const handleRowSelectionChange: OnChangeFn<RowSelectionState> = (
-    updater
-  ) => {
+  const handleRowSelectionChange: OnChangeFn<RowSelectionState> = (updater) => {
     if (controlledRowSelection === undefined) {
       setInternalRowSelection(updater);
     }
@@ -607,6 +622,9 @@ export function DataTable<TData, TValue = unknown>({
     onRowSelectionChange: handleRowSelectionChange,
     onColumnSizingChange: handleColumnSizingChange,
     onColumnOrderChange: handleColumnOrderChange,
+    initialState: showActionColumn
+      ? { columnPinning: { right: ['__actions'] } }
+      : undefined,
     state: {
       sorting,
       columnFilters,
@@ -729,7 +747,7 @@ export function DataTable<TData, TValue = unknown>({
     table.getAllLeafColumns().forEach((column) => {
       column.pin(column.columnDef.meta?.pin ?? false);
     });
-  }, [table, columns, externalTable]);
+  }, [table, tableColumns, externalTable]);
 
   const rows = table.getRowModel().rows;
   // Derived from the selection state, so it's the same for every row — compute
@@ -831,6 +849,9 @@ export function DataTable<TData, TValue = unknown>({
                           table={table}
                           iconOnly
                           triggerAriaLabel={columnSettingsLabel}
+                          searchPlaceholder={columnSearchPlaceholder}
+                          showAllLabel={showAllColumnsLabel}
+                          noResultsLabel={noColumnsFoundLabel}
                         />
                       </TableSettingsCell>
                     );
@@ -851,8 +872,7 @@ export function DataTable<TData, TValue = unknown>({
                       onDragOver={canReorder ? handleColumnDragOver : undefined}
                       onDrop={
                         canReorder
-                          ? (event) =>
-                              handleColumnDrop(event, header.column.id)
+                          ? (event) => handleColumnDrop(event, header.column.id)
                           : undefined
                       }
                       onDragEnd={

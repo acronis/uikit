@@ -31,7 +31,7 @@ optional row expansion, column resizing, and sticky (pinned) columns.
 | `DataTableColumnHeader`   | A sortable column header — single-click toggle (↑/↓/↕). Use in a column's `header`.                                                                                                                                                       |
 | `DataTableToolbar`        | Search box + per-column filters + applied-filter chips. Takes a `table` instance.                                                                                                                                                         |
 | `DataTablePagination`     | Selection count, rows-per-page, page controls. Takes a `table`.                                                                                                                                                                           |
-| `DataTableViewOptions`    | Column-visibility menu (a thin TanStack adapter over the `TableViewOptions` primitive). Pass `iconOnly` for the cog trigger that belongs in the trailing settings column.                                                                 |
+| `DataTableViewOptions`    | Searchable, categorized column-visibility menu (a thin TanStack adapter over `TableViewOptions`). Pass `iconOnly` for the cog trigger in the trailing settings column.                                                                    |
 | `DataTableExpandTrigger`  | A chevron toggle wired to a row's expansion state, placed inside a column's `cell` render function.                                                                                                                                       |
 | `DataTableBulkActionsBar` | A selection-aware bar above the grid: the consumer's bulk actions in a `<fieldset>` disabled until a selection is active, plus the selection summary and a Deselect control (or `loadedLabel` when nothing is selected). Takes a `table`. |
 | `isBulkSelectionActive`   | The single predicate for the bulk-selection threshold (one or more rows selected). Pass it to `TableActionsCell`'s `bulkSelectionActive` rather than re-deriving it.                                                                      |
@@ -80,10 +80,15 @@ from it too (see **Server-driven usage** below).
   `columnResizing`). Pass `onColumnSizingChange` to persist widths.
 - **Sticky (pinned) columns** — set `meta.pin: 'left' | 'right'` on a
   `ColumnDef`. DataTable drives TanStack's native column-pinning and renders the
-  column as `position: sticky` cells with an opaque row background.
+  column as `position: sticky` cells with an opaque row background. The built-in
+  trailing settings/actions column is pinned right by default.
 - **Wrapping columns** — set `meta.wrap: true` on a `ColumnDef` to let that
   column's header and cell content wrap onto multiple lines instead of
   truncating, mirroring the `Table` primitives' `wrap` prop.
+- **Visibility labels and categories** — set `meta.label` for the text shown in
+  the visibility dropdown and `meta.category` to group related columns under a
+  labelled section with a Show all action. Labels fall back to a string header,
+  then the column id.
 - **Expandable column** — put a `DataTableExpandTrigger` in a column's `cell`
   render function so the expand affordance sits in a real column instead of a
   whole-row click. It reads `row.getCanExpand()` / `getIsExpanded()` and calls

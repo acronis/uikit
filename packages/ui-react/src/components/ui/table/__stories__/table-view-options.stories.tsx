@@ -17,10 +17,45 @@ import {
 } from '../table-view-options';
 
 const demoColumns: TableColumnVisibility[] = [
-  { id: 'name', label: 'Name', hidden: false },
-  { id: 'status', label: 'Status', hidden: false },
-  { id: 'type', label: 'Type', hidden: true },
-  { id: 'updated', label: 'Last updated', hidden: false },
+  { id: 'name', label: 'Name', hidden: false, category: 'General' },
+  { id: 'client', label: 'Client', hidden: false, category: 'General' },
+  { id: 'type', label: 'Type', hidden: true, category: 'General' },
+  { id: 'status', label: 'Status', hidden: false, category: 'General' },
+  { id: 'compliance', label: 'Compliance', hidden: true, category: 'General' },
+  {
+    id: 'service-status',
+    label: 'Service status',
+    hidden: true,
+    category: 'General',
+  },
+  { id: 'comment', label: 'Comment', hidden: true, category: 'General' },
+  { id: 'last-seen', label: 'Last seen', hidden: false, category: 'General' },
+  {
+    id: 'last-login-user',
+    label: 'Last login user',
+    hidden: false,
+    category: 'General',
+  },
+  { id: 'group', label: 'Group', hidden: true, category: 'General' },
+  { id: 'policies', label: 'Policies', hidden: true, category: 'Protection' },
+  {
+    id: 'last-backup',
+    label: 'Last backup',
+    hidden: false,
+    category: 'Protection',
+  },
+  {
+    id: 'next-backup',
+    label: 'Next backup',
+    hidden: true,
+    category: 'Protection',
+  },
+  {
+    id: 'last-successful-backup',
+    label: 'Last successful backup',
+    hidden: true,
+    category: 'Protection',
+  },
 ];
 
 function toggle(columns: TableColumnVisibility[], id: string) {

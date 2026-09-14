@@ -22,10 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../table';
-import {
-  DataTableBulkActionsBar,
-  isBulkSelectionActive,
-} from '../index';
+import { DataTableBulkActionsBar, isBulkSelectionActive } from '../index';
 
 type Row = { id: string; email: string };
 
@@ -128,7 +125,11 @@ describe('DataTableBulkActionsBar', () => {
 
     expect(screen.getByText('3 of 3 items loaded')).toBeInTheDocument();
     expect(screen.queryByText(/ selected:$/)).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Delete' })).toBeDisabled();
+    const deleteButton = screen.getByRole('button', { name: 'Delete' });
+    expect(deleteButton).toBeDisabled();
+    expect(deleteButton.closest('fieldset')?.parentElement).toHaveClass(
+      'px-[var(--ui-table-global-cell-padding-x)]'
+    );
   });
 
   // A single selected row already switches to the bulk scope: this bar
@@ -141,7 +142,9 @@ describe('DataTableBulkActionsBar', () => {
 
     expect(screen.getByText('1 item selected:')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Delete' })).toBeEnabled();
-    expect(screen.getByRole('button', { name: 'Deselect' })).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Deselect' })
+    ).toBeInTheDocument();
     expect(rowActions('one@example.com')).toBeNull();
     expect(rowActions('two@example.com')).toBeNull();
   });

@@ -89,11 +89,12 @@ contract:
         On the pagination part — number of currently selected rows (drives the
         selection summary text).
     - name: columns
-      type: '{ id: string; label: string; hidden: boolean }[]'
+      type: '{ id: string; label: string; hidden: boolean; category?: string }[]'
       required: true
       description: >-
         On the view-options part — the toggleable columns and their current
-        visibility.
+        visibility. Columns with the same optional category render in a labelled
+        section with a per-category action that reveals every hidden column.
     - name: rows-per-page-label
       type: string
       required: false
@@ -162,11 +163,28 @@ contract:
       description: >-
         On the view-options part — accessible name of the `icon-only` trigger.
         Override to localize.
-    - name: menu-label
+    - name: search-placeholder
+      type: string
+      required: false
+      default: "'Search columns'"
+      description: >-
+        On the view-options part — placeholder and accessible name of the
+        in-dropdown column filter. Override to localize.
+    - name: show-all-label
       type: ReactNode
       required: false
-      default: "'Toggle columns'"
-      description: On the view-options part — the dropdown heading.
+      default: "'Show all'"
+      description: >-
+        On the view-options part — visible label of each category action that
+        reveals every hidden column in that category. Its accessible name also
+        includes the category label.
+    - name: no-results-label
+      type: ReactNode
+      required: false
+      default: "'No columns found.'"
+      description: >-
+        On the view-options part — empty state shown when no column label matches
+        the search query. Override to localize.
 
   events:
     - name: sort

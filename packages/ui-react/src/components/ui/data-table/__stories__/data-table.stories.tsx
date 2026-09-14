@@ -35,7 +35,12 @@ type Payment = {
 const payments: Payment[] = [
   { id: 'p1', amount: 316, status: 'success', email: 'ken99@example.com' },
   { id: 'p2', amount: 242, status: 'success', email: 'abe45@example.com' },
-  { id: 'p3', amount: 837, status: 'processing', email: 'monserrat@example.com' },
+  {
+    id: 'p3',
+    amount: 837,
+    status: 'processing',
+    email: 'monserrat@example.com',
+  },
   { id: 'p4', amount: 874, status: 'success', email: 'silas22@example.com' },
   { id: 'p5', amount: 721, status: 'failed', email: 'carmella@example.com' },
   { id: 'p6', amount: 100, status: 'pending', email: 'test@example.com' },
@@ -60,8 +65,7 @@ const columns: ColumnDef<Payment>[] = [
       <Checkbox
         checked={table.getIsAllPageRowsSelected()}
         indeterminate={
-          table.getIsSomePageRowsSelected() &&
-          !table.getIsAllPageRowsSelected()
+          table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected()
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -79,18 +83,26 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     cell: ({ row }) => (
-      <Tag variant={STATUS_VARIANT[row.original.status]}>{row.original.status}</Tag>
+      <Tag variant={STATUS_VARIANT[row.original.status]}>
+        {row.original.status}
+      </Tag>
     ),
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Email" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Email" />
+    ),
   },
   {
     accessorKey: 'amount',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Amount" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Amount" />
+    ),
     cell: ({ row }) => (
       <div className="font-medium">${row.original.amount.toFixed(2)}</div>
     ),
@@ -191,27 +203,39 @@ const workloadColumns: ColumnDef<Workload>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+    meta: { label: 'Name', category: 'General' },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
     size: 180,
     cell: ({ row }) => <div className="font-medium">{row.original.name}</div>,
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+    meta: { label: 'Status', category: 'General' },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Status" />
+    ),
     size: 130,
     cell: ({ row }) => (
-      <Tag variant={STATUS_VARIANT[row.original.status]}>{row.original.status}</Tag>
+      <Tag variant={STATUS_VARIANT[row.original.status]}>
+        {row.original.status}
+      </Tag>
     ),
   },
   // Sortable but not resizable — its tooltip drops the resize hint.
   {
     accessorKey: 'type',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Type" />,
+    meta: { label: 'Type', category: 'General' },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Type" />
+    ),
     size: 160,
     enableResizing: false,
   },
   {
     accessorKey: 'os',
+    meta: { label: 'Operating system', category: 'General' },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="OS" />
     ),
@@ -220,6 +244,7 @@ const workloadColumns: ColumnDef<Workload>[] = [
   // Neither sortable nor resizable — only the reorder hint is left.
   {
     accessorKey: 'ip',
+    meta: { label: 'IP address', category: 'General' },
     header: 'IP address',
     size: 140,
     enableSorting: false,
@@ -227,23 +252,40 @@ const workloadColumns: ColumnDef<Workload>[] = [
   },
   // Plain string header, so there's no click affordance — must be non-sortable
   // or its tooltip would promise a click that does nothing.
-  { accessorKey: 'agent', header: 'Agent version', size: 140, enableSorting: false },
+  {
+    accessorKey: 'agent',
+    header: 'Agent version',
+    size: 140,
+    enableSorting: false,
+    meta: { label: 'Agent version', category: 'General' },
+  },
   {
     accessorKey: 'plan',
+    meta: { label: 'Protection plan', category: 'Protection' },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Protection plan" />
     ),
     size: 180,
   },
   // Same as `agent` — plain string header, so sorting must be disabled.
-  { accessorKey: 'location', header: 'Data center', size: 140, enableSorting: false },
+  {
+    accessorKey: 'location',
+    header: 'Data center',
+    size: 140,
+    enableSorting: false,
+    meta: { label: 'Data center', category: 'General' },
+  },
   {
     accessorKey: 'owner',
-    header: ({ column }) => <DataTableColumnHeader column={column} title="Owner" />,
+    meta: { label: 'Owner', category: 'General' },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Owner" />
+    ),
     size: 200,
   },
   {
     accessorKey: 'lastBackup',
+    meta: { label: 'Last backup', category: 'Protection' },
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Last backup" />
     ),
@@ -267,7 +309,9 @@ function CoreCapabilitiesDemo() {
     setIsLoadingMore(true);
     window.setTimeout(() => {
       setItems(
-        makeWorkloads(Math.min(items.length + WORKLOADS_PAGE_SIZE, TOTAL_WORKLOADS))
+        makeWorkloads(
+          Math.min(items.length + WORKLOADS_PAGE_SIZE, TOTAL_WORKLOADS)
+        )
       );
       setIsLoadingMore(false);
     }, 600);
@@ -300,7 +344,10 @@ function CoreCapabilitiesDemo() {
       {/* Fixed height + overflow-auto gives the sentinel row somewhere to
           scroll within — the IntersectionObserver still measures against the
           viewport, but the row only reaches it once this pane is scrolled. */}
-      <div className="max-h-96 overflow-auto" data-testid="infinite-scroll-pane">
+      <div
+        className="max-h-96 overflow-auto"
+        data-testid="infinite-scroll-pane"
+      >
         <DataTable
           columns={workloadColumns}
           data={items}
@@ -346,7 +393,9 @@ export const CoreCapabilities: Story = {
     await waitFor(
       () => {
         pane.scrollTop = pane.scrollHeight;
-        canvas.getByText(`${TOTAL_WORKLOADS} of ${TOTAL_WORKLOADS} items loaded`);
+        canvas.getByText(
+          `${TOTAL_WORKLOADS} of ${TOTAL_WORKLOADS} items loaded`
+        );
       },
       { timeout: 15000 }
     );
@@ -362,7 +411,9 @@ function CoreCapabilitiesWithPaginationDemo() {
   // current page's slice, and pages are turned with plain prev/next buttons
   // (DataTablePagination binds to an externally-built `table`, which would
   // disable this demo's resizing/reordering — see the component's docs).
-  const [allWorkloads] = useState<Workload[]>(() => makeWorkloads(TOTAL_WORKLOADS));
+  const [allWorkloads] = useState<Workload[]>(() =>
+    makeWorkloads(TOTAL_WORKLOADS)
+  );
   const [pageIndex, setPageIndex] = useState(0);
   const pageCount = Math.ceil(allWorkloads.length / WORKLOADS_PAGE_SIZE);
   const pageItems = allWorkloads.slice(

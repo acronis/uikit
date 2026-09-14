@@ -103,8 +103,12 @@ parts:
       cog in the action column's header cell (`iconOnly`, inside a
       `TableSettingsCell`); it is not part of the toolbar. A thin TanStack
       adapter over the `TableViewOptions` primitive: it maps
-      `table.getAllColumns()` onto the plain `{ id, label, hidden }[]` shape and
-      routes `onToggle` back through `column.toggleVisibility()`.
+      `table.getAllColumns()` onto the plain
+      `{ id, label, hidden, category? }[]` shape (using `meta.label` and
+      `meta.category`) and routes `onToggle` back through
+      `column.toggleVisibility()`. The 300px popup includes search, labelled
+      category sections with Show all actions, and viewport-constrained internal
+      scrolling.
     optional: true
   - id: bulk-actions-bar
     element: div

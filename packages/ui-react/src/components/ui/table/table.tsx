@@ -81,8 +81,7 @@ const TableFooter = React.forwardRef<
 ));
 TableFooter.displayName = 'TableFooter';
 
-export interface TableRowProps
-  extends React.HTMLAttributes<HTMLTableRowElement> {
+export interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
   /** Mark the row as selected — applies the active row token + `data-state`. */
   selected?: boolean;
 }
@@ -108,8 +107,7 @@ TableRow.displayName = 'TableRow';
 
 type SortDirection = 'asc' | 'desc' | false;
 
-export interface TableHeadProps
-  extends React.ThHTMLAttributes<HTMLTableCellElement> {
+export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   /** Render the column as sortable — adds a sort affordance and `aria-sort`. */
   sortable?: boolean;
   /** Current sort direction for this column (`false` = sortable but unsorted). */
@@ -126,12 +124,33 @@ export interface TableHeadProps
 function SortIcon({ direction }: { direction: SortDirection }) {
   const size = 'size-[var(--ui-table-header-sort-icon-size)]';
   if (direction === 'asc') {
-    return <ArrowUpIcon className={cn(size, 'text-[var(--ui-table-header-sort-icon-color-active)]')} />;
+    return (
+      <ArrowUpIcon
+        className={cn(
+          size,
+          'text-[var(--ui-table-header-sort-icon-color-active)]'
+        )}
+      />
+    );
   }
   if (direction === 'desc') {
-    return <ArrowDownIcon className={cn(size, 'text-[var(--ui-table-header-sort-icon-color-active)]')} />;
+    return (
+      <ArrowDownIcon
+        className={cn(
+          size,
+          'text-[var(--ui-table-header-sort-icon-color-active)]'
+        )}
+      />
+    );
   }
-  return <ArrowsDownUpIcon className={cn(size, 'text-[var(--ui-table-header-sort-icon-color-inactive)]')} />;
+  return (
+    <ArrowsDownUpIcon
+      className={cn(
+        size,
+        'text-[var(--ui-table-header-sort-icon-color-inactive)]'
+      )}
+    />
+  );
 }
 
 const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
@@ -162,7 +181,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
         wrap
           ? 'whitespace-normal'
-          : 'h-[var(--ui-table-global-cell-min-height)]',
+          : 'h-[var(--ui-table-global-cell-min-height)] truncate',
         // Per the design, a sortable header tints the whole cell on hover/press
         // and draws the focus ring on the cell, not on the inner control.
         sortable &&
@@ -188,8 +207,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
 );
 TableHead.displayName = 'TableHead';
 
-export interface TableCellProps
-  extends React.TdHTMLAttributes<HTMLTableCellElement> {
+export interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /**
    * Allow the cell to wrap onto multiple lines (`whitespace-normal`) and drop
    * the fixed row height so the row grows to fit its content.
@@ -205,7 +223,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
         wrap
           ? 'whitespace-normal'
-          : 'h-[var(--ui-table-global-cell-min-height)]',
+          : 'h-[var(--ui-table-global-cell-min-height)] truncate',
         className
       )}
       {...props}
@@ -214,8 +232,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
 );
 TableCell.displayName = 'TableCell';
 
-export interface TableSelectCellProps
-  extends React.ThHTMLAttributes<HTMLTableCellElement> {
+export interface TableSelectCellProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   /**
    * Render the select-all cell of the header row (`<th>`) instead of a row's
    * selection cell (`<td>`).
@@ -250,8 +267,7 @@ const TableSelectCell = React.forwardRef<
 });
 TableSelectCell.displayName = 'TableSelectCell';
 
-export interface TableActionsCellProps
-  extends React.TdHTMLAttributes<HTMLTableCellElement> {
+export interface TableActionsCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /**
    * Suppress this row's actions because a selection is in play — the cell
    * still reserves its 48px column (so the grid doesn't reflow) but renders no

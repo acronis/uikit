@@ -2,11 +2,15 @@ import type { Table } from '@tanstack/react-table';
 
 import { TableViewOptions, type TableViewOptionsProps } from '../table';
 
-interface DataTableViewOptionsProps<TData>
-  extends Pick<
-    TableViewOptionsProps,
-    'triggerLabel' | 'iconOnly' | 'triggerAriaLabel'
-  > {
+interface DataTableViewOptionsProps<TData> extends Pick<
+  TableViewOptionsProps,
+  | 'triggerLabel'
+  | 'iconOnly'
+  | 'triggerAriaLabel'
+  | 'searchPlaceholder'
+  | 'showAllLabel'
+  | 'noResultsLabel'
+> {
   table: Table<TData>;
 }
 
@@ -25,8 +29,13 @@ export function DataTableViewOptions<TData>({
     )
     .map((column) => ({
       id: column.id,
-      label: column.id,
+      label:
+        column.columnDef.meta?.label ??
+        (typeof column.columnDef.header === 'string'
+          ? column.columnDef.header
+          : column.id),
       hidden: !column.getIsVisible(),
+      category: column.columnDef.meta?.category,
     }));
 
   return (

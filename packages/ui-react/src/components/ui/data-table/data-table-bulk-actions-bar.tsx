@@ -49,7 +49,7 @@ export function DataTableBulkActionsBar<TData>({
   const hasSelection = isBulkSelectionActive(table);
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-4 px-[var(--ui-table-global-cell-padding-x)]">
       <fieldset
         disabled={!hasSelection}
         className="m-0 flex min-w-0 items-center gap-4 border-0 p-0"
