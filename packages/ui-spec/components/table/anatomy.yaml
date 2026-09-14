@@ -107,7 +107,11 @@ parts:
   - id: view-options
     description: >-
       TableViewOptions — a TanStack-independent show/hide-columns dropdown driven
-      by a plain `{ id, label, hidden }[]` + `onToggle` (a checkbox per column).
+      by a plain `{ id, label, hidden, category? }[]` + `onToggle` (a checkbox
+      per column). The 300px dropdown contains a search field, groups categorized
+      columns under programmatically associated headings, exposes an accessible
+      per-category Show all action, and scrolls internally when its content is
+      taller than the available viewport height.
     element: div
     optional: true
 

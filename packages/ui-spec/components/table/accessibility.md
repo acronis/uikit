@@ -38,7 +38,10 @@ headers natively. Use the parts as their elements intend.
   items; each row shows a presentational checkbox box beside the column name and
   the row itself carries `role="menuitemcheckbox"` + `aria-checked`. The trigger
   has a visible "View" label, or — with `iconOnly` — is a cog-only icon button
-  named by `triggerAriaLabel` (default "Column settings").
+  named by `triggerAriaLabel` (default "Column settings"). Each categorized
+  group is named by its visible heading, and each repeated Show all action
+  combines its localized visible label with that category so assistive
+  technology can distinguish the actions.
 
 ## Contrast
 

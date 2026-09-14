@@ -179,6 +179,27 @@ contract:
         Accessible name of the action column's column-visibility trigger.
         Override to localize; falls through to the view-options part's own
         default ("Column settings") when omitted.
+    - name: columnSearchPlaceholder
+      type: string
+      required: false
+      default: "'Search columns'"
+      description: >-
+        Placeholder and accessible name of the built-in column-visibility
+        search field. Override to localize.
+    - name: showAllColumnsLabel
+      type: ReactNode
+      required: false
+      default: "'Show all'"
+      description: >-
+        Visible label of each category action that reveals every hidden column
+        in that category. Override to localize.
+    - name: noColumnsFoundLabel
+      type: ReactNode
+      required: false
+      default: "'No columns found.'"
+      description: >-
+        Empty state shown when the column-visibility search has no matches.
+        Override to localize.
     - name: headerHints
       type: 'Partial<DataTableHeaderHints>'
       required: false
@@ -214,6 +235,18 @@ contract:
         Set on a `ColumnDef.meta` (not a DataTable prop) — allows a column's
         header and cell content to wrap onto multiple lines instead of
         truncating, mirroring the `Table` primitives' `wrap` prop.
+    - name: meta.label
+      type: string
+      required: false
+      description: >-
+        Human-readable label shown for the column in the visibility dropdown.
+        Falls back to a string header and then the column id.
+    - name: meta.category
+      type: string
+      required: false
+      description: >-
+        Optional visibility-dropdown category. Columns with the same value are
+        grouped under a labelled section with a per-category Show all action.
     - name: children
       type: ReactNode
       required: false

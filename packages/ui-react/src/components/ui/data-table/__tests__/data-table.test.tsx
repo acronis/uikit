@@ -797,6 +797,45 @@ describe('getResizeKeyboardStep', () => {
 });
 
 describe('DataTable sticky (pinned) columns', () => {
+  it('pins the built-in gear and row-actions column to the right by default', async () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        renderRowActions={() => <button>Edit</button>}
+      />
+    );
+
+    await waitFor(() => {
+      const settingsCell = screen
+        .getByRole('button', { name: 'Column settings' })
+        .closest('th')!;
+      expect(settingsCell.style.position).toBe('sticky');
+      expect(settingsCell.style.right).toBe('0px');
+
+      const actionsCell = screen
+        .getByRole('button', { name: 'Row actions' })
+        .closest('td')!;
+      expect(actionsCell.style.position).toBe('sticky');
+      expect(actionsCell.style.right).toBe('0px');
+    });
+  });
+
+  it('pins the action column when it is enabled after mount', async () => {
+    const { rerender } = render(
+      <DataTable columns={columns} data={data.slice(0, 1)} hideActionColumn />
+    );
+    rerender(<DataTable columns={columns} data={data.slice(0, 1)} />);
+
+    await waitFor(() => {
+      const settingsCell = screen
+        .getByRole('button', { name: 'Column settings' })
+        .closest('th')!;
+      expect(settingsCell.style.position).toBe('sticky');
+      expect(settingsCell.style.right).toBe('0px');
+    });
+  });
+
   it('applies position:sticky to a column pinned via meta', async () => {
     const pinned: ColumnDef<Row>[] = [
       { accessorKey: 'email', header: 'Email', meta: { pin: 'left' } },
@@ -988,15 +1027,19 @@ describe('DataTable wrapping (meta.wrap) columns', () => {
     // The wrap-flagged cell + header get `whitespace-normal` and lose the min-height token.
     const wrapCell = screen.getByText('100').closest('td')!;
     expect(wrapCell).toHaveClass('whitespace-normal');
-    expect(wrapCell).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(wrapCell).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
+    );
     const wrapHeader = screen.getByText('Amount').closest('th')!;
     expect(wrapHeader).toHaveClass('whitespace-normal');
-    expect(wrapHeader).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(wrapHeader).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
+    );
 
     // The unflagged column keeps the default fixed height / no-wrap.
     const plainCell = screen.getByText('user1@example.com').closest('td')!;
     expect(plainCell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
-    expect(plainCell).not.toHaveClass('whitespace-normal');
+    expect(plainCell).toHaveClass('truncate');
   });
 });
 
@@ -1502,15 +1545,74 @@ describe('DataTableViewOptions in the settings column', () => {
     expect(screen.getByText('Amount')).toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: 'Column settings' }));
-    const item = () => screen.getByRole('menuitemcheckbox', { name: 'amount' });
+    const item = () => screen.getByRole('menuitemcheckbox', { name: 'Amount' });
     expect(item()).toHaveAttribute('aria-checked', 'true');
 
     await user.click(item());
-    expect(screen.queryByText('Amount')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('columnheader', { name: 'Amount' })
+    ).not.toBeInTheDocument();
     expect(item()).toHaveAttribute('aria-checked', 'false');
 
     await user.click(item());
-    expect(screen.getByText('Amount')).toBeInTheDocument();
+    expect(
+      screen.getByRole('columnheader', { name: 'Amount' })
+    ).toBeInTheDocument();
+  });
+
+  it('uses column metadata for visibility labels and categories', async () => {
+    const categorized: ColumnDef<Row>[] = [
+      {
+        accessorKey: 'email',
+        header: 'Email address',
+        meta: { label: 'Account email', category: 'Identity' },
+      },
+      {
+        accessorKey: 'amount',
+        header: 'Amount',
+        meta: { category: 'Billing' },
+      },
+    ];
+    const user = userEvent.setup();
+    render(<DataTable columns={categorized} data={data.slice(0, 1)} />);
+    await user.click(screen.getByRole('button', { name: 'Column settings' }));
+
+    expect(screen.getByText('Identity')).toBeInTheDocument();
+    expect(screen.getByText('Billing')).toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Account email' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Amount' })
+    ).toBeInTheDocument();
+  });
+
+  it('localizes the built-in column search, category action, and empty state', async () => {
+    const categorized: ColumnDef<Row>[] = [
+      {
+        accessorKey: 'email',
+        header: 'Email',
+        meta: { category: 'General' },
+      },
+    ];
+    const user = userEvent.setup();
+    render(
+      <DataTable
+        columns={categorized}
+        data={data.slice(0, 1)}
+        columnSearchPlaceholder="Spalten suchen"
+        showAllColumnsLabel="Alle zeigen"
+        noColumnsFoundLabel="Keine Spalten gefunden."
+      />
+    );
+    await user.click(screen.getByRole('button', { name: 'Column settings' }));
+
+    expect(
+      screen.getByRole('button', { name: 'Alle zeigen General' })
+    ).toBeInTheDocument();
+    const search = screen.getByRole('searchbox', { name: 'Spalten suchen' });
+    await user.type(search, 'missing');
+    expect(screen.getByText('Keine Spalten gefunden.')).toBeInTheDocument();
   });
 });
 

@@ -51,21 +51,21 @@ built on these same primitives.
 
 ## Parts
 
-| Export             | Purpose                                                                                  |
-| ------------------ | ---------------------------------------------------------------------------------------- |
-| `Table`            | The `<table>`, inside a horizontally scrollable container.                               |
-| `TableHeader`      | `<thead>` — holds column-header rows.                                                    |
-| `TableBody`        | `<tbody>` — holds data rows.                                                             |
-| `TableFooter`      | `<tfoot>` — summary rows, with a top divider.                                            |
-| `TableRow`         | `<tr>`. `selected` applies the active row token + `data-state="selected"`.               |
-| `TableHead`        | `<th>`. `sortable` / `sortDirection` / `onSort` render the sort button; `wrap` as below. |
-| `TableCell`        | `<td>`. `wrap` lets the content run onto multiple lines.                                 |
-| `TableSelectCell`  | 32px selection column holding a `Checkbox`. `header` renders the select-all `<th>`.      |
-| `TableActionsCell` | 48px trailing `<td>` for a row's overflow trigger; tints on hover/press.                 |
-| `TableSettingsCell`| 48px trailing `<th>` for a column-settings trigger; tints on hover/press.                |
-| `TableCaption`     | `<caption>` — muted, below the table.                                                    |
-| `TablePagination`  | Controlled pagination bar: row summary, rows-per-page select, first/prev/next/last.      |
-| `TableViewOptions` | Show/hide-columns dropdown driven by a plain `{ id, label, hidden }[]`.                  |
+| Export              | Purpose                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| `Table`             | The `<table>`, inside a horizontally scrollable container.                               |
+| `TableHeader`       | `<thead>` — holds column-header rows.                                                    |
+| `TableBody`         | `<tbody>` — holds data rows.                                                             |
+| `TableFooter`       | `<tfoot>` — summary rows, with a top divider.                                            |
+| `TableRow`          | `<tr>`. `selected` applies the active row token + `data-state="selected"`.               |
+| `TableHead`         | `<th>`. `sortable` / `sortDirection` / `onSort` render the sort button; `wrap` as below. |
+| `TableCell`         | `<td>`. `wrap` lets the content run onto multiple lines.                                 |
+| `TableSelectCell`   | 32px selection column holding a `Checkbox`. `header` renders the select-all `<th>`.      |
+| `TableActionsCell`  | 48px trailing `<td>` for a row's overflow trigger; tints on hover/press.                 |
+| `TableSettingsCell` | 48px trailing `<th>` for a column-settings trigger; tints on hover/press.                |
+| `TableCaption`      | `<caption>` — muted, below the table.                                                    |
+| `TablePagination`   | Controlled pagination bar: row summary, rows-per-page select, first/prev/next/last.      |
+| `TableViewOptions`  | Show/hide-columns dropdown driven by a plain `{ id, label, hidden }[]`.                  |
 
 ## Examples
 
@@ -273,9 +273,12 @@ total)` formatters:
 
 ### Column visibility
 
-`TableViewOptions` is a "View" dropdown of checkbox items, driven by a plain
-column list and an `onToggle` that hands you the toggled column's id. The menu
-stays open across toggles. Pass `iconOnly` for the cog-only trigger that fits a
+`TableViewOptions` is a searchable, 300px "View" dropdown of checkbox items,
+driven by a plain column list and an `onToggle` that hands you the toggled
+column's id. Give related columns the same optional `category` to render them in
+a labelled section with a per-category **Show all** action. Long lists scroll
+inside the viewport-constrained dropdown, and the menu stays open across
+toggles. Pass `iconOnly` for the cog-only trigger that fits a
 `TableSettingsCell` (its accessible name comes from `triggerAriaLabel`, default
 `'Column settings'`):
 
@@ -284,8 +287,18 @@ const [hidden, setHidden] = useState<string[]>([]);
 
 <TableViewOptions
   columns={[
-    { id: 'name', label: 'Name', hidden: hidden.includes('name') },
-    { id: 'status', label: 'Status', hidden: hidden.includes('status') },
+    {
+      id: 'name',
+      label: 'Name',
+      hidden: hidden.includes('name'),
+      category: 'General',
+    },
+    {
+      id: 'status',
+      label: 'Status',
+      hidden: hidden.includes('status'),
+      category: 'General',
+    },
   ]}
   onToggle={(id) =>
     setHidden((current) =>
@@ -327,6 +340,8 @@ encoding and a wiring example.
   `Select`; buttons at the range ends carry the native `disabled` state.
 - `TableViewOptions` is a keyboard-navigable dropdown of
   `role="menuitemcheckbox"` items with a visible "View" trigger label.
+  Categorized groups are named by their headings, and each Show all action's
+  accessible name includes its category.
 
 ## API Reference
 

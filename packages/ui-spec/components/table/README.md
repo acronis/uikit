@@ -34,21 +34,21 @@ sort and URL-synced state.
 
 ## Parts
 
-| Part                | Element   | Purpose                                                                                                                     |
-| ------------------- | --------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `Table`             | `table`   | The table, in a horizontally scrollable container.                                                                          |
-| `TableHeader`       | `thead`   | Column-header section.                                                                                                      |
-| `TableBody`         | `tbody`   | Data rows section.                                                                                                          |
-| `TableFooter`       | `tfoot`   | Summary section with a top divider.                                                                                         |
-| `TableRow`          | `tr`      | A row; `selected` applies the active state.                                                                                 |
-| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `wrap`.                                                             |
-| `TableCell`         | `td`      | A data cell; `wrap` lets it grow to fit multi-line content.                                                                 |
-| `TableSelectCell`   | `td`/`th` | 32px leading selection cell for a `Checkbox`; `header` renders the select-all `th`.                                         |
-| `TableActionsCell`  | `td`      | 48px trailing cell for a row's overflow trigger; owns the hover/press tint and focus ring.                                  |
-| `TableSettingsCell` | `th`      | 48px trailing header cell for the column-settings trigger.                                                                  |
-| `TableCaption`      | `caption` | Optional caption below the table.                                                                                           |
-| `TablePagination`   | `div`     | Plain-prop pagination bar (no TanStack dependency).                                                                         |
-| `TableViewOptions`  | `div`     | Show/hide-columns dropdown driven by a plain columns array. `iconOnly` gives the cog trigger that fits `TableSettingsCell`. |
+| Part                | Element   | Purpose                                                                                                                                                                                   |
+| ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Table`             | `table`   | The table, in a horizontally scrollable container.                                                                                                                                        |
+| `TableHeader`       | `thead`   | Column-header section.                                                                                                                                                                    |
+| `TableBody`         | `tbody`   | Data rows section.                                                                                                                                                                        |
+| `TableFooter`       | `tfoot`   | Summary section with a top divider.                                                                                                                                                       |
+| `TableRow`          | `tr`      | A row; `selected` applies the active state.                                                                                                                                               |
+| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `wrap`.                                                                                                                           |
+| `TableCell`         | `td`      | A data cell; `wrap` lets it grow to fit multi-line content.                                                                                                                               |
+| `TableSelectCell`   | `td`/`th` | 32px leading selection cell for a `Checkbox`; `header` renders the select-all `th`.                                                                                                       |
+| `TableActionsCell`  | `td`      | 48px trailing cell for a row's overflow trigger; owns the hover/press tint and focus ring.                                                                                                |
+| `TableSettingsCell` | `th`      | 48px trailing header cell for the column-settings trigger.                                                                                                                                |
+| `TableCaption`      | `caption` | Optional caption below the table.                                                                                                                                                         |
+| `TablePagination`   | `div`     | Plain-prop pagination bar (no TanStack dependency).                                                                                                                                       |
+| `TableViewOptions`  | `div`     | Searchable, internally scrolling show/hide-columns dropdown. Optional `category` values create labelled sections with per-category Show all actions; `iconOnly` fits `TableSettingsCell`. |
 
 ## Hooks
 
@@ -103,7 +103,11 @@ const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
   </TableSelectCell>
   <TableHead>Name</TableHead>
   <TableSettingsCell>
-    <TableViewOptions iconOnly columns={columns} onToggle={toggleColumn} />
+    <TableViewOptions
+      iconOnly
+      columns={columns}
+      onToggle={toggleColumn}
+    />
   </TableSettingsCell>
 </TableRow>
 

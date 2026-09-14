@@ -99,9 +99,25 @@ Scenario: Sort a column in a single click
 
 ```gherkin
 Scenario: Hide a column
-  Given the toolbar's view-options menu
+  Given the view-options menu opened from the trailing settings cog
   When the user unchecks the column
   Then that column is removed from the grid
+```
+
+```gherkin
+Scenario: Search and group visible columns
+  Given columns with meta.label and meta.category values
+  When the user opens the trailing settings cog
+  Then the visibility menu uses the metadata labels and groups matching categories
+  When the user searches
+  Then only matching column labels remain in the internally scrolling popup
+```
+
+```gherkin
+Scenario: Reveal a category
+  Given a category with multiple hidden columns
+  When the user activates that category's Show all action
+  Then every hidden column in that category becomes visible
 ```
 
 ```gherkin

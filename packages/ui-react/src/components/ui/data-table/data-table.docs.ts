@@ -157,6 +157,12 @@ export interface DataTableProps {
   rowActionsLabel?: string;
   /** Accessible name of the action column's column-visibility trigger. */
   columnSettingsLabel?: string;
+  /** Placeholder and accessible name of the column-visibility search field. */
+  columnSearchPlaceholder?: string;
+  /** Label of the per-category action that reveals every column. */
+  showAllColumnsLabel?: ReactNode;
+  /** Empty state shown when the column search has no matches. */
+  noColumnsFoundLabel?: ReactNode;
   /**
    * Copy of the tooltip shown while a header cell is hovered/focused — one
    * `{ label, action }` line per capability that column actually has. Merged

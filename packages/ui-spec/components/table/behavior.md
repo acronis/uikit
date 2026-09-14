@@ -130,10 +130,34 @@ Scenario: Selection summary
 
 ```gherkin
 Scenario: Toggling column visibility
-  Given a TableViewOptions with a { id, label, hidden }[] of columns
+  Given a TableViewOptions with a { id, label, hidden, category? }[] of columns
   When the user toggles a column's checkbox in the dropdown
   Then the toggle event fires with that column's id
   And the consumer updates the column's hidden flag
+```
+
+```gherkin
+Scenario: Searching columns
+  Given an open TableViewOptions
+  When the user types into the column search field
+  Then only columns whose labels contain the query remain
+  And an overridable empty state renders when no labels match
+```
+
+```gherkin
+Scenario: Categorized columns
+  Given columns sharing a category
+  Then they render in a group programmatically named by that category
+  And the category's Show all action is also named with the category
+  When the user activates Show all
+  Then the toggle event fires once for every hidden column in that category
+```
+
+```gherkin
+Scenario: A long column list scrolls inside the dropdown
+  Given the open column list is taller than the available viewport height
+  Then the 300px dropdown is capped to the available height
+  And the dropdown itself scrolls vertically
 ```
 
 ```gherkin
