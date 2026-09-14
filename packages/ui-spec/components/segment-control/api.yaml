@@ -1,0 +1,101 @@
+spec_version: '1.0'
+component: SegmentControl
+
+contract:
+  properties:
+    - name: variant
+      type: "'hug' | 'fill'"
+      required: false
+      default: "'hug'"
+      description: >-
+        Layout mode. Use `hug` for one or two items; `fill` makes the control
+        and its direct items share the available inline width for three or more.
+    - name: has-scroll
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Puts the items on a horizontally scrollable track and pins a pair of
+        paging chevrons to its inline end. Items keep their natural width so the
+        track can overflow, which takes precedence over `fill`'s item stretching.
+    - name: scroll-prev-label
+      type: string
+      required: false
+      default: "'Previous'"
+      description: Accessible label for the previous-page chevron.
+    - name: scroll-next-label
+      type: string
+      required: false
+      default: "'Next'"
+      description: Accessible label for the next-page chevron.
+    - {
+        name: value,
+        type: string,
+        required: false,
+        description: Controlled selected item value. Pair with value-change.,
+      }
+    - {
+        name: default-value,
+        type: string,
+        required: false,
+        description: Initially selected item value when uncontrolled.,
+      }
+    - {
+        name: disabled,
+        type: boolean,
+        required: false,
+        default: false,
+        description: Disables every group item; items may also be disabled individually.,
+      }
+    - {
+        name: name,
+        type: string,
+        required: false,
+        description: Form field name submitted with the selected value.,
+      }
+    - {
+        name: required,
+        type: boolean,
+        required: false,
+        default: false,
+        description: Requires a selected item before a containing form submits.,
+      }
+    - name: item.has-counter
+      type: boolean
+      required: false
+      default: false
+      description: Enables the item's trailing Tag counter.
+    - name: item.counter
+      type: '{ variant, size, icon, children }'
+      required: false
+      description: Tag props used only when item.has-counter is true.
+  events:
+    - name: value-change
+      payload: string
+      description: Fired for an enabled selection change; React exposes `onValueChange(value, details)`.
+  content:
+    - name: default
+      description: >-
+        SegmentControlItem children. Every item requires a unique value and label
+        content; its Tag counter renders only when hasCounter is true.
+adapters:
+  react:
+    component: SegmentControl
+    status: implemented
+    import: |
+      import { SegmentControl, SegmentControlItem } from '@acronis-platform/ui-react'
+      import { SquareDashedIcon } from '@acronis-platform/icons-react/stroke-mono'
+    example: |
+      <SegmentControl variant="fill" defaultValue="active" aria-label="Status">
+        <SegmentControlItem value="active" hasCounter counter={{ variant: 'neutral', size: 'sm', icon: <SquareDashedIcon size={16} />, children: '7' }}>
+          Active
+        </SegmentControlItem>
+        <SegmentControlItem value="completed">Completed</SegmentControlItem>
+        <SegmentControlItem value="all">All</SegmentControlItem>
+      </SegmentControl>
+  vue:
+    element: av-segment-control
+    status: planned
+  web-components:
+    element: ui-segment-control
+    status: planned

@@ -1,0 +1,14 @@
+spec_version: '1.0'
+component: SegmentControl
+name: segment-control
+status: ready
+category: selection
+description: >-
+  A compact, single-choice control for switching between related views or
+  filters. It has hug and fill layouts and may show a counter beside an item.
+since: 5.4.0
+dependencies:
+  components: [tag]
+figma:
+  node: '9458-47627'
+  codeConnect: packages/ui-react/src/components/ui/segment-control/segment-control.figma.tsx

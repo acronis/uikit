@@ -102,6 +102,7 @@ export {
 } from './components/ui/input-text-area';
 export * from './components/ui/section';
 export * from './components/ui/select';
+export * from './components/ui/segment-control';
 export * from './components/ui/separator';
 export * from './components/ui/sheet';
 export * from './components/ui/skeleton';
