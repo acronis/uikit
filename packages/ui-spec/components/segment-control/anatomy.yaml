@@ -1,0 +1,136 @@
+spec_version: '1.0'
+component: SegmentControl
+
+schematic: |
+  root: <div role="radiogroup">
+   [ item: selected ][ item ][ item ]       |‹|›|
+       label     counter (optional)        scroll
+                                           scroll-item (x2)
+
+  The root is borderless and edge-to-edge. The track holds the items and
+  scrolls; the scroll block reserves its inline-end width and is present only
+  when has-scroll is true.
+
+root:
+  element: div
+  role: radiogroup
+  description: >-
+    The borderless container that owns one selected value and provides
+    radio-group keyboard navigation. Items are edge-to-edge inside it; the
+    selected item supplies its own state border.
+
+parts:
+  - id: track
+    element: div
+    optional: true
+    visible_when: has-scroll is true
+    description: >-
+      The horizontally scrollable row that holds the items when has-scroll is
+      true. Without has-scroll the items are direct children of the root.
+  - id: item
+    element: button
+    role: radio
+    description: >-
+      One mutually exclusive choice. It contains the label and optional counter,
+      and receives the active surface when its value is selected.
+  - id: label
+    element: text
+    description: The item's consumer-provided visible text.
+  - id: counter
+    element: any
+    optional: true
+    visible_when: item.has-counter is true
+    description: Optional trailing Tag counter, configured by item.counter.
+  - id: scroll
+    element: div
+    optional: true
+    visible_when: has-scroll is true
+    description: >-
+      The paging block at the track's inline end. Its width is reserved by the
+      layout so items never render beneath it. Figma's position=start | middle
+      | end variants are derived from the track's scroll offset rather than
+      authored as a property.
+  - id: scroll-item
+    element: button
+    optional: true
+    visible_when: has-scroll is true
+    description: >-
+      One chevron button inside scroll. The previous button is disabled at the
+      start of the track and the next button at its end.
+
+layout:
+  type: flex
+  direction: row
+  align: center
+  order: [track, item, label, counter, scroll, scroll-item]
+
+internal_state:
+  - id: value
+    type: string
+    initial: undefined
+    controllable_via: [value]
+    controlled_default: default-value
+    emits: value-change
+    changed_by: click, Space, or arrow keys select an enabled item
+    description: The selected item value; only the matching item is checked.
+  - id: scroll-position
+    type: string
+    initial: start
+    changed_by: scrolling the track, or pressing a scroll-item chevron
+    description: >-
+      Where the track is scrolled — start, middle or end. Derived from the
+      track's scroll offset; it gates which chevron is disabled and mirrors
+      Figma's SegmentControlScroll position variant.
+
+transitions:
+  - id: select-item
+    state: value
+    on: click / Space / Arrow keys
+    to: the activated item's value
+    guard: item not disabled
+    effect: emits value-change(next)
+    when_controlled: >-
+      The component emits value-change and waits for its consumer to provide the
+      next value.
+    interactive: true
+
+states:
+  - {
+      id: selected,
+      trigger: 'item value === group value (data-[checked])',
+      kind: internal,
+      affects: [item, label, counter],
+    }
+  - {
+      id: idle,
+      trigger: 'item value !== group value',
+      kind: internal,
+      affects: [item, label, counter],
+    }
+  - {
+      id: hover,
+      trigger: pointer hover over an unselected item,
+      kind: pseudo,
+      pseudo: ':hover',
+      affects: [item, label],
+    }
+  - {
+      id: focus-visible,
+      trigger: keyboard focus on an item,
+      kind: pseudo,
+      pseudo: ':focus-visible',
+      affects: [item],
+    }
+  - {
+      id: disabled,
+      trigger: 'disabled === true (group or item)',
+      kind: prop,
+      prop: disabled,
+      affects: [item, label, counter],
+    }
+  - {
+      id: scroll-exhausted,
+      trigger: "scroll-position is already at that chevron's end",
+      kind: internal,
+      affects: [scroll-item],
+    }

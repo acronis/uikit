@@ -1,0 +1,46 @@
+spec_version: '1.0'
+component: SegmentControl
+source: '@acronis-platform/tokens-pd'
+tokens:
+  # The root is borderless and edge-to-edge; selected-item state owns the
+  # visible border. The radius and surface remain on the root for clipping.
+  - { name: --ui-segment-control-container-border-radius, affects: root }
+  - { name: --ui-segment-control-container-color, affects: root }
+  - { name: --ui-segment-control-item-border-color-idle, affects: item }
+  - { name: --ui-segment-control-item-border-color-hover, affects: item }
+  - { name: --ui-segment-control-item-border-color-active, affects: item }
+  - { name: --ui-segment-control-item-border-radius, affects: item }
+  - { name: --ui-segment-control-item-border-style, affects: item }
+  - { name: --ui-segment-control-item-border-width, affects: item }
+  - { name: --ui-segment-control-item-color-idle, affects: item }
+  - { name: --ui-segment-control-item-color-hover, affects: item }
+  - { name: --ui-segment-control-item-color-active, affects: item }
+  - { name: --ui-segment-control-item-gap, affects: item }
+  - { name: --ui-segment-control-item-height, affects: item }
+  - { name: --ui-segment-control-item-padding-x, affects: item }
+  - { name: --ui-segment-control-item-padding-y, affects: item }
+  - { name: --ui-segment-control-value-color-idle, affects: label }
+  - { name: --ui-segment-control-value-color-hover, affects: label }
+  - { name: --ui-segment-control-value-color-active, affects: label }
+  - { name: --ui-segment-control-box-icon-border-color, affects: scroll-item }
+  - { name: --ui-segment-control-box-icon-border-style, affects: scroll-item }
+  - { name: --ui-segment-control-box-icon-border-width, affects: scroll-item }
+  - { name: --ui-segment-control-box-icon-color-idle, affects: scroll-item }
+  - { name: --ui-segment-control-box-icon-color-hover, affects: scroll-item }
+  - { name: --ui-segment-control-box-icon-color-active, affects: scroll-item }
+  - { name: --ui-segment-control-box-icon-width, affects: scroll-item }
+  - {
+      name: --ui-glyph-on-surface-primary,
+      affects: scroll-item,
+      description: Chevron color; the boxIcon tier defines no icon color,
+    }
+  - {
+      name: --ui-glyph-on-surface-disabled,
+      affects: scroll-item,
+      description: Chevron color once the track reaches that end,
+    }
+  - {
+      name: --ui-focus-primary,
+      affects: item,
+      description: Focus-visible ring color,
+    }
