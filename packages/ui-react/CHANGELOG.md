@@ -1,5 +1,13 @@
 # @acronis-platform/ui-react
 
+## 5.3.1
+
+### Patch Changes
+
+- [#731](https://github.com/acronis/uikit/pull/731) [`1b56bfb`](https://github.com/acronis/uikit/commit/1b56bfb286686a939c0bab0e570bf867d438b95b) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Preserve native table auto-layout by avoiding default overflow truncation on table cells and headers, and keep column-resize focus indicators visible with inset rings.
+
+- [#730](https://github.com/acronis/uikit/pull/730) [`af58fc0`](https://github.com/acronis/uikit/commit/af58fc0ff1b005062c8a041742c89714cc15d470) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Align DataTable text truncation, categorized column visibility, sticky actions, and bulk action spacing with the table design.
+
 ## 5.3.0
 
 ### Minor Changes
