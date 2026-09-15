@@ -233,8 +233,8 @@ contract:
       required: false
       description: >-
         Set on a `ColumnDef.meta` (not a DataTable prop) — allows a column's
-        header and cell content to wrap onto multiple lines instead of
-        truncating, mirroring the `Table` primitives' `wrap` prop.
+        header and cell content to wrap onto multiple lines and drop the fixed
+        row height, mirroring the `Table` primitives' `wrap` prop.
     - name: meta.label
       type: string
       required: false

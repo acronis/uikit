@@ -36,7 +36,8 @@ contract:
       description: >-
         On a cell or column header — allow the content to wrap onto multiple
         lines (`whitespace-normal`) and drop the fixed row height so the cell
-        grows to fit multi-line content instead of truncating.
+        grows to fit multi-line content. Default cells retain native table
+        auto-layout; truncation is opt-in through a constrained cell or class.
     - name: header
       type: boolean
       required: false

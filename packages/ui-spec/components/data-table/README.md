@@ -83,8 +83,8 @@ from it too (see **Server-driven usage** below).
   column as `position: sticky` cells with an opaque row background. The built-in
   trailing settings/actions column is pinned right by default.
 - **Wrapping columns** — set `meta.wrap: true` on a `ColumnDef` to let that
-  column's header and cell content wrap onto multiple lines instead of
-  truncating, mirroring the `Table` primitives' `wrap` prop.
+  column's header and cell content drop the fixed row height and wrap onto
+  multiple lines, mirroring the `Table` primitives' `wrap` prop.
 - **Visibility labels and categories** — set `meta.label` for the text shown in
   the visibility dropdown and `meta.category` to group related columns under a
   labelled section with a Show all action. Labels fall back to a string header,

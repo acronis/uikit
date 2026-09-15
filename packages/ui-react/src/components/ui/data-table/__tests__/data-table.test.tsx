@@ -1036,10 +1036,32 @@ describe('DataTable wrapping (meta.wrap) columns', () => {
       'h-[var(--ui-table-global-cell-min-height)]'
     );
 
-    // The unflagged column keeps the default fixed height / no-wrap.
+    // The unflagged column keeps the default fixed height without forcing
+    // overflow-hidden/nowrap, so native table auto-layout remains usable.
     const plainCell = screen.getByText('user1@example.com').closest('td')!;
     expect(plainCell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
-    expect(plainCell).toHaveClass('truncate');
+    expect(plainCell).not.toHaveClass('truncate');
+  });
+});
+
+describe('DataTable resize-handle focus treatment', () => {
+  it('uses an inset focus ring so the handle outline is not clipped', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        enableColumnResizing
+      />
+    );
+
+    const handle = screen.getAllByRole('separator', {
+      name: 'Resize column',
+    })[0];
+    expect(handle).toHaveClass('focus-visible:outline-none');
+    expect(handle).toHaveClass('focus-visible:ring-inset');
+    expect(handle).toHaveClass('focus-visible:ring-[3px]');
+    expect(handle).toHaveClass('focus-visible:ring-[var(--ui-focus-primary)]');
+    expect(handle).not.toHaveClass('focus-visible:outline-[3px]');
   });
 });
 
