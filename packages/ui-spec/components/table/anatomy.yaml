@@ -64,9 +64,10 @@ parts:
     element: th
   - id: cell
     description: >-
-      A data cell (`<td>`) — padding/border from the cell tokens. Truncates within
-      the fixed row height (`h-10`) by default; `wrap` switches it to
-      `whitespace-normal` and lets the row grow to fit multi-line content.
+      A data cell (`<td>`) — padding/border from the cell tokens. Uses the fixed
+      row height (`h-10`) by default without forcing overflow-hidden or nowrap;
+      `wrap` switches it to `whitespace-normal` and lets the row grow to fit
+      multi-line content.
     element: td
   - id: select-cell
     description: >-

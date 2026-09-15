@@ -130,7 +130,7 @@ describe('Table', () => {
     );
   });
 
-  it('keeps the fixed row height and truncates to one line by default on a cell', () => {
+  it('keeps the fixed row height without constraining default cell content', () => {
     render(
       <Table>
         <TableBody>
@@ -142,7 +142,7 @@ describe('Table', () => {
     );
     const cell = screen.getByTestId('cell');
     expect(cell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
-    expect(cell).toHaveClass('truncate');
+    expect(cell).not.toHaveClass('truncate');
   });
 
   it('transitions its background so hover fades in sync with the row', () => {
@@ -196,6 +196,26 @@ describe('Table', () => {
     expect(header).not.toHaveClass(
       'h-[var(--ui-table-global-cell-min-height)]'
     );
+  });
+
+  it('keeps the sort icon in the DOM for narrow sortable headers', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead sortable sortDirection={false}>
+              A very long sortable header label
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+
+    const header = screen.getByRole('columnheader', {
+      name: /A very long sortable header label/,
+    });
+    expect(header).not.toHaveClass('truncate');
+    expect(header.querySelector('svg')).toBeInTheDocument();
   });
 
   it('drives a tri-state header checkbox across none/some/all row selection', async () => {

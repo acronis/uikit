@@ -216,7 +216,7 @@ Scenario: Sticky (pinned) columns
 ```gherkin
 Scenario: Wrapping columns
   Given a column with meta.wrap = true
-  Then that column's header and cell content wrap onto multiple lines instead of truncating
+  Then that column's header and cell content drop the fixed row height and wrap onto multiple lines
 ```
 
 ```gherkin

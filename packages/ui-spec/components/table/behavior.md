@@ -96,7 +96,7 @@ Scenario: A wrapping cell grows the row
   Given a TableCell (or TableHead) with wrap = true holding multi-line content
   When it renders
   Then it uses whitespace-normal and drops the fixed row height
-  And the row grows to fit the content instead of truncating it
+  And the row grows to fit the content
 ```
 
 ## Pagination (TablePagination)

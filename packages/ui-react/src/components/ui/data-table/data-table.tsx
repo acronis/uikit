@@ -930,7 +930,7 @@ export function DataTable<TData, TValue = unknown>({
                             handleResizeKeyDown(event, header)
                           }
                           className={cn(
-                            'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-[opacity,background-color] hover:bg-[var(--ui-resizable-border-color-hover)] hover:opacity-100 focus-visible:bg-[var(--ui-resizable-border-color-hover)] focus-visible:opacity-100 focus-visible:outline-[3px] focus-visible:outline-(--ui-focus-primary)',
+                            'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-[opacity,background-color] hover:bg-[var(--ui-resizable-border-color-hover)] hover:opacity-100 focus-visible:bg-[var(--ui-resizable-border-color-hover)] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)]',
                             header.column.getIsResizing() &&
                               'bg-[var(--ui-resizable-border-color-active)] opacity-100'
                           )}

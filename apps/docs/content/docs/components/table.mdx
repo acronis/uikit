@@ -214,10 +214,11 @@ cog trigger itself.
 
 ### Wrapping cells
 
-Cells and headers are a fixed row height (`--ui-table-global-cell-min-height`,
-40px) and stay on one line by
-default. `wrap` drops that height and switches the cell to `whitespace-normal`,
-so the row grows to fit multi-line content instead of truncating it:
+Cells and headers use a fixed row height (`--ui-table-global-cell-min-height`,
+40px) by default. The table keeps native auto-layout and does not force
+`overflow: hidden` or `white-space: nowrap` on every cell. `wrap` drops that
+height and switches the cell to `whitespace-normal`, so the row grows to fit
+multi-line content:
 
 ```tsx
 <TableRow>

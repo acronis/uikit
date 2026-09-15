@@ -315,8 +315,10 @@ and no hover tint. See the
 `ColumnDef.meta` is augmented by ui-react with two flags. `pin` drives TanStack's
 native column pinning and renders the column as `position: sticky` cells (with an
 opaque row background so scrolled cells don't show through); `wrap` lets a
-column's header and cells wrap onto multiple lines instead of truncating,
-mirroring the `Table` primitives' `wrap` prop.
+column's header and cells drop the fixed row height and wrap onto multiple
+lines, mirroring the `Table` primitives' `wrap` prop. DataTable does not force
+truncation on auto-layout cells; add a constrained cell renderer or an explicit
+`truncate` class when ellipsis is required.
 
 ```tsx
 const columns: ColumnDef<Device>[] = [

@@ -181,7 +181,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
         wrap
           ? 'whitespace-normal'
-          : 'h-[var(--ui-table-global-cell-min-height)] truncate',
+          : 'h-[var(--ui-table-global-cell-min-height)]',
         // Per the design, a sortable header tints the whole cell on hover/press
         // and draws the focus ring on the cell, not on the inner control.
         sortable &&
@@ -223,7 +223,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
         wrap
           ? 'whitespace-normal'
-          : 'h-[var(--ui-table-global-cell-min-height)] truncate',
+          : 'h-[var(--ui-table-global-cell-min-height)]',
         className
       )}
       {...props}
