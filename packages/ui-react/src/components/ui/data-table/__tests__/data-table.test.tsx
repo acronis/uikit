@@ -280,6 +280,76 @@ describe('DataTable renderRow', () => {
   });
 });
 
+describe('DataTable getRowId', () => {
+  // A row's own uncontrolled state (here, a toggle) — the thing that should
+  // follow the row's DATA identity across a reorder, not the array slot it
+  // happened to render into.
+  function ToggleCell({ label }: { label: string }) {
+    const [on, setOn] = useState(false);
+    return (
+      <button onClick={() => setOn(!on)}>
+        {label}: {on ? 'on' : 'off'}
+      </button>
+    );
+  }
+
+  const rowIdColumns: ColumnDef<Row>[] = [
+    {
+      accessorKey: 'email',
+      header: 'Email',
+      cell: ({ row }) => <ToggleCell label={row.original.id} />,
+    },
+  ];
+
+  it("keeps a row's own state attached to its data across a reorder", async () => {
+    const [r1, r2, r3] = data.slice(0, 3);
+    const { rerender } = render(
+      <DataTable
+        columns={rowIdColumns}
+        data={[r1, r2, r3]}
+        getRowId={(row) => row.id}
+        hideActionColumn
+      />
+    );
+
+    await userEvent.click(screen.getByText('r1: off'));
+    expect(screen.getByText('r1: on')).toBeInTheDocument();
+
+    // Same row objects, r1 moved from index 0 to index 2.
+    rerender(
+      <DataTable
+        columns={rowIdColumns}
+        data={[r2, r3, r1]}
+        getRowId={(row) => row.id}
+        hideActionColumn
+      />
+    );
+
+    expect(screen.getByText('r1: on')).toBeInTheDocument();
+    expect(screen.getByText('r2: off')).toBeInTheDocument();
+  });
+
+  it('without it, a row\'s state stays with its array slot instead of following the data', async () => {
+    const [r1, r2, r3] = data.slice(0, 3);
+    const { rerender } = render(
+      <DataTable columns={rowIdColumns} data={[r1, r2, r3]} hideActionColumn />
+    );
+
+    await userEvent.click(screen.getByText('r1: off'));
+    expect(screen.getByText('r1: on')).toBeInTheDocument();
+
+    // Same reorder as above, but no getRowId this time.
+    rerender(
+      <DataTable columns={rowIdColumns} data={[r2, r3, r1]} hideActionColumn />
+    );
+
+    // The default index-based id means slot 0 (now r2) inherits the "on"
+    // state r1 left behind there, instead of r1 keeping it.
+    expect(screen.getByText('r2: on')).toBeInTheDocument();
+    expect(screen.getByText('r1: off')).toBeInTheDocument();
+  });
+});
+
 describe('DataTable renderEmptyState', () => {
   it('receives hasFilters=false for an empty, unfiltered table', () => {
     render(
