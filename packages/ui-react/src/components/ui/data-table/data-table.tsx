@@ -265,10 +265,10 @@ type DataTableDataSourceProps<TData, TValue> =
        * configured on that instance). Makes `columns`/`data` unnecessary (they're
        * only used to build DataTable's own instance) and the following props
        * no-ops (configure the equivalent directly on the external instance
-       * instead): `columnVisibility`, `onColumnVisibilityChange`,
+       * instead): `getRowId`, `columnVisibility`, `onColumnVisibilityChange`,
        * `onColumnSizingChange`, `enableColumnResizing`,
        * `enableColumnReordering`, `columnOrder`, `onColumnOrderChange`,
-       * `getRowCanExpand`,
+       * `getRowCanExpand`, `rowSelection`, `onRowSelectionChange`,
        * `manualSorting`, `sorting`, `onSortingChange`, `paginationMode`,
        * `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`, `isLoadingMore`.
        * `meta.pin`-driven column pinning is also skipped — pin/unpin the
@@ -278,6 +278,12 @@ type DataTableDataSourceProps<TData, TValue> =
     };
 
 interface DataTableOwnProps<TData> {
+  /**
+   * Derives a stable row id from the row data (e.g. `row => row.id`) instead of the default
+   * array index — needed whenever `data` can reorder (sort/filter) while a row's own per-row
+   * state (selection, a hook keyed by row) should follow the row, not the slot it occupied.
+   */
+  getRowId?: (originalRow: TData, index: number, parent?: Row<TData>) => string;
   /** Enables row expansion for rows that return true. Pair with `renderExpandedRow`. */
   getRowCanExpand?: (row: Row<TData>) => boolean;
   /**
@@ -459,6 +465,7 @@ export function DataTable<TData, TValue = unknown>({
   columns = [],
   data = [],
   table: externalTable,
+  getRowId,
   getRowCanExpand,
   renderExpandedRow,
   striped = false,
@@ -604,6 +611,7 @@ export function DataTable<TData, TValue = unknown>({
   const internalTable = useReactTable({
     data,
     columns: tableColumns,
+    getRowId,
     enableColumnResizing,
     columnResizeMode: 'onChange',
     getCoreRowModel: getCoreRowModel(),

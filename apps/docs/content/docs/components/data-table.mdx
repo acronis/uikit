@@ -113,11 +113,12 @@ const table = useReactTable({
 ```
 
 With `table` passed, `DataTable` configures nothing on that instance — the
-props it would otherwise use to configure its own become no-ops
-(`enableColumnResizing`, `getRowCanExpand`, `manualSorting`, `sorting`,
-`onSortingChange`, `columnVisibility`, `onColumnVisibilityChange`,
-`onColumnSizingChange`, `paginationMode`, `onLoadMore`, `loadMoreRootMargin`,
-`hasNextPage`, `isLoadingMore`), and `meta.pin` pinning is skipped too — set the
+props it would otherwise use to configure its own become no-ops (`getRowId`,
+`enableColumnResizing`, `getRowCanExpand`, `rowSelection`,
+`onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
+`columnVisibility`, `onColumnVisibilityChange`, `onColumnSizingChange`,
+`paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
+`isLoadingMore`), and `meta.pin` pinning is skipped too — set the
 equivalents on your own instance (pin via TanStack's `column.pin()`). The
 trailing settings column is dropped as well, which is why the cog above is
 rendered next to the toolbar instead.
@@ -134,6 +135,20 @@ places:
   onColumnVisibilityChange={setColumnVisibility}
 />
 ```
+
+### Row identity
+
+By default a row's id is its array index, so re-sorting or filtering `data`
+reassigns index-keyed row state (selection, a per-row hook) to whichever row
+now lands on that index, instead of following the row it actually belonged to.
+Pass `getRowId` whenever rows carry their own stable identifier:
+
+```tsx
+<DataTable columns={columns} data={payments} getRowId={(payment) => payment.id} />
+```
+
+A no-op when an external `table` is passed — set `getRowId` directly on that
+`useReactTable` call instead.
 
 ### Presentational flags
 

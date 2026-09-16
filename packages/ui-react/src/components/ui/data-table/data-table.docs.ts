@@ -20,14 +20,21 @@ export interface DataTableProps {
    * DataTable's own — DataTable then owns no state and renders the caller's
    * instance as-is. Makes `columns`/`data` unnecessary and the following props
    * no-ops (configure the equivalent on the external instance instead):
-   * `columnVisibility`, `onColumnVisibilityChange`, `onColumnSizingChange`,
-   * `enableColumnResizing`, `enableColumnReordering`, `columnOrder`,
-   * `onColumnOrderChange`, `getRowCanExpand`, `manualSorting`, `sorting`,
-   * `onSortingChange`, `paginationMode`, `onLoadMore`, `loadMoreRootMargin`,
-   * `hasNextPage`, `isLoadingMore`. `meta.pin`-driven column pinning is also
-   * skipped — pin/unpin the caller's own instance via TanStack's `column.pin()`.
+   * `getRowId`, `columnVisibility`, `onColumnVisibilityChange`,
+   * `onColumnSizingChange`, `enableColumnResizing`, `enableColumnReordering`,
+   * `columnOrder`, `onColumnOrderChange`, `getRowCanExpand`, `rowSelection`,
+   * `onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
+   * `paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
+   * `isLoadingMore`. `meta.pin`-driven column pinning is also skipped —
+   * pin/unpin the caller's own instance via TanStack's `column.pin()`.
    */
   table?: unknown;
+  /**
+   * Derives a stable row id from the row data (e.g. `row => row.id`) instead of
+   * the default array index — needed whenever `data` can reorder while a row's
+   * own per-row state should follow the row, not the slot it occupied.
+   */
+  getRowId?: (originalRow: unknown, index: number) => string;
   /** Enables row expansion for rows that return true; pair with `renderExpandedRow`. */
   getRowCanExpand?: (row: unknown) => boolean;
   /** Renders the detail content for an expanded row. */
