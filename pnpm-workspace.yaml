@@ -34,8 +34,8 @@ catalog:
   # Cross-workspace runtime deps. Versions are anchored on
   # packages/ui-react (the published library) so its typecheck stays
   # stable; private apps adopt these versions to remove drift.
-  react-hook-form: 7.76.1
-  '@hookform/resolvers': 5.4.0
+  react-hook-form: 7.87.0
+  '@hookform/resolvers': 5.9.1
   '@tanstack/react-table': 8.21.3
   '@tanstack/react-virtual': 3.13.12
   recharts: 3.8.1
