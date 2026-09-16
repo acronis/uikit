@@ -1,5 +1,13 @@
 # @acronis-platform/ui-react
 
+## 5.4.0
+
+### Minor Changes
+
+- [#732](https://github.com/acronis/uikit/pull/732) [`1334ec7`](https://github.com/acronis/uikit/commit/1334ec7bd229a026288b8a92e541e3ab6b985825) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add the token-themed SegmentControl component with accessible single-choice selection, hug and fill layouts, and optional item counters.
+
+- [#734](https://github.com/acronis/uikit/pull/734) [`c7e87b5`](https://github.com/acronis/uikit/commit/c7e87b5d85bc818f291e7b9d1798a437c35660d6) Thanks [@RomiC](https://github.com/RomiC)! - `DataTable`: add `getRowId` to derive a stable row id from the row data, instead of the default array index. Needed whenever `data` can reorder (sort/filter) while a row's own per-row state (selection, a hook keyed by row) should follow the row instead of resetting to whatever now occupies its old slot. A no-op when an external `table` is passed — set `getRowId` on that `useReactTable` instance directly. Also documents that `rowSelection`/`onRowSelectionChange` were already no-ops in that case, which the `table` prop's own doc previously omitted.
+
 ## 5.3.1
 
 ### Patch Changes
