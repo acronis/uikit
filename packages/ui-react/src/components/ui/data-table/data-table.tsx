@@ -730,10 +730,23 @@ export function DataTable<TData, TValue = unknown>({
     setDraggedColumnId(columnId);
   };
 
-  const handleColumnDragOver = (event: DragEvent<HTMLTableCellElement>) => {
+  const handleColumnDragOver = (
+    event: DragEvent<HTMLTableCellElement>,
+    targetColumnId: string
+  ) => {
     // Without this the browser rejects the drop and no `onDrop` ever fires.
     event.preventDefault();
-    if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    if (!event.dataTransfer) return;
+    // Show "no drop" cursor when the source and target belong to different
+    // header groups — cross-group reordering is not allowed (it interleaves
+    // leaf columns from different groups in columnOrder, which breaks
+    // TanStack's header-group rendering and causes label duplication).
+    const draggedParentId = draggedColumnId
+      ? table.getColumn(draggedColumnId)?.parent?.id
+      : undefined;
+    const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
+    event.dataTransfer.dropEffect =
+      draggedParentId === targetParentId ? 'move' : 'none';
   };
 
   const handleColumnDrop = (
@@ -742,6 +755,16 @@ export function DataTable<TData, TValue = unknown>({
   ) => {
     event.preventDefault();
     if (!draggedColumnId) return;
+    // Reject drops that would move a column outside its header group. Allowing
+    // cross-group drops interleaves the two groups' leaf columns in columnOrder,
+    // which causes TanStack to produce malformed header rows: the group label
+    // renders at the wrong position (bug 2) and sometimes duplicates (bug 3).
+    const draggedParentId = table.getColumn(draggedColumnId)?.parent?.id;
+    const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
+    if (draggedParentId !== targetParentId) {
+      setDraggedColumnId(undefined);
+      return;
+    }
     const current = table.getState().columnOrder;
     const base = current.length
       ? current
@@ -898,7 +921,12 @@ export function DataTable<TData, TValue = unknown>({
                               handleColumnDragStart(event, header.column.id)
                           : undefined
                       }
-                      onDragOver={canReorder ? handleColumnDragOver : undefined}
+                      onDragOver={
+                        canReorder
+                          ? (event) =>
+                              handleColumnDragOver(event, header.column.id)
+                          : undefined
+                      }
                       onDrop={
                         canReorder
                           ? (event) => handleColumnDrop(event, header.column.id)

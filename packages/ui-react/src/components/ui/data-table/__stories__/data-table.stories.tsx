@@ -541,9 +541,7 @@ const workloadGroupedColumns: ColumnDef<Workload>[] = [
           </Tag>
         ),
       },
-    ],
-  },
-  {
+        {
     accessorKey: 'type',
     meta: { label: 'Type', category: 'General' },
     header: ({ column }) => (
@@ -551,6 +549,8 @@ const workloadGroupedColumns: ColumnDef<Workload>[] = [
     ),
     size: 160,
     enableResizing: false,
+  },
+    ],
   },
   {
     id: 'system',
@@ -601,9 +601,7 @@ const workloadGroupedColumns: ColumnDef<Workload>[] = [
         ),
         size: 170,
       },
-    ],
-  },
-  {
+        {
     accessorKey: 'owner',
     meta: { label: 'Owner', category: 'General' },
     header: ({ column }) => (
@@ -611,6 +609,9 @@ const workloadGroupedColumns: ColumnDef<Workload>[] = [
     ),
     size: 200,
   },
+    ],
+  },
+
 ];
 
 function CoreCapabilitiesWithGroupedHeadersDemo() {
