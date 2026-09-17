@@ -828,23 +828,32 @@ export function DataTable<TData, TValue = unknown>({
             table markup is unaffected). */}
         <TooltipProvider>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
                   // TanStack sets colSpan to 0 for cells that are fully
                   // "consumed" by a spanning sibling — skip them entirely.
                   if (header.colSpan === 0) return null;
                   const isPinned = header.column.getIsPinned();
+                  // Group headers (parent cells spanning multiple leaf columns)
+                  // are purely structural — no sort/reorder/resize/tooltip.
+                  const isGroupHeader = header.subHeaders.length > 0;
                   const canResize =
+                    !isGroupHeader &&
                     resizingEnabled &&
                     header.column.getCanResize() &&
                     header.column.id !== 'select';
                   // A pinned column is anchored to a table edge, so dragging it
                   // out of that edge would contradict its own pinning.
                   const canReorder =
-                    reorderingEnabled && !header.isPlaceholder && !isPinned;
+                    !isGroupHeader &&
+                    reorderingEnabled &&
+                    !header.isPlaceholder &&
+                    !isPinned;
                   const canSort =
-                    !header.isPlaceholder && header.column.getCanSort();
+                    !isGroupHeader &&
+                    !header.isPlaceholder &&
+                    header.column.getCanSort();
                   // One tooltip line per capability the column actually has, in
                   // the design's order; a column with none gets no tooltip.
                   const hints = [
@@ -855,6 +864,9 @@ export function DataTable<TData, TValue = unknown>({
                     Boolean(hint)
                   );
                   if (header.column.id === '__actions') {
+                    // Only show the cog in the last header group row (leaf columns).
+                    // Group-header rows are structural and carry no actions column.
+                    if (groupIndex < headerGroups.length - 1) return null;
                     return (
                       <TableSettingsCell
                         key={header.id}
