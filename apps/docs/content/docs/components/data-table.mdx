@@ -291,13 +291,23 @@ step 10px, or <kbd>Shift</kbd> + arrow for 50px, clamped to the column's
 
 ### Column reordering
 
-`enableColumnReordering` makes every non-pinned header cell draggable: grab one
-and drop it on another header to move that column into its place (native HTML5
-drag-and-drop over TanStack's `columnOrder`; the grab/grabbing cursors use the
-literal `cursor-grab`/`cursor-grabbing` utilities — there's no dedicated Figma
-"Draggable" token yet, unlike the resize handle's generated
+`enableColumnReordering` makes every non-pinned **leaf** header cell draggable:
+grab one and drop it on another header to move that column into its place (native
+HTML5 drag-and-drop over TanStack's `columnOrder`; the grab/grabbing cursors use
+the literal `cursor-grab`/`cursor-grabbing` utilities — there's no dedicated
+Figma "Draggable" token yet, unlike the resize handle's generated
 `--ui-resizable-cursor`). Pinned columns are excluded — they're anchored to a
-table edge by definition.
+table edge by definition. Group-label header cells (those spanning multiple leaf
+columns) are also excluded: they carry no column identity in TanStack's
+`columnOrder` and are never draggable.
+
+Cross-group reordering is intentionally blocked. TanStack computes header-group
+rows from a flat `columnOrder`; interleaving leaf columns from different groups
+produces malformed header rows. When the drag target belongs to a different header
+group from the source, the drop cursor changes to `none` and releasing the mouse
+aborts the drop without changing the order. Within the same group, reordering
+works normally. Ungrouped leaf columns (those with no parent group) can be freely
+reordered among each other.
 
 ```tsx
 <DataTable
@@ -312,6 +322,49 @@ table edge by definition.
 `columnOrder`/`onColumnOrderChange` are optional — omit both and DataTable keeps
 the order internally; pass them to persist the user's order. The gesture is
 pointer-only for now: there is no keyboard equivalent yet.
+
+### Grouped column headers
+
+Nest leaf columns under a parent column to produce a multi-row header where the
+parent label spans its children. DataTable automatically computes and forwards
+the correct `colSpan` to each group-label cell; TanStack placeholder cells
+(`colSpan = 0`) are suppressed so the DOM contains no empty cells.
+
+```tsx
+const columns: ColumnDef<Workload>[] = [
+  {
+    id: 'workload',
+    header: 'Workload',         // group label — spans the two leaf columns below
+    columns: [
+      {
+        accessorKey: 'name',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+        size: 180,
+      },
+      {
+        accessorKey: 'status',
+        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        size: 130,
+      },
+    ],
+  },
+  {
+    id: 'system',
+    header: 'System',           // second group
+    columns: [
+      { accessorKey: 'os',    header: 'OS',         size: 190 },
+      { accessorKey: 'ip',    header: 'IP address', size: 140 },
+    ],
+  },
+];
+```
+
+Group-label cells are purely structural. Sorting, resizing, and reordering are
+all suppressed on them — the leaf columns beneath them remain sortable and
+resizable as usual. Within a group, leaf columns can be dragged into a new order;
+dragging a leaf column across group boundaries is blocked (see [Column
+reordering](#column-reordering)). The column-visibility cog appears only in the
+leaf-column header row.
 
 ### Row actions vs. bulk actions
 

@@ -174,13 +174,43 @@ Scenario: Resize a column
 ```gherkin
 Scenario: Reorder a column by dragging its header
   Given a DataTable with enableColumnReordering
-  Then every non-pinned header cell is draggable and shows the grab cursor
+  Then every non-pinned leaf header cell is draggable and shows the grab cursor
       (cursor-grab; cursor-grabbing while pressed)
+  And group-label header cells (those spanning multiple leaf columns) are not draggable
   When the user drags one header and drops it on another
   Then the dragged column moves to the drop target's position (headers and body cells alike)
   And onColumnOrderChange fires with the new order so a consumer can persist it
   And a pinned column is never draggable — it is anchored to a table edge
   # Pointer-only: there is no keyboard equivalent for the gesture yet.
+```
+
+```gherkin
+Scenario: Grouped column headers render with correct colSpan
+  Given columns defined with TanStack header groups (parent columns with leaf columns nested under them)
+  Then each group-label header cell spans its sub-columns (colSpan = number of leaf children)
+  And phantom cells (colSpan = 0) that TanStack inserts as placeholders are not rendered
+```
+
+```gherkin
+Scenario: Group header cells are non-interactive
+  Given a DataTable with enableColumnReordering, enableColumnResizing, and sortable columns
+  And columns are arranged in header groups (parent columns spanning multiple leaf columns)
+  Then group-label header cells are not draggable and have no grab cursor
+  And group-label header cells have no resize handle
+  And group-label header cells are not clickable for sorting
+  And group-label header cells show no hover tint and no capability tooltip
+  And the column-visibility cog appears only in the leaf-column header row, not in group-label rows
+```
+
+```gherkin
+Scenario: Column reordering is blocked across header groups
+  Given a DataTable with enableColumnReordering and columns in two or more header groups
+  When the user drags a leaf column from group A over a leaf column from group B
+  Then the drop cursor shows "none" (no-drop)
+  And releasing the mouse does not change the column order
+  When the user drags a leaf column within the same group
+  Then the drop succeeds and the column moves to the drop target's position
+  And leaf columns that have no parent group can be freely reordered among each other
 ```
 
 ```gherkin
