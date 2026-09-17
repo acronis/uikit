@@ -159,7 +159,12 @@ function getHeaderStyle<TData>(
   enableColumnResizing: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(header.column);
-  const width = getColumnWidth(header.column, enableColumnResizing);
+  // Group headers (those with sub-headers) have no leaf size — skip width so
+  // the browser's native colSpan layout determines the cell's rendered width.
+  const width =
+    header.subHeaders.length === 0
+      ? getColumnWidth(header.column, enableColumnResizing)
+      : undefined;
   if (!pin && width === undefined) return undefined;
   return { ...pin, width };
 }
@@ -826,6 +831,9 @@ export function DataTable<TData, TValue = unknown>({
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
+                  // TanStack sets colSpan to 0 for cells that are fully
+                  // "consumed" by a spanning sibling — skip them entirely.
+                  if (header.colSpan === 0) return null;
                   const isPinned = header.column.getIsPinned();
                   const canResize =
                     resizingEnabled &&
@@ -866,6 +874,7 @@ export function DataTable<TData, TValue = unknown>({
                   }
                   const headerCell = (
                     <TableHead
+                      colSpan={header.colSpan}
                       wrap={header.column.columnDef.meta?.wrap}
                       style={getHeaderStyle(header, resizingEnabled)}
                       draggable={
