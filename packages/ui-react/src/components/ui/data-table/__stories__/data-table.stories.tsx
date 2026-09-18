@@ -541,15 +541,15 @@ const workloadGroupedColumns: ColumnDef<Workload>[] = [
           </Tag>
         ),
       },
-        {
-    accessorKey: 'type',
-    meta: { label: 'Type', category: 'General' },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Type" />
-    ),
-    size: 160,
-    enableResizing: false,
-  },
+      {
+        accessorKey: 'type',
+        meta: { label: 'Type', category: 'Workload' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Type" />
+        ),
+        size: 160,
+        enableResizing: false,
+      },
     ],
   },
   {
@@ -601,17 +601,16 @@ const workloadGroupedColumns: ColumnDef<Workload>[] = [
         ),
         size: 170,
       },
-        {
-    accessorKey: 'owner',
-    meta: { label: 'Owner', category: 'General' },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Owner" />
-    ),
-    size: 200,
-  },
+      {
+        accessorKey: 'owner',
+        meta: { label: 'Owner', category: 'Protection' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Owner" />
+        ),
+        size: 200,
+      },
     ],
   },
-
 ];
 
 function CoreCapabilitiesWithGroupedHeadersDemo() {
@@ -682,4 +681,25 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
 
 export const CoreCapabilitiesWithGroupedHeaders: Story = {
   render: () => <CoreCapabilitiesWithGroupedHeadersDemo />,
+};
+
+/* ---- Compact grouped-header view (no scroll required) ---- */
+
+export const GroupedHeadersCompact: Story = {
+  render: () => (
+    <div className="max-w-3xl">
+      <DataTable
+        columns={workloadGroupedColumns}
+        data={makeWorkloads(5)}
+        enableColumnResizing
+        enableColumnReordering
+        renderRowActions={(row) => (
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
+      />
+    </div>
+  ),
 };

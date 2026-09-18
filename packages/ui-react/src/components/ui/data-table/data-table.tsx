@@ -159,8 +159,8 @@ function getHeaderStyle<TData>(
   enableColumnResizing: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(header.column);
-  // Group headers (those with sub-headers) have no leaf size — skip width so
-  // the browser's native colSpan layout determines the cell's rendered width.
+  // Non-leaf cells (group-label spans and placeholders) have no single leaf
+  // size — skip width so colSpan layout determines the cell's rendered width.
   const width =
     header.subHeaders.length === 0
       ? getColumnWidth(header.column, enableColumnResizing)
@@ -759,6 +759,11 @@ export function DataTable<TData, TValue = unknown>({
     // cross-group drops interleaves the two groups' leaf columns in columnOrder,
     // which causes TanStack to produce malformed header rows: the group label
     // renders at the wrong position (bug 2) and sometimes duplicates (bug 3).
+    //
+    // Known limitation: this guard only covers the drag gesture. The same broken
+    // state is reachable via the `columnOrder` controlled prop — if the caller
+    // passes a `columnOrder` where a group's leaf columns are not contiguous,
+    // TanStack will produce duplicate group-label cells with no warning.
     const draggedParentId = table.getColumn(draggedColumnId)?.parent?.id;
     const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
     if (draggedParentId !== targetParentId) {
@@ -778,6 +783,14 @@ export function DataTable<TData, TValue = unknown>({
   // `meta.pin` is removed dynamically actually un-pins. Skipped for an
   // external `table` — DataTable owns no state in that mode (see the `table`
   // prop's tsdoc), so the caller's own pinning setup is left alone.
+  //
+  // Known limitation: pinning a leaf column that is nested inside a header
+  // group breaks group contiguity. TanStack moves pinned leaves to a separate
+  // bucket and reorders columns as [...left, ...center, ...right] before
+  // createHeaderGroup runs, separating the pinned leaf from its siblings.
+  // The result is a duplicate group-label cell in the header row — the same
+  // rendering defect that the drag guard exists to prevent. Do not set
+  // `meta.pin` on a leaf column that belongs to a header group.
   useEffect(() => {
     if (externalTable) return;
     table.getAllLeafColumns().forEach((column) => {
@@ -854,12 +867,10 @@ export function DataTable<TData, TValue = unknown>({
             {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
-                  // TanStack sets colSpan to 0 for cells that are fully
-                  // "consumed" by a spanning sibling — skip them entirely.
-                  if (header.colSpan === 0) return null;
                   const isPinned = header.column.getIsPinned();
-                  // Group headers (parent cells spanning multiple leaf columns)
-                  // are purely structural — no sort/reorder/resize/tooltip.
+                  // Non-leaf header cells (group-label spans and TanStack's
+                  // structural placeholder cells) are purely presentational —
+                  // no sort/reorder/resize/tooltip.
                   const isGroupHeader = header.subHeaders.length > 0;
                   const canResize =
                     !isGroupHeader &&
@@ -887,9 +898,18 @@ export function DataTable<TData, TValue = unknown>({
                     Boolean(hint)
                   );
                   if (header.column.id === '__actions') {
-                    // Only show the cog in the last header group row (leaf columns).
-                    // Group-header rows are structural and carry no actions column.
-                    if (groupIndex < headerGroups.length - 1) return null;
+                    if (groupIndex < headerGroups.length - 1) {
+                      // Group-header rows carry no cog, but the pinned cell
+                      // must still be present so the row scrolls horizontally
+                      // in sync with the leaf header row and the body.
+                      return (
+                        <TableSettingsCell
+                          key={header.id}
+                          style={getHeaderStyle(header, resizingEnabled)}
+                          className={headerPinnedBg}
+                        />
+                      );
+                    }
                     return (
                       <TableSettingsCell
                         key={header.id}

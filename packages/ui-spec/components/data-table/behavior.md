@@ -188,7 +188,7 @@ Scenario: Reorder a column by dragging its header
 Scenario: Grouped column headers render with correct colSpan
   Given columns defined with TanStack header groups (parent columns with leaf columns nested under them)
   Then each group-label header cell spans its sub-columns (colSpan = number of leaf children)
-  And phantom cells (colSpan = 0) that TanStack inserts as placeholders are not rendered
+  And TanStack placeholder cells render as empty <th> elements with no visible content
 ```
 
 ```gherkin
@@ -200,6 +200,8 @@ Scenario: Group header cells are non-interactive
   And group-label header cells are not clickable for sorting
   And group-label header cells show no hover tint and no capability tooltip
   And the column-visibility cog appears only in the leaf-column header row, not in group-label rows
+  And its menu still lists every hideable leaf column, including leaves nested inside a group
+      (never the group labels themselves)
 ```
 
 ```gherkin

@@ -309,6 +309,11 @@ aborts the drop without changing the order. Within the same group, reordering
 works normally. Ungrouped leaf columns (those with no parent group) can be freely
 reordered among each other.
 
+> **Known limitation:** the cross-group guard applies only to the drag gesture.
+> Passing a `columnOrder` value where a group's leaf columns are not contiguous
+> bypasses it — TanStack will produce duplicate group-label cells with no warning.
+> Keep a group's leaves adjacent when constructing or restoring `columnOrder`.
+
 ```tsx
 <DataTable
   columns={columns}
@@ -328,7 +333,7 @@ pointer-only for now: there is no keyboard equivalent yet.
 Nest leaf columns under a parent column to produce a multi-row header where the
 parent label spans its children. DataTable automatically computes and forwards
 the correct `colSpan` to each group-label cell; TanStack placeholder cells
-(`colSpan = 0`) are suppressed so the DOM contains no empty cells.
+render as empty `<th>` elements — they carry no visible content.
 
 ```tsx
 const columns: ColumnDef<Workload>[] = [
@@ -364,7 +369,13 @@ all suppressed on them — the leaf columns beneath them remain sortable and
 resizable as usual. Within a group, leaf columns can be dragged into a new order;
 dragging a leaf column across group boundaries is blocked (see [Column
 reordering](#column-reordering)). The column-visibility cog appears only in the
-leaf-column header row.
+leaf-column header row, and its menu lists every hideable **leaf** column —
+including leaves nested inside a group — never the group labels themselves.
+
+> **Known limitation:** do not set `meta.pin` on a leaf column that is nested
+> inside a header group. TanStack moves pinned leaves to a separate column bucket
+> before building the header rows, which separates the pinned leaf from its
+> siblings and produces duplicate group-label cells.
 
 ### Row actions vs. bulk actions
 
