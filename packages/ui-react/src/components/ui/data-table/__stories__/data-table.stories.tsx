@@ -486,3 +486,220 @@ function CoreCapabilitiesWithPaginationDemo() {
 export const CoreCapabilitiesWithPagination: Story = {
   render: () => <CoreCapabilitiesWithPaginationDemo />,
 };
+
+/* ----------------------------------------- Core capabilities + grouped headers */
+
+const workloadGroupedColumns: ColumnDef<Workload>[] = [
+  {
+    id: 'select',
+    meta: { pin: 'left' },
+    enableSorting: false,
+    enableHiding: false,
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        indeterminate={
+          table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected()
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+  },
+  {
+    id: 'workload',
+    header: 'Workload',
+    columns: [
+      {
+        accessorKey: 'name',
+        meta: { label: 'Name', category: 'Workload' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Name" />
+        ),
+        size: 180,
+        cell: ({ row }) => (
+          <div className="font-medium">{row.original.name}</div>
+        ),
+      },
+      {
+        accessorKey: 'status',
+        meta: { label: 'Status', category: 'Workload' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
+        size: 130,
+        cell: ({ row }) => (
+          <Tag variant={STATUS_VARIANT[row.original.status]}>
+            {row.original.status}
+          </Tag>
+        ),
+      },
+      {
+        accessorKey: 'type',
+        meta: { label: 'Type', category: 'Workload' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Type" />
+        ),
+        size: 160,
+        enableResizing: false,
+      },
+    ],
+  },
+  {
+    id: 'system',
+    header: 'System',
+    columns: [
+      {
+        accessorKey: 'os',
+        meta: { label: 'Operating system', category: 'System' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="OS" />
+        ),
+        size: 190,
+      },
+      {
+        accessorKey: 'ip',
+        meta: { label: 'IP address', category: 'System' },
+        header: 'IP address',
+        size: 140,
+        enableSorting: false,
+        enableResizing: false,
+      },
+      {
+        accessorKey: 'agent',
+        meta: { label: 'Agent version', category: 'System' },
+        header: 'Agent version',
+        size: 140,
+        enableSorting: false,
+      },
+    ],
+  },
+  {
+    id: 'protection',
+    header: 'Protection',
+    columns: [
+      {
+        accessorKey: 'plan',
+        meta: { label: 'Protection plan', category: 'Protection' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Protection plan" />
+        ),
+        size: 180,
+      },
+      {
+        accessorKey: 'lastBackup',
+        meta: { label: 'Last backup', category: 'Protection' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Last backup" />
+        ),
+        size: 170,
+      },
+      {
+        accessorKey: 'owner',
+        meta: { label: 'Owner', category: 'Protection' },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Owner" />
+        ),
+        size: 200,
+      },
+    ],
+  },
+];
+
+function CoreCapabilitiesWithGroupedHeadersDemo() {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [items, setItems] = useState<Workload[]>(() =>
+    makeWorkloads(WORKLOADS_PAGE_SIZE)
+  );
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const hasNextPage = items.length < TOTAL_WORKLOADS;
+
+  const handleLoadMore = () => {
+    if (isLoadingMore || !hasNextPage) return;
+    setIsLoadingMore(true);
+    window.setTimeout(() => {
+      setItems(
+        makeWorkloads(
+          Math.min(items.length + WORKLOADS_PAGE_SIZE, TOTAL_WORKLOADS)
+        )
+      );
+      setIsLoadingMore(false);
+    }, 600);
+  };
+
+  const selectionTable = useReactTable({
+    data: items,
+    columns: workloadGroupedColumns,
+    state: { rowSelection },
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="max-w-3xl flex flex-col gap-4">
+      <DataTableBulkActionsBar
+        table={selectionTable}
+        loadedLabel={`${items.length} of ${TOTAL_WORKLOADS} items loaded`}
+      >
+        <Button variant="ghost" className="h-8">
+          Delete
+        </Button>
+      </DataTableBulkActionsBar>
+      <div
+        className="max-h-96 overflow-auto"
+        data-testid="infinite-scroll-pane-grouped"
+      >
+        <DataTable
+          columns={workloadGroupedColumns}
+          data={items}
+          enableColumnResizing
+          enableColumnReordering
+          rowSelection={rowSelection}
+          onRowSelectionChange={setRowSelection}
+          paginationMode="infinite"
+          onLoadMore={handleLoadMore}
+          hasNextPage={hasNextPage}
+          isLoadingMore={isLoadingMore}
+          renderRowActions={(row) => (
+            <DropdownMenuGroup>
+              <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
+              <DropdownMenuItem>Delete</DropdownMenuItem>
+            </DropdownMenuGroup>
+          )}
+        />
+      </div>
+    </div>
+  );
+}
+
+export const CoreCapabilitiesWithGroupedHeaders: Story = {
+  render: () => <CoreCapabilitiesWithGroupedHeadersDemo />,
+};
+
+/* ---- Compact grouped-header view (no scroll required) ---- */
+
+export const GroupedHeadersCompact: Story = {
+  render: () => (
+    <div className="max-w-3xl">
+      <DataTable
+        columns={workloadGroupedColumns}
+        data={makeWorkloads(5)}
+        enableColumnResizing
+        enableColumnReordering
+        renderRowActions={(row) => (
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
+      />
+    </div>
+  ),
+};

@@ -1802,3 +1802,215 @@ describe('DataTable header capability tooltip', () => {
     expect(screen.getByText('Klick')).toBeInTheDocument();
   });
 });
+
+describe('DataTable grouped headers', () => {
+  // One group with two leaf columns — used for colSpan, non-interactive, and
+  // within-group reorder tests.
+  const twoLeafGroupColumns: ColumnDef<Row>[] = [
+    {
+      id: 'groupA',
+      header: 'Group A',
+      columns: [
+        { accessorKey: 'email', header: 'Email' },
+        { accessorKey: 'amount', header: 'Amount' },
+      ],
+    },
+  ];
+
+  // Two groups, one leaf column each — used for cross-group reorder tests.
+  const crossGroupColumns: ColumnDef<Row>[] = [
+    {
+      id: 'groupA',
+      header: 'Group A',
+      columns: [{ accessorKey: 'email', header: 'Email' }],
+    },
+    {
+      id: 'groupB',
+      header: 'Group B',
+      columns: [{ accessorKey: 'amount', header: 'Amount' }],
+    },
+  ];
+
+  it('group header cell has colSpan equal to the number of leaf columns', () => {
+    render(
+      <DataTable
+        columns={twoLeafGroupColumns}
+        data={data.slice(0, 2)}
+        hideActionColumn
+      />
+    );
+    const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
+    // The group header spans both leaf columns.
+    expect(groupHeader).toHaveAttribute('colspan', '2');
+  });
+
+  it('group row contains exactly one <th> when no pinned columns are present', () => {
+    render(
+      <DataTable
+        columns={twoLeafGroupColumns}
+        data={data.slice(0, 2)}
+        hideActionColumn
+      />
+    );
+    const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
+    const groupRow = groupHeader.closest('tr')!;
+    // One spanning group-label cell; no select or __actions columns are
+    // present so no placeholder cells appear in this row.
+    expect(within(groupRow).getAllByRole('columnheader')).toHaveLength(1);
+  });
+
+  it('group header cells are not draggable even with enableColumnReordering', () => {
+    render(
+      <DataTable
+        columns={twoLeafGroupColumns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
+    expect(groupHeader).not.toHaveAttribute('draggable');
+    // The leaf headers are still draggable.
+    expect(
+      screen.getByRole('columnheader', { name: 'Email' })
+    ).toHaveAttribute('draggable', 'true');
+  });
+
+  it('group header cells have no resize handle even with enableColumnResizing', () => {
+    render(
+      <DataTable
+        columns={twoLeafGroupColumns}
+        data={data.slice(0, 2)}
+        enableColumnResizing
+        hideActionColumn
+      />
+    );
+    const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
+    // No resize separator inside the group header cell.
+    expect(
+      within(groupHeader).queryByRole('separator', { name: 'Resize column' })
+    ).not.toBeInTheDocument();
+    // The two leaf columns still each get a resize handle.
+    expect(
+      screen.getAllByRole('separator', { name: 'Resize column' })
+    ).toHaveLength(2);
+  });
+
+  it('group header cells have no interactive sort controls', () => {
+    // Even when all features are enabled, the group header cell must not
+    // render any buttons or sort indicators (canSort is gated by !isGroupHeader).
+    render(
+      <DataTable
+        columns={twoLeafGroupColumns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        enableColumnResizing
+        hideActionColumn
+      />
+    );
+    const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
+    expect(within(groupHeader).queryByRole('button')).not.toBeInTheDocument();
+  });
+
+  it('cross-group drop is rejected and the column order does not change', () => {
+    render(
+      <DataTable
+        columns={crossGroupColumns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const emailHeader = screen.getByRole('columnheader', { name: 'Email' });
+    const amountHeader = screen.getByRole('columnheader', { name: 'Amount' });
+
+    // Record the leaf-header order before the attempted cross-group drag.
+    const leafRow = emailHeader.closest('tr')!;
+    const orderBefore = within(leafRow)
+      .getAllByRole('columnheader')
+      .map((th) => th.textContent);
+
+    // Drag Email (Group A) onto Amount (Group B) — cross-group, rejected.
+    // Note: handleColumnDragOver sets event.dataTransfer.dropEffect = 'none'
+    // to show the no-drop cursor, but happy-dom's DataTransfer does not
+    // reflect that mutation back to the caller's object, so we can't assert
+    // it here. The order-unchanged assertion below covers the rejection path.
+    const dataTransfer = { effectAllowed: '', dropEffect: '' };
+    fireEvent.dragStart(emailHeader, { dataTransfer });
+    fireEvent.dragOver(amountHeader, { dataTransfer });
+    fireEvent.drop(amountHeader, { dataTransfer });
+
+    const orderAfter = within(leafRow)
+      .getAllByRole('columnheader')
+      .map((th) => th.textContent);
+    expect(orderAfter).toEqual(orderBefore);
+  });
+
+  it('within-group drop succeeds and the column order changes', () => {
+    render(
+      <DataTable
+        columns={twoLeafGroupColumns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const emailHeader = screen.getByRole('columnheader', { name: 'Email' });
+    const amountHeader = screen.getByRole('columnheader', { name: 'Amount' });
+
+    // Both columns are in Group A — drag Email onto Amount, which should succeed.
+    const dataTransfer = { effectAllowed: '', dropEffect: '' };
+    fireEvent.dragStart(emailHeader, { dataTransfer });
+    fireEvent.dragOver(amountHeader, { dataTransfer });
+    fireEvent.drop(amountHeader, { dataTransfer });
+
+    // After a valid within-group drop the order must have flipped.
+    const leafRow = screen
+      .getByRole('columnheader', { name: 'Amount' })
+      .closest('tr')!;
+    const orderAfter = within(leafRow)
+      .getAllByRole('columnheader')
+      .map((th) => th.textContent);
+    // Amount should now come before Email.
+    expect(orderAfter.indexOf('Amount')).toBeLessThan(
+      orderAfter.indexOf('Email')
+    );
+  });
+
+  it('lists the nested leaf columns in the visibility dropdown, not the group labels', async () => {
+    const user = userEvent.setup();
+    render(<DataTable columns={twoLeafGroupColumns} data={data.slice(0, 2)} />);
+
+    await user.click(screen.getByRole('button', { name: 'Column settings' }));
+
+    // The dropdown must offer the real (leaf) data columns...
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Email' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Amount' })
+    ).toBeInTheDocument();
+    // ...and not the group column, which carries no data of its own.
+    expect(
+      screen.queryByRole('menuitemcheckbox', { name: 'Group A' })
+    ).not.toBeInTheDocument();
+    // Regression guard: getAllColumns() would filter everything out and fall
+    // through to the empty state.
+    expect(screen.queryByText('No columns found.')).not.toBeInTheDocument();
+  });
+
+  it('toggles a nested leaf column off from the visibility dropdown', async () => {
+    const user = userEvent.setup();
+    render(<DataTable columns={twoLeafGroupColumns} data={data.slice(0, 2)} />);
+
+    await user.click(screen.getByRole('button', { name: 'Column settings' }));
+    await user.click(screen.getByRole('menuitemcheckbox', { name: 'Amount' }));
+
+    expect(
+      screen.queryByRole('columnheader', { name: 'Amount' })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole('menuitemcheckbox', { name: 'Amount' })
+    ).toHaveAttribute('aria-checked', 'false');
+  });
+});
