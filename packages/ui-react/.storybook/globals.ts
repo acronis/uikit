@@ -21,6 +21,20 @@ import bundleLightGray from '@acronis-platform/tokens-pd/bundles/light-gray.css?
 import bundleTelstra from '@acronis-platform/tokens-pd/bundles/telstra.css?raw';
 import bundleVirtuozzo from '@acronis-platform/tokens-pd/bundles/virtuozzo.css?raw';
 import bundleYellow1c from '@acronis-platform/tokens-pd/bundles/yellow-1c.css?raw';
+import bundleBlueYellowUssSignal from '@acronis-platform/tokens-pd/bundles/blue_yellow_uss_signal.css?raw';
+import bundleBrown from '@acronis-platform/tokens-pd/bundles/brown.css?raw';
+import bundleDarkGray from '@acronis-platform/tokens-pd/bundles/dark_gray.css?raw';
+import bundleDeepPurple from '@acronis-platform/tokens-pd/bundles/deep_purple.css?raw';
+import bundleGreenAlsoChoiseDf from '@acronis-platform/tokens-pd/bundles/green_also_choise_df.css?raw';
+import bundleIngramMicro from '@acronis-platform/tokens-pd/bundles/ingram_micro.css?raw';
+import bundleLightBlueHp from '@acronis-platform/tokens-pd/bundles/light_blue_hp.css?raw';
+import bundleOrangeTsukaeruHelpox from '@acronis-platform/tokens-pd/bundles/orange_tsukaeru_helpox.css?raw';
+import bundlePinky from '@acronis-platform/tokens-pd/bundles/pinky.css?raw';
+import bundlePurple from '@acronis-platform/tokens-pd/bundles/purple.css?raw';
+import bundlePurpleFusionMedia from '@acronis-platform/tokens-pd/bundles/purple_fusion_media.css?raw';
+import bundleRedFireBrick from '@acronis-platform/tokens-pd/bundles/red_fire_brick.css?raw';
+import bundleRedHomePl from '@acronis-platform/tokens-pd/bundles/red_home_pl.css?raw';
+import bundleSand from '@acronis-platform/tokens-pd/bundles/sand.css?raw';
 
 export type Brand =
   | 'default'
@@ -28,7 +42,21 @@ export type Brand =
   | 'light-gray'
   | 'telstra'
   | 'virtuozzo'
-  | 'yellow-1c';
+  | 'yellow-1c'
+  | 'blue_yellow_uss_signal'
+  | 'brown'
+  | 'dark_gray'
+  | 'deep_purple'
+  | 'green_also_choise_df'
+  | 'ingram_micro'
+  | 'light_blue_hp'
+  | 'orange_tsukaeru_helpox'
+  | 'pinky'
+  | 'purple'
+  | 'purple_fusion_media'
+  | 'red_fire_brick'
+  | 'red_home_pl'
+  | 'sand';
 export type ColorMode = 'light' | 'dark';
 export type Direction = 'auto' | 'ltr' | 'rtl';
 export type Locale = 'en' | 'de' | 'fr' | 'ja' | 'ar' | 'he';
@@ -40,6 +68,20 @@ const BRAND_BUNDLES: Record<Exclude<Brand, 'default'>, string> = {
   telstra: bundleTelstra,
   virtuozzo: bundleVirtuozzo,
   'yellow-1c': bundleYellow1c,
+  blue_yellow_uss_signal: bundleBlueYellowUssSignal,
+  brown: bundleBrown,
+  dark_gray: bundleDarkGray,
+  deep_purple: bundleDeepPurple,
+  green_also_choise_df: bundleGreenAlsoChoiseDf,
+  ingram_micro: bundleIngramMicro,
+  light_blue_hp: bundleLightBlueHp,
+  orange_tsukaeru_helpox: bundleOrangeTsukaeruHelpox,
+  pinky: bundlePinky,
+  purple: bundlePurple,
+  purple_fusion_media: bundlePurpleFusionMedia,
+  red_fire_brick: bundleRedFireBrick,
+  red_home_pl: bundleRedHomePl,
+  sand: bundleSand,
 };
 
 const BRAND_STYLE_ID = 'sb-brand-override';
