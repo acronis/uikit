@@ -29,9 +29,12 @@ import type { Config, TransformedToken } from 'style-dictionary/types';
 import { STATIC_HOOKS } from './hooks';
 import { isEmittableToken } from './hooks/filters/semantic-only';
 import { collectDecls, type Decls, serializeCss } from './hooks/formats/css-light-dark';
+import { STATIC_BORDER_WIDTH_CLASSES } from './hooks/formats/border-width-classes';
+import { spaceYUtilityClass, STATIC_DIVIDE_CLASSES } from './hooks/formats/child-spacing-classes';
 import { STATIC_FRACTION_CLASSES } from './hooks/formats/fraction-utility-classes';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from './hooks/formats/gap-utility-classes';
 import { STATIC_LAYOUT_CLASSES } from './hooks/formats/layout-utility-classes';
+import { STATIC_LIST_CURSOR_RESIZE_CLASSES } from './hooks/formats/list-cursor-resize-classes';
 import { STATIC_NAMED_MAX_WIDTH_CLASSES } from './hooks/formats/named-max-width-classes';
 import {
   offsetUtilityClasses,
@@ -39,6 +42,7 @@ import {
   STATIC_POSITION_TYPE_CLASSES,
 } from './hooks/formats/position-utility-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from './hooks/formats/sizing-utility-classes';
+import { STATIC_TEXT_DECORATION_CLASSES } from './hooks/formats/text-decoration-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
 import {
@@ -408,6 +412,16 @@ export async function buildCss(filter: Filter): Promise<void> {
         semantics.classes.set(selector, block);
       }
       for (const [selector, block] of STATIC_OFFSET_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_LIST_CURSOR_RESIZE_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_BORDER_WIDTH_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_DIVIDE_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_TEXT_DECORATION_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
       for (const [sizeKey, pxValue] of gapTokens) {
         const varName = `ui-gap-${sizeKey}`;
         semantics.vars.set(varName, pxValue);
@@ -420,6 +434,8 @@ export async function buildCss(filter: Filter): Promise<void> {
         for (const [selector, block] of offsetUtilityClasses(varName, sizeKey)) {
           semantics.classes.set(selector, block);
         }
+        const [spaceYSelector, spaceYBlock] = spaceYUtilityClass(varName, sizeKey);
+        semantics.classes.set(spaceYSelector, spaceYBlock);
       }
     }
     perBrand.set(brand.name, decls);
