@@ -159,6 +159,10 @@ const meta: Meta<typeof LayoutDemo> = {
   component: LayoutDemo,
   parameters: {
     layout: 'fullscreen',
+    // Six sections stacked vertically exceed the default viewport — capture
+    // the full page so nothing below the fold is missing from the visual
+    // regression baseline.
+    snapshot: { fullPage: true },
     docs: {
       description: {
         component:
