@@ -23,6 +23,7 @@ import {
 import { semanticColorClasses } from '../formats/semantic-color-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
 import { STATIC_TEXT_DECORATION_CLASSES } from '../formats/text-decoration-classes';
+import { withStateVariants } from '../formats/variant-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { diffDecls } from '../../tokens';
 
@@ -603,6 +604,44 @@ describe('semanticColorClasses', () => {
     expect(semanticColorClasses(brandA).get('.ui-text-on-surface-primary')).toBe(
       semanticColorClasses(brandB).get('.ui-text-on-surface-primary')
     );
+  });
+});
+
+describe('withStateVariants', () => {
+  it('multiplies a class by the fixed variant set, colon-escaped and pseudo-suffixed', () => {
+    const classes = new Map([['.ui-text-on-surface-primary', 'color: var(--ui-text-on-surface-primary);']]);
+    const variants = withStateVariants(classes);
+
+    expect(variants.get('.ui-hover\\:text-on-surface-primary:hover')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+    expect(variants.get('.ui-disabled\\:text-on-surface-primary:disabled')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+    expect(variants.get('.ui-focus-visible\\:text-on-surface-primary:focus-visible')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+    expect(variants.get('.ui-last\\:text-on-surface-primary:last-child')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+  });
+
+  it('produces 4 variants per input class', () => {
+    const classes = new Map([
+      ['.ui-text-a', 'color: var(--ui-text-a);'],
+      ['.ui-bg-b', 'background-color: var(--ui-background-b);'],
+    ]);
+    expect(withStateVariants(classes).size).toBe(8);
+  });
+
+  it('is generic — works for any `.ui-*` input, not just color classes by name', () => {
+    const classes = new Map([['.ui-whatever-role', 'opacity: 0.5;']]);
+    expect(withStateVariants(classes).get('.ui-hover\\:whatever-role:hover')).toBe('opacity: 0.5;');
+  });
+
+  it('skips a selector that is not `.ui-*`-prefixed', () => {
+    const classes = new Map([['.not-ui-prefixed', 'color: red;']]);
+    expect(withStateVariants(classes).size).toBe(0);
   });
 });
 

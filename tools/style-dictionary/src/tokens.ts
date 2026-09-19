@@ -44,6 +44,7 @@ import {
 import { semanticColorClasses } from './hooks/formats/semantic-color-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from './hooks/formats/sizing-utility-classes';
 import { STATIC_TEXT_DECORATION_CLASSES } from './hooks/formats/text-decoration-classes';
+import { withStateVariants } from './hooks/formats/variant-utility-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
 import {
@@ -397,7 +398,15 @@ export async function buildCss(filter: Filter): Promise<void> {
       // Brand-invariant: the class body only references the var name, so
       // this produces identical classes across every brand and diffs to
       // nothing for non-default brands, same as the other static injections.
-      for (const [selector, block] of semanticColorClasses(semantics.vars)) {
+      const colorClasses = semanticColorClasses(semantics.vars);
+      for (const [selector, block] of colorClasses) {
+        semantics.classes.set(selector, block);
+      }
+      // State variants — a generic multiplier over the color classes above.
+      // Deriving from `colorClasses` (not a separate lookup) means a new
+      // color role automatically gets its hover/disabled/focus-visible/last
+      // forms with no change here.
+      for (const [selector, block] of withStateVariants(colorClasses)) {
         semantics.classes.set(selector, block);
       }
       for (const [sizeKey, pxValue] of gapTokens) {
