@@ -82,9 +82,35 @@ No naming collision with the border-**width** classes (`ui-border`,
 `ui-border-t-4`, …) — checked against the full list of border color role
 names.
 
-**Not included:** `ui-hover:*`/`ui-disabled:*` forms of these classes — that's
-the state-variant compiler, still blocked pending its own generator
-capability.
+### Delivered: state variants (`ui-hover:*`/`ui-disabled:*`/`ui-focus-visible:*`/`ui-last:*`)
+
+A generic multiplier (class-list × variant-list), exactly as specced in the
+ticket's own comment: "build variant-compiling as a generic multiplier, not
+case-by-case… so any new color class automatically gets its hover/disabled
+forms." Implemented in `variant-utility-classes.ts`'s `withStateVariants()`,
+applied to the semantic color classes above (129 × 4 = 516 new classes):
+
+```tsx
+<button className="ui-text-on-surface-primary ui-hover:text-on-brand-primary">
+  Hover me
+</button>
+```
+
+Naming mirrors Tailwind's own `variant:utility` syntax exactly — the colon
+is escaped in the CSS selector (`.ui-hover\:text-on-surface-primary:hover`),
+matching an unescaped `className="ui-hover:text-on-surface-primary"`, same
+escaping mechanism already used for fraction classes (`.ui-w-1\/2`).
+
+| Variant             | Pseudo-class     |
+| ------------------- | ---------------- |
+| `ui-hover:`         | `:hover`         |
+| `ui-disabled:`      | `:disabled`      |
+| `ui-focus-visible:` | `:focus-visible` |
+| `ui-last:`          | `:last-child`    |
+
+`withStateVariants()` is generic over its input, not hardcoded to color — a
+future class subset (e.g. opacity utilities) gets variant forms for free by
+calling it, no change needed in this file.
 
 ---
 

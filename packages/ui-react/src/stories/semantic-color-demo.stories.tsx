@@ -71,6 +71,49 @@ function BorderSwatch({ role }: { role: string }) {
   );
 }
 
+function StateVariantsDemo() {
+  return (
+    <div className="mt-8">
+      <p className="color-section-title mb-3 font-mono text-xs font-semibold">
+        ui-hover: / ui-disabled: / ui-last:
+      </p>
+
+      <div className="color-row mb-2 flex items-center gap-3">
+        <span className="color-label w-56 shrink-0 font-mono text-xs">
+          ui-hover:bg-brand-primary (hover me)
+        </span>
+        <div
+          data-testid="state-variant-hover-chip"
+          className="ui-bg-surface-secondary ui-hover:bg-brand-primary color-swatch h-8 w-24 rounded"
+        />
+      </div>
+
+      <div className="color-row mb-2 flex items-center gap-3">
+        <span className="color-label w-56 shrink-0 font-mono text-xs">
+          ui-disabled:text-on-surface-secondary
+        </span>
+        <button
+          disabled
+          className="ui-text-on-surface-primary ui-disabled:text-on-surface-secondary"
+        >
+          Disabled button
+        </button>
+      </div>
+
+      <div className="color-row flex items-center gap-3">
+        <span className="color-label w-56 shrink-0 font-mono text-xs">
+          ui-last:bg-status-danger (last item only)
+        </span>
+        <div className="flex gap-1">
+          <div className="ui-bg-surface-secondary color-swatch h-8 w-12 rounded" />
+          <div className="ui-bg-surface-secondary color-swatch h-8 w-12 rounded" />
+          <div className="ui-bg-surface-secondary ui-last:bg-status-danger color-swatch h-8 w-12 rounded" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function SemanticColorDemo() {
   return (
     <div className="p-8">
@@ -100,6 +143,8 @@ function SemanticColorDemo() {
       {BORDER_ROLES.map((role) => (
         <BorderSwatch key={role} role={role} />
       ))}
+
+      <StateVariantsDemo />
     </div>
   );
 }
@@ -111,17 +156,23 @@ const meta: Meta<typeof SemanticColorDemo> = {
     layout: 'fullscreen',
     // Three sections × several rows exceed the default viewport — capture
     // the full page so nothing below the fold is missing from the visual
-    // regression baseline.
-    snapshot: { fullPage: true },
+    // regression baseline. Real mouse hover (only a Playwright-level
+    // capability, not a synthetic pointer event) proves the ui-hover:*
+    // variant actually applies on hover, not just that the class exists.
+    snapshot: {
+      fullPage: true,
+      hoverSelector: '[data-testid="state-variant-hover-chip"]',
+    },
     docs: {
       description: {
         component:
           'Live demo (curated subset) of the `.ui-text-*`/`.ui-bg-*`/' +
           '`.ui-border-*` semantic color utility classes — one class per ' +
           'existing `--ui-text-*`/`--ui-background-*`/`--ui-border-*` ' +
-          'custom property (129 total), full path with no truncation, for ' +
-          'framework-agnostic (non-Tailwind) consumers. See the Token ' +
-          'reference page for the exhaustive list.',
+          'custom property (129 total), full path with no truncation — ' +
+          'plus their `ui-hover:`/`ui-disabled:`/`ui-last:` state-variant ' +
+          'forms, for framework-agnostic (non-Tailwind) consumers. See the ' +
+          'Token reference page for the exhaustive color list.',
       },
     },
   },
