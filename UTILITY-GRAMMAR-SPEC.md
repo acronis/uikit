@@ -61,6 +61,31 @@ consumers bypass the `.ui-typography-*` composite scale, undermining the
 system it's part of; `accent-color` — needs a specific brand-color choice,
 i.e. semantic-color territory.
 
+### Delivered: semantic color (`ui-text-*`/`ui-bg-*`/`ui-border-*`)
+
+One class per existing `--ui-text-*`/`--ui-background-*`/`--ui-border-*`
+custom property (129 total), mechanically wrapped — **full path, no
+truncation**: `--ui-text-on-surface-link-idle` → `.ui-text-on-surface-link-idle`,
+not a hand-picked alias like `ui-text-brand`. Same "mirror the name
+verbatim" convention as every other utility in this grammar. `background`
+shortens to `bg` in the **class prefix only** (matching Tailwind's own
+convention) — the token's own path/suffix is never touched.
+
+Implemented in `semantic-color-classes.ts`: driven entirely by whatever
+color vars the semantics tier resolves to at build time, not a hardcoded
+list — a new `colors.text/background/border.*` token gets a class for free
+on the next build. Brand-invariant (the class body only references the var
+name), so it diffs to nothing for non-default brand override files, same
+as every other static injection.
+
+No naming collision with the border-**width** classes (`ui-border`,
+`ui-border-t-4`, …) — checked against the full list of border color role
+names.
+
+**Not included:** `ui-hover:*`/`ui-disabled:*` forms of these classes — that's
+the state-variant compiler, still blocked pending its own generator
+capability.
+
 ---
 
 ## 1. `ui-w-*` / `ui-h-*` sizing
