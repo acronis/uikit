@@ -1,0 +1,148 @@
+---
+title: Layout
+description: Framework-agnostic .ui-* flex, grid, alignment, and text-flow utility classes.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+[`@acronis-platform/tokens-pd`](/packages/tokens-pd) ships a static set of
+layout and text-flow `.ui-*` utility classes — flex, grid, alignment (in and
+out of flex/grid), text wrapping/overflow, and display — mirroring Tailwind's
+own bounded utility groups wholesale, for non-Tailwind
+[`@acronis-platform/ui-react`](/getting-started) consumers.
+
+<Callout type="info">
+  These are not token-driven — there's no design token behind `display: flex`.
+  They're a fixed, finite set copied from Tailwind's own utility groups, same
+  as the spacing grammar's "generate the whole scale" rule, so a future
+  release only ever **adds** classes to this set, never removes or renames
+  them.
+</Callout>
+
+<Callout type="warn">
+  Typography (`font-size`, `font-weight`, `font-family`, `line-height`,
+  `letter-spacing`) is **out of scope** here — see
+  [Typography](/typography) for the `.ui-typography-*` classes that own it.
+</Callout>
+
+## Flex
+
+```tsx
+<div className="ui-flex ui-flex-row ui-flex-wrap">
+  <div className="ui-grow" />
+  <div className="ui-shrink-0" />
+</div>
+```
+
+`ui-flex`, `ui-inline-flex`, `ui-flex-row`, `ui-flex-row-reverse`,
+`ui-flex-col`, `ui-flex-col-reverse`, `ui-flex-wrap`, `ui-flex-wrap-reverse`,
+`ui-flex-nowrap`, `ui-flex-1`, `ui-flex-auto`, `ui-flex-initial`,
+`ui-flex-none`, `ui-grow`, `ui-grow-0`, `ui-shrink`, `ui-shrink-0`.
+
+## Grid
+
+```tsx
+<div className="ui-grid ui-grid-cols-4 ui-gap-16">
+  <div className="ui-col-span-2" />
+</div>
+```
+
+`ui-grid`, `ui-inline-grid`, `ui-grid-cols-1`…`ui-grid-cols-12`,
+`ui-grid-rows-1`…`ui-grid-rows-6`, `ui-col-span-1`…`ui-col-span-12`,
+`ui-row-span-1`…`ui-row-span-6`. Column/row counts mirror Tailwind's own
+default scale (12 columns, 6 rows).
+
+## Alignment — flex & grid containers/items
+
+`ui-items-start`/`-end`/`-center`/`-baseline`/`-stretch`,
+`ui-justify-start`/`-end`/`-center`/`-between`/`-around`/`-evenly`,
+`ui-content-start`/`-end`/`-center`/`-between`/`-around`/`-evenly`/`-stretch`,
+`ui-self-auto`/`-start`/`-end`/`-center`/`-stretch`/`-baseline`,
+`ui-justify-self-auto`/`-start`/`-end`/`-center`/`-stretch`.
+
+## Alignment outside flex/grid
+
+`ui-text-left`/`-center`/`-right`/`-justify`/`-start`/`-end`,
+`ui-align-baseline`/`-top`/`-middle`/`-bottom`/`-text-top`/`-text-bottom`,
+`ui-float-left`/`-right`/`-none`, `ui-clear-left`/`-right`/`-both`/`-none`.
+
+## Text wrapping & overflow
+
+```tsx
+<p className="ui-truncate">One line, ellipsized when it overflows.</p>
+<p className="ui-line-clamp-2">Wraps normally, then clamps after two lines.</p>
+```
+
+`ui-whitespace-normal`/`-nowrap`/`-pre`/`-pre-line`/`-pre-wrap`/
+`-break-spaces`, `ui-break-normal`/`-words`/`-all`/`-keep`, `ui-truncate`,
+`ui-text-ellipsis`, `ui-text-clip`, `ui-line-clamp-1`…`ui-line-clamp-6`,
+`ui-line-clamp-none`, `ui-hyphens-none`/`-manual`/`-auto`,
+`ui-underline-offset-4`.
+
+<Callout type="info">
+  `ui-underline-offset-4` isn't part of `.ui-typography-*` — the typography
+  composite classes only ever emit `font-family`/`font-size`/`font-weight`/
+  `line-height`/`letter-spacing`, never `text-decoration` properties.
+</Callout>
+
+## Display
+
+`ui-block`, `ui-inline-block`, `ui-inline`, `ui-hidden`, `ui-contents`.
+
+## List style
+
+```tsx
+<ul className="ui-list-disc ui-list-inside">
+  <li>Item</li>
+</ul>
+```
+
+`ui-list-disc`, `ui-list-decimal`, `ui-list-none`, `ui-list-inside`,
+`ui-list-outside`.
+
+## Cursor
+
+`ui-cursor-auto`/`-default`/`-pointer`/`-wait`/`-text`/`-move`/`-help`/
+`-not-allowed`/`-none`/`-grab`/`-grabbing`/`-zoom-in`/`-zoom-out`.
+
+## Resize
+
+`ui-resize-none`, `ui-resize` (both axes), `ui-resize-x`, `ui-resize-y`.
+
+## Child spacing
+
+```tsx
+<div className="ui-space-y-16">
+  <div>Row 1</div>
+  <div>Row 2</div>
+</div>
+
+<div className="ui-divide-y">
+  <div>Row 1</div>
+  <div>Row 2</div>
+</div>
+```
+
+`ui-space-y-*` mirrors the spacing scale (same steps as
+[sizing](/styling-utilities/sizing)/[spacing](/styling-utilities/spacing)),
+adding `margin-top` between children via Tailwind's own
+`:not([hidden]) ~ :not([hidden])` sibling combinator. `ui-divide-y` is a
+single fixed value using the already-established
+`--ui-border-on-surface-divider` token.
+
+## Border width
+
+```tsx
+<div className="ui-border-t-0" />
+<div className="ui-border-x-0 ui-border-y" />
+```
+
+`ui-border`/`ui-border-{t,r,b,l,x,y}` (default 1px) plus a
+`-0`/`-2`/`-4`/`-8` suffix per direction — Tailwind's own border-width
+scale, mirrored wholesale.
+
+<Callout type="warn">
+  All of the above is generated from `@acronis-platform/design-tokens` by the
+  `tools/style-dictionary` pipeline and committed to git. Never hand-edit
+  `css/default.css` directly.
+</Callout>
