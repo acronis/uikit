@@ -8,8 +8,15 @@ import type { TransformedToken } from 'style-dictionary/types';
 import { describe, expect, it, vi } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
+import { STATIC_FRACTION_CLASSES } from '../formats/fraction-utility-classes';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from '../formats/gap-utility-classes';
 import { STATIC_LAYOUT_CLASSES } from '../formats/layout-utility-classes';
+import { STATIC_NAMED_MAX_WIDTH_CLASSES } from '../formats/named-max-width-classes';
+import {
+  offsetUtilityClasses,
+  STATIC_OFFSET_CLASSES,
+  STATIC_POSITION_TYPE_CLASSES,
+} from '../formats/position-utility-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { buildThemeExtend, colorKeyFromPath, routeColor, scopeToNamespace } from '../../tailwind';
@@ -417,6 +424,88 @@ describe('STATIC_LAYOUT_CLASSES', () => {
     for (const [selector, block] of STATIC_LAYOUT_CLASSES) brand.classes.set(selector, block);
     const { classes } = diffDecls(base, brand);
     expect(classes.size).toBe(0);
+  });
+});
+
+describe('STATIC_FRACTION_CLASSES', () => {
+  it('emits width and height fraction classes with escaped selectors', () => {
+    const classes = STATIC_FRACTION_CLASSES;
+    expect(classes.get('.ui-w-1\\/2')).toBe('width: 50%;');
+    expect(classes.get('.ui-h-1\\/2')).toBe('height: 50%;');
+    expect(classes.get('.ui-w-1\\/3')).toBe('width: 33.333333%;');
+    expect(classes.get('.ui-w-11\\/12')).toBe('width: 91.666667%;');
+  });
+
+  it('keeps literal (unreduced) fraction labels distinct, matching Tailwind', () => {
+    // 2/4 and 1/2 both render 50% but stay separate selectors — Tailwind
+    // doesn't reduce fractions, and neither do we.
+    const classes = STATIC_FRACTION_CLASSES;
+    expect(classes.has('.ui-w-2\\/4')).toBe(true);
+    expect(classes.has('.ui-w-1\\/2')).toBe(true);
+    expect(classes.get('.ui-w-2\\/4')).toBe(classes.get('.ui-w-1\\/2'));
+  });
+
+  it('renders 26 fractions × 2 properties (width, height)', () => {
+    expect(STATIC_FRACTION_CLASSES.size).toBe(52);
+  });
+});
+
+describe('STATIC_NAMED_MAX_WIDTH_CLASSES', () => {
+  it('emits the xs..7xl named scale', () => {
+    const classes = STATIC_NAMED_MAX_WIDTH_CLASSES;
+    expect(classes.get('.ui-max-w-xs')).toBe('max-width: 320px;');
+    expect(classes.get('.ui-max-w-2xl')).toBe('max-width: 672px;');
+    expect(classes.get('.ui-max-w-7xl')).toBe('max-width: 1280px;');
+    expect(classes.size).toBe(11);
+  });
+});
+
+describe('offsetUtilityClasses', () => {
+  it('returns one selector per offset direction, all referencing the same var', () => {
+    const classes = offsetUtilityClasses('ui-gap-16', '16');
+    expect(classes.size).toBe(9); // top, right, bottom, left, start, end, inset, inset-x, inset-y
+    for (const block of classes.values()) {
+      expect(block).toContain('var(--ui-gap-16)');
+    }
+  });
+
+  it('maps each selector to the correct CSS property', () => {
+    const classes = offsetUtilityClasses('ui-gap-16', '16');
+    const expected: Record<string, string> = {
+      '.ui-top-16': 'top',
+      '.ui-right-16': 'right',
+      '.ui-bottom-16': 'bottom',
+      '.ui-left-16': 'left',
+      '.ui-start-16': 'inset-inline-start',
+      '.ui-end-16': 'inset-inline-end',
+      '.ui-inset-16': 'inset',
+      '.ui-inset-x-16': 'inset-inline',
+      '.ui-inset-y-16': 'inset-block',
+    };
+    for (const [selector, property] of Object.entries(expected)) {
+      expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
+    }
+  });
+});
+
+describe('STATIC_POSITION_TYPE_CLASSES', () => {
+  it('emits the five position-type classes', () => {
+    const classes = STATIC_POSITION_TYPE_CLASSES;
+    expect(classes.get('.ui-relative')).toBe('position: relative;');
+    expect(classes.get('.ui-absolute')).toBe('position: absolute;');
+    expect(classes.get('.ui-fixed')).toBe('position: fixed;');
+    expect(classes.get('.ui-sticky')).toBe('position: sticky;');
+    expect(classes.get('.ui-static')).toBe('position: static;');
+  });
+});
+
+describe('STATIC_OFFSET_CLASSES', () => {
+  it('emits a full (100%) variant for every offset direction', () => {
+    const classes = STATIC_OFFSET_CLASSES;
+    expect(classes.get('.ui-top-full')).toBe('top: 100%;');
+    expect(classes.get('.ui-right-full')).toBe('right: 100%;');
+    expect(classes.get('.ui-inset-full')).toBe('inset: 100%;');
+    expect(classes.size).toBe(9);
   });
 });
 
