@@ -116,6 +116,10 @@ const meta: Meta<typeof SizingDemo> = {
   component: SizingDemo,
   parameters: {
     layout: 'fullscreen',
+    // Taller than the default viewport (17 scale rows + fractions + named
+    // scale) — capture the full page so nothing below the fold is missing
+    // from the visual regression baseline.
+    snapshot: { fullPage: true },
     docs: {
       description: {
         component:

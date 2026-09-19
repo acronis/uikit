@@ -97,6 +97,9 @@ const meta: Meta<typeof PositionDemo> = {
   component: PositionDemo,
   parameters: {
     layout: 'fullscreen',
+    // Capture the full page for consistency with the other Foundations
+    // demos, so nothing below the fold is missing from the baseline.
+    snapshot: { fullPage: true },
     docs: {
       description: {
         component:
