@@ -22,13 +22,18 @@ preset.
   scale.
 - [Layout](/styling-utilities/layout) — static `.ui-*` flex, grid, alignment,
   and text-flow (wrapping/overflow) classes mirroring Tailwind's own bounded
-  utility groups.
+  utility groups, plus list-style, cursor, resize, child spacing
+  (`ui-space-y-*`/`ui-divide-y`), and border-width.
+- [Colors](/styling-utilities/colors) — `.ui-text-*`/`.ui-bg-*`/
+  `.ui-border-*` semantic color classes, one per existing
+  `--ui-text-*`/`--ui-background-*`/`--ui-border-*` custom property.
 - [Breakpoints](/styling-utilities/breakpoints) — the viewport breakpoint scale,
   as Tailwind `@theme` values, `--ui-breakpoint-*` CSS variables, and JS
   constants.
 
-For color, typography, and component tokens, see
-[Token reference](/token-reference) and [Typography](/typography).
+For every `--ui-*` token (including the ones the Colors page above wraps)
+and typography, see [Token reference](/token-reference) and
+[Typography](/typography).
 
 <Callout type="warn">
   **The tailwind-merge trap.** `@acronis-platform/ui-react` components merge a

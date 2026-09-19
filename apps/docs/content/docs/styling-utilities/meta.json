@@ -1,4 +1,12 @@
 {
   "title": "Styling Utilities",
-  "pages": ["index", "spacing", "sizing", "position", "layout", "breakpoints"]
+  "pages": [
+    "index",
+    "spacing",
+    "sizing",
+    "position",
+    "layout",
+    "colors",
+    "breakpoints"
+  ]
 }
