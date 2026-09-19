@@ -13,6 +13,10 @@ const SIZING_SCALE = [
   0, 2, 4, 6, 8, 12, 16, 20, 24, 32, 40, 48, 56, 64, 72, 88, 96,
 ] as const;
 
+const FRACTIONS = ['1/4', '1/3', '1/2', '2/3', '3/4', '5/6', '11/12'] as const;
+
+const NAMED_MAX_WIDTHS = ['xs', 'sm', 'md', 'lg', 'xl', '2xl'] as const;
+
 function SizingRow({ step }: { step: number }) {
   return (
     <div className="sizing-row flex items-center gap-6 py-3">
@@ -71,6 +75,38 @@ function SizingDemo() {
           </div>
         </div>
       </div>
+
+      <div className="mt-8">
+        <p className="sizing-label mb-3 font-mono text-xs font-semibold">
+          .ui-w-* fractions
+        </p>
+        <div className="sizing-box w-full p-2">
+          {FRACTIONS.map((fraction) => (
+            <div key={fraction} className="mb-2 flex items-center gap-3">
+              <span className="sizing-step w-12 shrink-0 font-mono text-xs">
+                {fraction}
+              </span>
+              <div className={`ui-w-${fraction} sizing-fill h-4`} />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <p className="sizing-label mb-3 font-mono text-xs font-semibold">
+          .ui-max-w-* named scale
+        </p>
+        <div className="sizing-box w-full p-2">
+          {NAMED_MAX_WIDTHS.map((name) => (
+            <div key={name} className="mb-2 flex items-center gap-3">
+              <span className="sizing-step w-12 shrink-0 font-mono text-xs">
+                {name}
+              </span>
+              <div className={`ui-max-w-${name} sizing-fill h-4 w-full`} />
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
@@ -85,9 +121,10 @@ const meta: Meta<typeof SizingDemo> = {
         component:
           'Live demo of the `.ui-w-*`/`.ui-h-*`/`.ui-min-w-*`/`.ui-min-h-*`/' +
           '`.ui-max-w-*`/`.ui-max-h-*` (+ `.ui-max-w-full`) sizing utility ' +
-          'classes, generated from the same `units.gap` primitive scale as ' +
-          'the spacing utilities, for framework-agnostic (non-Tailwind) ' +
-          'consumers. One row per scale step.',
+          'classes generated from the same `units.gap` primitive scale as ' +
+          'the spacing utilities, plus the width/height fraction scale and ' +
+          'the named `.ui-max-w-*` scale (`xs`…`7xl`), for ' +
+          'framework-agnostic (non-Tailwind) consumers.',
       },
     },
   },
