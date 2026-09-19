@@ -66,12 +66,37 @@ There's also one static, non-scale utility:
 <div className="ui-max-w-full" />
 ```
 
+## Fractions
+
+Not token-driven — a fixed, finite set copied verbatim from Tailwind's own
+default fraction scale (halves, thirds, quarters, fifths, sixths, twelfths),
+applied to **both** width and height:
+
+```tsx
+<div className="ui-w-1/2 ui-h-1/3" />
+```
+
+Selectors escape the `/` (`.ui-w-1\/2`) — this is invisible from markup, an
+unescaped `className="ui-w-1/2"` matches it exactly like any Tailwind
+fraction class does.
+
 <Callout type="warn">
-  This grammar covers the fixed spacing-scale steps only — it does not include
-  Tailwind's named max-width scale (`max-w-xs`…`max-w-7xl`) or fraction widths
-  (`w-1/2`, `w-1/3`, …). Those aren't generated from a design token and are
-  tracked as a separate follow-up.
+  Fraction labels are **not reduced**: `.ui-w-2/4` and `.ui-w-1/2` both render
+  `50%` but are separate classes, matching Tailwind's own convention.
 </Callout>
+
+## Named max-width scale
+
+Also not token-driven — Tailwind's own bounded `xs`…`7xl` scale, copied
+verbatim (values are Tailwind's defaults, rem × 16px):
+
+```tsx
+<div className="ui-max-w-md" />
+```
+
+`ui-max-w-xs` (320px), `sm` (384px), `md` (448px), `lg` (512px), `xl`
+(576px), `2xl` (672px), `3xl` (768px), `4xl` (896px), `5xl` (1024px), `6xl`
+(1152px), `7xl` (1280px).
 
 <Callout type="warn">
   All of the above is generated from `@acronis-platform/design-tokens` by the

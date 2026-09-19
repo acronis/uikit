@@ -89,9 +89,29 @@ Keep it a separate file/function — sizing and spacing are different concerns
 that happen to share a scale, and the existing file's naming
 (`gap-utility-classes.ts`) is spacing-specific.
 
-**Not in this batch:** the Tailwind-named fixed scale (`w-1/2`, `w-1/3`,
-`max-w-xs`…`max-w-7xl`). Those are a _different_, finite, non-token-driven set
-— tracked as a follow-up ("Next" tier in the ticket).
+### Delivered follow-up: fractions, named max-width scale, position
+
+Shipped in a second pass (`fraction-utility-classes.ts`,
+`named-max-width-classes.ts`, `position-utility-classes.ts`):
+
+- `ui-w-*`/`ui-h-*` **fractions** — Tailwind's default fraction scale
+  (halves, thirds, quarters, fifths, sixths, twelfths — 26 literal labels,
+  not reduced, matching Tailwind exactly). Applied to **both** width and
+  height. Selectors escape the `/` (`.ui-w-1\/2`), matching an unescaped
+  `className="ui-w-1/2"`.
+- **Named max-width scale** — `ui-max-w-xs` … `ui-max-w-7xl`, Tailwind's own
+  values (rem × 16px).
+- **Position** — offsets (`ui-top-*`/`ui-right-*`/`ui-bottom-*`/`ui-left-*`/
+  `ui-start-*`/`ui-end-*`/`ui-inset-*`/`ui-inset-x-*`/`ui-inset-y-*`,
+  generated from the same 17-step spacing scale, plus a static `-full`
+  variant per direction) shipped together with position-type utilities
+  (`ui-static`/`ui-relative`/`ui-absolute`/`ui-fixed`/`ui-sticky`) — offsets
+  alone are unusable without a position declaration. `left`/`right` are
+  physical (RTL caution, same as `pl`/`pr`); prefer `start`/`end`.
+
+**Intentionally skipped:** `ui-max-h-60` — not on the 17-step spacing scale,
+and the ticket's own audit called it "unmeasured/low count." Not worth a
+one-off special case or a second, wider scale for a single value.
 
 ---
 
