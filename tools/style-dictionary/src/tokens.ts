@@ -41,6 +41,7 @@ import {
   STATIC_OFFSET_CLASSES,
   STATIC_POSITION_TYPE_CLASSES,
 } from './hooks/formats/position-utility-classes';
+import { semanticColorClasses } from './hooks/formats/semantic-color-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from './hooks/formats/sizing-utility-classes';
 import { STATIC_TEXT_DECORATION_CLASSES } from './hooks/formats/text-decoration-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
@@ -391,6 +392,12 @@ export async function buildCss(filter: Filter): Promise<void> {
       }
       for (const [selector, block] of STATIC_DIVIDE_CLASSES) semantics.classes.set(selector, block);
       for (const [selector, block] of STATIC_TEXT_DECORATION_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      // Brand-invariant: the class body only references the var name, so
+      // this produces identical classes across every brand and diffs to
+      // nothing for non-default brands, same as the other static injections.
+      for (const [selector, block] of semanticColorClasses(semantics.vars)) {
         semantics.classes.set(selector, block);
       }
       for (const [sizeKey, pxValue] of gapTokens) {

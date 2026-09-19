@@ -20,6 +20,7 @@ import {
   STATIC_OFFSET_CLASSES,
   STATIC_POSITION_TYPE_CLASSES,
 } from '../formats/position-utility-classes';
+import { semanticColorClasses } from '../formats/semantic-color-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
 import { STATIC_TEXT_DECORATION_CLASSES } from '../formats/text-decoration-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
@@ -564,6 +565,43 @@ describe('STATIC_TEXT_DECORATION_CLASSES', () => {
   it('emits ui-underline-offset-4', () => {
     expect(STATIC_TEXT_DECORATION_CLASSES.get('.ui-underline-offset-4')).toBe(
       'text-underline-offset: 4px;'
+    );
+  });
+});
+
+describe('semanticColorClasses', () => {
+  it('wraps every ui-text-*/ui-background-*/ui-border-* var, full path, no truncation', () => {
+    const vars = new Map<string, string>([
+      ['ui-text-on-surface-link-idle', 'light-dark(rgb(0 0 0), rgb(255 255 255))'],
+      ['ui-background-surface-primary', 'light-dark(rgb(255 255 255), rgb(0 0 0))'],
+      ['ui-border-on-surface-border', 'light-dark(rgb(200 200 200), rgb(50 50 50))'],
+    ]);
+    const classes = semanticColorClasses(vars);
+    expect(classes.get('.ui-text-on-surface-link-idle')).toBe(
+      'color: var(--ui-text-on-surface-link-idle);'
+    );
+    expect(classes.get('.ui-bg-surface-primary')).toBe(
+      'background-color: var(--ui-background-surface-primary);'
+    );
+    expect(classes.get('.ui-border-on-surface-border')).toBe(
+      'border-color: var(--ui-border-on-surface-border);'
+    );
+  });
+
+  it('ignores vars outside the text/background/border roots', () => {
+    const vars = new Map<string, string>([
+      ['ui-gap-16', '16px'],
+      ['ui-shadow-md', '0px 16px 32px 0px rgb(0 0 0 / 0.4)'],
+      ['ui-gradients-ai-idle', 'linear-gradient(180deg, rgb(0 0 0) 0%)'],
+    ]);
+    expect(semanticColorClasses(vars).size).toBe(0);
+  });
+
+  it('is brand-invariant: identical input names produce identical classes regardless of resolved value', () => {
+    const brandA = new Map([['ui-text-on-surface-primary', 'light-dark(rgb(0 0 0), rgb(255 255 255))']]);
+    const brandB = new Map([['ui-text-on-surface-primary', 'light-dark(rgb(10 10 10), rgb(245 245 245))']]);
+    expect(semanticColorClasses(brandA).get('.ui-text-on-surface-primary')).toBe(
+      semanticColorClasses(brandB).get('.ui-text-on-surface-primary')
     );
   });
 });

@@ -287,6 +287,238 @@
   vertical-align: top;
 }
 
+.ui-bg-backdrop-element-primary {
+  background-color: var(--ui-background-backdrop-element-primary);
+}
+
+.ui-bg-backdrop-element-secondary {
+  background-color: var(--ui-background-backdrop-element-secondary);
+}
+
+.ui-bg-backdrop-screen {
+  background-color: var(--ui-background-backdrop-screen);
+}
+
+.ui-bg-brand-primary {
+  background-color: var(--ui-background-brand-primary);
+}
+
+.ui-bg-brand-primary-active {
+  background-color: var(--ui-background-brand-primary-active);
+}
+
+.ui-bg-brand-primary-disabled {
+  background-color: var(--ui-background-brand-primary-disabled);
+}
+
+.ui-bg-brand-primary-hover {
+  background-color: var(--ui-background-brand-primary-hover);
+}
+
+.ui-bg-brand-secondary {
+  background-color: var(--ui-background-brand-secondary);
+}
+
+.ui-bg-brand-secondary-active {
+  background-color: var(--ui-background-brand-secondary-active);
+}
+
+.ui-bg-brand-secondary-disabled {
+  background-color: var(--ui-background-brand-secondary-disabled);
+}
+
+.ui-bg-brand-secondary-hover {
+  background-color: var(--ui-background-brand-secondary-hover);
+}
+
+.ui-bg-inverse-primary {
+  background-color: var(--ui-background-inverse-primary);
+}
+
+.ui-bg-status-ai {
+  background-color: var(--ui-background-status-ai);
+}
+
+.ui-bg-status-ai-hover {
+  background-color: var(--ui-background-status-ai-hover);
+}
+
+.ui-bg-status-ai-pressed {
+  background-color: var(--ui-background-status-ai-pressed);
+}
+
+.ui-bg-status-critical {
+  background-color: var(--ui-background-status-critical);
+}
+
+.ui-bg-status-critical-hover {
+  background-color: var(--ui-background-status-critical-hover);
+}
+
+.ui-bg-status-critical-pressed {
+  background-color: var(--ui-background-status-critical-pressed);
+}
+
+.ui-bg-status-danger {
+  background-color: var(--ui-background-status-danger);
+}
+
+.ui-bg-status-danger-hover {
+  background-color: var(--ui-background-status-danger-hover);
+}
+
+.ui-bg-status-danger-pressed {
+  background-color: var(--ui-background-status-danger-pressed);
+}
+
+.ui-bg-status-info {
+  background-color: var(--ui-background-status-info);
+}
+
+.ui-bg-status-info-hover {
+  background-color: var(--ui-background-status-info-hover);
+}
+
+.ui-bg-status-info-pressed {
+  background-color: var(--ui-background-status-info-pressed);
+}
+
+.ui-bg-status-neutral {
+  background-color: var(--ui-background-status-neutral);
+}
+
+.ui-bg-status-neutral-hover {
+  background-color: var(--ui-background-status-neutral-hover);
+}
+
+.ui-bg-status-neutral-pressed {
+  background-color: var(--ui-background-status-neutral-pressed);
+}
+
+.ui-bg-status-off {
+  background-color: var(--ui-background-status-off);
+}
+
+.ui-bg-status-on {
+  background-color: var(--ui-background-status-on);
+}
+
+.ui-bg-status-strong-critical {
+  background-color: var(--ui-background-status-strong-critical);
+}
+
+.ui-bg-status-strong-critical-hover {
+  background-color: var(--ui-background-status-strong-critical-hover);
+}
+
+.ui-bg-status-strong-critical-pressed {
+  background-color: var(--ui-background-status-strong-critical-pressed);
+}
+
+.ui-bg-status-strong-danger {
+  background-color: var(--ui-background-status-strong-danger);
+}
+
+.ui-bg-status-strong-danger-hover {
+  background-color: var(--ui-background-status-strong-danger-hover);
+}
+
+.ui-bg-status-strong-danger-pressed {
+  background-color: var(--ui-background-status-strong-danger-pressed);
+}
+
+.ui-bg-status-strong-info {
+  background-color: var(--ui-background-status-strong-info);
+}
+
+.ui-bg-status-strong-info-hover {
+  background-color: var(--ui-background-status-strong-info-hover);
+}
+
+.ui-bg-status-strong-info-pressed {
+  background-color: var(--ui-background-status-strong-info-pressed);
+}
+
+.ui-bg-status-strong-neutral {
+  background-color: var(--ui-background-status-strong-neutral);
+}
+
+.ui-bg-status-strong-neutral-hover {
+  background-color: var(--ui-background-status-strong-neutral-hover);
+}
+
+.ui-bg-status-strong-neutral-pressed {
+  background-color: var(--ui-background-status-strong-neutral-pressed);
+}
+
+.ui-bg-status-strong-success {
+  background-color: var(--ui-background-status-strong-success);
+}
+
+.ui-bg-status-strong-success-hover {
+  background-color: var(--ui-background-status-strong-success-hover);
+}
+
+.ui-bg-status-strong-success-pressed {
+  background-color: var(--ui-background-status-strong-success-pressed);
+}
+
+.ui-bg-status-strong-warning {
+  background-color: var(--ui-background-status-strong-warning);
+}
+
+.ui-bg-status-strong-warning-hover {
+  background-color: var(--ui-background-status-strong-warning-hover);
+}
+
+.ui-bg-status-strong-warning-pressed {
+  background-color: var(--ui-background-status-strong-warning-pressed);
+}
+
+.ui-bg-status-success {
+  background-color: var(--ui-background-status-success);
+}
+
+.ui-bg-status-success-hover {
+  background-color: var(--ui-background-status-success-hover);
+}
+
+.ui-bg-status-success-pressed {
+  background-color: var(--ui-background-status-success-pressed);
+}
+
+.ui-bg-status-warning {
+  background-color: var(--ui-background-status-warning);
+}
+
+.ui-bg-status-warning-hover {
+  background-color: var(--ui-background-status-warning-hover);
+}
+
+.ui-bg-status-warning-pressed {
+  background-color: var(--ui-background-status-warning-pressed);
+}
+
+.ui-bg-surface-active {
+  background-color: var(--ui-background-surface-active);
+}
+
+.ui-bg-surface-hover {
+  background-color: var(--ui-background-surface-hover);
+}
+
+.ui-bg-surface-primary {
+  background-color: var(--ui-background-surface-primary);
+}
+
+.ui-bg-surface-secondary {
+  background-color: var(--ui-background-surface-secondary);
+}
+
+.ui-bg-transparent {
+  background-color: var(--ui-background-transparent);
+}
+
 .ui-block {
   display: block;
 }
@@ -351,6 +583,90 @@
   border-left-width: 8px;
 }
 
+.ui-border-on-brand-border {
+  border-color: var(--ui-border-on-brand-border);
+}
+
+.ui-border-on-brand-border-active {
+  border-color: var(--ui-border-on-brand-border-active);
+}
+
+.ui-border-on-brand-divider {
+  border-color: var(--ui-border-on-brand-divider);
+}
+
+.ui-border-on-status-ai {
+  border-color: var(--ui-border-on-status-ai);
+}
+
+.ui-border-on-status-ai-strong {
+  border-color: var(--ui-border-on-status-ai-strong);
+}
+
+.ui-border-on-status-critical {
+  border-color: var(--ui-border-on-status-critical);
+}
+
+.ui-border-on-status-critical-strong {
+  border-color: var(--ui-border-on-status-critical-strong);
+}
+
+.ui-border-on-status-danger {
+  border-color: var(--ui-border-on-status-danger);
+}
+
+.ui-border-on-status-danger-strong {
+  border-color: var(--ui-border-on-status-danger-strong);
+}
+
+.ui-border-on-status-info {
+  border-color: var(--ui-border-on-status-info);
+}
+
+.ui-border-on-status-info-strong {
+  border-color: var(--ui-border-on-status-info-strong);
+}
+
+.ui-border-on-status-neutral {
+  border-color: var(--ui-border-on-status-neutral);
+}
+
+.ui-border-on-status-neutral-strong {
+  border-color: var(--ui-border-on-status-neutral-strong);
+}
+
+.ui-border-on-status-success {
+  border-color: var(--ui-border-on-status-success);
+}
+
+.ui-border-on-status-success-strong {
+  border-color: var(--ui-border-on-status-success-strong);
+}
+
+.ui-border-on-status-warning {
+  border-color: var(--ui-border-on-status-warning);
+}
+
+.ui-border-on-status-warning-strong {
+  border-color: var(--ui-border-on-status-warning-strong);
+}
+
+.ui-border-on-surface-border {
+  border-color: var(--ui-border-on-surface-border);
+}
+
+.ui-border-on-surface-border-active {
+  border-color: var(--ui-border-on-surface-border-active);
+}
+
+.ui-border-on-surface-border-error {
+  border-color: var(--ui-border-on-surface-border-error);
+}
+
+.ui-border-on-surface-divider {
+  border-color: var(--ui-border-on-surface-divider);
+}
+
 .ui-border-r {
   border-right-width: 1px;
 }
@@ -389,6 +705,10 @@
 
 .ui-border-t-8 {
   border-top-width: 8px;
+}
+
+.ui-border-transparent {
+  border-color: var(--ui-border-transparent);
 }
 
 .ui-border-x {
@@ -2338,6 +2658,202 @@
 
 .ui-text-left {
   text-align: left;
+}
+
+.ui-text-on-backdrop-element-link-active {
+  color: var(--ui-text-on-backdrop-element-link-active);
+}
+
+.ui-text-on-backdrop-element-link-hover {
+  color: var(--ui-text-on-backdrop-element-link-hover);
+}
+
+.ui-text-on-backdrop-element-link-idle {
+  color: var(--ui-text-on-backdrop-element-link-idle);
+}
+
+.ui-text-on-backdrop-element-primary {
+  color: var(--ui-text-on-backdrop-element-primary);
+}
+
+.ui-text-on-backdrop-screen-link-active {
+  color: var(--ui-text-on-backdrop-screen-link-active);
+}
+
+.ui-text-on-backdrop-screen-link-hover {
+  color: var(--ui-text-on-backdrop-screen-link-hover);
+}
+
+.ui-text-on-backdrop-screen-link-idle {
+  color: var(--ui-text-on-backdrop-screen-link-idle);
+}
+
+.ui-text-on-backdrop-screen-primary {
+  color: var(--ui-text-on-backdrop-screen-primary);
+}
+
+.ui-text-on-backdrop-screen-secondary {
+  color: var(--ui-text-on-backdrop-screen-secondary);
+}
+
+.ui-text-on-brand-disabled {
+  color: var(--ui-text-on-brand-disabled);
+}
+
+.ui-text-on-brand-link-disabled {
+  color: var(--ui-text-on-brand-link-disabled);
+}
+
+.ui-text-on-brand-link-hover {
+  color: var(--ui-text-on-brand-link-hover);
+}
+
+.ui-text-on-brand-link-idle {
+  color: var(--ui-text-on-brand-link-idle);
+}
+
+.ui-text-on-brand-link-pressed {
+  color: var(--ui-text-on-brand-link-pressed);
+}
+
+.ui-text-on-brand-primary {
+  color: var(--ui-text-on-brand-primary);
+}
+
+.ui-text-on-brand-secondary {
+  color: var(--ui-text-on-brand-secondary);
+}
+
+.ui-text-on-inverse-primary {
+  color: var(--ui-text-on-inverse-primary);
+}
+
+.ui-text-on-inverse-secondary {
+  color: var(--ui-text-on-inverse-secondary);
+}
+
+.ui-text-on-status-ai {
+  color: var(--ui-text-on-status-ai);
+}
+
+.ui-text-on-status-critical {
+  color: var(--ui-text-on-status-critical);
+}
+
+.ui-text-on-status-danger {
+  color: var(--ui-text-on-status-danger);
+}
+
+.ui-text-on-status-info {
+  color: var(--ui-text-on-status-info);
+}
+
+.ui-text-on-status-link-disabled {
+  color: var(--ui-text-on-status-link-disabled);
+}
+
+.ui-text-on-status-link-hover {
+  color: var(--ui-text-on-status-link-hover);
+}
+
+.ui-text-on-status-link-idle {
+  color: var(--ui-text-on-status-link-idle);
+}
+
+.ui-text-on-status-link-pressed {
+  color: var(--ui-text-on-status-link-pressed);
+}
+
+.ui-text-on-status-neutral {
+  color: var(--ui-text-on-status-neutral);
+}
+
+.ui-text-on-status-primary {
+  color: var(--ui-text-on-status-primary);
+}
+
+.ui-text-on-status-secondary {
+  color: var(--ui-text-on-status-secondary);
+}
+
+.ui-text-on-status-strong-ai {
+  color: var(--ui-text-on-status-strong-ai);
+}
+
+.ui-text-on-status-strong-critical {
+  color: var(--ui-text-on-status-strong-critical);
+}
+
+.ui-text-on-status-strong-danger {
+  color: var(--ui-text-on-status-strong-danger);
+}
+
+.ui-text-on-status-strong-info {
+  color: var(--ui-text-on-status-strong-info);
+}
+
+.ui-text-on-status-strong-link {
+  color: var(--ui-text-on-status-strong-link);
+}
+
+.ui-text-on-status-strong-neutral {
+  color: var(--ui-text-on-status-strong-neutral);
+}
+
+.ui-text-on-status-strong-primary {
+  color: var(--ui-text-on-status-strong-primary);
+}
+
+.ui-text-on-status-strong-secondary {
+  color: var(--ui-text-on-status-strong-secondary);
+}
+
+.ui-text-on-status-strong-success {
+  color: var(--ui-text-on-status-strong-success);
+}
+
+.ui-text-on-status-strong-warning {
+  color: var(--ui-text-on-status-strong-warning);
+}
+
+.ui-text-on-status-success {
+  color: var(--ui-text-on-status-success);
+}
+
+.ui-text-on-status-warning {
+  color: var(--ui-text-on-status-warning);
+}
+
+.ui-text-on-surface-destructive {
+  color: var(--ui-text-on-surface-destructive);
+}
+
+.ui-text-on-surface-disabled {
+  color: var(--ui-text-on-surface-disabled);
+}
+
+.ui-text-on-surface-link-disabled {
+  color: var(--ui-text-on-surface-link-disabled);
+}
+
+.ui-text-on-surface-link-hover {
+  color: var(--ui-text-on-surface-link-hover);
+}
+
+.ui-text-on-surface-link-idle {
+  color: var(--ui-text-on-surface-link-idle);
+}
+
+.ui-text-on-surface-link-pressed {
+  color: var(--ui-text-on-surface-link-pressed);
+}
+
+.ui-text-on-surface-primary {
+  color: var(--ui-text-on-surface-primary);
+}
+
+.ui-text-on-surface-secondary {
+  color: var(--ui-text-on-surface-secondary);
 }
 
 .ui-text-right {
