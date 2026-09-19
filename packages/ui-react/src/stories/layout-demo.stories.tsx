@@ -107,6 +107,108 @@ function TextFlowDemo() {
       <div className="layout-box ui-whitespace-nowrap mt-2 w-40 overflow-hidden p-2">
         This text should never wrap onto a second line
       </div>
+      <a href="#" className="ui-underline-offset-4 mt-2 inline-block underline">
+        .ui-underline-offset-4 link
+      </a>
+    </Section>
+  );
+}
+
+function ListDemo() {
+  return (
+    <Section title=".ui-list-disc / .ui-list-decimal / .ui-list-none">
+      <div className="flex gap-8">
+        <ul className="ui-list-disc ui-list-inside">
+          <li>disc item one</li>
+          <li>disc item two</li>
+        </ul>
+        <ol className="ui-list-decimal ui-list-inside">
+          <li>decimal item one</li>
+          <li>decimal item two</li>
+        </ol>
+        <ul className="ui-list-none">
+          <li>none item one</li>
+          <li>none item two</li>
+        </ul>
+      </div>
+    </Section>
+  );
+}
+
+function CursorDemo() {
+  const cursors = ['help', 'move', 'pointer', 'not-allowed', 'grab'] as const;
+  return (
+    <Section title=".ui-cursor-help / .ui-cursor-move / .ui-cursor-pointer / .ui-cursor-not-allowed">
+      <div className="flex gap-2">
+        {cursors.map((cursor) => (
+          <div key={cursor} className={`ui-cursor-${cursor}`}>
+            <Chip>{cursor}</Chip>
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function ResizeDemo() {
+  return (
+    <Section title=".ui-resize-none / .ui-resize-x / .ui-resize-y">
+      <div className="flex gap-4">
+        <textarea
+          className="layout-box ui-resize-none h-16 w-32 p-2"
+          defaultValue="resize-none"
+        />
+        <textarea
+          className="layout-box ui-resize-x h-16 w-32 p-2"
+          defaultValue="resize-x"
+        />
+        <textarea
+          className="layout-box ui-resize-y h-16 w-32 p-2"
+          defaultValue="resize-y"
+        />
+      </div>
+    </Section>
+  );
+}
+
+function ChildSpacingDemo() {
+  return (
+    <Section title=".ui-space-y-4 / .ui-divide-y">
+      <div className="ui-space-y-4 layout-box w-40 p-2">
+        <Chip>1</Chip>
+        <Chip>2</Chip>
+        <Chip>3</Chip>
+      </div>
+      <div className="ui-divide-y layout-box mt-2 w-40 p-2">
+        <div className="py-1">row 1</div>
+        <div className="py-1">row 2</div>
+        <div className="py-1">row 3</div>
+      </div>
+    </Section>
+  );
+}
+
+function BorderWidthDemo() {
+  const sides = ['border-t', 'border-r', 'border-b', 'border-l'] as const;
+  return (
+    <Section title=".ui-border-t-0 / .ui-border-x-0 / .ui-border-y / .ui-border-*">
+      <div className="flex gap-4">
+        {sides.map((side) => (
+          <div
+            key={side}
+            className={`ui-${side}-4 border-solid p-2`}
+            style={{ borderColor: 'var(--ui-border-on-surface-border-active)' }}
+          >
+            .ui-{side}-4
+          </div>
+        ))}
+        <div
+          className="ui-border-x-0 ui-border-y-4 border-solid p-2"
+          style={{ borderColor: 'var(--ui-border-on-surface-border-active)' }}
+        >
+          .ui-border-x-0 .ui-border-y-4
+        </div>
+      </div>
     </Section>
   );
 }
@@ -150,6 +252,11 @@ function LayoutDemo() {
       <NonFlexAlignmentDemo />
       <TextFlowDemo />
       <DisplayDemo />
+      <ListDemo />
+      <CursorDemo />
+      <ResizeDemo />
+      <ChildSpacingDemo />
+      <BorderWidthDemo />
     </div>
   );
 }
@@ -159,9 +266,9 @@ const meta: Meta<typeof LayoutDemo> = {
   component: LayoutDemo,
   parameters: {
     layout: 'fullscreen',
-    // Six sections stacked vertically exceed the default viewport — capture
-    // the full page so nothing below the fold is missing from the visual
-    // regression baseline.
+    // Eleven sections stacked vertically exceed the default viewport —
+    // capture the full page so nothing below the fold is missing from the
+    // visual regression baseline.
     snapshot: { fullPage: true },
     docs: {
       description: {
@@ -169,9 +276,11 @@ const meta: Meta<typeof LayoutDemo> = {
           'Live demo of the static `.ui-*` layout & text-flow utility ' +
           'classes — flex, grid, flex/grid alignment, non-flex alignment ' +
           '(text-align, float), text wrapping/overflow (truncate, ' +
-          'line-clamp, whitespace), and display — for framework-agnostic ' +
-          '(non-Tailwind) consumers. Typography (font-size/weight) is out ' +
-          'of scope here; see the Typography catalog.',
+          'line-clamp, whitespace, underline-offset), display, list-style, ' +
+          'cursor, resize, child spacing (space-y/divide-y), and ' +
+          'border-width per side — for framework-agnostic (non-Tailwind) ' +
+          'consumers. Typography (font-size/weight) is out of scope here; ' +
+          'see the Typography catalog.',
       },
     },
   },

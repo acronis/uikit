@@ -33,8 +33,33 @@ immediately, mirroring the existing spacing-emitter pattern.
    family/line-height — those stay in `.ui-typography-*`).
 
 Everything else from the ticket (semantic color wrappers, `ui-shadow-*`,
-fixed max-width/fraction scales, border-radius, the state-variant compiler)
-is out of scope here — tracked separately.
+border-radius, the state-variant compiler, `ui-accent-color`) is out of
+scope here — each needs a naming/scope decision, tracked separately.
+
+### Delivered: the "no-argument" batch
+
+Shipped alongside the sizing/layout batches — mechanical Tailwind mirrors or
+a single already-established token reference, no naming/scope decision
+needed (`list-cursor-resize-classes.ts`, `child-spacing-classes.ts`,
+`border-width-classes.ts`, `text-decoration-classes.ts`):
+
+- List-style (`ui-list-disc`/`-decimal`/`-none`/`-inside`/`-outside`)
+- Cursor (`ui-cursor-auto`/`-default`/`-pointer`/`-wait`/`-text`/`-move`/
+  `-help`/`-not-allowed`/`-none`/`-grab`/`-grabbing`/`-zoom-in`/`-zoom-out`)
+- Resize (`ui-resize-none`/`ui-resize`/`-x`/`-y`)
+- Child spacing — `ui-space-y-*` generated from the spacing scale (Tailwind's
+  `:not([hidden]) ~ :not([hidden])` sibling combinator); `ui-divide-y` using
+  the already-established `--ui-border-on-surface-divider` token
+- Border-width per side — `ui-border`/`ui-border-{t,r,b,l,x,y}` × the 5-value
+  Tailwind border-width scale (default/`0`/`2`/`4`/`8`)
+- `ui-underline-offset-4` — not covered by `.ui-typography-*` (the
+  typography transform never emits `text-decoration` properties)
+
+**Explicitly excluded from this batch** (each requires a real decision, not
+mechanical): `font-bold`/`normal-case`/`tracking-normal` — would let
+consumers bypass the `.ui-typography-*` composite scale, undermining the
+system it's part of; `accent-color` — needs a specific brand-color choice,
+i.e. semantic-color territory.
 
 ---
 
