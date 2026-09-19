@@ -486,3 +486,36 @@ function CoreCapabilitiesWithPaginationDemo() {
 export const CoreCapabilitiesWithPagination: Story = {
   render: () => <CoreCapabilitiesWithPaginationDemo />,
 };
+
+/* ------------------------------------------------------------- Sticky header */
+
+function StickyHeaderDemo() {
+  const [workloads] = useState<Workload[]>(() => makeWorkloads(TOTAL_WORKLOADS));
+
+  return (
+    // `position: sticky` resolves against the NEAREST scroll-container ancestor, regardless
+    // of whether that one actually has a visible scrollbar — and `Table` already renders one
+    // (the `overflow-auto` div wrapping the `<table>`). So the fix is to bound THAT div's own
+    // height, not wrap a second `overflow-auto` around it: a redundant outer wrapper would
+    // become the one that visibly scrolls, while `Table`'s own div — sized to fit its content,
+    // so it never overflows itself — stays the (non-scrolling) element sticky resolves against,
+    // and the header silently does nothing. `[&_.overflow-auto]:max-h-96` reaches in and bounds
+    // that inner div directly instead.
+    <div className="[&_.overflow-auto]:max-h-96">
+      <DataTable columns={workloadColumns} data={workloads} stickyHeader />
+    </div>
+  );
+}
+
+export const StickyHeader: Story = {
+  render: () => <StickyHeaderDemo />,
+  // Scrolled partway so the snapshot actually proves the header stayed put against a
+  // *different* set of body rows — the unscrolled state would look identical whether or
+  // not `stickyHeader` did anything at all. Targets `Table`'s own scroll div directly (see
+  // the demo's own comment above) rather than a `data-testid` on some outer wrapper, since
+  // that inner div is the one that actually scrolls.
+  play: async ({ canvasElement }) => {
+    const pane = canvasElement.querySelector<HTMLElement>('.overflow-auto');
+    if (pane) pane.scrollTop = 200;
+  },
+};

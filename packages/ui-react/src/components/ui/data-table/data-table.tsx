@@ -88,6 +88,13 @@ import { DataTableViewOptions } from './data-table-view-options';
 //     `active:cursor-grabbing` utilities, since there's no dedicated Figma
 //     "Draggable" token yet, unlike the resize handle's generated
 //     `--ui-resizable-cursor`).
+//
+// `stickyHeader` isn't TanStack-native (there's no header-pinning API to hook) — it's plain
+// `position: sticky; top: 0` on every header cell, opaque for the same reason a pinned column is.
+// Only visible once `Table`'s own scroll div (the `overflow-auto` div around the `<table>`) has
+// a bounded height shorter than the table's content — a SEPARATE bounded wrapper around
+// `DataTable` does not work (sticky resolves against the nearest scroll-container ancestor,
+// which is that inner div regardless); see that prop's own doc and the `StickyHeader` story.
 
 // Extend TanStack's per-column `meta` with the flags DataTable reads. Augmenting
 // the module keeps `ColumnDef.meta.pin` type-safe at the call site.
@@ -154,14 +161,39 @@ export function getColumnWidth<TData>(
   return undefined;
 }
 
+// `stickyHeader` layers a second sticky axis (top) onto whatever `getPinnedStyle` already
+// computed for the column's own left/right pinning. A cell that's both pinned AND sticky-header
+// (the corner where both axes meet) needs to out-rank a merely-pinned cell scrolling vertically
+// past it, hence the bumped z-index — mirrors the reasoning `cloud-console-clients` had to work
+// out by hand in its own CSS before this prop existed.
+// A sticky cell's `border-collapse` bottom border doesn't reliably paint in every browser once
+// `position: sticky` takes it out of the table's normal border-resolution — the same reason
+// `getPinnedStyle` draws its own edge as a `boxShadow` rather than a real border. Same fix here,
+// sized/colored from the row-border tokens so it still re-themes with them.
+// Inset (rather than the non-inset `0 1px 0 0` used for pinned-column side separators) because
+// `border-collapse: collapse` clips shadows that cross the <thead>/<tbody> section boundary.
+const STICKY_HEADER_BOTTOM_SHADOW =
+  'inset 0 calc(-1 * var(--ui-table-global-row-border-width)) 0 0 var(--ui-table-global-row-border-color)';
+
 function getHeaderStyle<TData>(
   header: Header<TData, unknown>,
-  enableColumnResizing: boolean
+  enableColumnResizing: boolean,
+  stickyHeader: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(header.column);
   const width = getColumnWidth(header.column, enableColumnResizing);
-  if (!pin && width === undefined) return undefined;
-  return { ...pin, width };
+  if (!pin && !stickyHeader && width === undefined) return undefined;
+  if (!stickyHeader) return { ...pin, width };
+  return {
+    ...pin,
+    position: 'sticky',
+    top: 0,
+    zIndex: pin ? 2 : 1,
+    boxShadow: pin?.boxShadow
+      ? `${pin.boxShadow}, ${STICKY_HEADER_BOTTOM_SHADOW}`
+      : STICKY_HEADER_BOTTOM_SHADOW,
+    width,
+  };
 }
 
 export function getCellStyle<TData>(
@@ -295,6 +327,20 @@ interface DataTableOwnProps<TData> {
   striped?: boolean;
   /** Vertical borders between columns (rows already have horizontal borders). */
   bordered?: boolean;
+  /**
+   * Pins the header row to the top of the table's own scroll container (the `overflow-auto`
+   * div `Table` renders around the `<table>`) instead of scrolling away with the body rows.
+   * Only visible once THAT SPECIFIC div has a bounded height shorter than the table's content —
+   * `position: sticky` resolves against the nearest scroll-container ancestor regardless of
+   * which one actually has a scrollbar, and that div already qualifies as one (`overflow-auto`)
+   * even while it's tall enough to show everything with no overflow of its own. Wrapping
+   * `DataTable` in a second, separately-bounded `overflow-auto`/`overflow-y-auto` div does NOT
+   * work — that outer div ends up the one that visibly scrolls, while `Table`'s own div (still
+   * sized to fit its content) stays the ineffective, non-scrolling anchor sticky resolves
+   * against. Bound the existing div directly instead, e.g. a wrapper using
+   * `[&_.overflow-auto]:max-h-96` — see the `StickyHeader` story for the full pattern.
+   */
+  stickyHeader?: boolean;
   /** Highlight the row the user last clicked (the "current" row). */
   highlightCurrentRow?: boolean;
   /** Render placeholder skeleton rows instead of data (loading state). */
@@ -470,6 +516,7 @@ export function DataTable<TData, TValue = unknown>({
   renderExpandedRow,
   striped = false,
   bordered = false,
+  stickyHeader = false,
   highlightCurrentRow = false,
   skeleton = false,
   skeletonRows = 5,
@@ -797,13 +844,13 @@ export function DataTable<TData, TValue = unknown>({
     ? '[&_th:not(:last-child)]:border-e [&_td:not(:last-child)]:border-e [&_th]:border-[var(--ui-table-global-row-border-color)] [&_td]:border-[var(--ui-table-global-row-border-color)]'
     : undefined;
 
-  // A pinned header/body cell must be opaque so the cells scrolling under it
-  // (same row) aren't visible. `--ui-table-data-row-color-idle` is
-  // *transparent by design* (an idle row shows the page/card surface through
-  // it), so it can't be reused here — pinned idle cells need the actual
-  // resolved surface color instead (`--ui-background-surface-primary`, bridged
-  // to `bg-background`). Non-idle states (selected/current/striped) already use
-  // real opaque tokens and are safe to mirror as-is (see `rowBg` below).
+  // A pinned OR sticky-header cell must be opaque so the cells scrolling under it (same row for a
+  // pinned column, every row for a sticky header) aren't visible. `--ui-table-data-row-color-idle`
+  // is *transparent by design* (an idle row shows the page/card surface through it), so it can't
+  // be reused here — these cells need the actual resolved surface color instead
+  // (`--ui-background-surface-primary`, bridged to `bg-background`). Non-idle states
+  // (selected/current/striped) already use real opaque tokens and are safe to mirror as-is (see
+  // `rowBg` below).
   const headerPinnedBg = 'bg-background';
 
   return (
@@ -824,7 +871,10 @@ export function DataTable<TData, TValue = unknown>({
         <TooltipProvider>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} className="hover:bg-transparent">
+              <TableRow
+                key={headerGroup.id}
+                className={cn('hover:bg-transparent', stickyHeader && 'border-b-0')}
+              >
                 {headerGroup.headers.map((header) => {
                   const isPinned = header.column.getIsPinned();
                   const canResize =
@@ -850,7 +900,7 @@ export function DataTable<TData, TValue = unknown>({
                     return (
                       <TableSettingsCell
                         key={header.id}
-                        style={getHeaderStyle(header, resizingEnabled)}
+                        style={getHeaderStyle(header, resizingEnabled, stickyHeader)}
                         className={headerPinnedBg}
                       >
                         <DataTableViewOptions
@@ -867,7 +917,7 @@ export function DataTable<TData, TValue = unknown>({
                   const headerCell = (
                     <TableHead
                       wrap={header.column.columnDef.meta?.wrap}
-                      style={getHeaderStyle(header, resizingEnabled)}
+                      style={getHeaderStyle(header, resizingEnabled, stickyHeader)}
                       draggable={
                         (canReorder && !isAnyColumnResizing) || undefined
                       }
@@ -904,7 +954,7 @@ export function DataTable<TData, TValue = unknown>({
                         canReorder &&
                           draggedColumnId === header.column.id &&
                           'opacity-50',
-                        isPinned && headerPinnedBg
+                        (isPinned || stickyHeader) && headerPinnedBg
                       )}
                     >
                       {header.isPlaceholder

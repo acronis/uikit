@@ -1002,6 +1002,79 @@ describe('DataTable sticky (pinned) columns', () => {
   });
 });
 
+describe('DataTable stickyHeader', () => {
+  it('does not stick the header by default', () => {
+    render(<DataTable columns={columns} data={data.slice(0, 2)} />);
+    expect(screen.getByText('Email').closest('th')!.style.position).toBe('');
+  });
+
+  it('applies position:sticky, top:0, and a bottom-border shadow to every header cell', async () => {
+    render(<DataTable columns={columns} data={data.slice(0, 2)} stickyHeader />);
+    const email = screen.getByText('Email').closest('th')!;
+    const amount = screen.getByText('Amount').closest('th')!;
+    for (const header of [email, amount]) {
+      expect(header.style.position).toBe('sticky');
+      expect(header.style.top).toBe('0px');
+      // Regression guard: `border-collapse` doesn't reliably paint a `<tr>`'s own
+      // border-bottom once a cell inside it is `position: sticky` — the header row
+      // visibly lost its divider before this shadow was added.
+      expect(header.style.boxShadow).toContain(
+        'var(--ui-table-global-row-border-color)'
+      );
+    }
+    // The built-in trailing gear column is a header cell too.
+    await waitFor(() => {
+      const settingsCell = screen
+        .getByRole('button', { name: 'Column settings' })
+        .closest('th')!;
+      expect(settingsCell.style.position).toBe('sticky');
+      expect(settingsCell.style.top).toBe('0px');
+    });
+  });
+
+  it('leaves body cells alone', () => {
+    render(<DataTable columns={columns} data={data.slice(0, 2)} stickyHeader />);
+    expect(screen.getByText('user1@example.com').closest('td')!.style.position).toBe(
+      ''
+    );
+  });
+
+  it('removes the header row native border-b to prevent doubling with the bottom shadow', () => {
+    // The inset shadow is the only divider — the <tr>'s own border-b would stack
+    // on top of it and produce a double line without this suppression.
+    render(<DataTable columns={columns} data={data.slice(0, 2)} stickyHeader hideActionColumn />);
+    const headerRow = screen.getAllByRole('row')[0];
+    expect(headerRow.className).toContain('border-b-0');
+  });
+
+  it('keeps the header row native border-b when stickyHeader is off', () => {
+    render(<DataTable columns={columns} data={data.slice(0, 2)} hideActionColumn />);
+    const headerRow = screen.getAllByRole('row')[0];
+    expect(headerRow.className).not.toContain('border-b-0');
+  });
+
+  it('out-ranks a merely-pinned column at the corner where both stickiness axes meet', async () => {
+    const pinned: ColumnDef<Row>[] = [
+      { accessorKey: 'email', header: 'Email', meta: { pin: 'left' } },
+      { accessorKey: 'amount', header: 'Amount' },
+    ];
+    render(<DataTable columns={pinned} data={data.slice(0, 2)} stickyHeader />);
+    await waitFor(() => {
+      const header = screen.getByText('Email').closest('th')!;
+      // Sticky on both axes at once, and stacked above a pinned-only cell (z-index 1).
+      expect(header.style.position).toBe('sticky');
+      expect(header.style.left).toBe('0px');
+      expect(header.style.top).toBe('0px');
+      expect(header.style.zIndex).toBe('2');
+      // Both the pin's own side shadow and the sticky-header bottom shadow survive, combined.
+      expect(header.style.boxShadow).toContain(
+        'var(--ui-table-global-row-border-color)'
+      );
+      expect(header.style.boxShadow.split(',')).toHaveLength(2);
+    });
+  });
+});
+
 describe('DataTable action column', () => {
   it('renders the column-settings cog by default, with no explicit settings column', () => {
     render(<DataTable columns={columns} data={data.slice(0, 2)} />);
