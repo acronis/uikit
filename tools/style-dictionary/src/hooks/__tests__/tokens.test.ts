@@ -9,6 +9,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from '../formats/gap-utility-classes';
+import { STATIC_LAYOUT_CLASSES } from '../formats/layout-utility-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { buildThemeExtend, colorKeyFromPath, routeColor, scopeToNamespace } from '../../tailwind';
@@ -369,6 +370,51 @@ describe('STATIC_SIZING_CLASSES', () => {
     const brand = collectDecls([], new Map());
     for (const [selector, block] of STATIC_SIZING_CLASSES) brand.classes.set(selector, block);
 
+    const { classes } = diffDecls(base, brand);
+    expect(classes.size).toBe(0);
+  });
+});
+
+describe('STATIC_LAYOUT_CLASSES', () => {
+  it('emits the flex/grid/alignment/text-flow/display classes, no typographic ones', () => {
+    const classes = STATIC_LAYOUT_CLASSES;
+    expect(classes.get('.ui-flex')).toBe('display: flex;');
+    expect(classes.get('.ui-grid-cols-12')).toBe('grid-template-columns: repeat(12, minmax(0, 1fr));');
+    expect(classes.get('.ui-col-span-3')).toBe('grid-column: span 3 / span 3;');
+    expect(classes.get('.ui-items-center')).toBe('align-items: center;');
+    expect(classes.get('.ui-justify-between')).toBe('justify-content: space-between;');
+    expect(classes.get('.ui-text-left')).toBe('text-align: left;');
+    expect(classes.get('.ui-float-right')).toBe('float: right;');
+    expect(classes.get('.ui-whitespace-nowrap')).toBe('white-space: nowrap;');
+    expect(classes.get('.ui-truncate')).toBe(
+      'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'
+    );
+    expect(classes.get('.ui-line-clamp-3')).toBe(
+      'overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;'
+    );
+    expect(classes.get('.ui-hidden')).toBe('display: none;');
+
+    // Nothing typographic — that stays owned by .ui-typography-*.
+    for (const selector of classes.keys()) {
+      expect(selector).not.toMatch(/font|leading|tracking/);
+    }
+  });
+
+  it('does not exceed Tailwind-mirrored grid/line-clamp ceilings (12 cols, 6 rows, 6-line clamp)', () => {
+    const classes = STATIC_LAYOUT_CLASSES;
+    expect(classes.has('.ui-grid-cols-12')).toBe(true);
+    expect(classes.has('.ui-grid-cols-13')).toBe(false);
+    expect(classes.has('.ui-row-span-6')).toBe(true);
+    expect(classes.has('.ui-row-span-7')).toBe(false);
+    expect(classes.has('.ui-line-clamp-6')).toBe(true);
+    expect(classes.has('.ui-line-clamp-7')).toBe(false);
+  });
+
+  it('renders once and diffs to nothing across identical brands', () => {
+    const base = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_LAYOUT_CLASSES) base.classes.set(selector, block);
+    const brand = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_LAYOUT_CLASSES) brand.classes.set(selector, block);
     const { classes } = diffDecls(base, brand);
     expect(classes.size).toBe(0);
   });

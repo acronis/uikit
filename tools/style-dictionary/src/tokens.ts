@@ -30,6 +30,7 @@ import { STATIC_HOOKS } from './hooks';
 import { isEmittableToken } from './hooks/filters/semantic-only';
 import { collectDecls, type Decls, serializeCss } from './hooks/formats/css-light-dark';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from './hooks/formats/gap-utility-classes';
+import { STATIC_LAYOUT_CLASSES } from './hooks/formats/layout-utility-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from './hooks/formats/sizing-utility-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
@@ -391,6 +392,7 @@ export async function buildCss(filter: Filter): Promise<void> {
     if (semantics) {
       for (const [selector, block] of STATIC_GAP_CLASSES) semantics.classes.set(selector, block);
       for (const [selector, block] of STATIC_SIZING_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_LAYOUT_CLASSES) semantics.classes.set(selector, block);
       for (const [sizeKey, pxValue] of gapTokens) {
         const varName = `ui-gap-${sizeKey}`;
         semantics.vars.set(varName, pxValue);
