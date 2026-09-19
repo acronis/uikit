@@ -1445,6 +1445,146 @@
   display: block;
 }
 
+.ui-border {
+  border-width: 1px;
+}
+
+.ui-border-0 {
+  border-width: 0px;
+}
+
+.ui-border-2 {
+  border-width: 2px;
+}
+
+.ui-border-4 {
+  border-width: 4px;
+}
+
+.ui-border-8 {
+  border-width: 8px;
+}
+
+.ui-border-b {
+  border-bottom-width: 1px;
+}
+
+.ui-border-b-0 {
+  border-bottom-width: 0px;
+}
+
+.ui-border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.ui-border-b-4 {
+  border-bottom-width: 4px;
+}
+
+.ui-border-b-8 {
+  border-bottom-width: 8px;
+}
+
+.ui-border-l {
+  border-left-width: 1px;
+}
+
+.ui-border-l-0 {
+  border-left-width: 0px;
+}
+
+.ui-border-l-2 {
+  border-left-width: 2px;
+}
+
+.ui-border-l-4 {
+  border-left-width: 4px;
+}
+
+.ui-border-l-8 {
+  border-left-width: 8px;
+}
+
+.ui-border-r {
+  border-right-width: 1px;
+}
+
+.ui-border-r-0 {
+  border-right-width: 0px;
+}
+
+.ui-border-r-2 {
+  border-right-width: 2px;
+}
+
+.ui-border-r-4 {
+  border-right-width: 4px;
+}
+
+.ui-border-r-8 {
+  border-right-width: 8px;
+}
+
+.ui-border-t {
+  border-top-width: 1px;
+}
+
+.ui-border-t-0 {
+  border-top-width: 0px;
+}
+
+.ui-border-t-2 {
+  border-top-width: 2px;
+}
+
+.ui-border-t-4 {
+  border-top-width: 4px;
+}
+
+.ui-border-t-8 {
+  border-top-width: 8px;
+}
+
+.ui-border-x {
+  border-inline-width: 1px;
+}
+
+.ui-border-x-0 {
+  border-inline-width: 0px;
+}
+
+.ui-border-x-2 {
+  border-inline-width: 2px;
+}
+
+.ui-border-x-4 {
+  border-inline-width: 4px;
+}
+
+.ui-border-x-8 {
+  border-inline-width: 8px;
+}
+
+.ui-border-y {
+  border-block-width: 1px;
+}
+
+.ui-border-y-0 {
+  border-block-width: 0px;
+}
+
+.ui-border-y-2 {
+  border-block-width: 2px;
+}
+
+.ui-border-y-4 {
+  border-block-width: 4px;
+}
+
+.ui-border-y-8 {
+  border-block-width: 8px;
+}
+
 .ui-bottom-0 {
   bottom: var(--ui-gap-0);
 }
@@ -1789,12 +1929,69 @@
   display: contents;
 }
 
+.ui-cursor-auto {
+  cursor: auto;
+}
+
+.ui-cursor-default {
+  cursor: default;
+}
+
+.ui-cursor-grab {
+  cursor: grab;
+}
+
+.ui-cursor-grabbing {
+  cursor: grabbing;
+}
+
+.ui-cursor-help {
+  cursor: help;
+}
+
+.ui-cursor-move {
+  cursor: move;
+}
+
+.ui-cursor-none {
+  cursor: none;
+}
+
+.ui-cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.ui-cursor-pointer {
+  cursor: pointer;
+}
+
+.ui-cursor-text {
+  cursor: text;
+}
+
+.ui-cursor-wait {
+  cursor: wait;
+}
+
+.ui-cursor-zoom-in {
+  cursor: zoom-in;
+}
+
+.ui-cursor-zoom-out {
+  cursor: zoom-out;
+}
+
 .ui-dialog-header-title-text-style {
   font-family: Inter, system-ui, sans-serif;
   font-size: 24px;
   font-weight: 400;
   line-height: 32px;
   letter-spacing: 0px;
+}
+
+.ui-divide-y > :not([hidden]) ~ :not([hidden]) {
+  border-top-width: 1px;
+  border-color: var(--ui-border-on-surface-divider);
 }
 
 .ui-end-0 {
@@ -3141,6 +3338,26 @@
   letter-spacing: 0px;
 }
 
+.ui-list-decimal {
+  list-style-type: decimal;
+}
+
+.ui-list-disc {
+  list-style-type: disc;
+}
+
+.ui-list-inside {
+  list-style-position: inside;
+}
+
+.ui-list-none {
+  list-style-type: none;
+}
+
+.ui-list-outside {
+  list-style-position: outside;
+}
+
 .ui-loading-element-label-text-style {
   font-family: Inter, system-ui, sans-serif;
   font-size: 14px;
@@ -3505,6 +3722,22 @@
   position: relative;
 }
 
+.ui-resize {
+  resize: both;
+}
+
+.ui-resize-none {
+  resize: none;
+}
+
+.ui-resize-x {
+  resize: horizontal;
+}
+
+.ui-resize-y {
+  resize: vertical;
+}
+
 .ui-right-0 {
   right: var(--ui-gap-0);
 }
@@ -3711,6 +3944,74 @@
   font-weight: 600;
   line-height: 24px;
   letter-spacing: 0px;
+}
+
+.ui-space-y-0 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-0);
+}
+
+.ui-space-y-12 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-12);
+}
+
+.ui-space-y-16 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-16);
+}
+
+.ui-space-y-2 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-2);
+}
+
+.ui-space-y-20 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-20);
+}
+
+.ui-space-y-24 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-24);
+}
+
+.ui-space-y-32 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-32);
+}
+
+.ui-space-y-4 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-4);
+}
+
+.ui-space-y-40 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-40);
+}
+
+.ui-space-y-48 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-48);
+}
+
+.ui-space-y-56 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-56);
+}
+
+.ui-space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-6);
+}
+
+.ui-space-y-64 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-64);
+}
+
+.ui-space-y-72 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-72);
+}
+
+.ui-space-y-8 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-8);
+}
+
+.ui-space-y-88 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-88);
+}
+
+.ui-space-y-96 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: var(--ui-gap-96);
 }
 
 .ui-start-0 {
@@ -4139,6 +4440,10 @@
   font-weight: 600;
   line-height: 16px;
   letter-spacing: 1px;
+}
+
+.ui-underline-offset-4 {
+  text-underline-offset: 4px;
 }
 
 .ui-w-0 {

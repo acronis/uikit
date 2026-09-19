@@ -7,10 +7,13 @@
 import type { TransformedToken } from 'style-dictionary/types';
 import { describe, expect, it } from 'vitest';
 
+import { STATIC_BORDER_WIDTH_CLASSES } from '../formats/border-width-classes';
+import { spaceYUtilityClass, STATIC_DIVIDE_CLASSES } from '../formats/child-spacing-classes';
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
 import { STATIC_FRACTION_CLASSES } from '../formats/fraction-utility-classes';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from '../formats/gap-utility-classes';
 import { STATIC_LAYOUT_CLASSES } from '../formats/layout-utility-classes';
+import { STATIC_LIST_CURSOR_RESIZE_CLASSES } from '../formats/list-cursor-resize-classes';
 import { STATIC_NAMED_MAX_WIDTH_CLASSES } from '../formats/named-max-width-classes';
 import {
   offsetUtilityClasses,
@@ -18,6 +21,7 @@ import {
   STATIC_POSITION_TYPE_CLASSES,
 } from '../formats/position-utility-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
+import { STATIC_TEXT_DECORATION_CLASSES } from '../formats/text-decoration-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { diffDecls } from '../../tokens';
 
@@ -505,6 +509,62 @@ describe('STATIC_OFFSET_CLASSES', () => {
     expect(classes.get('.ui-right-full')).toBe('right: 100%;');
     expect(classes.get('.ui-inset-full')).toBe('inset: 100%;');
     expect(classes.size).toBe(9);
+  });
+});
+
+describe('STATIC_LIST_CURSOR_RESIZE_CLASSES', () => {
+  it('emits the ticket-cited list/cursor classes and their sibling values', () => {
+    const classes = STATIC_LIST_CURSOR_RESIZE_CLASSES;
+    expect(classes.get('.ui-list-disc')).toBe('list-style-type: disc;');
+    expect(classes.get('.ui-list-inside')).toBe('list-style-position: inside;');
+    expect(classes.get('.ui-list-none')).toBe('list-style-type: none;');
+    expect(classes.get('.ui-cursor-help')).toBe('cursor: help;');
+    expect(classes.get('.ui-cursor-move')).toBe('cursor: move;');
+    expect(classes.get('.ui-cursor-pointer')).toBe('cursor: pointer;');
+    expect(classes.get('.ui-cursor-not-allowed')).toBe('cursor: not-allowed;');
+    expect(classes.get('.ui-resize-none')).toBe('resize: none;');
+    expect(classes.get('.ui-resize')).toBe('resize: both;');
+  });
+});
+
+describe('STATIC_BORDER_WIDTH_CLASSES', () => {
+  it('emits the ticket-cited border-width classes plus the full per-side scale', () => {
+    const classes = STATIC_BORDER_WIDTH_CLASSES;
+    expect(classes.get('.ui-border-t-0')).toBe('border-top-width: 0px;');
+    expect(classes.get('.ui-border-x-0')).toBe('border-inline-width: 0px;');
+    expect(classes.get('.ui-border-y')).toBe('border-block-width: 1px;');
+    expect(classes.get('.ui-border')).toBe('border-width: 1px;');
+    expect(classes.get('.ui-border-4')).toBe('border-width: 4px;');
+    expect(classes.get('.ui-border-l-8')).toBe('border-left-width: 8px;');
+  });
+
+  it('renders 7 directions (all sides + 6 per-side) × 5 widths = 35 classes', () => {
+    expect(STATIC_BORDER_WIDTH_CLASSES.size).toBe(35);
+  });
+});
+
+describe('spaceYUtilityClass', () => {
+  it('targets the not-hidden sibling combinator, referencing the shared var', () => {
+    const [selector, block] = spaceYUtilityClass('ui-gap-16', '16');
+    expect(selector).toBe('.ui-space-y-16 > :not([hidden]) ~ :not([hidden])');
+    expect(block).toBe('margin-top: var(--ui-gap-16);');
+  });
+});
+
+describe('STATIC_DIVIDE_CLASSES', () => {
+  it('emits ui-divide-y using the established divider token', () => {
+    const classes = STATIC_DIVIDE_CLASSES;
+    const block = classes.get('.ui-divide-y > :not([hidden]) ~ :not([hidden])');
+    expect(block).toContain('border-top-width: 1px;');
+    expect(block).toContain('border-color: var(--ui-border-on-surface-divider);');
+  });
+});
+
+describe('STATIC_TEXT_DECORATION_CLASSES', () => {
+  it('emits ui-underline-offset-4', () => {
+    expect(STATIC_TEXT_DECORATION_CLASSES.get('.ui-underline-offset-4')).toBe(
+      'text-underline-offset: 4px;'
+    );
   });
 });
 
