@@ -9,6 +9,7 @@ import { describe, expect, it } from 'vitest';
 
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from '../formats/gap-utility-classes';
+import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { diffDecls } from '../../tokens';
 
@@ -323,6 +324,52 @@ describe('gapUtilityClasses', () => {
     for (const [selector, property] of Object.entries(expected)) {
       expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
     }
+  });
+});
+
+describe('sizingUtilityClasses', () => {
+  it('returns one selector per width/height direction, all referencing the same var', () => {
+    const classes = sizingUtilityClasses('ui-gap-16', '16');
+    expect(classes.size).toBe(6); // w, h, min-w, min-h, max-w, max-h
+    for (const block of classes.values()) {
+      expect(block).toContain('var(--ui-gap-16)');
+    }
+  });
+
+  it('maps each selector to the correct CSS property', () => {
+    const classes = sizingUtilityClasses('ui-gap-16', '16');
+    const expected: Record<string, string> = {
+      '.ui-w-16': 'width',
+      '.ui-h-16': 'height',
+      '.ui-min-w-16': 'min-width',
+      '.ui-min-h-16': 'min-height',
+      '.ui-max-w-16': 'max-width',
+      '.ui-max-h-16': 'max-height',
+    };
+    for (const [selector, property] of Object.entries(expected)) {
+      expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
+    }
+  });
+});
+
+describe('STATIC_SIZING_CLASSES', () => {
+  it('renders .ui-max-w-full once', () => {
+    const { vars, classes } = collectDecls([token({ name: 'ui-x', $type: 'dimension', $value: '1px' })], new Map());
+    for (const [selector, block] of STATIC_SIZING_CLASSES) classes.set(selector, block);
+    const css = serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+    expect(css.match(/\.ui-max-w-full/g)).toHaveLength(1);
+    expect(css).toContain('max-width: 100%;');
+  });
+
+  it('brand override omits the class when identical to the default (no diff)', () => {
+    const base = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_SIZING_CLASSES) base.classes.set(selector, block);
+
+    const brand = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_SIZING_CLASSES) brand.classes.set(selector, block);
+
+    const { classes } = diffDecls(base, brand);
+    expect(classes.size).toBe(0);
   });
 });
 
