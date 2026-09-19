@@ -1,0 +1,89 @@
+---
+title: Layout
+description: Framework-agnostic .ui-* flex, grid, alignment, and text-flow utility classes.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+[`@acronis-platform/tokens-pd`](/packages/tokens-pd) ships a static set of
+layout and text-flow `.ui-*` utility classes — flex, grid, alignment (in and
+out of flex/grid), text wrapping/overflow, and display — mirroring Tailwind's
+own bounded utility groups wholesale, for non-Tailwind
+[`@acronis-platform/ui-react`](/getting-started) consumers.
+
+<Callout type="info">
+  These are not token-driven — there's no design token behind `display: flex`.
+  They're a fixed, finite set copied from Tailwind's own utility groups, same
+  as the spacing grammar's "generate the whole scale" rule, so a future
+  release only ever **adds** classes to this set, never removes or renames
+  them.
+</Callout>
+
+<Callout type="warn">
+  Typography (`font-size`, `font-weight`, `font-family`, `line-height`,
+  `letter-spacing`) is **out of scope** here — see
+  [Typography](/typography) for the `.ui-typography-*` classes that own it.
+</Callout>
+
+## Flex
+
+```tsx
+<div className="ui-flex ui-flex-row ui-flex-wrap">
+  <div className="ui-grow" />
+  <div className="ui-shrink-0" />
+</div>
+```
+
+`ui-flex`, `ui-inline-flex`, `ui-flex-row`, `ui-flex-row-reverse`,
+`ui-flex-col`, `ui-flex-col-reverse`, `ui-flex-wrap`, `ui-flex-wrap-reverse`,
+`ui-flex-nowrap`, `ui-flex-1`, `ui-flex-auto`, `ui-flex-initial`,
+`ui-flex-none`, `ui-grow`, `ui-grow-0`, `ui-shrink`, `ui-shrink-0`.
+
+## Grid
+
+```tsx
+<div className="ui-grid ui-grid-cols-4 ui-gap-16">
+  <div className="ui-col-span-2" />
+</div>
+```
+
+`ui-grid`, `ui-inline-grid`, `ui-grid-cols-1`…`ui-grid-cols-12`,
+`ui-grid-rows-1`…`ui-grid-rows-6`, `ui-col-span-1`…`ui-col-span-12`,
+`ui-row-span-1`…`ui-row-span-6`. Column/row counts mirror Tailwind's own
+default scale (12 columns, 6 rows).
+
+## Alignment — flex & grid containers/items
+
+`ui-items-start`/`-end`/`-center`/`-baseline`/`-stretch`,
+`ui-justify-start`/`-end`/`-center`/`-between`/`-around`/`-evenly`,
+`ui-content-start`/`-end`/`-center`/`-between`/`-around`/`-evenly`/`-stretch`,
+`ui-self-auto`/`-start`/`-end`/`-center`/`-stretch`/`-baseline`,
+`ui-justify-self-auto`/`-start`/`-end`/`-center`/`-stretch`.
+
+## Alignment outside flex/grid
+
+`ui-text-left`/`-center`/`-right`/`-justify`/`-start`/`-end`,
+`ui-align-baseline`/`-top`/`-middle`/`-bottom`/`-text-top`/`-text-bottom`,
+`ui-float-left`/`-right`/`-none`, `ui-clear-left`/`-right`/`-both`/`-none`.
+
+## Text wrapping & overflow
+
+```tsx
+<p className="ui-truncate">One line, ellipsized when it overflows.</p>
+<p className="ui-line-clamp-2">Wraps normally, then clamps after two lines.</p>
+```
+
+`ui-whitespace-normal`/`-nowrap`/`-pre`/`-pre-line`/`-pre-wrap`/
+`-break-spaces`, `ui-break-normal`/`-words`/`-all`/`-keep`, `ui-truncate`,
+`ui-text-ellipsis`, `ui-text-clip`, `ui-line-clamp-1`…`ui-line-clamp-6`,
+`ui-line-clamp-none`, `ui-hyphens-none`/`-manual`/`-auto`.
+
+## Display
+
+`ui-block`, `ui-inline-block`, `ui-inline`, `ui-hidden`, `ui-contents`.
+
+<Callout type="warn">
+  All of the above is generated from `@acronis-platform/design-tokens` by the
+  `tools/style-dictionary` pipeline and committed to git. Never hand-edit
+  `css/default.css` directly.
+</Callout>
