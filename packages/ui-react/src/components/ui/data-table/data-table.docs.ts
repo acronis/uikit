@@ -43,6 +43,10 @@ export interface DataTableProps {
   striped?: boolean;
   /** Vertical borders between columns (rows already have horizontal borders). */
   bordered?: boolean;
+  /**
+   * Pins the header row to the top of the table's own scroll container.
+   */
+  stickyHeader?: boolean;
   /** Highlight the row the user last clicked (the "current" row). */
   highlightCurrentRow?: boolean;
   /** Render placeholder skeleton rows instead of data (loading state). */
