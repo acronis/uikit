@@ -29,8 +29,15 @@ import type { Config, TransformedToken } from 'style-dictionary/types';
 import { STATIC_HOOKS } from './hooks';
 import { isEmittableToken } from './hooks/filters/semantic-only';
 import { collectDecls, type Decls, serializeCss } from './hooks/formats/css-light-dark';
+import { STATIC_FRACTION_CLASSES } from './hooks/formats/fraction-utility-classes';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from './hooks/formats/gap-utility-classes';
 import { STATIC_LAYOUT_CLASSES } from './hooks/formats/layout-utility-classes';
+import { STATIC_NAMED_MAX_WIDTH_CLASSES } from './hooks/formats/named-max-width-classes';
+import {
+  offsetUtilityClasses,
+  STATIC_OFFSET_CLASSES,
+  STATIC_POSITION_TYPE_CLASSES,
+} from './hooks/formats/position-utility-classes';
 import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from './hooks/formats/sizing-utility-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
@@ -364,6 +371,14 @@ export async function buildCss(filter: Filter): Promise<void> {
       for (const [selector, block] of STATIC_GAP_CLASSES) semantics.classes.set(selector, block);
       for (const [selector, block] of STATIC_SIZING_CLASSES) semantics.classes.set(selector, block);
       for (const [selector, block] of STATIC_LAYOUT_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_FRACTION_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_NAMED_MAX_WIDTH_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_POSITION_TYPE_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_OFFSET_CLASSES) semantics.classes.set(selector, block);
       for (const [sizeKey, pxValue] of gapTokens) {
         const varName = `ui-gap-${sizeKey}`;
         semantics.vars.set(varName, pxValue);
@@ -371,6 +386,9 @@ export async function buildCss(filter: Filter): Promise<void> {
           semantics.classes.set(selector, block);
         }
         for (const [selector, block] of sizingUtilityClasses(varName, sizeKey)) {
+          semantics.classes.set(selector, block);
+        }
+        for (const [selector, block] of offsetUtilityClasses(varName, sizeKey)) {
           semantics.classes.set(selector, block);
         }
       }
