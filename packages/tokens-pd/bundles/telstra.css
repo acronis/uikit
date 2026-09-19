@@ -2309,6 +2309,522 @@
   letter-spacing: 0px;
 }
 
+.ui-disabled\:bg-backdrop-element-primary:disabled {
+  background-color: var(--ui-background-backdrop-element-primary);
+}
+
+.ui-disabled\:bg-backdrop-element-secondary:disabled {
+  background-color: var(--ui-background-backdrop-element-secondary);
+}
+
+.ui-disabled\:bg-backdrop-screen:disabled {
+  background-color: var(--ui-background-backdrop-screen);
+}
+
+.ui-disabled\:bg-brand-primary-active:disabled {
+  background-color: var(--ui-background-brand-primary-active);
+}
+
+.ui-disabled\:bg-brand-primary-disabled:disabled {
+  background-color: var(--ui-background-brand-primary-disabled);
+}
+
+.ui-disabled\:bg-brand-primary-hover:disabled {
+  background-color: var(--ui-background-brand-primary-hover);
+}
+
+.ui-disabled\:bg-brand-primary:disabled {
+  background-color: var(--ui-background-brand-primary);
+}
+
+.ui-disabled\:bg-brand-secondary-active:disabled {
+  background-color: var(--ui-background-brand-secondary-active);
+}
+
+.ui-disabled\:bg-brand-secondary-disabled:disabled {
+  background-color: var(--ui-background-brand-secondary-disabled);
+}
+
+.ui-disabled\:bg-brand-secondary-hover:disabled {
+  background-color: var(--ui-background-brand-secondary-hover);
+}
+
+.ui-disabled\:bg-brand-secondary:disabled {
+  background-color: var(--ui-background-brand-secondary);
+}
+
+.ui-disabled\:bg-inverse-primary:disabled {
+  background-color: var(--ui-background-inverse-primary);
+}
+
+.ui-disabled\:bg-status-ai-hover:disabled {
+  background-color: var(--ui-background-status-ai-hover);
+}
+
+.ui-disabled\:bg-status-ai-pressed:disabled {
+  background-color: var(--ui-background-status-ai-pressed);
+}
+
+.ui-disabled\:bg-status-ai:disabled {
+  background-color: var(--ui-background-status-ai);
+}
+
+.ui-disabled\:bg-status-critical-hover:disabled {
+  background-color: var(--ui-background-status-critical-hover);
+}
+
+.ui-disabled\:bg-status-critical-pressed:disabled {
+  background-color: var(--ui-background-status-critical-pressed);
+}
+
+.ui-disabled\:bg-status-critical:disabled {
+  background-color: var(--ui-background-status-critical);
+}
+
+.ui-disabled\:bg-status-danger-hover:disabled {
+  background-color: var(--ui-background-status-danger-hover);
+}
+
+.ui-disabled\:bg-status-danger-pressed:disabled {
+  background-color: var(--ui-background-status-danger-pressed);
+}
+
+.ui-disabled\:bg-status-danger:disabled {
+  background-color: var(--ui-background-status-danger);
+}
+
+.ui-disabled\:bg-status-info-hover:disabled {
+  background-color: var(--ui-background-status-info-hover);
+}
+
+.ui-disabled\:bg-status-info-pressed:disabled {
+  background-color: var(--ui-background-status-info-pressed);
+}
+
+.ui-disabled\:bg-status-info:disabled {
+  background-color: var(--ui-background-status-info);
+}
+
+.ui-disabled\:bg-status-neutral-hover:disabled {
+  background-color: var(--ui-background-status-neutral-hover);
+}
+
+.ui-disabled\:bg-status-neutral-pressed:disabled {
+  background-color: var(--ui-background-status-neutral-pressed);
+}
+
+.ui-disabled\:bg-status-neutral:disabled {
+  background-color: var(--ui-background-status-neutral);
+}
+
+.ui-disabled\:bg-status-off:disabled {
+  background-color: var(--ui-background-status-off);
+}
+
+.ui-disabled\:bg-status-on:disabled {
+  background-color: var(--ui-background-status-on);
+}
+
+.ui-disabled\:bg-status-strong-critical-hover:disabled {
+  background-color: var(--ui-background-status-strong-critical-hover);
+}
+
+.ui-disabled\:bg-status-strong-critical-pressed:disabled {
+  background-color: var(--ui-background-status-strong-critical-pressed);
+}
+
+.ui-disabled\:bg-status-strong-critical:disabled {
+  background-color: var(--ui-background-status-strong-critical);
+}
+
+.ui-disabled\:bg-status-strong-danger-hover:disabled {
+  background-color: var(--ui-background-status-strong-danger-hover);
+}
+
+.ui-disabled\:bg-status-strong-danger-pressed:disabled {
+  background-color: var(--ui-background-status-strong-danger-pressed);
+}
+
+.ui-disabled\:bg-status-strong-danger:disabled {
+  background-color: var(--ui-background-status-strong-danger);
+}
+
+.ui-disabled\:bg-status-strong-info-hover:disabled {
+  background-color: var(--ui-background-status-strong-info-hover);
+}
+
+.ui-disabled\:bg-status-strong-info-pressed:disabled {
+  background-color: var(--ui-background-status-strong-info-pressed);
+}
+
+.ui-disabled\:bg-status-strong-info:disabled {
+  background-color: var(--ui-background-status-strong-info);
+}
+
+.ui-disabled\:bg-status-strong-neutral-hover:disabled {
+  background-color: var(--ui-background-status-strong-neutral-hover);
+}
+
+.ui-disabled\:bg-status-strong-neutral-pressed:disabled {
+  background-color: var(--ui-background-status-strong-neutral-pressed);
+}
+
+.ui-disabled\:bg-status-strong-neutral:disabled {
+  background-color: var(--ui-background-status-strong-neutral);
+}
+
+.ui-disabled\:bg-status-strong-success-hover:disabled {
+  background-color: var(--ui-background-status-strong-success-hover);
+}
+
+.ui-disabled\:bg-status-strong-success-pressed:disabled {
+  background-color: var(--ui-background-status-strong-success-pressed);
+}
+
+.ui-disabled\:bg-status-strong-success:disabled {
+  background-color: var(--ui-background-status-strong-success);
+}
+
+.ui-disabled\:bg-status-strong-warning-hover:disabled {
+  background-color: var(--ui-background-status-strong-warning-hover);
+}
+
+.ui-disabled\:bg-status-strong-warning-pressed:disabled {
+  background-color: var(--ui-background-status-strong-warning-pressed);
+}
+
+.ui-disabled\:bg-status-strong-warning:disabled {
+  background-color: var(--ui-background-status-strong-warning);
+}
+
+.ui-disabled\:bg-status-success-hover:disabled {
+  background-color: var(--ui-background-status-success-hover);
+}
+
+.ui-disabled\:bg-status-success-pressed:disabled {
+  background-color: var(--ui-background-status-success-pressed);
+}
+
+.ui-disabled\:bg-status-success:disabled {
+  background-color: var(--ui-background-status-success);
+}
+
+.ui-disabled\:bg-status-warning-hover:disabled {
+  background-color: var(--ui-background-status-warning-hover);
+}
+
+.ui-disabled\:bg-status-warning-pressed:disabled {
+  background-color: var(--ui-background-status-warning-pressed);
+}
+
+.ui-disabled\:bg-status-warning:disabled {
+  background-color: var(--ui-background-status-warning);
+}
+
+.ui-disabled\:bg-surface-active:disabled {
+  background-color: var(--ui-background-surface-active);
+}
+
+.ui-disabled\:bg-surface-hover:disabled {
+  background-color: var(--ui-background-surface-hover);
+}
+
+.ui-disabled\:bg-surface-primary:disabled {
+  background-color: var(--ui-background-surface-primary);
+}
+
+.ui-disabled\:bg-surface-secondary:disabled {
+  background-color: var(--ui-background-surface-secondary);
+}
+
+.ui-disabled\:bg-transparent:disabled {
+  background-color: var(--ui-background-transparent);
+}
+
+.ui-disabled\:border-on-brand-border-active:disabled {
+  border-color: var(--ui-border-on-brand-border-active);
+}
+
+.ui-disabled\:border-on-brand-border:disabled {
+  border-color: var(--ui-border-on-brand-border);
+}
+
+.ui-disabled\:border-on-brand-divider:disabled {
+  border-color: var(--ui-border-on-brand-divider);
+}
+
+.ui-disabled\:border-on-status-ai-strong:disabled {
+  border-color: var(--ui-border-on-status-ai-strong);
+}
+
+.ui-disabled\:border-on-status-ai:disabled {
+  border-color: var(--ui-border-on-status-ai);
+}
+
+.ui-disabled\:border-on-status-critical-strong:disabled {
+  border-color: var(--ui-border-on-status-critical-strong);
+}
+
+.ui-disabled\:border-on-status-critical:disabled {
+  border-color: var(--ui-border-on-status-critical);
+}
+
+.ui-disabled\:border-on-status-danger-strong:disabled {
+  border-color: var(--ui-border-on-status-danger-strong);
+}
+
+.ui-disabled\:border-on-status-danger:disabled {
+  border-color: var(--ui-border-on-status-danger);
+}
+
+.ui-disabled\:border-on-status-info-strong:disabled {
+  border-color: var(--ui-border-on-status-info-strong);
+}
+
+.ui-disabled\:border-on-status-info:disabled {
+  border-color: var(--ui-border-on-status-info);
+}
+
+.ui-disabled\:border-on-status-neutral-strong:disabled {
+  border-color: var(--ui-border-on-status-neutral-strong);
+}
+
+.ui-disabled\:border-on-status-neutral:disabled {
+  border-color: var(--ui-border-on-status-neutral);
+}
+
+.ui-disabled\:border-on-status-success-strong:disabled {
+  border-color: var(--ui-border-on-status-success-strong);
+}
+
+.ui-disabled\:border-on-status-success:disabled {
+  border-color: var(--ui-border-on-status-success);
+}
+
+.ui-disabled\:border-on-status-warning-strong:disabled {
+  border-color: var(--ui-border-on-status-warning-strong);
+}
+
+.ui-disabled\:border-on-status-warning:disabled {
+  border-color: var(--ui-border-on-status-warning);
+}
+
+.ui-disabled\:border-on-surface-border-active:disabled {
+  border-color: var(--ui-border-on-surface-border-active);
+}
+
+.ui-disabled\:border-on-surface-border-error:disabled {
+  border-color: var(--ui-border-on-surface-border-error);
+}
+
+.ui-disabled\:border-on-surface-border:disabled {
+  border-color: var(--ui-border-on-surface-border);
+}
+
+.ui-disabled\:border-on-surface-divider:disabled {
+  border-color: var(--ui-border-on-surface-divider);
+}
+
+.ui-disabled\:border-transparent:disabled {
+  border-color: var(--ui-border-transparent);
+}
+
+.ui-disabled\:text-on-backdrop-element-link-active:disabled {
+  color: var(--ui-text-on-backdrop-element-link-active);
+}
+
+.ui-disabled\:text-on-backdrop-element-link-hover:disabled {
+  color: var(--ui-text-on-backdrop-element-link-hover);
+}
+
+.ui-disabled\:text-on-backdrop-element-link-idle:disabled {
+  color: var(--ui-text-on-backdrop-element-link-idle);
+}
+
+.ui-disabled\:text-on-backdrop-element-primary:disabled {
+  color: var(--ui-text-on-backdrop-element-primary);
+}
+
+.ui-disabled\:text-on-backdrop-screen-link-active:disabled {
+  color: var(--ui-text-on-backdrop-screen-link-active);
+}
+
+.ui-disabled\:text-on-backdrop-screen-link-hover:disabled {
+  color: var(--ui-text-on-backdrop-screen-link-hover);
+}
+
+.ui-disabled\:text-on-backdrop-screen-link-idle:disabled {
+  color: var(--ui-text-on-backdrop-screen-link-idle);
+}
+
+.ui-disabled\:text-on-backdrop-screen-primary:disabled {
+  color: var(--ui-text-on-backdrop-screen-primary);
+}
+
+.ui-disabled\:text-on-backdrop-screen-secondary:disabled {
+  color: var(--ui-text-on-backdrop-screen-secondary);
+}
+
+.ui-disabled\:text-on-brand-disabled:disabled {
+  color: var(--ui-text-on-brand-disabled);
+}
+
+.ui-disabled\:text-on-brand-link-disabled:disabled {
+  color: var(--ui-text-on-brand-link-disabled);
+}
+
+.ui-disabled\:text-on-brand-link-hover:disabled {
+  color: var(--ui-text-on-brand-link-hover);
+}
+
+.ui-disabled\:text-on-brand-link-idle:disabled {
+  color: var(--ui-text-on-brand-link-idle);
+}
+
+.ui-disabled\:text-on-brand-link-pressed:disabled {
+  color: var(--ui-text-on-brand-link-pressed);
+}
+
+.ui-disabled\:text-on-brand-primary:disabled {
+  color: var(--ui-text-on-brand-primary);
+}
+
+.ui-disabled\:text-on-brand-secondary:disabled {
+  color: var(--ui-text-on-brand-secondary);
+}
+
+.ui-disabled\:text-on-inverse-primary:disabled {
+  color: var(--ui-text-on-inverse-primary);
+}
+
+.ui-disabled\:text-on-inverse-secondary:disabled {
+  color: var(--ui-text-on-inverse-secondary);
+}
+
+.ui-disabled\:text-on-status-ai:disabled {
+  color: var(--ui-text-on-status-ai);
+}
+
+.ui-disabled\:text-on-status-critical:disabled {
+  color: var(--ui-text-on-status-critical);
+}
+
+.ui-disabled\:text-on-status-danger:disabled {
+  color: var(--ui-text-on-status-danger);
+}
+
+.ui-disabled\:text-on-status-info:disabled {
+  color: var(--ui-text-on-status-info);
+}
+
+.ui-disabled\:text-on-status-link-disabled:disabled {
+  color: var(--ui-text-on-status-link-disabled);
+}
+
+.ui-disabled\:text-on-status-link-hover:disabled {
+  color: var(--ui-text-on-status-link-hover);
+}
+
+.ui-disabled\:text-on-status-link-idle:disabled {
+  color: var(--ui-text-on-status-link-idle);
+}
+
+.ui-disabled\:text-on-status-link-pressed:disabled {
+  color: var(--ui-text-on-status-link-pressed);
+}
+
+.ui-disabled\:text-on-status-neutral:disabled {
+  color: var(--ui-text-on-status-neutral);
+}
+
+.ui-disabled\:text-on-status-primary:disabled {
+  color: var(--ui-text-on-status-primary);
+}
+
+.ui-disabled\:text-on-status-secondary:disabled {
+  color: var(--ui-text-on-status-secondary);
+}
+
+.ui-disabled\:text-on-status-strong-ai:disabled {
+  color: var(--ui-text-on-status-strong-ai);
+}
+
+.ui-disabled\:text-on-status-strong-critical:disabled {
+  color: var(--ui-text-on-status-strong-critical);
+}
+
+.ui-disabled\:text-on-status-strong-danger:disabled {
+  color: var(--ui-text-on-status-strong-danger);
+}
+
+.ui-disabled\:text-on-status-strong-info:disabled {
+  color: var(--ui-text-on-status-strong-info);
+}
+
+.ui-disabled\:text-on-status-strong-link:disabled {
+  color: var(--ui-text-on-status-strong-link);
+}
+
+.ui-disabled\:text-on-status-strong-neutral:disabled {
+  color: var(--ui-text-on-status-strong-neutral);
+}
+
+.ui-disabled\:text-on-status-strong-primary:disabled {
+  color: var(--ui-text-on-status-strong-primary);
+}
+
+.ui-disabled\:text-on-status-strong-secondary:disabled {
+  color: var(--ui-text-on-status-strong-secondary);
+}
+
+.ui-disabled\:text-on-status-strong-success:disabled {
+  color: var(--ui-text-on-status-strong-success);
+}
+
+.ui-disabled\:text-on-status-strong-warning:disabled {
+  color: var(--ui-text-on-status-strong-warning);
+}
+
+.ui-disabled\:text-on-status-success:disabled {
+  color: var(--ui-text-on-status-success);
+}
+
+.ui-disabled\:text-on-status-warning:disabled {
+  color: var(--ui-text-on-status-warning);
+}
+
+.ui-disabled\:text-on-surface-destructive:disabled {
+  color: var(--ui-text-on-surface-destructive);
+}
+
+.ui-disabled\:text-on-surface-disabled:disabled {
+  color: var(--ui-text-on-surface-disabled);
+}
+
+.ui-disabled\:text-on-surface-link-disabled:disabled {
+  color: var(--ui-text-on-surface-link-disabled);
+}
+
+.ui-disabled\:text-on-surface-link-hover:disabled {
+  color: var(--ui-text-on-surface-link-hover);
+}
+
+.ui-disabled\:text-on-surface-link-idle:disabled {
+  color: var(--ui-text-on-surface-link-idle);
+}
+
+.ui-disabled\:text-on-surface-link-pressed:disabled {
+  color: var(--ui-text-on-surface-link-pressed);
+}
+
+.ui-disabled\:text-on-surface-primary:disabled {
+  color: var(--ui-text-on-surface-primary);
+}
+
+.ui-disabled\:text-on-surface-secondary:disabled {
+  color: var(--ui-text-on-surface-secondary);
+}
+
 .ui-divide-y > :not([hidden]) ~ :not([hidden]) {
   border-top-width: 1px;
   border-color: var(--ui-border-on-surface-divider);
@@ -2448,6 +2964,522 @@
 
 .ui-float-right {
   float: right;
+}
+
+.ui-focus-visible\:bg-backdrop-element-primary:focus-visible {
+  background-color: var(--ui-background-backdrop-element-primary);
+}
+
+.ui-focus-visible\:bg-backdrop-element-secondary:focus-visible {
+  background-color: var(--ui-background-backdrop-element-secondary);
+}
+
+.ui-focus-visible\:bg-backdrop-screen:focus-visible {
+  background-color: var(--ui-background-backdrop-screen);
+}
+
+.ui-focus-visible\:bg-brand-primary-active:focus-visible {
+  background-color: var(--ui-background-brand-primary-active);
+}
+
+.ui-focus-visible\:bg-brand-primary-disabled:focus-visible {
+  background-color: var(--ui-background-brand-primary-disabled);
+}
+
+.ui-focus-visible\:bg-brand-primary-hover:focus-visible {
+  background-color: var(--ui-background-brand-primary-hover);
+}
+
+.ui-focus-visible\:bg-brand-primary:focus-visible {
+  background-color: var(--ui-background-brand-primary);
+}
+
+.ui-focus-visible\:bg-brand-secondary-active:focus-visible {
+  background-color: var(--ui-background-brand-secondary-active);
+}
+
+.ui-focus-visible\:bg-brand-secondary-disabled:focus-visible {
+  background-color: var(--ui-background-brand-secondary-disabled);
+}
+
+.ui-focus-visible\:bg-brand-secondary-hover:focus-visible {
+  background-color: var(--ui-background-brand-secondary-hover);
+}
+
+.ui-focus-visible\:bg-brand-secondary:focus-visible {
+  background-color: var(--ui-background-brand-secondary);
+}
+
+.ui-focus-visible\:bg-inverse-primary:focus-visible {
+  background-color: var(--ui-background-inverse-primary);
+}
+
+.ui-focus-visible\:bg-status-ai-hover:focus-visible {
+  background-color: var(--ui-background-status-ai-hover);
+}
+
+.ui-focus-visible\:bg-status-ai-pressed:focus-visible {
+  background-color: var(--ui-background-status-ai-pressed);
+}
+
+.ui-focus-visible\:bg-status-ai:focus-visible {
+  background-color: var(--ui-background-status-ai);
+}
+
+.ui-focus-visible\:bg-status-critical-hover:focus-visible {
+  background-color: var(--ui-background-status-critical-hover);
+}
+
+.ui-focus-visible\:bg-status-critical-pressed:focus-visible {
+  background-color: var(--ui-background-status-critical-pressed);
+}
+
+.ui-focus-visible\:bg-status-critical:focus-visible {
+  background-color: var(--ui-background-status-critical);
+}
+
+.ui-focus-visible\:bg-status-danger-hover:focus-visible {
+  background-color: var(--ui-background-status-danger-hover);
+}
+
+.ui-focus-visible\:bg-status-danger-pressed:focus-visible {
+  background-color: var(--ui-background-status-danger-pressed);
+}
+
+.ui-focus-visible\:bg-status-danger:focus-visible {
+  background-color: var(--ui-background-status-danger);
+}
+
+.ui-focus-visible\:bg-status-info-hover:focus-visible {
+  background-color: var(--ui-background-status-info-hover);
+}
+
+.ui-focus-visible\:bg-status-info-pressed:focus-visible {
+  background-color: var(--ui-background-status-info-pressed);
+}
+
+.ui-focus-visible\:bg-status-info:focus-visible {
+  background-color: var(--ui-background-status-info);
+}
+
+.ui-focus-visible\:bg-status-neutral-hover:focus-visible {
+  background-color: var(--ui-background-status-neutral-hover);
+}
+
+.ui-focus-visible\:bg-status-neutral-pressed:focus-visible {
+  background-color: var(--ui-background-status-neutral-pressed);
+}
+
+.ui-focus-visible\:bg-status-neutral:focus-visible {
+  background-color: var(--ui-background-status-neutral);
+}
+
+.ui-focus-visible\:bg-status-off:focus-visible {
+  background-color: var(--ui-background-status-off);
+}
+
+.ui-focus-visible\:bg-status-on:focus-visible {
+  background-color: var(--ui-background-status-on);
+}
+
+.ui-focus-visible\:bg-status-strong-critical-hover:focus-visible {
+  background-color: var(--ui-background-status-strong-critical-hover);
+}
+
+.ui-focus-visible\:bg-status-strong-critical-pressed:focus-visible {
+  background-color: var(--ui-background-status-strong-critical-pressed);
+}
+
+.ui-focus-visible\:bg-status-strong-critical:focus-visible {
+  background-color: var(--ui-background-status-strong-critical);
+}
+
+.ui-focus-visible\:bg-status-strong-danger-hover:focus-visible {
+  background-color: var(--ui-background-status-strong-danger-hover);
+}
+
+.ui-focus-visible\:bg-status-strong-danger-pressed:focus-visible {
+  background-color: var(--ui-background-status-strong-danger-pressed);
+}
+
+.ui-focus-visible\:bg-status-strong-danger:focus-visible {
+  background-color: var(--ui-background-status-strong-danger);
+}
+
+.ui-focus-visible\:bg-status-strong-info-hover:focus-visible {
+  background-color: var(--ui-background-status-strong-info-hover);
+}
+
+.ui-focus-visible\:bg-status-strong-info-pressed:focus-visible {
+  background-color: var(--ui-background-status-strong-info-pressed);
+}
+
+.ui-focus-visible\:bg-status-strong-info:focus-visible {
+  background-color: var(--ui-background-status-strong-info);
+}
+
+.ui-focus-visible\:bg-status-strong-neutral-hover:focus-visible {
+  background-color: var(--ui-background-status-strong-neutral-hover);
+}
+
+.ui-focus-visible\:bg-status-strong-neutral-pressed:focus-visible {
+  background-color: var(--ui-background-status-strong-neutral-pressed);
+}
+
+.ui-focus-visible\:bg-status-strong-neutral:focus-visible {
+  background-color: var(--ui-background-status-strong-neutral);
+}
+
+.ui-focus-visible\:bg-status-strong-success-hover:focus-visible {
+  background-color: var(--ui-background-status-strong-success-hover);
+}
+
+.ui-focus-visible\:bg-status-strong-success-pressed:focus-visible {
+  background-color: var(--ui-background-status-strong-success-pressed);
+}
+
+.ui-focus-visible\:bg-status-strong-success:focus-visible {
+  background-color: var(--ui-background-status-strong-success);
+}
+
+.ui-focus-visible\:bg-status-strong-warning-hover:focus-visible {
+  background-color: var(--ui-background-status-strong-warning-hover);
+}
+
+.ui-focus-visible\:bg-status-strong-warning-pressed:focus-visible {
+  background-color: var(--ui-background-status-strong-warning-pressed);
+}
+
+.ui-focus-visible\:bg-status-strong-warning:focus-visible {
+  background-color: var(--ui-background-status-strong-warning);
+}
+
+.ui-focus-visible\:bg-status-success-hover:focus-visible {
+  background-color: var(--ui-background-status-success-hover);
+}
+
+.ui-focus-visible\:bg-status-success-pressed:focus-visible {
+  background-color: var(--ui-background-status-success-pressed);
+}
+
+.ui-focus-visible\:bg-status-success:focus-visible {
+  background-color: var(--ui-background-status-success);
+}
+
+.ui-focus-visible\:bg-status-warning-hover:focus-visible {
+  background-color: var(--ui-background-status-warning-hover);
+}
+
+.ui-focus-visible\:bg-status-warning-pressed:focus-visible {
+  background-color: var(--ui-background-status-warning-pressed);
+}
+
+.ui-focus-visible\:bg-status-warning:focus-visible {
+  background-color: var(--ui-background-status-warning);
+}
+
+.ui-focus-visible\:bg-surface-active:focus-visible {
+  background-color: var(--ui-background-surface-active);
+}
+
+.ui-focus-visible\:bg-surface-hover:focus-visible {
+  background-color: var(--ui-background-surface-hover);
+}
+
+.ui-focus-visible\:bg-surface-primary:focus-visible {
+  background-color: var(--ui-background-surface-primary);
+}
+
+.ui-focus-visible\:bg-surface-secondary:focus-visible {
+  background-color: var(--ui-background-surface-secondary);
+}
+
+.ui-focus-visible\:bg-transparent:focus-visible {
+  background-color: var(--ui-background-transparent);
+}
+
+.ui-focus-visible\:border-on-brand-border-active:focus-visible {
+  border-color: var(--ui-border-on-brand-border-active);
+}
+
+.ui-focus-visible\:border-on-brand-border:focus-visible {
+  border-color: var(--ui-border-on-brand-border);
+}
+
+.ui-focus-visible\:border-on-brand-divider:focus-visible {
+  border-color: var(--ui-border-on-brand-divider);
+}
+
+.ui-focus-visible\:border-on-status-ai-strong:focus-visible {
+  border-color: var(--ui-border-on-status-ai-strong);
+}
+
+.ui-focus-visible\:border-on-status-ai:focus-visible {
+  border-color: var(--ui-border-on-status-ai);
+}
+
+.ui-focus-visible\:border-on-status-critical-strong:focus-visible {
+  border-color: var(--ui-border-on-status-critical-strong);
+}
+
+.ui-focus-visible\:border-on-status-critical:focus-visible {
+  border-color: var(--ui-border-on-status-critical);
+}
+
+.ui-focus-visible\:border-on-status-danger-strong:focus-visible {
+  border-color: var(--ui-border-on-status-danger-strong);
+}
+
+.ui-focus-visible\:border-on-status-danger:focus-visible {
+  border-color: var(--ui-border-on-status-danger);
+}
+
+.ui-focus-visible\:border-on-status-info-strong:focus-visible {
+  border-color: var(--ui-border-on-status-info-strong);
+}
+
+.ui-focus-visible\:border-on-status-info:focus-visible {
+  border-color: var(--ui-border-on-status-info);
+}
+
+.ui-focus-visible\:border-on-status-neutral-strong:focus-visible {
+  border-color: var(--ui-border-on-status-neutral-strong);
+}
+
+.ui-focus-visible\:border-on-status-neutral:focus-visible {
+  border-color: var(--ui-border-on-status-neutral);
+}
+
+.ui-focus-visible\:border-on-status-success-strong:focus-visible {
+  border-color: var(--ui-border-on-status-success-strong);
+}
+
+.ui-focus-visible\:border-on-status-success:focus-visible {
+  border-color: var(--ui-border-on-status-success);
+}
+
+.ui-focus-visible\:border-on-status-warning-strong:focus-visible {
+  border-color: var(--ui-border-on-status-warning-strong);
+}
+
+.ui-focus-visible\:border-on-status-warning:focus-visible {
+  border-color: var(--ui-border-on-status-warning);
+}
+
+.ui-focus-visible\:border-on-surface-border-active:focus-visible {
+  border-color: var(--ui-border-on-surface-border-active);
+}
+
+.ui-focus-visible\:border-on-surface-border-error:focus-visible {
+  border-color: var(--ui-border-on-surface-border-error);
+}
+
+.ui-focus-visible\:border-on-surface-border:focus-visible {
+  border-color: var(--ui-border-on-surface-border);
+}
+
+.ui-focus-visible\:border-on-surface-divider:focus-visible {
+  border-color: var(--ui-border-on-surface-divider);
+}
+
+.ui-focus-visible\:border-transparent:focus-visible {
+  border-color: var(--ui-border-transparent);
+}
+
+.ui-focus-visible\:text-on-backdrop-element-link-active:focus-visible {
+  color: var(--ui-text-on-backdrop-element-link-active);
+}
+
+.ui-focus-visible\:text-on-backdrop-element-link-hover:focus-visible {
+  color: var(--ui-text-on-backdrop-element-link-hover);
+}
+
+.ui-focus-visible\:text-on-backdrop-element-link-idle:focus-visible {
+  color: var(--ui-text-on-backdrop-element-link-idle);
+}
+
+.ui-focus-visible\:text-on-backdrop-element-primary:focus-visible {
+  color: var(--ui-text-on-backdrop-element-primary);
+}
+
+.ui-focus-visible\:text-on-backdrop-screen-link-active:focus-visible {
+  color: var(--ui-text-on-backdrop-screen-link-active);
+}
+
+.ui-focus-visible\:text-on-backdrop-screen-link-hover:focus-visible {
+  color: var(--ui-text-on-backdrop-screen-link-hover);
+}
+
+.ui-focus-visible\:text-on-backdrop-screen-link-idle:focus-visible {
+  color: var(--ui-text-on-backdrop-screen-link-idle);
+}
+
+.ui-focus-visible\:text-on-backdrop-screen-primary:focus-visible {
+  color: var(--ui-text-on-backdrop-screen-primary);
+}
+
+.ui-focus-visible\:text-on-backdrop-screen-secondary:focus-visible {
+  color: var(--ui-text-on-backdrop-screen-secondary);
+}
+
+.ui-focus-visible\:text-on-brand-disabled:focus-visible {
+  color: var(--ui-text-on-brand-disabled);
+}
+
+.ui-focus-visible\:text-on-brand-link-disabled:focus-visible {
+  color: var(--ui-text-on-brand-link-disabled);
+}
+
+.ui-focus-visible\:text-on-brand-link-hover:focus-visible {
+  color: var(--ui-text-on-brand-link-hover);
+}
+
+.ui-focus-visible\:text-on-brand-link-idle:focus-visible {
+  color: var(--ui-text-on-brand-link-idle);
+}
+
+.ui-focus-visible\:text-on-brand-link-pressed:focus-visible {
+  color: var(--ui-text-on-brand-link-pressed);
+}
+
+.ui-focus-visible\:text-on-brand-primary:focus-visible {
+  color: var(--ui-text-on-brand-primary);
+}
+
+.ui-focus-visible\:text-on-brand-secondary:focus-visible {
+  color: var(--ui-text-on-brand-secondary);
+}
+
+.ui-focus-visible\:text-on-inverse-primary:focus-visible {
+  color: var(--ui-text-on-inverse-primary);
+}
+
+.ui-focus-visible\:text-on-inverse-secondary:focus-visible {
+  color: var(--ui-text-on-inverse-secondary);
+}
+
+.ui-focus-visible\:text-on-status-ai:focus-visible {
+  color: var(--ui-text-on-status-ai);
+}
+
+.ui-focus-visible\:text-on-status-critical:focus-visible {
+  color: var(--ui-text-on-status-critical);
+}
+
+.ui-focus-visible\:text-on-status-danger:focus-visible {
+  color: var(--ui-text-on-status-danger);
+}
+
+.ui-focus-visible\:text-on-status-info:focus-visible {
+  color: var(--ui-text-on-status-info);
+}
+
+.ui-focus-visible\:text-on-status-link-disabled:focus-visible {
+  color: var(--ui-text-on-status-link-disabled);
+}
+
+.ui-focus-visible\:text-on-status-link-hover:focus-visible {
+  color: var(--ui-text-on-status-link-hover);
+}
+
+.ui-focus-visible\:text-on-status-link-idle:focus-visible {
+  color: var(--ui-text-on-status-link-idle);
+}
+
+.ui-focus-visible\:text-on-status-link-pressed:focus-visible {
+  color: var(--ui-text-on-status-link-pressed);
+}
+
+.ui-focus-visible\:text-on-status-neutral:focus-visible {
+  color: var(--ui-text-on-status-neutral);
+}
+
+.ui-focus-visible\:text-on-status-primary:focus-visible {
+  color: var(--ui-text-on-status-primary);
+}
+
+.ui-focus-visible\:text-on-status-secondary:focus-visible {
+  color: var(--ui-text-on-status-secondary);
+}
+
+.ui-focus-visible\:text-on-status-strong-ai:focus-visible {
+  color: var(--ui-text-on-status-strong-ai);
+}
+
+.ui-focus-visible\:text-on-status-strong-critical:focus-visible {
+  color: var(--ui-text-on-status-strong-critical);
+}
+
+.ui-focus-visible\:text-on-status-strong-danger:focus-visible {
+  color: var(--ui-text-on-status-strong-danger);
+}
+
+.ui-focus-visible\:text-on-status-strong-info:focus-visible {
+  color: var(--ui-text-on-status-strong-info);
+}
+
+.ui-focus-visible\:text-on-status-strong-link:focus-visible {
+  color: var(--ui-text-on-status-strong-link);
+}
+
+.ui-focus-visible\:text-on-status-strong-neutral:focus-visible {
+  color: var(--ui-text-on-status-strong-neutral);
+}
+
+.ui-focus-visible\:text-on-status-strong-primary:focus-visible {
+  color: var(--ui-text-on-status-strong-primary);
+}
+
+.ui-focus-visible\:text-on-status-strong-secondary:focus-visible {
+  color: var(--ui-text-on-status-strong-secondary);
+}
+
+.ui-focus-visible\:text-on-status-strong-success:focus-visible {
+  color: var(--ui-text-on-status-strong-success);
+}
+
+.ui-focus-visible\:text-on-status-strong-warning:focus-visible {
+  color: var(--ui-text-on-status-strong-warning);
+}
+
+.ui-focus-visible\:text-on-status-success:focus-visible {
+  color: var(--ui-text-on-status-success);
+}
+
+.ui-focus-visible\:text-on-status-warning:focus-visible {
+  color: var(--ui-text-on-status-warning);
+}
+
+.ui-focus-visible\:text-on-surface-destructive:focus-visible {
+  color: var(--ui-text-on-surface-destructive);
+}
+
+.ui-focus-visible\:text-on-surface-disabled:focus-visible {
+  color: var(--ui-text-on-surface-disabled);
+}
+
+.ui-focus-visible\:text-on-surface-link-disabled:focus-visible {
+  color: var(--ui-text-on-surface-link-disabled);
+}
+
+.ui-focus-visible\:text-on-surface-link-hover:focus-visible {
+  color: var(--ui-text-on-surface-link-hover);
+}
+
+.ui-focus-visible\:text-on-surface-link-idle:focus-visible {
+  color: var(--ui-text-on-surface-link-idle);
+}
+
+.ui-focus-visible\:text-on-surface-link-pressed:focus-visible {
+  color: var(--ui-text-on-surface-link-pressed);
+}
+
+.ui-focus-visible\:text-on-surface-primary:focus-visible {
+  color: var(--ui-text-on-surface-primary);
+}
+
+.ui-focus-visible\:text-on-surface-secondary:focus-visible {
+  color: var(--ui-text-on-surface-secondary);
 }
 
 .ui-gap-0 {
@@ -2912,6 +3944,522 @@
 
 .ui-hidden {
   display: none;
+}
+
+.ui-hover\:bg-backdrop-element-primary:hover {
+  background-color: var(--ui-background-backdrop-element-primary);
+}
+
+.ui-hover\:bg-backdrop-element-secondary:hover {
+  background-color: var(--ui-background-backdrop-element-secondary);
+}
+
+.ui-hover\:bg-backdrop-screen:hover {
+  background-color: var(--ui-background-backdrop-screen);
+}
+
+.ui-hover\:bg-brand-primary-active:hover {
+  background-color: var(--ui-background-brand-primary-active);
+}
+
+.ui-hover\:bg-brand-primary-disabled:hover {
+  background-color: var(--ui-background-brand-primary-disabled);
+}
+
+.ui-hover\:bg-brand-primary-hover:hover {
+  background-color: var(--ui-background-brand-primary-hover);
+}
+
+.ui-hover\:bg-brand-primary:hover {
+  background-color: var(--ui-background-brand-primary);
+}
+
+.ui-hover\:bg-brand-secondary-active:hover {
+  background-color: var(--ui-background-brand-secondary-active);
+}
+
+.ui-hover\:bg-brand-secondary-disabled:hover {
+  background-color: var(--ui-background-brand-secondary-disabled);
+}
+
+.ui-hover\:bg-brand-secondary-hover:hover {
+  background-color: var(--ui-background-brand-secondary-hover);
+}
+
+.ui-hover\:bg-brand-secondary:hover {
+  background-color: var(--ui-background-brand-secondary);
+}
+
+.ui-hover\:bg-inverse-primary:hover {
+  background-color: var(--ui-background-inverse-primary);
+}
+
+.ui-hover\:bg-status-ai-hover:hover {
+  background-color: var(--ui-background-status-ai-hover);
+}
+
+.ui-hover\:bg-status-ai-pressed:hover {
+  background-color: var(--ui-background-status-ai-pressed);
+}
+
+.ui-hover\:bg-status-ai:hover {
+  background-color: var(--ui-background-status-ai);
+}
+
+.ui-hover\:bg-status-critical-hover:hover {
+  background-color: var(--ui-background-status-critical-hover);
+}
+
+.ui-hover\:bg-status-critical-pressed:hover {
+  background-color: var(--ui-background-status-critical-pressed);
+}
+
+.ui-hover\:bg-status-critical:hover {
+  background-color: var(--ui-background-status-critical);
+}
+
+.ui-hover\:bg-status-danger-hover:hover {
+  background-color: var(--ui-background-status-danger-hover);
+}
+
+.ui-hover\:bg-status-danger-pressed:hover {
+  background-color: var(--ui-background-status-danger-pressed);
+}
+
+.ui-hover\:bg-status-danger:hover {
+  background-color: var(--ui-background-status-danger);
+}
+
+.ui-hover\:bg-status-info-hover:hover {
+  background-color: var(--ui-background-status-info-hover);
+}
+
+.ui-hover\:bg-status-info-pressed:hover {
+  background-color: var(--ui-background-status-info-pressed);
+}
+
+.ui-hover\:bg-status-info:hover {
+  background-color: var(--ui-background-status-info);
+}
+
+.ui-hover\:bg-status-neutral-hover:hover {
+  background-color: var(--ui-background-status-neutral-hover);
+}
+
+.ui-hover\:bg-status-neutral-pressed:hover {
+  background-color: var(--ui-background-status-neutral-pressed);
+}
+
+.ui-hover\:bg-status-neutral:hover {
+  background-color: var(--ui-background-status-neutral);
+}
+
+.ui-hover\:bg-status-off:hover {
+  background-color: var(--ui-background-status-off);
+}
+
+.ui-hover\:bg-status-on:hover {
+  background-color: var(--ui-background-status-on);
+}
+
+.ui-hover\:bg-status-strong-critical-hover:hover {
+  background-color: var(--ui-background-status-strong-critical-hover);
+}
+
+.ui-hover\:bg-status-strong-critical-pressed:hover {
+  background-color: var(--ui-background-status-strong-critical-pressed);
+}
+
+.ui-hover\:bg-status-strong-critical:hover {
+  background-color: var(--ui-background-status-strong-critical);
+}
+
+.ui-hover\:bg-status-strong-danger-hover:hover {
+  background-color: var(--ui-background-status-strong-danger-hover);
+}
+
+.ui-hover\:bg-status-strong-danger-pressed:hover {
+  background-color: var(--ui-background-status-strong-danger-pressed);
+}
+
+.ui-hover\:bg-status-strong-danger:hover {
+  background-color: var(--ui-background-status-strong-danger);
+}
+
+.ui-hover\:bg-status-strong-info-hover:hover {
+  background-color: var(--ui-background-status-strong-info-hover);
+}
+
+.ui-hover\:bg-status-strong-info-pressed:hover {
+  background-color: var(--ui-background-status-strong-info-pressed);
+}
+
+.ui-hover\:bg-status-strong-info:hover {
+  background-color: var(--ui-background-status-strong-info);
+}
+
+.ui-hover\:bg-status-strong-neutral-hover:hover {
+  background-color: var(--ui-background-status-strong-neutral-hover);
+}
+
+.ui-hover\:bg-status-strong-neutral-pressed:hover {
+  background-color: var(--ui-background-status-strong-neutral-pressed);
+}
+
+.ui-hover\:bg-status-strong-neutral:hover {
+  background-color: var(--ui-background-status-strong-neutral);
+}
+
+.ui-hover\:bg-status-strong-success-hover:hover {
+  background-color: var(--ui-background-status-strong-success-hover);
+}
+
+.ui-hover\:bg-status-strong-success-pressed:hover {
+  background-color: var(--ui-background-status-strong-success-pressed);
+}
+
+.ui-hover\:bg-status-strong-success:hover {
+  background-color: var(--ui-background-status-strong-success);
+}
+
+.ui-hover\:bg-status-strong-warning-hover:hover {
+  background-color: var(--ui-background-status-strong-warning-hover);
+}
+
+.ui-hover\:bg-status-strong-warning-pressed:hover {
+  background-color: var(--ui-background-status-strong-warning-pressed);
+}
+
+.ui-hover\:bg-status-strong-warning:hover {
+  background-color: var(--ui-background-status-strong-warning);
+}
+
+.ui-hover\:bg-status-success-hover:hover {
+  background-color: var(--ui-background-status-success-hover);
+}
+
+.ui-hover\:bg-status-success-pressed:hover {
+  background-color: var(--ui-background-status-success-pressed);
+}
+
+.ui-hover\:bg-status-success:hover {
+  background-color: var(--ui-background-status-success);
+}
+
+.ui-hover\:bg-status-warning-hover:hover {
+  background-color: var(--ui-background-status-warning-hover);
+}
+
+.ui-hover\:bg-status-warning-pressed:hover {
+  background-color: var(--ui-background-status-warning-pressed);
+}
+
+.ui-hover\:bg-status-warning:hover {
+  background-color: var(--ui-background-status-warning);
+}
+
+.ui-hover\:bg-surface-active:hover {
+  background-color: var(--ui-background-surface-active);
+}
+
+.ui-hover\:bg-surface-hover:hover {
+  background-color: var(--ui-background-surface-hover);
+}
+
+.ui-hover\:bg-surface-primary:hover {
+  background-color: var(--ui-background-surface-primary);
+}
+
+.ui-hover\:bg-surface-secondary:hover {
+  background-color: var(--ui-background-surface-secondary);
+}
+
+.ui-hover\:bg-transparent:hover {
+  background-color: var(--ui-background-transparent);
+}
+
+.ui-hover\:border-on-brand-border-active:hover {
+  border-color: var(--ui-border-on-brand-border-active);
+}
+
+.ui-hover\:border-on-brand-border:hover {
+  border-color: var(--ui-border-on-brand-border);
+}
+
+.ui-hover\:border-on-brand-divider:hover {
+  border-color: var(--ui-border-on-brand-divider);
+}
+
+.ui-hover\:border-on-status-ai-strong:hover {
+  border-color: var(--ui-border-on-status-ai-strong);
+}
+
+.ui-hover\:border-on-status-ai:hover {
+  border-color: var(--ui-border-on-status-ai);
+}
+
+.ui-hover\:border-on-status-critical-strong:hover {
+  border-color: var(--ui-border-on-status-critical-strong);
+}
+
+.ui-hover\:border-on-status-critical:hover {
+  border-color: var(--ui-border-on-status-critical);
+}
+
+.ui-hover\:border-on-status-danger-strong:hover {
+  border-color: var(--ui-border-on-status-danger-strong);
+}
+
+.ui-hover\:border-on-status-danger:hover {
+  border-color: var(--ui-border-on-status-danger);
+}
+
+.ui-hover\:border-on-status-info-strong:hover {
+  border-color: var(--ui-border-on-status-info-strong);
+}
+
+.ui-hover\:border-on-status-info:hover {
+  border-color: var(--ui-border-on-status-info);
+}
+
+.ui-hover\:border-on-status-neutral-strong:hover {
+  border-color: var(--ui-border-on-status-neutral-strong);
+}
+
+.ui-hover\:border-on-status-neutral:hover {
+  border-color: var(--ui-border-on-status-neutral);
+}
+
+.ui-hover\:border-on-status-success-strong:hover {
+  border-color: var(--ui-border-on-status-success-strong);
+}
+
+.ui-hover\:border-on-status-success:hover {
+  border-color: var(--ui-border-on-status-success);
+}
+
+.ui-hover\:border-on-status-warning-strong:hover {
+  border-color: var(--ui-border-on-status-warning-strong);
+}
+
+.ui-hover\:border-on-status-warning:hover {
+  border-color: var(--ui-border-on-status-warning);
+}
+
+.ui-hover\:border-on-surface-border-active:hover {
+  border-color: var(--ui-border-on-surface-border-active);
+}
+
+.ui-hover\:border-on-surface-border-error:hover {
+  border-color: var(--ui-border-on-surface-border-error);
+}
+
+.ui-hover\:border-on-surface-border:hover {
+  border-color: var(--ui-border-on-surface-border);
+}
+
+.ui-hover\:border-on-surface-divider:hover {
+  border-color: var(--ui-border-on-surface-divider);
+}
+
+.ui-hover\:border-transparent:hover {
+  border-color: var(--ui-border-transparent);
+}
+
+.ui-hover\:text-on-backdrop-element-link-active:hover {
+  color: var(--ui-text-on-backdrop-element-link-active);
+}
+
+.ui-hover\:text-on-backdrop-element-link-hover:hover {
+  color: var(--ui-text-on-backdrop-element-link-hover);
+}
+
+.ui-hover\:text-on-backdrop-element-link-idle:hover {
+  color: var(--ui-text-on-backdrop-element-link-idle);
+}
+
+.ui-hover\:text-on-backdrop-element-primary:hover {
+  color: var(--ui-text-on-backdrop-element-primary);
+}
+
+.ui-hover\:text-on-backdrop-screen-link-active:hover {
+  color: var(--ui-text-on-backdrop-screen-link-active);
+}
+
+.ui-hover\:text-on-backdrop-screen-link-hover:hover {
+  color: var(--ui-text-on-backdrop-screen-link-hover);
+}
+
+.ui-hover\:text-on-backdrop-screen-link-idle:hover {
+  color: var(--ui-text-on-backdrop-screen-link-idle);
+}
+
+.ui-hover\:text-on-backdrop-screen-primary:hover {
+  color: var(--ui-text-on-backdrop-screen-primary);
+}
+
+.ui-hover\:text-on-backdrop-screen-secondary:hover {
+  color: var(--ui-text-on-backdrop-screen-secondary);
+}
+
+.ui-hover\:text-on-brand-disabled:hover {
+  color: var(--ui-text-on-brand-disabled);
+}
+
+.ui-hover\:text-on-brand-link-disabled:hover {
+  color: var(--ui-text-on-brand-link-disabled);
+}
+
+.ui-hover\:text-on-brand-link-hover:hover {
+  color: var(--ui-text-on-brand-link-hover);
+}
+
+.ui-hover\:text-on-brand-link-idle:hover {
+  color: var(--ui-text-on-brand-link-idle);
+}
+
+.ui-hover\:text-on-brand-link-pressed:hover {
+  color: var(--ui-text-on-brand-link-pressed);
+}
+
+.ui-hover\:text-on-brand-primary:hover {
+  color: var(--ui-text-on-brand-primary);
+}
+
+.ui-hover\:text-on-brand-secondary:hover {
+  color: var(--ui-text-on-brand-secondary);
+}
+
+.ui-hover\:text-on-inverse-primary:hover {
+  color: var(--ui-text-on-inverse-primary);
+}
+
+.ui-hover\:text-on-inverse-secondary:hover {
+  color: var(--ui-text-on-inverse-secondary);
+}
+
+.ui-hover\:text-on-status-ai:hover {
+  color: var(--ui-text-on-status-ai);
+}
+
+.ui-hover\:text-on-status-critical:hover {
+  color: var(--ui-text-on-status-critical);
+}
+
+.ui-hover\:text-on-status-danger:hover {
+  color: var(--ui-text-on-status-danger);
+}
+
+.ui-hover\:text-on-status-info:hover {
+  color: var(--ui-text-on-status-info);
+}
+
+.ui-hover\:text-on-status-link-disabled:hover {
+  color: var(--ui-text-on-status-link-disabled);
+}
+
+.ui-hover\:text-on-status-link-hover:hover {
+  color: var(--ui-text-on-status-link-hover);
+}
+
+.ui-hover\:text-on-status-link-idle:hover {
+  color: var(--ui-text-on-status-link-idle);
+}
+
+.ui-hover\:text-on-status-link-pressed:hover {
+  color: var(--ui-text-on-status-link-pressed);
+}
+
+.ui-hover\:text-on-status-neutral:hover {
+  color: var(--ui-text-on-status-neutral);
+}
+
+.ui-hover\:text-on-status-primary:hover {
+  color: var(--ui-text-on-status-primary);
+}
+
+.ui-hover\:text-on-status-secondary:hover {
+  color: var(--ui-text-on-status-secondary);
+}
+
+.ui-hover\:text-on-status-strong-ai:hover {
+  color: var(--ui-text-on-status-strong-ai);
+}
+
+.ui-hover\:text-on-status-strong-critical:hover {
+  color: var(--ui-text-on-status-strong-critical);
+}
+
+.ui-hover\:text-on-status-strong-danger:hover {
+  color: var(--ui-text-on-status-strong-danger);
+}
+
+.ui-hover\:text-on-status-strong-info:hover {
+  color: var(--ui-text-on-status-strong-info);
+}
+
+.ui-hover\:text-on-status-strong-link:hover {
+  color: var(--ui-text-on-status-strong-link);
+}
+
+.ui-hover\:text-on-status-strong-neutral:hover {
+  color: var(--ui-text-on-status-strong-neutral);
+}
+
+.ui-hover\:text-on-status-strong-primary:hover {
+  color: var(--ui-text-on-status-strong-primary);
+}
+
+.ui-hover\:text-on-status-strong-secondary:hover {
+  color: var(--ui-text-on-status-strong-secondary);
+}
+
+.ui-hover\:text-on-status-strong-success:hover {
+  color: var(--ui-text-on-status-strong-success);
+}
+
+.ui-hover\:text-on-status-strong-warning:hover {
+  color: var(--ui-text-on-status-strong-warning);
+}
+
+.ui-hover\:text-on-status-success:hover {
+  color: var(--ui-text-on-status-success);
+}
+
+.ui-hover\:text-on-status-warning:hover {
+  color: var(--ui-text-on-status-warning);
+}
+
+.ui-hover\:text-on-surface-destructive:hover {
+  color: var(--ui-text-on-surface-destructive);
+}
+
+.ui-hover\:text-on-surface-disabled:hover {
+  color: var(--ui-text-on-surface-disabled);
+}
+
+.ui-hover\:text-on-surface-link-disabled:hover {
+  color: var(--ui-text-on-surface-link-disabled);
+}
+
+.ui-hover\:text-on-surface-link-hover:hover {
+  color: var(--ui-text-on-surface-link-hover);
+}
+
+.ui-hover\:text-on-surface-link-idle:hover {
+  color: var(--ui-text-on-surface-link-idle);
+}
+
+.ui-hover\:text-on-surface-link-pressed:hover {
+  color: var(--ui-text-on-surface-link-pressed);
+}
+
+.ui-hover\:text-on-surface-primary:hover {
+  color: var(--ui-text-on-surface-primary);
+}
+
+.ui-hover\:text-on-surface-secondary:hover {
+  color: var(--ui-text-on-surface-secondary);
 }
 
 .ui-hyphens-auto {
@@ -3524,6 +5072,522 @@
 
 .ui-justify-start {
   justify-content: flex-start;
+}
+
+.ui-last\:bg-backdrop-element-primary:last-child {
+  background-color: var(--ui-background-backdrop-element-primary);
+}
+
+.ui-last\:bg-backdrop-element-secondary:last-child {
+  background-color: var(--ui-background-backdrop-element-secondary);
+}
+
+.ui-last\:bg-backdrop-screen:last-child {
+  background-color: var(--ui-background-backdrop-screen);
+}
+
+.ui-last\:bg-brand-primary-active:last-child {
+  background-color: var(--ui-background-brand-primary-active);
+}
+
+.ui-last\:bg-brand-primary-disabled:last-child {
+  background-color: var(--ui-background-brand-primary-disabled);
+}
+
+.ui-last\:bg-brand-primary-hover:last-child {
+  background-color: var(--ui-background-brand-primary-hover);
+}
+
+.ui-last\:bg-brand-primary:last-child {
+  background-color: var(--ui-background-brand-primary);
+}
+
+.ui-last\:bg-brand-secondary-active:last-child {
+  background-color: var(--ui-background-brand-secondary-active);
+}
+
+.ui-last\:bg-brand-secondary-disabled:last-child {
+  background-color: var(--ui-background-brand-secondary-disabled);
+}
+
+.ui-last\:bg-brand-secondary-hover:last-child {
+  background-color: var(--ui-background-brand-secondary-hover);
+}
+
+.ui-last\:bg-brand-secondary:last-child {
+  background-color: var(--ui-background-brand-secondary);
+}
+
+.ui-last\:bg-inverse-primary:last-child {
+  background-color: var(--ui-background-inverse-primary);
+}
+
+.ui-last\:bg-status-ai-hover:last-child {
+  background-color: var(--ui-background-status-ai-hover);
+}
+
+.ui-last\:bg-status-ai-pressed:last-child {
+  background-color: var(--ui-background-status-ai-pressed);
+}
+
+.ui-last\:bg-status-ai:last-child {
+  background-color: var(--ui-background-status-ai);
+}
+
+.ui-last\:bg-status-critical-hover:last-child {
+  background-color: var(--ui-background-status-critical-hover);
+}
+
+.ui-last\:bg-status-critical-pressed:last-child {
+  background-color: var(--ui-background-status-critical-pressed);
+}
+
+.ui-last\:bg-status-critical:last-child {
+  background-color: var(--ui-background-status-critical);
+}
+
+.ui-last\:bg-status-danger-hover:last-child {
+  background-color: var(--ui-background-status-danger-hover);
+}
+
+.ui-last\:bg-status-danger-pressed:last-child {
+  background-color: var(--ui-background-status-danger-pressed);
+}
+
+.ui-last\:bg-status-danger:last-child {
+  background-color: var(--ui-background-status-danger);
+}
+
+.ui-last\:bg-status-info-hover:last-child {
+  background-color: var(--ui-background-status-info-hover);
+}
+
+.ui-last\:bg-status-info-pressed:last-child {
+  background-color: var(--ui-background-status-info-pressed);
+}
+
+.ui-last\:bg-status-info:last-child {
+  background-color: var(--ui-background-status-info);
+}
+
+.ui-last\:bg-status-neutral-hover:last-child {
+  background-color: var(--ui-background-status-neutral-hover);
+}
+
+.ui-last\:bg-status-neutral-pressed:last-child {
+  background-color: var(--ui-background-status-neutral-pressed);
+}
+
+.ui-last\:bg-status-neutral:last-child {
+  background-color: var(--ui-background-status-neutral);
+}
+
+.ui-last\:bg-status-off:last-child {
+  background-color: var(--ui-background-status-off);
+}
+
+.ui-last\:bg-status-on:last-child {
+  background-color: var(--ui-background-status-on);
+}
+
+.ui-last\:bg-status-strong-critical-hover:last-child {
+  background-color: var(--ui-background-status-strong-critical-hover);
+}
+
+.ui-last\:bg-status-strong-critical-pressed:last-child {
+  background-color: var(--ui-background-status-strong-critical-pressed);
+}
+
+.ui-last\:bg-status-strong-critical:last-child {
+  background-color: var(--ui-background-status-strong-critical);
+}
+
+.ui-last\:bg-status-strong-danger-hover:last-child {
+  background-color: var(--ui-background-status-strong-danger-hover);
+}
+
+.ui-last\:bg-status-strong-danger-pressed:last-child {
+  background-color: var(--ui-background-status-strong-danger-pressed);
+}
+
+.ui-last\:bg-status-strong-danger:last-child {
+  background-color: var(--ui-background-status-strong-danger);
+}
+
+.ui-last\:bg-status-strong-info-hover:last-child {
+  background-color: var(--ui-background-status-strong-info-hover);
+}
+
+.ui-last\:bg-status-strong-info-pressed:last-child {
+  background-color: var(--ui-background-status-strong-info-pressed);
+}
+
+.ui-last\:bg-status-strong-info:last-child {
+  background-color: var(--ui-background-status-strong-info);
+}
+
+.ui-last\:bg-status-strong-neutral-hover:last-child {
+  background-color: var(--ui-background-status-strong-neutral-hover);
+}
+
+.ui-last\:bg-status-strong-neutral-pressed:last-child {
+  background-color: var(--ui-background-status-strong-neutral-pressed);
+}
+
+.ui-last\:bg-status-strong-neutral:last-child {
+  background-color: var(--ui-background-status-strong-neutral);
+}
+
+.ui-last\:bg-status-strong-success-hover:last-child {
+  background-color: var(--ui-background-status-strong-success-hover);
+}
+
+.ui-last\:bg-status-strong-success-pressed:last-child {
+  background-color: var(--ui-background-status-strong-success-pressed);
+}
+
+.ui-last\:bg-status-strong-success:last-child {
+  background-color: var(--ui-background-status-strong-success);
+}
+
+.ui-last\:bg-status-strong-warning-hover:last-child {
+  background-color: var(--ui-background-status-strong-warning-hover);
+}
+
+.ui-last\:bg-status-strong-warning-pressed:last-child {
+  background-color: var(--ui-background-status-strong-warning-pressed);
+}
+
+.ui-last\:bg-status-strong-warning:last-child {
+  background-color: var(--ui-background-status-strong-warning);
+}
+
+.ui-last\:bg-status-success-hover:last-child {
+  background-color: var(--ui-background-status-success-hover);
+}
+
+.ui-last\:bg-status-success-pressed:last-child {
+  background-color: var(--ui-background-status-success-pressed);
+}
+
+.ui-last\:bg-status-success:last-child {
+  background-color: var(--ui-background-status-success);
+}
+
+.ui-last\:bg-status-warning-hover:last-child {
+  background-color: var(--ui-background-status-warning-hover);
+}
+
+.ui-last\:bg-status-warning-pressed:last-child {
+  background-color: var(--ui-background-status-warning-pressed);
+}
+
+.ui-last\:bg-status-warning:last-child {
+  background-color: var(--ui-background-status-warning);
+}
+
+.ui-last\:bg-surface-active:last-child {
+  background-color: var(--ui-background-surface-active);
+}
+
+.ui-last\:bg-surface-hover:last-child {
+  background-color: var(--ui-background-surface-hover);
+}
+
+.ui-last\:bg-surface-primary:last-child {
+  background-color: var(--ui-background-surface-primary);
+}
+
+.ui-last\:bg-surface-secondary:last-child {
+  background-color: var(--ui-background-surface-secondary);
+}
+
+.ui-last\:bg-transparent:last-child {
+  background-color: var(--ui-background-transparent);
+}
+
+.ui-last\:border-on-brand-border-active:last-child {
+  border-color: var(--ui-border-on-brand-border-active);
+}
+
+.ui-last\:border-on-brand-border:last-child {
+  border-color: var(--ui-border-on-brand-border);
+}
+
+.ui-last\:border-on-brand-divider:last-child {
+  border-color: var(--ui-border-on-brand-divider);
+}
+
+.ui-last\:border-on-status-ai-strong:last-child {
+  border-color: var(--ui-border-on-status-ai-strong);
+}
+
+.ui-last\:border-on-status-ai:last-child {
+  border-color: var(--ui-border-on-status-ai);
+}
+
+.ui-last\:border-on-status-critical-strong:last-child {
+  border-color: var(--ui-border-on-status-critical-strong);
+}
+
+.ui-last\:border-on-status-critical:last-child {
+  border-color: var(--ui-border-on-status-critical);
+}
+
+.ui-last\:border-on-status-danger-strong:last-child {
+  border-color: var(--ui-border-on-status-danger-strong);
+}
+
+.ui-last\:border-on-status-danger:last-child {
+  border-color: var(--ui-border-on-status-danger);
+}
+
+.ui-last\:border-on-status-info-strong:last-child {
+  border-color: var(--ui-border-on-status-info-strong);
+}
+
+.ui-last\:border-on-status-info:last-child {
+  border-color: var(--ui-border-on-status-info);
+}
+
+.ui-last\:border-on-status-neutral-strong:last-child {
+  border-color: var(--ui-border-on-status-neutral-strong);
+}
+
+.ui-last\:border-on-status-neutral:last-child {
+  border-color: var(--ui-border-on-status-neutral);
+}
+
+.ui-last\:border-on-status-success-strong:last-child {
+  border-color: var(--ui-border-on-status-success-strong);
+}
+
+.ui-last\:border-on-status-success:last-child {
+  border-color: var(--ui-border-on-status-success);
+}
+
+.ui-last\:border-on-status-warning-strong:last-child {
+  border-color: var(--ui-border-on-status-warning-strong);
+}
+
+.ui-last\:border-on-status-warning:last-child {
+  border-color: var(--ui-border-on-status-warning);
+}
+
+.ui-last\:border-on-surface-border-active:last-child {
+  border-color: var(--ui-border-on-surface-border-active);
+}
+
+.ui-last\:border-on-surface-border-error:last-child {
+  border-color: var(--ui-border-on-surface-border-error);
+}
+
+.ui-last\:border-on-surface-border:last-child {
+  border-color: var(--ui-border-on-surface-border);
+}
+
+.ui-last\:border-on-surface-divider:last-child {
+  border-color: var(--ui-border-on-surface-divider);
+}
+
+.ui-last\:border-transparent:last-child {
+  border-color: var(--ui-border-transparent);
+}
+
+.ui-last\:text-on-backdrop-element-link-active:last-child {
+  color: var(--ui-text-on-backdrop-element-link-active);
+}
+
+.ui-last\:text-on-backdrop-element-link-hover:last-child {
+  color: var(--ui-text-on-backdrop-element-link-hover);
+}
+
+.ui-last\:text-on-backdrop-element-link-idle:last-child {
+  color: var(--ui-text-on-backdrop-element-link-idle);
+}
+
+.ui-last\:text-on-backdrop-element-primary:last-child {
+  color: var(--ui-text-on-backdrop-element-primary);
+}
+
+.ui-last\:text-on-backdrop-screen-link-active:last-child {
+  color: var(--ui-text-on-backdrop-screen-link-active);
+}
+
+.ui-last\:text-on-backdrop-screen-link-hover:last-child {
+  color: var(--ui-text-on-backdrop-screen-link-hover);
+}
+
+.ui-last\:text-on-backdrop-screen-link-idle:last-child {
+  color: var(--ui-text-on-backdrop-screen-link-idle);
+}
+
+.ui-last\:text-on-backdrop-screen-primary:last-child {
+  color: var(--ui-text-on-backdrop-screen-primary);
+}
+
+.ui-last\:text-on-backdrop-screen-secondary:last-child {
+  color: var(--ui-text-on-backdrop-screen-secondary);
+}
+
+.ui-last\:text-on-brand-disabled:last-child {
+  color: var(--ui-text-on-brand-disabled);
+}
+
+.ui-last\:text-on-brand-link-disabled:last-child {
+  color: var(--ui-text-on-brand-link-disabled);
+}
+
+.ui-last\:text-on-brand-link-hover:last-child {
+  color: var(--ui-text-on-brand-link-hover);
+}
+
+.ui-last\:text-on-brand-link-idle:last-child {
+  color: var(--ui-text-on-brand-link-idle);
+}
+
+.ui-last\:text-on-brand-link-pressed:last-child {
+  color: var(--ui-text-on-brand-link-pressed);
+}
+
+.ui-last\:text-on-brand-primary:last-child {
+  color: var(--ui-text-on-brand-primary);
+}
+
+.ui-last\:text-on-brand-secondary:last-child {
+  color: var(--ui-text-on-brand-secondary);
+}
+
+.ui-last\:text-on-inverse-primary:last-child {
+  color: var(--ui-text-on-inverse-primary);
+}
+
+.ui-last\:text-on-inverse-secondary:last-child {
+  color: var(--ui-text-on-inverse-secondary);
+}
+
+.ui-last\:text-on-status-ai:last-child {
+  color: var(--ui-text-on-status-ai);
+}
+
+.ui-last\:text-on-status-critical:last-child {
+  color: var(--ui-text-on-status-critical);
+}
+
+.ui-last\:text-on-status-danger:last-child {
+  color: var(--ui-text-on-status-danger);
+}
+
+.ui-last\:text-on-status-info:last-child {
+  color: var(--ui-text-on-status-info);
+}
+
+.ui-last\:text-on-status-link-disabled:last-child {
+  color: var(--ui-text-on-status-link-disabled);
+}
+
+.ui-last\:text-on-status-link-hover:last-child {
+  color: var(--ui-text-on-status-link-hover);
+}
+
+.ui-last\:text-on-status-link-idle:last-child {
+  color: var(--ui-text-on-status-link-idle);
+}
+
+.ui-last\:text-on-status-link-pressed:last-child {
+  color: var(--ui-text-on-status-link-pressed);
+}
+
+.ui-last\:text-on-status-neutral:last-child {
+  color: var(--ui-text-on-status-neutral);
+}
+
+.ui-last\:text-on-status-primary:last-child {
+  color: var(--ui-text-on-status-primary);
+}
+
+.ui-last\:text-on-status-secondary:last-child {
+  color: var(--ui-text-on-status-secondary);
+}
+
+.ui-last\:text-on-status-strong-ai:last-child {
+  color: var(--ui-text-on-status-strong-ai);
+}
+
+.ui-last\:text-on-status-strong-critical:last-child {
+  color: var(--ui-text-on-status-strong-critical);
+}
+
+.ui-last\:text-on-status-strong-danger:last-child {
+  color: var(--ui-text-on-status-strong-danger);
+}
+
+.ui-last\:text-on-status-strong-info:last-child {
+  color: var(--ui-text-on-status-strong-info);
+}
+
+.ui-last\:text-on-status-strong-link:last-child {
+  color: var(--ui-text-on-status-strong-link);
+}
+
+.ui-last\:text-on-status-strong-neutral:last-child {
+  color: var(--ui-text-on-status-strong-neutral);
+}
+
+.ui-last\:text-on-status-strong-primary:last-child {
+  color: var(--ui-text-on-status-strong-primary);
+}
+
+.ui-last\:text-on-status-strong-secondary:last-child {
+  color: var(--ui-text-on-status-strong-secondary);
+}
+
+.ui-last\:text-on-status-strong-success:last-child {
+  color: var(--ui-text-on-status-strong-success);
+}
+
+.ui-last\:text-on-status-strong-warning:last-child {
+  color: var(--ui-text-on-status-strong-warning);
+}
+
+.ui-last\:text-on-status-success:last-child {
+  color: var(--ui-text-on-status-success);
+}
+
+.ui-last\:text-on-status-warning:last-child {
+  color: var(--ui-text-on-status-warning);
+}
+
+.ui-last\:text-on-surface-destructive:last-child {
+  color: var(--ui-text-on-surface-destructive);
+}
+
+.ui-last\:text-on-surface-disabled:last-child {
+  color: var(--ui-text-on-surface-disabled);
+}
+
+.ui-last\:text-on-surface-link-disabled:last-child {
+  color: var(--ui-text-on-surface-link-disabled);
+}
+
+.ui-last\:text-on-surface-link-hover:last-child {
+  color: var(--ui-text-on-surface-link-hover);
+}
+
+.ui-last\:text-on-surface-link-idle:last-child {
+  color: var(--ui-text-on-surface-link-idle);
+}
+
+.ui-last\:text-on-surface-link-pressed:last-child {
+  color: var(--ui-text-on-surface-link-pressed);
+}
+
+.ui-last\:text-on-surface-primary:last-child {
+  color: var(--ui-text-on-surface-primary);
+}
+
+.ui-last\:text-on-surface-secondary:last-child {
+  color: var(--ui-text-on-surface-secondary);
 }
 
 .ui-left-0 {
