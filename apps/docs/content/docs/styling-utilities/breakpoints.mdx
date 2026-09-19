@@ -29,12 +29,27 @@ past Tailwind's stock breakpoints for this scale's larger viewport ranges.
 ## Tailwind responsive variants
 
 Because `lg`–`4xl` are declared in ui-react's `@theme` block, the standard
-Tailwind responsive prefixes apply the design system's values automatically —
-no config needed for consumers who load `@acronis-platform/ui-react/styles`:
+Tailwind responsive prefixes use the design system's breakpoint values —
+**but only for a consumer running their own Tailwind build against this
+preset** (`@config`/`@import` pointing at `@acronis-platform/ui-react`'s
+theme):
 
 ```tsx
 <div className="flex-col lg:flex-row 2xl:max-w-4xl" />
 ```
+
+<Callout type="warn">
+  This does **not** work "out of the box" for a consumer who only loads the
+  precompiled `@acronis-platform/ui-react/styles` (`dist/ui-react.css`) — e.g.
+  the shadow-DOM/`adoptedStyleSheets` consumer this styling-utilities section
+  targets. That stylesheet only contains the exact variant+utility
+  combinations ui-react's **own source** happens to use — `lg:flex-row` is
+  only in the shipped CSS if some kit component already uses `lg:flex-row`
+  verbatim. Any other combination is silently dead, no build error. If you
+  need a responsive variant that isn't already used inside the kit, either
+  run your own Tailwind build against this preset, or use a `@container`/
+  `@media` query with the `--ui-breakpoint-*` variables below.
+</Callout>
 
 ## CSS variables
 

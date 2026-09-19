@@ -76,11 +76,70 @@ default scale (12 columns, 6 rows).
 `ui-whitespace-normal`/`-nowrap`/`-pre`/`-pre-line`/`-pre-wrap`/
 `-break-spaces`, `ui-break-normal`/`-words`/`-all`/`-keep`, `ui-truncate`,
 `ui-text-ellipsis`, `ui-text-clip`, `ui-line-clamp-1`…`ui-line-clamp-6`,
-`ui-line-clamp-none`, `ui-hyphens-none`/`-manual`/`-auto`.
+`ui-line-clamp-none`, `ui-hyphens-none`/`-manual`/`-auto`,
+`ui-underline-offset-4`.
+
+<Callout type="info">
+  `ui-underline-offset-4` isn't part of `.ui-typography-*` — the typography
+  composite classes only ever emit `font-family`/`font-size`/`font-weight`/
+  `line-height`/`letter-spacing`, never `text-decoration` properties.
+</Callout>
 
 ## Display
 
 `ui-block`, `ui-inline-block`, `ui-inline`, `ui-hidden`, `ui-contents`.
+
+## List style
+
+```tsx
+<ul className="ui-list-disc ui-list-inside">
+  <li>Item</li>
+</ul>
+```
+
+`ui-list-disc`, `ui-list-decimal`, `ui-list-none`, `ui-list-inside`,
+`ui-list-outside`.
+
+## Cursor
+
+`ui-cursor-auto`/`-default`/`-pointer`/`-wait`/`-text`/`-move`/`-help`/
+`-not-allowed`/`-none`/`-grab`/`-grabbing`/`-zoom-in`/`-zoom-out`.
+
+## Resize
+
+`ui-resize-none`, `ui-resize` (both axes), `ui-resize-x`, `ui-resize-y`.
+
+## Child spacing
+
+```tsx
+<div className="ui-space-y-16">
+  <div>Row 1</div>
+  <div>Row 2</div>
+</div>
+
+<div className="ui-divide-y">
+  <div>Row 1</div>
+  <div>Row 2</div>
+</div>
+```
+
+`ui-space-y-*` mirrors the spacing scale (same steps as
+[sizing](/styling-utilities/sizing)/[spacing](/styling-utilities/spacing)),
+adding `margin-top` between children via Tailwind's own
+`:not([hidden]) ~ :not([hidden])` sibling combinator. `ui-divide-y` is a
+single fixed value using the already-established
+`--ui-border-on-surface-divider` token.
+
+## Border width
+
+```tsx
+<div className="ui-border-t-0" />
+<div className="ui-border-x-0 ui-border-y" />
+```
+
+`ui-border`/`ui-border-{t,r,b,l,x,y}` (default 1px) plus a
+`-0`/`-2`/`-4`/`-8` suffix per direction — Tailwind's own border-width
+scale, mirrored wholesale.
 
 <Callout type="warn">
   All of the above is generated from `@acronis-platform/design-tokens` by the

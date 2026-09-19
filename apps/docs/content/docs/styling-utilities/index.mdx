@@ -3,6 +3,8 @@ title: Styling Utilities
 description: Framework-agnostic spacing, sizing, layout utility classes and viewport breakpoints shipped alongside the design tokens.
 ---
 
+import { Callout } from 'fumadocs-ui/components/callout';
+
 **Styling utilities** are small, generated CSS building blocks that sit next to
 the token system — usable whether or not a consumer extends the Tailwind
 preset.
@@ -27,3 +29,17 @@ preset.
 
 For color, typography, and component tokens, see
 [Token reference](/token-reference) and [Typography](/typography).
+
+<Callout type="warn">
+  **The tailwind-merge trap.** `@acronis-platform/ui-react` components merge a
+  `className` you pass with their own default classes via `cn()`
+  (`clsx` + `tailwind-merge`), which **deduplicates conflicting utilities in
+  your favor** — including a utility your className didn't intend to
+  override. Passing a dead or unrelated class alongside a real one can
+  silently remove a component's own working style: e.g. `<TabsContent
+  className="mt-6" />` drops the component's built-in `mt-2` (both are
+  `margin-top` utilities, so `tailwind-merge` keeps only the last one) and
+  renders with zero margin instead of stacking on top of it. When overriding
+  a component's own spacing/sizing, check what the component already applies
+  before assuming your class only adds to it.
+</Callout>
