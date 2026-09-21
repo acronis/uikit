@@ -94,7 +94,12 @@ contract:
     - name: xAxisAngle
       type: number
       required: false
-      description: Rotate the X-axis tick labels by this many degrees (a negative angle tilts them up toward the right); the tick anchor + axis height adjust.
+      description: >-
+        Rotate the X-axis tick labels by this many degrees (a negative angle
+        tilts them up toward the right). Every rendered tick remains visible:
+        the chart reserves only the required space below the axis and at either
+        endpoint, keeps bottom legends clear, and does not extend the data grid
+        into that reserved side space.
     - name: xAxisInterval
       type: "number | 'preserveStart' | 'preserveEnd' | 'preserveStartEnd' | 'equidistantPreserveStart'"
       required: false

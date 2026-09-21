@@ -34,7 +34,6 @@ import {
   resolveLabelFillClass,
   resolveReferenceLineProps,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   toLabelFormatter,
@@ -52,6 +51,11 @@ import {
   toCssKey,
   type CartesianLabelPosition,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
 // axes are the design's Area-chart variant set: `layout` (independent
@@ -366,7 +370,21 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
+    const xAxisTickLabels = resolveXAxisTickLabels(
+      data.map((row) => row[xKey]),
+      xTickFormatter
+    );
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      xAxisAngle,
+      xAxisLabel,
+      xAxisTickLabels.join('\u0000')
+    );
+    const chartMargin = mergeXAxisLayoutMargin(
+      hasLabels ? CHART_LABEL_MARGIN : undefined,
+      xAxisLayout.margin
+    );
 
     const projStartIndex = React.useMemo(() => {
       if (projectionStart === undefined) return -1;
@@ -483,13 +501,14 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
         {...props}
       >
         <ChartContainer
+          ref={chartContainerRef}
           config={config}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsAreaChart
             data={chartData as readonly unknown[]}
-            margin={hasLabels ? CHART_LABEL_MARGIN : undefined}
+            margin={chartMargin}
           >
             {isGradient && (
               <AreaFillGradients
@@ -517,7 +536,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-              height={xAxisHeight}
+              height={xAxisLayout.height}
               label={xAxisTitle}
             />
             <YAxis

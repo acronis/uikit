@@ -116,6 +116,29 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// PLTFRM-95210: long rotated period labels leave the bottom legend readable.
+export const LongRotatedCategories: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — forecast retention by protection plan`,
+    })),
+    xAxisAngle: -45,
+    className: 'h-[400px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — forecast retention by protection plan`,
+    })),
+    xAxisAngle: 45,
+    className: 'h-[400px] w-[720px]',
+  },
+};
+
 // Compact currency on the MRR axis — `146500 → "$146.5K"`. A `unit` suffix
 // can't abbreviate the value or prefix `$`.
 const mrrData = [

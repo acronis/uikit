@@ -153,6 +153,30 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// PLTFRM-95210: the categorical X axis reserves room for labels before its
+// bottom legend is positioned.
+export const LongRotatedCategories: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — monitor deployments by protection plan`,
+    })),
+    xAxisAngle: -45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — monitor deployments by protection plan`,
+    })),
+    xAxisAngle: 45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
 // The classic combo: bars for a quantity + a line for a related trend.
 export const BarPlusLine: Story = {
   args: {

@@ -35,7 +35,6 @@ import {
   resolveLabelFillClass,
   resolveReferenceLineProps,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   toLabelFormatter,
@@ -53,6 +52,11 @@ import {
   type ChartReferenceLine,
   type CartesianLabelPosition,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
 // axes are the design's Line-chart variant set: `curve` (how the segments
@@ -405,7 +409,21 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showLabels ||
       Object.values(lineSettings ?? {}).some((settings) => settings.showLabel);
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
+    const xAxisTickLabels = resolveXAxisTickLabels(
+      data.map((row) => row[xKey]),
+      xTickFormatter
+    );
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      xAxisAngle,
+      xAxisLabel,
+      xAxisTickLabels.join('\u0000')
+    );
+    const chartMargin = mergeXAxisLayoutMargin(
+      hasLabels ? CHART_LABEL_MARGIN : undefined,
+      xAxisLayout.margin
+    );
 
     const projStartIndex = React.useMemo(() => {
       if (projectionStart === undefined) return -1;
@@ -563,13 +581,14 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         {...props}
       >
         <ChartContainer
+          ref={chartContainerRef}
           config={config}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RootChart
             data={chartData as readonly unknown[]}
-            margin={hasLabels ? CHART_LABEL_MARGIN : undefined}
+            margin={chartMargin}
           >
             {showGrid && (
               <CartesianGrid
@@ -590,7 +609,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-              height={xAxisHeight}
+              height={xAxisLayout.height}
               label={xAxisTitle}
             />
             <YAxis
