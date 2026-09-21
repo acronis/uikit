@@ -11,7 +11,10 @@ semantic/component tokens carry per-brand aliases back into the primitives. This
 package ships the resolved output. **The generated files are committed** (and
 published); do not edit them by hand — change the upstream tokens and rebuild.
 
-Brands: `default` plus `deep_sky_itkontoret`, `light-gray`, `telstra`,
+Brands: `default` plus `blue_yellow_uss_signal`, `brown`, `dark_gray`,
+`deep_purple`, `deep_sky_itkontoret`, `green_also_choise_df`, `ingram_micro`,
+`light-gray`, `light_blue_hp`, `orange_tsukaeru_helpox`, `pinky`, `purple`,
+`purple_fusion_media`, `red_fire_brick`, `red_home_pl`, `sand`, `telstra`,
 `virtuozzo`, `yellow-1c`.
 
 ## Layout

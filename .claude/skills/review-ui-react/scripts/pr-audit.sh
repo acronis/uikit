@@ -252,7 +252,7 @@ if [ "$dt_changed" -gt 0 ]; then
     echo "DESIGN_TOKENS_TO_TOKENS_PD: PASS (both changed together)"
   else
     echo "DESIGN_TOKENS_TO_TOKENS_PD: FAIL — design-tokens changed, tokens-pd did not."
-    echo "  Fix: pnpm --filter @acronis-platform/style-dictionary build pd-css pd-tailwind"
+    echo "  Fix: pnpm --filter @acronis-platform/style-dictionary build"
   fi
 else
   echo "DESIGN_TOKENS_TO_TOKENS_PD: n/a (design-tokens tiers unchanged)"

@@ -14,5 +14,4 @@ in value for any existing brand — purely additive. `tools/style-dictionary`'s
 data-driven brand discovery picks up each new brand automatically; this
 release adds the corresponding generated `tokens-pd` artifacts (`css/<brand>.css`,
 `css/<Component>/<brand>.css`, `bundles/<brand>.css`,
-`tailwind/<brand>/{tokens,components/*}.js`, `dtcg/{semantics,components}-<brand>.json`)
-for all 14.
+`dtcg/{semantics,components}-<brand>.json`) for all 14.
