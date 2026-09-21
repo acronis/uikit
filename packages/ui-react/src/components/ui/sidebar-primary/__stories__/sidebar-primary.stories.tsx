@@ -417,3 +417,45 @@ export const TallBrandedLogoOverrideCollapsed: Story = {
     return <TallBrandedLogoOverrideDemo defaultExpanded={false} />;
   },
 };
+
+// VR coverage for a non-default brand — see AGENTS.md root context/
+export const BrandPurple: Story = {
+  name: 'Brand - Purple (known SidebarPrimary alias bug, see Finding #1)',
+  globals: { brand: 'purple' },
+  render: function BrandPurpleStory() {
+    return (
+      <Shell height={420}>
+        <TooltipProvider delay={0}>
+          <SidebarPrimary defaultExpanded>
+            <SidebarPrimaryHeader
+              logo={<LogoMark />}
+              collapsedLogo={<LogoMarkCollapsed />}
+            />
+            <SidebarPrimaryContent>
+              <SidebarPrimarySection>
+                <SidebarPrimaryMenu>
+                  <SidebarPrimaryMenuItem href="#" icon={<ChartPieIcon />} selected>
+                    Intelligence
+                  </SidebarPrimaryMenuItem>
+                  <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />}>
+                    Assets
+                  </SidebarPrimaryMenuItem>
+                  <SidebarPrimaryMenuItem href="#" icon={<ShieldCheckIcon />}>
+                    Protection
+                  </SidebarPrimaryMenuItem>
+                </SidebarPrimaryMenu>
+              </SidebarPrimarySection>
+            </SidebarPrimaryContent>
+            <SidebarPrimaryFooter>
+              <SidebarPrimaryMenu>
+                <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>
+                  Help
+                </SidebarPrimaryMenuItem>
+              </SidebarPrimaryMenu>
+            </SidebarPrimaryFooter>
+          </SidebarPrimary>
+        </TooltipProvider>
+      </Shell>
+    );
+  },
+};
