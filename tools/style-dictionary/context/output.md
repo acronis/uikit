@@ -1,7 +1,7 @@
-# Output — the CSS + Tailwind contract
+# Output — the CSS contract
 
 The token build writes into the published `packages/tokens-pd/` package (committed,
-not gitignored), grouped into `css/`, `tailwind/`, and `dtcg/` dirs. The CSS
+not gitignored), grouped into `css/` and `dtcg/` dirs. The CSS
 (`tokens-pd/css/`) is partitioned by tier and brand:
 
 - `css/default.css` — semantic tier, default brand (full): every `--ui-*` color +
@@ -78,15 +78,15 @@ appear once with a single value.
 
 Every numeric `units.gap.*` **primitive** size also emits a full
 padding/margin/gap utility grammar, in addition to its `--ui-gap-*` custom
-property — for framework-agnostic (non-Tailwind) consumers who can't extend a
-Tailwind preset. This is **not** a semantic token: `design-tokens/tiers/*.json`
-is Figma-sourced only (there is no `spacing` group in Figma, only `gap`), so
-`tokens.ts`'s `resolveGapTokens` reads `units.gap.*` directly — bypassing
-`isEmittableToken`'s primitive-root filter — and feeds it into `buildCss`'s
-`semantics` slice via dedicated code, the same way `STATIC_GAP_CLASSES` is
-special-cased. `gapUtilityClasses` (`hooks/formats/gap-utility-classes.ts`)
-derives the `{property}{direction}-{size}` classes Tailwind's own engine would
-generate for free once a preset key exists:
+property — for framework-agnostic consumers who only load CSS. This is **not**
+a semantic token: `design-tokens/tiers/*.json` is Figma-sourced only (there is
+no `spacing` group in Figma, only `gap`), so `tokens.ts`'s `resolveGapTokens`
+reads `units.gap.*` directly — bypassing `isEmittableToken`'s primitive-root
+filter — and feeds it into `buildCss`'s `semantics` slice via dedicated code,
+the same way `STATIC_GAP_CLASSES` is special-cased. `gapUtilityClasses`
+(`hooks/formats/gap-utility-classes.ts`) derives the
+`{property}{direction}-{size}` classes Tailwind's own engine would generate
+for free once a preset key exists:
 
 | Prefix                  | Property                                                                                                                                                                           |
 | ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -105,31 +105,8 @@ Plus one static, non-token-driven class emitted once per build:
 
 Gradient tokens live under the top-level `gradients.*` root of `semantics.json`
 (a semantic root, so they emit into the root semantic CSS as `--ui-gradients-*`
-custom properties and into the base Tailwind preset's `backgroundImage`). They are
-rendered by the `gradient/css` transform (`hooks/transforms/gradient-css.ts`): the
-`$value` is a DTCG array of `{ color, position }` stops and the matrix is under
+custom properties). They are rendered by the `gradient/css` transform
+(`hooks/transforms/gradient-css.ts`): the `$value` is a DTCG array of
+`{ color, position }` stops and the matrix is under
 `$extensions.com.figma.gradientTransform`, mapped to a CSS angle via
 `atan2(a, -c)`. Each stop color uses the same hsl→rgb conversion as solid colors.
-
-## Tailwind presets
-
-`pd-tailwind` (`tailwind.ts`) emits `tailwind/<brand>.js` (+ `.d.ts`) — a preset
-object (`{ theme: { extend: … } }`) consumed via `@config`. Values are
-**baked** resolved literals (colors as `light-dark()`, gradients into
-`backgroundImage`, typography into `fontSize`/`fontFamily`, dimensions into
-`spacing`/`borderRadius`), keyed with the `ui-` prefix — so a preset is
-self-contained (no `--ui-*` dependency) and brand selection is build-time. The
-shared semantic (`tokens`) preset also gets `gap-<n>` keys merged into its
-`spacing` namespace directly from `resolveGapTokens`, independent of the
-token-driven `buildThemeExtend` pass above (`units.gap` isn't a normal token
-in the resolved stream — see "Gap utility classes").
-
-The color/gradient → Tailwind-namespace routing (which theme namespace a token
-lands in — `backgroundColor`, `textColor`, `borderColor`, `fill`, `ringColor`,
-`backgroundImage`) is **data-driven**: it is authored in the source tokens as a
-root-level `com.acronis.tailwindRoles` extension (in `semantics.json` and
-`components.json`) and read at build time by `routeColor` (`tailwind.ts`), rather
-than hardcoded role→namespace maps in the tool. The key-shaping is unchanged:
-**pure semantic-tier role words are dropped** from the utility key
-(`bg-surface-primary`), while **component part words are kept**
-(`bg-button-primary-container-idle`); gradients route to `backgroundImage`.

@@ -16,18 +16,16 @@ Brands: `default` plus `deep_sky_itkontoret`, `light-gray`, `telstra`,
 
 ## Layout
 
-Output is grouped into four top-level directories — `css/`, `bundles/`, `tailwind/`, `dtcg/`:
+Output is grouped into three top-level directories — `css/`, `bundles/`, `dtcg/`:
 
-| Path                                         | Tier      | Contents                                                                                                                                 |
-| -------------------------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| `css/default.css`                            | semantic  | Default brand — every semantic token (`--ui-*`, incl. `--ui-shadow-*`), `.ui-typography-*`, `.ui-p-*`/`.ui-m-*`/`.ui-gap-*`              |
-| `css/<brand>.css`                            | semantic  | Non-default brand — only the tokens that differ from `default`                                                                           |
-| `css/<Component>/default.css`                | component | Default brand — that component's tokens (`Button/`, `Tooltip/`, …; dirs are PascalCase)                                                  |
-| `css/<Component>/<brand>.css`                | component | Non-default brand — only the component tokens that differ                                                                                |
-| `bundles/<brand>.css`                        | bundle    | Full brand in one file — semantic tier + every component tier merged, always full (never override-only). Runtime re-theming entry point. |
-| `tailwind/<brand>/tokens.js`                 | semantic  | Tailwind preset of the shared semantic vocabulary (**baked** values), incl. `gap-*` and `boxShadow` keys                                 |
-| `tailwind/<brand>/components/<Component>.js` | component | One preset per component — opt-in, so its utilities aren't suggested globally                                                            |
-| `dtcg/*.json`                                | —         | The 100%-DTCG intermediate (per-mode), for generic DTCG tooling                                                                          |
+| Path                          | Tier      | Contents                                                                                                                                 |
+| ----------------------------- | --------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `css/default.css`             | semantic  | Default brand — every semantic token (`--ui-*`, incl. `--ui-shadow-*`), `.ui-typography-*`, `.ui-p-*`/`.ui-m-*`/`.ui-gap-*`              |
+| `css/<brand>.css`             | semantic  | Non-default brand — only the tokens that differ from `default`                                                                           |
+| `css/<Component>/default.css` | component | Default brand — that component's tokens (`Button/`, `Tooltip/`, …; dirs are PascalCase)                                                  |
+| `css/<Component>/<brand>.css` | component | Non-default brand — only the component tokens that differ                                                                                |
+| `bundles/<brand>.css`         | bundle    | Full brand in one file — semantic tier + every component tier merged, always full (never override-only). Runtime re-theming entry point. |
+| `dtcg/*.json`                 | —         | The 100%-DTCG intermediate (per-mode), for generic DTCG tooling                                                                          |
 
 Names use the `--ui-*` convention (the `colors` tier segment is dropped, every
 token is prefixed with `ui`): `colors.background.surface.primary` →
@@ -68,44 +66,28 @@ Light/dark is built in via `light-dark()` + `color-scheme`; switch with the
 declare the `color-scheme` shell; override files restate only the changed
 properties on top.
 
-The Tailwind presets bake resolved values (no dependency on the CSS variables).
-They split into a shared semantic `tokens` preset plus one preset per component,
-so a component's utilities are only suggested where that component preset is
-loaded — not globally:
-
-```css
-@import 'tailwindcss';
-/* presets: [
-     require('@acronis-platform/tokens-pd/tailwind/default/tokens.js'),       // shared vocabulary
-     require('@acronis-platform/tokens-pd/tailwind/default/components/Button.js'), // opt-in per component
-   ] */
-@config '../tailwind.config.js';
-```
-
 ## Build
 
 ```sh
 pnpm --filter @acronis-platform/tokens-pd build
 ```
 
-This delegates to `@acronis-platform/style-dictionary` (`pd-css` + `pd-tailwind`,
-which run their `pd-dtcg` dependency first). There is no build logic in this
-package — it is a published home for the tool's token output.
+This delegates to `@acronis-platform/style-dictionary` (`pd-css`, which runs
+its `pd-dtcg` dependency first). There is no build logic in this package — it
+is a published home for the tool's token output.
 
 ## Scope
 
 - Colors (incl. `light-dark()` theming and gradients as `linear-gradient(...)`),
   typography utility classes, spacing (margin/padding/gap), shadows, and component
   dimensions.
-- Shadows ship as `--ui-shadow-{sm,md,lg}` custom properties plus a `boxShadow`
-  Tailwind namespace (`shadow-sm`/`shadow-md`/`shadow-lg`). The light/dark pair sits
-  **inside the shadow's color slot** (`0px 8px 16px 0px light-dark(…, …)`) because
-  `light-dark()` is a color function and cannot wrap a whole shadow value.
-- Spacing ships three ways, generated directly from the `units.gap` **primitive**
+- Shadows ship as `--ui-shadow-{sm,md,lg}` custom properties. The light/dark pair
+  sits **inside the shadow's color slot** (`0px 8px 16px 0px light-dark(…, …)`)
+  because `light-dark()` is a color function and cannot wrap a whole shadow value.
+- Spacing ships two ways, generated directly from the `units.gap` **primitive**
   scale by dedicated build code (not a semantic token — see the tool's
-  `context/output.md`): `--ui-gap-*` custom properties, framework-agnostic
-  `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` utility classes (plus `.ui-mx-auto`), and `gap-*`
-  Tailwind preset keys (e.g. `p-gap-8`, `gap-x-gap-16`) — not brand-dependent, so it
-  carries no override-file entries.
+  `context/output.md`): `--ui-gap-*` custom properties, and framework-agnostic
+  `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` utility classes (plus `.ui-mx-auto`) — not
+  brand-dependent, so it carries no override-file entries.
 - Non-default brands are emitted as **override-only** files: a token appears in a
   brand's file only when its value differs from `default` or is new in that brand.
