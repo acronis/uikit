@@ -1,5 +1,55 @@
 # @acronis-platform/tokens-pd
 
+## 3.0.0
+
+### Major Changes
+
+- [#737](https://github.com/acronis/uikit/pull/737) [`321e4cf`](https://github.com/acronis/uikit/commit/321e4cf4aca808c5333cc0415423184f47acb0f7) Thanks [@madjorr](https://github.com/madjorr)! - Removes the Tailwind preset output (`tailwind/<brand>/tokens.js` +
+  `tailwind/<brand>/components/<Component>.js`, consumed via `@config`). The
+  package now ships CSS custom properties only (`css/`, `bundles/`, `dtcg/`).
+
+  This was built for external Tailwind-utility consumers of the design tokens,
+  but no such consumer exists today, and closing the coverage gaps in how
+  `@acronis-platform/style-dictionary` computed some component tokens for that
+  output wasn't worth the investment relative to the CSS-only path everything
+  in this repo already uses.
+
+  **Migration**: replace any `@import`/`require` of
+  `@acronis-platform/tokens-pd/tailwind/...` with the equivalent
+  `@acronis-platform/tokens-pd/css/...` custom properties — see the package
+  README's "Consume" section.
+
+### Minor Changes
+
+- [#737](https://github.com/acronis/uikit/pull/737) [`b90ff95`](https://github.com/acronis/uikit/commit/b90ff950eb352ab648b66d0a5579f775df3975ff) Thanks [@madjorr](https://github.com/madjorr)! - Sync 14 new brand themes from Figma: `blue_yellow_uss_signal`, `brown`,
+  `dark_gray`, `deep_purple`, `green_also_choise_df`, `ingram_micro`,
+  `light_blue_hp`, `orange_tsukaeru_helpox`, `pinky`, `purple`,
+  `purple_fusion_media`, `red_fire_brick`, `red_home_pl`, `sand`.
+
+  Populates `values.<brand>` across every semantic and component token (228
+  semantic + 1199 component leaves). No token paths added, removed, or changed
+  in value for any existing brand — purely additive. `tools/style-dictionary`'s
+  data-driven brand discovery picks up each new brand automatically; this
+  release adds the corresponding generated `tokens-pd` artifacts (`css/<brand>.css`,
+  `css/<Component>/<brand>.css`, `bundles/<brand>.css`,
+  `dtcg/{semantics,components}-<brand>.json`) for all 14.
+
+### Patch Changes
+
+- [#737](https://github.com/acronis/uikit/pull/737) [`94aa338`](https://github.com/acronis/uikit/commit/94aa33899aab727b78def8af676e484408cad6f9) Thanks [@madjorr](https://github.com/madjorr)! - fix(design-tokens): correct SidebarPrimary cross-brand aliases for 14 brands
+
+  Two Figma wiring bugs shipped in the brand-modes-sync release: all 14 brands
+  added there had their `SidebarPrimary` MenuItem icon/label colors aliased to
+  `yellow_1c`'s palette instead of falling through to the semantic default (the
+  existing `deep_sky_itkontoret`/`virtuozzo` behavior for brands with no
+  dedicated primitive), and `purple` had its `SidebarPrimary`/`ButtonPrimary`
+  background aliased to `deep_purple` instead of its own palette. Both are
+  corrected from a fresh Figma export; no token paths were added, removed, or
+  changed for any other brand.
+
+- Updated dependencies [[`b90ff95`](https://github.com/acronis/uikit/commit/b90ff950eb352ab648b66d0a5579f775df3975ff), [`94aa338`](https://github.com/acronis/uikit/commit/94aa33899aab727b78def8af676e484408cad6f9)]:
+  - @acronis-platform/design-tokens@2.8.0
+
 ## 2.9.0
 
 ### Minor Changes
