@@ -1,5 +1,23 @@
 # @acronis-platform/ui-react
 
+## 5.4.1
+
+### Patch Changes
+
+- [#736](https://github.com/acronis/uikit/pull/736) [`a42a499`](https://github.com/acronis/uikit/commit/a42a499dd4d77e70f18ebd53121b88dfc52b8813) Thanks [@madjorr](https://github.com/madjorr)! - fix(data-table): support grouped/spanning column headers
+
+  Grouped column header cells now render with the correct colSpan so group
+  labels span their sub-columns. TanStack placeholder cells render as empty
+  `<th>` elements with no visible content. Group-label header cells are purely
+  structural — sorting, resizing, reordering, tooltips, and the
+  column-visibility cog are suppressed on them. Cross-group column reordering
+  is blocked: dragging a
+  leaf column from one header group over a leaf column in a different group
+  shows a "none" drop cursor and aborts the drop, preventing malformed
+  header rows. The column-visibility cog now lists columns nested inside
+  header groups — previously it listed none at all for a grouped table,
+  because it read only the top-level (group) columns.
+
 ## 5.4.0
 
 ### Minor Changes
