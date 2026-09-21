@@ -313,14 +313,11 @@ export interface ChartContainerProps extends React.ComponentProps<'div'> {
   >['children'];
 }
 
-function ChartContainer({
-  id,
-  className,
-  children,
-  config,
-  palette = CHART_DEFAULT_PALETTE,
-  ...props
-}: ChartContainerProps) {
+const ChartContainer = React.forwardRef<HTMLDivElement, ChartContainerProps>(
+  function ChartContainer(
+    { id, className, children, config, palette = CHART_DEFAULT_PALETTE, ...props },
+    ref
+  ) {
   const uniqueId = React.useId();
   const chartId = `chart-${id || uniqueId.replace(/:/g, '')}`;
   // Resolved once and shared with the context, so the tooltip rows and legend
@@ -333,6 +330,7 @@ function ChartContainer({
   return (
     <ChartContext.Provider value={{ config: resolvedConfig }}>
       <div
+        ref={ref}
         id={id}
         data-slot="chart"
         data-chart={chartId}
@@ -378,7 +376,10 @@ function ChartContainer({
       </div>
     </ChartContext.Provider>
   );
-}
+  }
+);
+
+ChartContainer.displayName = 'ChartContainer';
 
 const ChartStyle = ({
   id,

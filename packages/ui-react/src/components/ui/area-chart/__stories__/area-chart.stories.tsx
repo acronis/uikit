@@ -228,6 +228,30 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// PLTFRM-95210: long category labels must reserve their rotated footprint before
+// the bottom legend is laid out.
+export const LongRotatedCategories: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — monitor deployments by protection plan`,
+    })),
+    xAxisAngle: -45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — monitor deployments by protection plan`,
+    })),
+    xAxisAngle: 45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
 // Gradient fill — the series color fades from full opacity at the line down to
 // transparent. Use when the trend (not the volume) is the message.
 export const GradientFill: Story = {

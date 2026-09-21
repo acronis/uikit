@@ -241,6 +241,29 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// PLTFRM-95210: keep long rotated category labels clear of the bottom legend.
+export const LongRotatedCategories: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — monitor deployments by protection plan`,
+    })),
+    xAxisAngle: -45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    data: data.map((row) => ({
+      ...row,
+      month: `${row.month} — monitor deployments by protection plan`,
+    })),
+    xAxisAngle: 45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
 // A single series.
 export const SingleLine: Story = {
   args: { dataKeys: ['desktop'] },

@@ -88,6 +88,23 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// PLTFRM-95210: histogram bin labels can be just as long as regular categories.
+export const LongRotatedCategories: Story = {
+  args: {
+    xAxisAngle: -45,
+    xTickFormatter: (value) => `Response-time range ${value} milliseconds`,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    xAxisAngle: 45,
+    xTickFormatter: (value) => `Response-time range ${value} milliseconds`,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
 // The distribution binned into 10 equal-width ranges.
 export const Default: Story = {};
 

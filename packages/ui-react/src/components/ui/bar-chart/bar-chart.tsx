@@ -38,7 +38,6 @@ import {
   resolveLabelFillClass,
   resolveReferenceLineProps,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   resolveChartColors,
@@ -58,6 +57,11 @@ import {
   type ChartDataLabelProps,
   type CartesianLabelPosition,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // The two CVA axes are the design's Bar-chart variant set (B2): `orientation`
 // and `layout` (grouped side-by-side vs stacked). `orientation` is the
@@ -906,6 +910,21 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
   (rawProps, ref) => {
     // useId must be called unconditionally before any early return (Rules of Hooks).
     const instanceId = React.useId().replace(/:/g, '');
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const verticalProps = rawProps as Partial<BarChartVerticalProps>;
+    const rawXAxisKey = verticalProps.xKey;
+    const rawXAxisTickLabels = resolveXAxisTickLabels(
+      verticalProps.data && rawXAxisKey
+        ? verticalProps.data.map((row) => row[rawXAxisKey])
+        : [],
+      verticalProps.xTickFormatter
+    );
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      verticalProps.xAxisAngle,
+      verticalProps.xAxisLabel,
+      rawXAxisTickLabels.join('\u0000')
+    );
 
     if (rawProps.orientation === 'horizontal') {
       const { orientation: _orientation, ...horizontalProps } = rawProps;
@@ -1140,7 +1159,6 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
 
     // Round only the growing end — the top of the bar.
     const endRadius: [number, number, number, number] = [
@@ -1190,7 +1208,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           angle={xAxisAngle}
           interval={xAxisInterval}
           textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-          height={xAxisHeight}
+          height={xAxisLayout.height}
           label={xAxisTitle}
         />
         <YAxis
@@ -1328,6 +1346,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
         {...props}
       >
         <ChartContainer
+          ref={chartContainerRef}
           config={config}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
@@ -1339,6 +1358,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
             maxBarSize={maxBarSize}
             barGap={barGap}
             barCategoryGap={barCategoryGap}
+            margin={mergeXAxisLayoutMargin(undefined, xAxisLayout.margin)}
           >
             <BarPaintServers id={defsId} dataKeys={dataKeys} shapes={usedShapes} />
             {showGrid && (

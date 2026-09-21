@@ -34,7 +34,6 @@ import {
   resolveLabelFillClass,
   resolveReferenceLineProps,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   toLabelFormatter,
@@ -52,6 +51,11 @@ import {
   type ChartYAxisTarget,
   type SecondaryYAxisProps,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
 // chart's defining trait is that each series picks its own render type
@@ -446,7 +450,19 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       ? valueAxisBinding('secondary')
       : {};
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
+    const xAxisTickLabels = resolveXAxisTickLabels(
+      isHorizontal
+        ? []
+        : data.map((row) => row[xKey]),
+      xTickFormatter
+    );
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      xAxisAngle,
+      xAxisLabel,
+      xAxisTickLabels.join('\u0000')
+    );
 
     const referenceLines = referenceLine
       ? Array.isArray(referenceLine)
@@ -552,7 +568,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     )
       ? REFERENCE_LABEL_MARGIN
       : undefined;
-    const resolvedMargin =
+    const baseMargin =
       margin || labelMargin || referenceLabelMargin
         ? {
             ...(margin ? DEFAULT_CHART_MARGIN : {}),
@@ -561,6 +577,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             ...margin,
           }
         : undefined;
+    const resolvedMargin = mergeXAxisLayoutMargin(baseMargin, xAxisLayout.margin);
 
     // Only the segment at the growing end of a stack rounds its corners — the
     // ones below it butt against the next segment.
@@ -603,7 +620,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
           textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
           tickCount={yAxisTickCount}
           domain={yDomain}
-          height={xAxisHeight}
+          height={xAxisLayout.height}
           label={xAxisTitle}
         />
         <YAxis
@@ -652,7 +669,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
           angle={xAxisAngle}
           interval={xAxisInterval}
           textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-          height={xAxisHeight}
+          height={xAxisLayout.height}
           label={xAxisTitle}
         />
         <YAxis
@@ -920,6 +937,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
         {...props}
       >
         <ChartContainer
+          ref={chartContainerRef}
           config={config}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"

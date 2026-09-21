@@ -110,3 +110,12 @@ Scenario: Reduced motion
   Then the entrance animation does not play and the series render at their final geometry
   And the same applies when rendering on the server
 ```
+
+```gherkin
+Scenario: Rotated category labels fit their actual geometry
+  Given xAxisAngle is set and the rendered X-axis labels vary in length
+  Then every rendered endpoint label remains fully visible
+  And only the bottom and endpoint side room those labels require is reserved
+  And a bottom legend remains separated from the labels
+  And the data grid does not grow into the reserved side room
+```

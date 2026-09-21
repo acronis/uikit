@@ -184,3 +184,12 @@ Scenario: Range brush keyboard and accessible name
   And the focused handle moves one row per left/right arrow key press
   And each handle exposes brushAriaLabel as its accessible name
 ```
+
+```gherkin
+Scenario: Rotated category labels fit their actual geometry
+  Given xAxisAngle is set and the rendered X-axis labels vary in length
+  Then every rendered endpoint label remains fully visible
+  And only the bottom and endpoint side room those labels require is reserved
+  And a bottom legend remains separated from the labels
+  And the data grid does not grow into the reserved side room
+```

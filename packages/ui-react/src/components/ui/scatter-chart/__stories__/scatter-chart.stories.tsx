@@ -183,6 +183,23 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// PLTFRM-95210: a numeric X axis can also produce long formatted tick labels.
+export const LongRotatedCategories: Story = {
+  args: {
+    xAxisAngle: -45,
+    xTickFormatter: (value) => `${value} hours — incident exposure window`,
+    className: 'h-[400px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    xAxisAngle: 45,
+    xTickFormatter: (value) => `${value} hours — incident exposure window`,
+    className: 'h-[400px] w-[720px]',
+  },
+};
+
 // Map a third numeric field to point size (a bubble chart) via zKey.
 export const Bubble: Story = {
   args: { zKey: 'weight', zRange: [60, 500] },

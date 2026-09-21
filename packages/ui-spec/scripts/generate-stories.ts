@@ -466,13 +466,15 @@ const RENDER: Record<string, RenderHint> = {
   'area-chart': {
     // Data-driven: requires data / config / dataKeys / xKey + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories
-    // (Single / Stacked / SolidFill / NoChrome + TooltipOpen).
+    // (Single / Stacked / SolidFill / NoChrome + TooltipOpen, plus long
+    // rotated categories at -45° and +45°).
     skip: true,
   },
   'bar-chart': {
     // Data-driven: requires data / config / dataKeys / xKey + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories
-    // (Vertical/Horizontal × Grouped/Stacked + TooltipOpen).
+    // (Vertical/Horizontal × Grouped/Stacked + TooltipOpen, plus long
+    // rotated categories at -45° and +45°).
     skip: true,
   },
   'pie-chart': {
@@ -484,19 +486,22 @@ const RENDER: Record<string, RenderHint> = {
   'line-chart': {
     // Data-driven: requires data / config / dataKeys / xKey + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories
-    // (SingleLine / MultiLine / Linear / Stepped / Dashed + TooltipOpen).
+    // (SingleLine / MultiLine / Linear / Stepped / Dashed + TooltipOpen, plus
+    // long rotated categories at -45° and +45°).
     skip: true,
   },
   'scatter-chart': {
     // Data-driven: requires series / config / xKey / yKey + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories
-    // (Grouped / Bubble / TriangleMarkers / NoChrome + TooltipOpen).
+    // (Grouped / Bubble / TriangleMarkers / NoChrome + TooltipOpen, plus long
+    // rotated categories at -45° and +45°).
     skip: true,
   },
   'composed-chart': {
     // Data-driven: requires data / config / series / xKey + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories
-    // (BarPlusLine / BarAreaLine / NoChrome + TooltipOpen).
+    // (BarPlusLine / BarAreaLine / NoChrome + TooltipOpen, plus long rotated
+    // categories at -45° and +45°).
     skip: true,
   },
   'funnel-chart': {
@@ -508,13 +513,15 @@ const RENDER: Record<string, RenderHint> = {
   histogram: {
     // Data-driven: requires values / config + a sized box, so a zero-arg render
     // is meaningless. VR is covered by the hand-written stories (Default /
-    // FewBins / ManyBins / NoChrome + TooltipOpen).
+    // FewBins / ManyBins / NoChrome + TooltipOpen, plus long rotated categories
+    // at -45° and +45°).
     skip: true,
   },
   'confidence-cone': {
     // Data-driven: requires data / config / field keys + a sized box, so a
     // zero-arg render is meaningless. VR is covered by the hand-written stories
-    // (Default / NoChrome + TooltipOpen).
+    // (Default / NoChrome + TooltipOpen, plus long rotated categories at -45°
+    // and +45°).
     skip: true,
   },
   'radar-chart': {

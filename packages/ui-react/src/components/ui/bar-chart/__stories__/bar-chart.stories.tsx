@@ -305,6 +305,36 @@ export const AxisAndGridConfig: Story = {
   },
 };
 
+// Regression coverage for PLTFRM-95210: long labels rotated beneath a bottom
+// legend must reserve their full vertical footprint instead of painting into
+// the legend's row.
+export const LongRotatedCategories: Story = {
+  args: {
+    config: { count: { label: 'Count', tone: { status: 'info' } } },
+    data: [
+      { monitor: 'Backup policy checks', count: 11 },
+      { monitor: 'Antimalware protection', count: 10 },
+      { monitor: 'Vulnerability assessment', count: 10 },
+      { monitor: 'Patch management policy', count: 10 },
+      { monitor: 'Data protection plan', count: 10 },
+      { monitor: 'Device health monitoring', count: 10 },
+      { monitor: 'Ransomware protection', count: 10 },
+      { monitor: 'Network access control', count: 10 },
+    ],
+    dataKeys: ['count'],
+    xKey: 'monitor',
+    xAxisAngle: -45,
+    className: 'h-[384px] w-[720px]',
+  },
+};
+
+export const LongRotatedCategoriesRight: Story = {
+  args: {
+    ...LongRotatedCategories.args,
+    xAxisAngle: 45,
+  },
+};
+
 const widgetConfig = {
   desktop: { label: 'Desktop', tone: { status: 'info' as const } },
   tablet: { label: 'Tablet', tone: { status: 'warning' as const } },

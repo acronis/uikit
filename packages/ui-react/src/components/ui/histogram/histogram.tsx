@@ -17,7 +17,6 @@ import {
   resolveAnimation,
   resolveAxisDomain,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   type ChartConfig,
@@ -26,6 +25,11 @@ import {
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // A histogram bins a set of continuous samples into equal-width ranges and plots
 // the frequency of each as contiguous bars — distinct from BarChart, whose bars
@@ -163,8 +167,6 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
-
     const bins = React.useMemo(
       () => computeHistogramBins(values, binCount, domain),
       [values, binCount, domain]
@@ -172,6 +174,17 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
     // Bars carry the bin `label` as the category and `count` under `dataKey`, so
     // the tooltip resolves the frequency from `config[dataKey]`.
     const data = bins.map((bin) => ({ label: bin.label, [dataKey]: bin.count }));
+    const xAxisTickLabels = resolveXAxisTickLabels(
+      data.map((row) => row.label),
+      xTickFormatter
+    );
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      xAxisAngle,
+      xAxisLabel,
+      xAxisTickLabels.join('\u0000')
+    );
 
     return (
       <div
@@ -180,11 +193,16 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
         {...props}
       >
         <ChartContainer
+          ref={chartContainerRef}
           config={config}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
-          <RechartsBarChart data={data} barCategoryGap={0}>
+          <RechartsBarChart
+            data={data}
+            barCategoryGap={0}
+            margin={mergeXAxisLayoutMargin(undefined, xAxisLayout.margin)}
+          >
             {showGrid && (
               <CartesianGrid
                 horizontal={gridHorizontal ?? true}
@@ -201,7 +219,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-              height={xAxisHeight}
+              height={xAxisLayout.height}
               label={xAxisTitle}
             />
             <YAxis

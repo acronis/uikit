@@ -12,6 +12,7 @@ import {
   resolveLabelFillClass,
   resolveChartReferenceValue,
   resolveRotatedTickAnchor,
+  resolveXAxisTickLabels,
   resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
@@ -491,9 +492,31 @@ describe('resolveXAxisHeight', () => {
     expect(resolveXAxisHeight('Month', 0)).toBe(68);
   });
 
+  it('uses the same modest first pass for labels of every length', () => {
+    expect(resolveXAxisHeight(undefined, -45)).toBe(50);
+  });
+
   it('ignores an empty label the same way it ignores a missing one', () => {
     expect(resolveXAxisHeight('', undefined)).toBeUndefined();
     expect(resolveXAxisHeight('', -45)).toBe(50);
+  });
+});
+
+describe('resolveXAxisTickLabels', () => {
+  it('preserves string and numeric source values without a formatter', () => {
+    expect(resolveXAxisTickLabels(['January', 2500, null])).toEqual([
+      'January',
+      2500,
+      '',
+    ]);
+  });
+
+  it('uses displayed values while safely ignoring nullish source cells', () => {
+    expect(
+      resolveXAxisTickLabels(['January', null, 2500], (value, index) =>
+        `${index}:${value}`
+      )
+    ).toEqual(['0:January', '', '2:2500']);
   });
 });
 

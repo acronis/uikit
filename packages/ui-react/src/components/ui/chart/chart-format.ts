@@ -22,6 +22,21 @@ import type { ChartTooltipContentType } from './chart';
 export type TickFormatter = (value: number | string, index?: number) => string;
 
 /**
+ * Format the source values a chart may render on its X axis. The concrete ticks
+ * remain recharts' responsibility; the displayed values become a stable layout
+ * key so a rotated category row is remeasured when they change.
+ */
+export function resolveXAxisTickLabels(
+  values: readonly unknown[],
+  formatter?: TickFormatter
+): Array<string | number> {
+  return values.map((value, index) => {
+    if (typeof value !== 'string' && typeof value !== 'number') return '';
+    return formatter ? formatter(value, index) : value;
+  });
+}
+
+/**
  * Props shared by every cartesian chart (Bar, Line, Area, Composed, Scatter,
  * ConfidenceCone, Histogram) — chrome toggles, axis titles/units, tick
  * formatting/visibility, and grid trim. All optional. `showLegend` and `xUnit`
@@ -145,10 +160,10 @@ export function resolveRotatedTickAnchor(
  * Height to reserve for the X tick row, or `undefined` to keep recharts' own
  * default. Shared by all 7 cartesian charts.
  *
- * recharts' default 30 covers one upright tick row and nothing else, so a
- * rotated row (+20) and an axis title (+18) each need their own allowance. The
- * two are additive rather than exclusive — a chart can rotate its ticks *and*
- * title the axis, which a label-or-angle ternary under-allocates.
+ * recharts' default 30 covers one upright tick row and nothing else. The
+ * browser refines the rotated-label fallback after layout through
+ * `useXAxisLayout`, using the labels' actual SVG bounds rather than an
+ * estimate based on character count.
  *
  * The +20 keys off the angle being *present*, not non-zero, so `angle={0}`
  * reserves the rotated row's height as well — the same edge case
@@ -159,7 +174,14 @@ export function resolveXAxisHeight(
   angle: number | undefined
 ): number | undefined {
   if (!label && angle == null) return undefined;
-  return 30 + (angle != null ? 20 : 0) + (label ? 18 : 0);
+
+  const titleHeight = label ? 18 : 0;
+  if (angle == null) return 30 + titleHeight;
+
+  // This modest first-pass allocation prevents a visible jump for ordinary
+  // rotated labels. A longest-label estimate is exactly what creates the empty
+  // area the post-layout measurement replaces.
+  return 30 + 20 + titleHeight;
 }
 
 /**

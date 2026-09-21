@@ -23,7 +23,6 @@ import {
   resolveAxisDomain,
   resolveAnimation,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   CHART_LABEL_FONT_SIZE,
@@ -35,6 +34,11 @@ import {
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // A forecast confidence-cone: a solid line over the known/actual period, a
 // dashed line over the forecast period, and a shaded band (the "cone") between
@@ -393,7 +397,17 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       return next ?? config;
     }, [config, plotted]);
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
+    const xAxisTickLabels = resolveXAxisTickLabels(
+      data.map((row) => row[xKey]),
+      xTickFormatter
+    );
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      xAxisAngle,
+      xAxisLabel,
+      xAxisTickLabels.join('\u0000')
+    );
 
     // Augment each row with one `[lower, upper]` band tuple per coned series for
     // its Area to shade. Rows missing a numeric bound are left un-coned (the
@@ -457,7 +471,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           angle={xAxisAngle}
           interval={xAxisInterval}
           textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-          height={xAxisHeight}
+          height={xAxisLayout.height}
           label={xAxisTitle}
         />
         <YAxis
@@ -672,11 +686,15 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
     return (
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
+          ref={chartContainerRef}
           config={seriesConfig}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
-          <ComposedChart data={chartData as readonly unknown[]}>
+          <ComposedChart
+            data={chartData as readonly unknown[]}
+            margin={mergeXAxisLayoutMargin(undefined, xAxisLayout.margin)}
+          >
             {showGrid && (
               <CartesianGrid
                 horizontal={gridHorizontal ?? true}

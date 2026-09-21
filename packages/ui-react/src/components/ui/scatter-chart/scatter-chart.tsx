@@ -20,7 +20,6 @@ import {
   resolveAnimation,
   resolveAxisDomain,
   resolveRotatedTickAnchor,
-  resolveXAxisHeight,
   resolveXAxisTitle,
   resolveYAxisTitle,
   type ChartConfig,
@@ -29,6 +28,11 @@ import {
   type CartesianChartProps,
   type ChartAnimationProps,
 } from '../chart';
+import {
+  mergeXAxisLayoutMargin,
+  useXAxisLayout,
+} from '../chart/use-x-axis-layout';
+import { resolveXAxisTickLabels } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. Unlike the
 // other chart types, a scatter has no visual "mode" to model as a CVA variant —
@@ -144,17 +148,31 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
 
-    const xAxisHeight = resolveXAxisHeight(xAxisLabel, xAxisAngle);
+    const xAxisTickLabels = resolveXAxisTickLabels(
+      series.flatMap(({ data }) => data.map((row) => row[xKey])),
+      xTickFormatter
+    );
+    const chartContainerRef = React.useRef<HTMLDivElement>(null);
+    const xAxisLayout = useXAxisLayout(
+      chartContainerRef,
+      xAxisAngle,
+      xAxisLabel,
+      xAxisTickLabels.join('\u0000')
+    );
 
     return (
       <div ref={ref} className={cn(className)} {...props}>
         <ChartContainer
+          ref={chartContainerRef}
           config={config}
           palette={palette}
           className="size-full [&_.recharts-label]:fill-foreground"
         >
           <RechartsScatterChart
-            margin={{ top: 16, right: 16, bottom: 16, left: 16 }}
+            margin={mergeXAxisLayoutMargin(
+              { top: 16, right: 16, bottom: 16, left: 16 },
+              xAxisLayout.margin
+            )}
           >
             {showGrid && (
               <CartesianGrid
@@ -176,7 +194,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               angle={xAxisAngle}
               interval={xAxisInterval}
               textAnchor={resolveRotatedTickAnchor(xAxisAngle)}
-              height={xAxisHeight}
+              height={xAxisLayout.height}
               label={xAxisTitle}
             />
             <YAxis
