@@ -184,6 +184,27 @@ function serialize(root) {
   return formatNode(root, 0, null) + '\n';
 }
 
+// ---------- Brand-identity guard ----------
+// A `Branding/<brand>/...` alias must target the SAME brand this leaf is
+// being translated for — Figma occasionally mis-wires a new brand's alias to
+// point at an unrelated, already-shipped brand (e.g. `Branding/yellow_1c/...`
+// showing up in a leaf being translated for a brand-new mode). That class of
+// bug must fail loudly instead of silently landing in committed tier JSON.
+class BrandAliasMismatchError extends Error {
+  constructor(ctx, expectedBrand, actualBrand, targetName) {
+    super(
+      `${ctx}: Branding alias targets brand "${actualBrand}" but is being ` +
+        `translated for brand "${expectedBrand}" (targetVariableName: ${targetName})`,
+    );
+    this.name = 'BrandAliasMismatchError';
+    this.ctx = ctx;
+    this.expectedBrand = expectedBrand;
+    this.actualBrand = actualBrand;
+    this.targetName = targetName;
+  }
+}
+const normalizeBrandSeg = (s) => s.replace(/-/g, '_');
+
 // ---------- Alias validation ----------
 function aliasResolves(alias, root) {
   const inner = alias.slice(1, -1);
@@ -197,7 +218,7 @@ function aliasResolves(alias, root) {
 }
 
 // ---------- Leaf translation ----------
-function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx) {
+function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, brandKey) {
   const val = exportLeaf.$value;
   const ext = exportLeaf.$extensions || {};
   const aliasData = ext['com.figma.aliasData'];
@@ -260,6 +281,9 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx) {
     const parts = targetName.split('/');
     if (parts[0] === 'Branding') {
       const [, brandSeg, ...rest] = parts;
+      if (normalizeBrandSeg(brandSeg) !== normalizeBrandSeg(brandKey)) {
+        throw new BrandAliasMismatchError(ctx, brandKey, brandSeg, targetName);
+      }
       const alias = `{branding.${brandSeg}.${rest.join('.')}}`;
       if (aliasResolves(alias, primitives)) return alias;
       warnings.push(`${ctx}: branding alias does not resolve: ${alias} (from ${targetName})`);
@@ -364,59 +388,89 @@ if (mode === 'check') {
 const warnings = [];
 const mismatches = [];
 
-for (const { key: brandKey, file } of targetBrands) {
-  const exportPath = path.join(brandDir, `${file}.tokens.json`);
-  if (!fs.existsSync(exportPath)) {
-    console.error(`Missing export file for brand "${file}": ${exportPath}`);
+try {
+  runTranslation();
+} catch (err) {
+  if (err instanceof BrandAliasMismatchError) {
+    console.error(`\nBrand-identity guard failed: ${err.message}`);
     process.exit(1);
   }
-  const brandExport = readJson(exportPath);
+  throw err;
+}
 
-  // semantics.json: colors + gradients + dataviz + shadow roots.
-  // `dataviz` is a top-level sibling of `semantics`/`components` in the
-  // Figma export (not nested under `semantics`); everything else nests
-  // under `semantics.*` as expected.
-  for (const { path: p, node } of collectValueLeaves(semantics)) {
-    const exportPath2 = p[0] === 'dataviz' ? [...p] : ['semantics', ...p];
-    const exportLeaf = getPath(brandExport, exportPath2);
-    let translated = exportLeaf
-      ? translateLeafValue(exportLeaf, primitives, semantics, warnings, `semantics.${p.join('.')}`)
-      : undefined;
-    if (translated === undefined) {
-      // Genuinely absent from this export (e.g. `shadow.*`, which has no
-      // Figma Variable backing at all) — brand-invariant across every
-      // currently-wired brand, so carry the default value forward.
-      warnings.push(`semantics.${p.join('.')}: no leaf at this path in export — used default fallback`);
-      translated = node.values.default;
+function runTranslation() {
+  for (const { key: brandKey, file } of targetBrands) {
+    const exportPath = path.join(brandDir, `${file}.tokens.json`);
+    if (!fs.existsSync(exportPath)) {
+      console.error(`Missing export file for brand "${file}": ${exportPath}`);
+      process.exit(1);
     }
-    if (mode === 'check') {
-      const existing = node.values[brandKey];
-      if (JSON.stringify(existing) !== JSON.stringify(translated)) {
-        mismatches.push({ tier: 'semantics', path: p.join('.'), brand: brandKey, existing, translated });
-      }
-    } else {
-      node.values[brandKey] = translated;
-    }
-  }
+    const brandExport = readJson(exportPath);
 
-  // components.json
-  for (const { path: p, node } of collectValueLeaves(components)) {
-    const exportPath2 = ['components', ...p];
-    const exportLeaf = getPath(brandExport, exportPath2);
-    let translated = exportLeaf
-      ? translateLeafValue(exportLeaf, primitives, semantics, warnings, `components.${p.join('.')}`)
-      : undefined;
-    if (translated === undefined) {
-      warnings.push(`components.${p.join('.')}: no leaf at this path in export — used default fallback`);
-      translated = node.values.default;
-    }
-    if (mode === 'check') {
-      const existing = node.values[brandKey];
-      if (JSON.stringify(existing) !== JSON.stringify(translated)) {
-        mismatches.push({ tier: 'components', path: p.join('.'), brand: brandKey, existing, translated });
+    // semantics.json: colors + gradients + dataviz + shadow roots.
+    // `dataviz` is a top-level sibling of `semantics`/`components` in the
+    // Figma export (not nested under `semantics`); everything else nests
+    // under `semantics.*` as expected.
+    for (const { path: p, node } of collectValueLeaves(semantics)) {
+      const exportPath2 = p[0] === 'dataviz' ? [...p] : ['semantics', ...p];
+      const exportLeaf = getPath(brandExport, exportPath2);
+      let translated;
+      try {
+        translated = exportLeaf
+          ? translateLeafValue(exportLeaf, primitives, semantics, warnings, `semantics.${p.join('.')}`, brandKey)
+          : undefined;
+      } catch (err) {
+        if (err instanceof BrandAliasMismatchError && mode === 'check') {
+          mismatches.push({ tier: 'semantics', path: p.join('.'), brand: brandKey, error: err.message });
+          continue;
+        }
+        throw err;
       }
-    } else {
-      node.values[brandKey] = translated;
+      if (translated === undefined) {
+        // Genuinely absent from this export (e.g. `shadow.*`, which has no
+        // Figma Variable backing at all) — brand-invariant across every
+        // currently-wired brand, so carry the default value forward.
+        warnings.push(`semantics.${p.join('.')}: no leaf at this path in export — used default fallback`);
+        translated = node.values.default;
+      }
+      if (mode === 'check') {
+        const existing = node.values[brandKey];
+        if (JSON.stringify(existing) !== JSON.stringify(translated)) {
+          mismatches.push({ tier: 'semantics', path: p.join('.'), brand: brandKey, existing, translated });
+        }
+      } else {
+        node.values[brandKey] = translated;
+      }
+    }
+
+    // components.json
+    for (const { path: p, node } of collectValueLeaves(components)) {
+      const exportPath2 = ['components', ...p];
+      const exportLeaf = getPath(brandExport, exportPath2);
+      let translated;
+      try {
+        translated = exportLeaf
+          ? translateLeafValue(exportLeaf, primitives, semantics, warnings, `components.${p.join('.')}`, brandKey)
+          : undefined;
+      } catch (err) {
+        if (err instanceof BrandAliasMismatchError && mode === 'check') {
+          mismatches.push({ tier: 'components', path: p.join('.'), brand: brandKey, error: err.message });
+          continue;
+        }
+        throw err;
+      }
+      if (translated === undefined) {
+        warnings.push(`components.${p.join('.')}: no leaf at this path in export — used default fallback`);
+        translated = node.values.default;
+      }
+      if (mode === 'check') {
+        const existing = node.values[brandKey];
+        if (JSON.stringify(existing) !== JSON.stringify(translated)) {
+          mismatches.push({ tier: 'components', path: p.join('.'), brand: brandKey, existing, translated });
+        }
+      } else {
+        node.values[brandKey] = translated;
+      }
     }
   }
 }

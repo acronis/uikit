@@ -117,6 +117,15 @@ Sanity checks:
   understood fallback cases (see below) — anything new is worth a second look
   before proceeding.
 
+For any newly-wired brand, also grep the diff for `branding\.` aliases and
+confirm the brand segment inside each one matches the brand being added
+(e.g. a `purple` diff should never contain `{branding.deep_purple...}`).
+`translateLeafValue`'s same-brand guard (see "Known translation rules" below)
+already fails `check`/`apply` on this class of bug before it reaches this
+diff, so treat this grep as a backstop, not the primary check — but run it
+anyway, since it's cheap and catches anything the guard's normalization
+doesn't anticipate.
+
 Run Prettier on the two files — the script's own formatter approximates but
 isn't guaranteed byte-identical to the house style for deeply nested arrays:
 
@@ -223,7 +232,11 @@ Figma's per-brand export is a fully-resolved, single-mode DTCG tree per file
   prefix. If it doesn't resolve against our tree (Figma nests one extra group
   ours doesn't), retry with each middle path segment removed in turn.
 - A leaf with `$extensions.com.figma.aliasData.targetVariableName`:
-  - `Branding/<brand>/<rest>` → `{branding.<brand>.<rest, dot-joined>}`.
+  - `Branding/<brand>/<rest>` → `{branding.<brand>.<rest, dot-joined>}`. The
+    alias's `<brand>` segment must match the brand currently being
+    translated — a mismatch (Figma alias-ing a leaf to a different, already-
+    shipped brand) throws (`apply` exits non-zero; `check` reports it as a
+    mismatch) rather than silently writing a wrong-brand value.
   - `gap|size|radius|stroke/<prefix>-<key>` → `{units.<section>.<key>}` —
     strip the leading alpha prefix (not just digits!) so sentinels like
     `radius-full` → `full` and signed values like `gap-neg-6` → `neg-6`
