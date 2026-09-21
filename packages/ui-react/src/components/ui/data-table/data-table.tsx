@@ -159,7 +159,12 @@ function getHeaderStyle<TData>(
   enableColumnResizing: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(header.column);
-  const width = getColumnWidth(header.column, enableColumnResizing);
+  // Non-leaf cells (group-label spans and placeholders) have no single leaf
+  // size — skip width so colSpan layout determines the cell's rendered width.
+  const width =
+    header.subHeaders.length === 0
+      ? getColumnWidth(header.column, enableColumnResizing)
+      : undefined;
   if (!pin && width === undefined) return undefined;
   return { ...pin, width };
 }
@@ -725,10 +730,23 @@ export function DataTable<TData, TValue = unknown>({
     setDraggedColumnId(columnId);
   };
 
-  const handleColumnDragOver = (event: DragEvent<HTMLTableCellElement>) => {
+  const handleColumnDragOver = (
+    event: DragEvent<HTMLTableCellElement>,
+    targetColumnId: string
+  ) => {
     // Without this the browser rejects the drop and no `onDrop` ever fires.
     event.preventDefault();
-    if (event.dataTransfer) event.dataTransfer.dropEffect = 'move';
+    if (!event.dataTransfer) return;
+    // Show "no drop" cursor when the source and target belong to different
+    // header groups — cross-group reordering is not allowed (it interleaves
+    // leaf columns from different groups in columnOrder, which breaks
+    // TanStack's header-group rendering and causes label duplication).
+    const draggedParentId = draggedColumnId
+      ? table.getColumn(draggedColumnId)?.parent?.id
+      : undefined;
+    const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
+    event.dataTransfer.dropEffect =
+      draggedParentId === targetParentId ? 'move' : 'none';
   };
 
   const handleColumnDrop = (
@@ -737,6 +755,21 @@ export function DataTable<TData, TValue = unknown>({
   ) => {
     event.preventDefault();
     if (!draggedColumnId) return;
+    // Reject drops that would move a column outside its header group. Allowing
+    // cross-group drops interleaves the two groups' leaf columns in columnOrder,
+    // which causes TanStack to produce malformed header rows: the group label
+    // renders at the wrong position (bug 2) and sometimes duplicates (bug 3).
+    //
+    // Known limitation: this guard only covers the drag gesture. The same broken
+    // state is reachable via the `columnOrder` controlled prop — if the caller
+    // passes a `columnOrder` where a group's leaf columns are not contiguous,
+    // TanStack will produce duplicate group-label cells with no warning.
+    const draggedParentId = table.getColumn(draggedColumnId)?.parent?.id;
+    const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
+    if (draggedParentId !== targetParentId) {
+      setDraggedColumnId(undefined);
+      return;
+    }
     const current = table.getState().columnOrder;
     const base = current.length
       ? current
@@ -750,6 +783,14 @@ export function DataTable<TData, TValue = unknown>({
   // `meta.pin` is removed dynamically actually un-pins. Skipped for an
   // external `table` — DataTable owns no state in that mode (see the `table`
   // prop's tsdoc), so the caller's own pinning setup is left alone.
+  //
+  // Known limitation: pinning a leaf column that is nested inside a header
+  // group breaks group contiguity. TanStack moves pinned leaves to a separate
+  // bucket and reorders columns as [...left, ...center, ...right] before
+  // createHeaderGroup runs, separating the pinned leaf from its siblings.
+  // The result is a duplicate group-label cell in the header row — the same
+  // rendering defect that the drag guard exists to prevent. Do not set
+  // `meta.pin` on a leaf column that belongs to a header group.
   useEffect(() => {
     if (externalTable) return;
     table.getAllLeafColumns().forEach((column) => {
@@ -823,20 +864,30 @@ export function DataTable<TData, TValue = unknown>({
             table markup is unaffected). */}
         <TooltipProvider>
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
               <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => {
                   const isPinned = header.column.getIsPinned();
+                  // Non-leaf header cells (group-label spans and TanStack's
+                  // structural placeholder cells) are purely presentational —
+                  // no sort/reorder/resize/tooltip.
+                  const isGroupHeader = header.subHeaders.length > 0;
                   const canResize =
+                    !isGroupHeader &&
                     resizingEnabled &&
                     header.column.getCanResize() &&
                     header.column.id !== 'select';
                   // A pinned column is anchored to a table edge, so dragging it
                   // out of that edge would contradict its own pinning.
                   const canReorder =
-                    reorderingEnabled && !header.isPlaceholder && !isPinned;
+                    !isGroupHeader &&
+                    reorderingEnabled &&
+                    !header.isPlaceholder &&
+                    !isPinned;
                   const canSort =
-                    !header.isPlaceholder && header.column.getCanSort();
+                    !isGroupHeader &&
+                    !header.isPlaceholder &&
+                    header.column.getCanSort();
                   // One tooltip line per capability the column actually has, in
                   // the design's order; a column with none gets no tooltip.
                   const hints = [
@@ -847,6 +898,18 @@ export function DataTable<TData, TValue = unknown>({
                     Boolean(hint)
                   );
                   if (header.column.id === '__actions') {
+                    if (groupIndex < headerGroups.length - 1) {
+                      // Group-header rows carry no cog, but the pinned cell
+                      // must still be present so the row scrolls horizontally
+                      // in sync with the leaf header row and the body.
+                      return (
+                        <TableSettingsCell
+                          key={header.id}
+                          style={getHeaderStyle(header, resizingEnabled)}
+                          className={headerPinnedBg}
+                        />
+                      );
+                    }
                     return (
                       <TableSettingsCell
                         key={header.id}
@@ -866,6 +929,7 @@ export function DataTable<TData, TValue = unknown>({
                   }
                   const headerCell = (
                     <TableHead
+                      colSpan={header.colSpan}
                       wrap={header.column.columnDef.meta?.wrap}
                       style={getHeaderStyle(header, resizingEnabled)}
                       draggable={
@@ -877,7 +941,12 @@ export function DataTable<TData, TValue = unknown>({
                               handleColumnDragStart(event, header.column.id)
                           : undefined
                       }
-                      onDragOver={canReorder ? handleColumnDragOver : undefined}
+                      onDragOver={
+                        canReorder
+                          ? (event) =>
+                              handleColumnDragOver(event, header.column.id)
+                          : undefined
+                      }
                       onDrop={
                         canReorder
                           ? (event) => handleColumnDrop(event, header.column.id)
