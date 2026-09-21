@@ -1,8 +1,8 @@
 # AGENTS.md — `packages/tokens-pd`
 
 `@acronis-platform/tokens-pd` — the **published** home for the Acronis platform
-(PD) token artifacts: per-brand CSS custom properties, per-component CSS, Tailwind
-presets, and a DTCG intermediate. Everything here is **generated** by
+(PD) token artifacts: per-brand CSS custom properties, per-component CSS, and a
+DTCG intermediate. Everything here is **generated** by
 [`@acronis-platform/style-dictionary`](../../tools/style-dictionary) from
 [`@acronis-platform/design-tokens`](../design-tokens) and **committed to git**.
 
@@ -15,10 +15,10 @@ There are no source files to compile. `pnpm build` simply delegates to the tool:
 
 ```sh
 pnpm --filter @acronis-platform/tokens-pd build
-# → pnpm --filter @acronis-platform/style-dictionary build pd-css pd-tailwind
+# → pnpm --filter @acronis-platform/style-dictionary build pd-css
 ```
 
-`pd-css`/`pd-tailwind` run their `pd-dtcg` dependency first. The tool writes its
+`pd-css` runs its `pd-dtcg` dependency first. The tool writes its
 token output directly into this package (paths centralized in the tool's
 `src/platforms.ts`). To change a value, edit `@acronis-platform/design-tokens`
 and rebuild — never hand-edit the generated files (they carry a DO-NOT-EDIT
@@ -26,7 +26,7 @@ header). `dev`/`clean`/`lint`/`typecheck` are no-ops; `test` re-runs the build.
 
 ## Layout (all generated, all committed)
 
-Four top-level dirs — `css/`, `bundles/`, `tailwind/`, `dtcg/`:
+Three top-level dirs — `css/`, `bundles/`, `dtcg/`:
 
 - `css/default.css` — semantic tier, default brand (full): `--ui-*` custom
   properties + `.ui-typography-*` and `.ui-p-*`/`.ui-m-*`/`.ui-gap-*` (+ `.ui-mx-auto`)
@@ -42,11 +42,6 @@ Four top-level dirs — `css/`, `bundles/`, `tailwind/`, `dtcg/`:
   override-only files are opt-in per component and never auto-loaded. Load
   `bundles/<brand>.css` alone (in place of `css/<brand>.css` + every
   `css/<Component>/<brand>.css`) to fully re-theme at runtime.
-- `tailwind/<brand>/tokens.js` (+ `.d.ts`) — Tailwind preset of the shared
-  semantic vocabulary, **baked** values, consumed via `@config`.
-- `tailwind/<brand>/components/<component>.js` (+ `.d.ts`) — one preset per
-  component, opt-in (load only the ones a build needs so their utilities aren't
-  globally suggested).
 - `dtcg/*.json` — the six per-mode, 100%-DTCG intermediate files.
 
 ## Conventions / scope
@@ -67,27 +62,16 @@ Four top-level dirs — `css/`, `bundles/`, `tailwind/`, `dtcg/`:
   which component tiers happen to already be loaded.
 - **Override rule.** A non-default brand file contains a token only when its value
   **differs** from `acronis` or is **new** in that brand.
-- **Tailwind presets** carry baked literals (no `--ui-*` dependency), so a preset
-  is self-contained but brand selection is build-time (`@config`). Keys follow
-  Tailwind's role-namespaced model — colors land in `backgroundColor`/`textColor`/
-  `borderColor`/`fill`/`ringColor` with the role word and `ui-` prefix dropped
-  (`bg-surface-primary`, `fill-on-surface-primary`, `ring-brand`); gradients in
-  `backgroundImage` (`bg-ai-idle`); component dimensions land in `spacing` keyed
-  `<component>-<part>` (`p-button-global-gap`). The semantic vocabulary and each
-  component ship as **separate** presets so component utilities stay opt-in.
 - **Spacing/gap utilities.** Generated directly from the `units.gap` **primitive**
   scale by dedicated build code in the tool (`tokens.ts`'s `resolveGapTokens` +
   `hooks/formats/gap-utility-classes.ts`) — not a semantic token; `design-tokens/
 tiers/*.json` is Figma-sourced only and there is no `spacing` group in Figma,
-  only `gap`. Emits three ways: `--ui-gap-*` custom properties, framework-agnostic
+  only `gap`. Emits two ways: `--ui-gap-*` custom properties, and framework-agnostic
   `.ui-p-*`/`.ui-px-*`/`.ui-py-*`/`.ui-pt-*`/`.ui-pb-*`/`.ui-pl-*`/`.ui-pr-*`/
   `.ui-ps-*`/`.ui-pe-*` (padding — the last two are the logical/RTL-mirroring
   inline-start/inline-end pair), the same nine for `m`/margin, `.ui-gap-*`/
-  `.ui-gap-x-*`/`.ui-gap-y-*`, plus a static `.ui-mx-auto` — and `gap-<n>` keys (`p-gap-8`,
-  `gap-x-gap-16`) in the shared semantic Tailwind preset's `spacing` namespace,
-  deliberately not bare `<n>` so it never collides with Tailwind's own default
-  numeric spacing scale. Not brand-dependent, so non-default brand override files
-  carry no gap entries.
+  `.ui-gap-x-*`/`.ui-gap-y-*`, plus a static `.ui-mx-auto`. Not brand-dependent, so
+  non-default brand override files carry no gap entries.
 
 See `../../context/releasing.md` for the Changesets / publish flow. The tool's
 own conventions live in [`../../tools/style-dictionary/AGENTS.md`](../../tools/style-dictionary/AGENTS.md).

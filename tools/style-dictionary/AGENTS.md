@@ -3,8 +3,8 @@
 `@acronis-platform/style-dictionary` — a **private** (unpublished) build tool: a
 [Style Dictionary v5](https://styledictionary.com/) translation pipeline that
 turns `@acronis-platform/design-tokens` into the published
-`@acronis-platform/tokens-pd` package (per-brand CSS, per-component CSS, Tailwind
-presets, and a DTCG intermediate). This is the first inhabitant of the repo's
+`@acronis-platform/tokens-pd` package (per-brand CSS, per-component CSS, and a
+DTCG intermediate). This is the first inhabitant of the repo's
 `tools/` tier (scripts that automate, translate, or execute operations — never
 published to npm).
 
@@ -30,12 +30,7 @@ this tool's gitignored `dist/assets/`:
 2. `pd-css` → `tokens-pd/css/` — semantic tier at the css root (`default.css`
    full, `brand-b.css` override-only) + one dir per component
    (`css/<component>/<brand>.css`). Names use the `--ui-*` convention.
-3. `pd-tailwind` → `tokens-pd/tailwind/<brand>/tokens.js` (semantic) +
-   `tokens-pd/tailwind/<brand>/components/<component>.js` (one per component) —
-   per-brand Tailwind presets with **baked** token values, consumed via `@config`.
-   Colors use role-namespaced keys (`bg-surface-primary`, `fill-on-surface-primary`,
-   `ring-brand`); splitting the components out keeps their utilities opt-in.
-4. `pd-assets` / `web-assets` → optimized SVG + React from
+3. `pd-assets` / `web-assets` → optimized SVG + React from
    `@acronis-platform/design-assets`, emitted as **one dir per deliverable** under
    `dist/assets/<filter>-<group>-<format>/`: `pd-icons-{svg,react}` (the `icons`
    pack's four `assetsGroups` merged) and `web-illustrations-svg` (SVG-only). The
@@ -51,8 +46,8 @@ tsx src/index.ts pd-assets web-assets --pack=icons   # one asset pack only
 tsx src/index.ts --filter=web                   # restrict to one filter (web-assets only)
 ```
 
-`pd-css` and `pd-tailwind` consume the DTCG files `pd-dtcg` writes, so requesting
-either runs `pd-dtcg` first; the default builds everything. `dev` is a no-op;
+`pd-css` consumes the DTCG files `pd-dtcg` writes, so requesting it runs
+`pd-dtcg` first; the default builds everything. `dev` is a no-op;
 `clean` removes `dist/` (assets only — the token output lives in `tokens-pd` and
 is cleaned per-build before regenerating); `lint`/`typecheck` run eslint/tsc;
 `test` runs the vitest suite (resolver R1–R16, executor, codegen, SVGO, plus the
@@ -65,18 +60,18 @@ A platform key is `<filter>-<output>`. Both halves are real axes:
 - **`filter`** (`pd` | `web`) maps to the `platforms` enum (`PD` | `WEB`) — a
   closed enum mirrored by design-tokens and design-assets. The same sources produce
   a **different** bundle per filter.
-- **`output`** (`dtcg` | `css` | `tailwind` | `assets`) is the artifact kind.
+- **`output`** (`dtcg` | `css` | `assets`) is the artifact kind.
 
 The valid filters differ **per output**, because tokens and assets have different
 source coverage — `filtersFor(output)` in `index.ts` encodes this:
 
-- `dtcg`/`css`/`tailwind` come from the token package. Every token is `["PD"]`
+- `dtcg`/`css` come from the token package. Every token is `["PD"]`
   today, so `FILTERS` is `['pd']`; `web` is schema-defined and coming.
 - `assets` come from `@acronis-platform/design-assets`, which **already** spans
   both platforms — icons are `PD`, illustrations `WEB` — selected
   per-asset by each asset's own `platforms`. So the asset build runs for
   `ASSET_FILTERS` (`['pd','web']`), independent of the token `FILTERS`. The valid
-  platform keys are therefore `pd-{dtcg,css,tailwind,assets}` + `web-assets`.
+  platform keys are therefore `pd-{dtcg,css,assets}` + `web-assets`.
 - Adding WEB tokens = add `'web'` to `FILTERS`. No hook changes — the stages take a
   `filter` and derive their keys / dist dirs from it.
 
@@ -84,23 +79,20 @@ source coverage — `filtersFor(output)` in `index.ts` encodes this:
 
 `index.ts` is the **CLI home only** — it parses keys/filters/packs and dispatches
 to the build domains. `tokens.ts` is the Style Dictionary token → CSS build (its SD
-hooks live in `hooks/`); `tailwind.ts` builds the per-brand Tailwind presets
-(reusing `tokens.ts`'s resolve); `assets/` is the design-assets → SVG/React build
+hooks live in `hooks/`); `assets/` is the design-assets → SVG/React build
 (no SD instance — its own resolver + executor + codegen). The shared platform-key
 axes + output locations they all agree on live in `platforms.ts`, so no domain has
 to import the CLI.
 
 ```
 src/
-  index.ts              CLI home: parseArgs/parseKey/main, dispatch to tokens + tailwind + assets.
+  index.ts              CLI home: parseArgs/parseKey/main, dispatch to tokens + assets.
   platforms.ts          Shared axes: Filter/Output/PlatformKey, FILTERS, OUTPUTS,
                         filtersFor, ALL_FILTERS, FILTER_ENUM; the tokens-pd output
-                        paths (TOKENS_PD, dtcgDir, cssDir, semanticsFile, componentFile,
-                        tailwindDir, tailwindTokensPreset, tailwindComponentPreset),
+                        paths (TOKENS_PD, dtcgDir, cssDir, semanticsFile, componentFile),
                         DIST/ASSETS_DIST, rel.
   tokens.ts             The two SD stages (buildDtcg, buildCss) + TOKEN_SOURCES, VIEWS,
                         BRANDS, the makeSd factory; exports resolveTokens/resolveColorMap.
-  tailwind.ts           buildTailwind — per-brand Tailwind preset (baked values).
   hooks/                Style Dictionary hooks — the token pipeline's extension points.
     preprocessors/      acronis/dtcg — Acronis source → per-mode DTCG. `normalizeTree`
                         is what stage 1 calls directly; `acronisDtcg` wraps it as an
@@ -140,7 +132,7 @@ contract, implemented by the `assets-detect` / `assets-build` jobs in
 
 | Changed path                                     | Build invocation                                        |
 | ------------------------------------------------ | ------------------------------------------------------- |
-| `design-tokens/tiers/**` or its schema           | `build` (token build: `pd-dtcg`+`pd-css`+`pd-tailwind`) |
+| `design-tokens/tiers/**` or its schema           | `build` (token build: `pd-dtcg`+`pd-css`)               |
 | `design-assets/packs/<name>.json` or `<name>/**` | `build pd-assets web-assets --pack=<name>`              |
 | `design-assets/rules/**` or `pack.schema.json`   | `build pd-assets web-assets` (all packs — shared input) |
 
@@ -202,9 +194,8 @@ tool needs `@acronis-platform/design-assets` as a workspace dependency.
   `gradients.*` root (color-stop arrays + a Figma transform matrix) into
   `linear-gradient(...)` strings (angle from `com.figma.gradientTransform`).
   `gradients` is a semantic root, so they emit as plain `--ui-gradients-*` custom
-  properties (theme-invariant, not zipped into `light-dark()`) in the root semantic
-  CSS, and route into the base Tailwind preset's `backgroundImage` — the routing is
-  driven by the source `com.acronis.tailwindRoles` extension, not hardcoded.
+  properties (theme-invariant, not zipped into `light-dark()`) in the root
+  semantic CSS.
 - **Assets: lossless resize + data-driven currentColor.** `scale` sets
   width/height and preserves the viewBox; `stroke` sizes to target px via
   `S·viewBoxLonger/renderedLonger`; `currentColor` is applied to **mono** styles
@@ -220,11 +211,11 @@ tool needs `@acronis-platform/design-assets` as a workspace dependency.
 
 Before non-trivial work, read the matching file(s) in full.
 
-| When the task involves…                                                                                                                     | Load                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
-| The two stages, the source→mode mapping, the PD filter, how aliases are kept vs flattened                                                   | [`context/pipeline.md`](context/pipeline.md) |
-| The CSS contract — `light-dark()`, `rgb()` colors, `--ui-*` names, tier split, brand override diff, typography, gradients, Tailwind presets | [`context/output.md`](context/output.md)     |
-| The assets build — resolver/executor split, scale/stroke execution, currentColor, SVGO, React dedup + size/variant                          | [`context/assets.md`](context/assets.md)     |
+| When the task involves…                                                                                                   | Load                                         |
+| ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------- |
+| The two stages, the source→mode mapping, the PD filter, how aliases are kept vs flattened                                 | [`context/pipeline.md`](context/pipeline.md) |
+| The CSS contract — `light-dark()`, `rgb()` colors, `--ui-*` names, tier split, brand override diff, typography, gradients | [`context/output.md`](context/output.md)     |
+| The assets build — resolver/executor split, scale/stroke execution, currentColor, SVGO, React dedup + size/variant        | [`context/assets.md`](context/assets.md)     |
 
 To understand the **input** shape (the Acronis token divergences this tool
 consumes), read

@@ -1,6 +1,6 @@
 ---
 title: tokens-pd
-description: Generated, themeable CSS custom properties and Tailwind presets for the Acronis platform design tokens.
+description: Generated, themeable CSS custom properties for the Acronis platform design tokens.
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
@@ -10,9 +10,8 @@ import { Callout } from 'fumadocs-ui/components/callout';
 `@acronis-platform/design-tokens` by the `tools/style-dictionary` pipeline and
 **committed to git**, so consumers (and npm) get the output with no build step.
 
-It ships four kinds of artifact: the tiered CSS under `css/`, one full CSS
-bundle per brand under `bundles/`, Tailwind presets under `tailwind/`, and the
-DTCG intermediate under `dtcg/`.
+It ships three kinds of artifact: the tiered CSS under `css/`, one full CSS
+bundle per brand under `bundles/`, and the DTCG intermediate under `dtcg/`.
 
 ## Semantic tier
 
@@ -45,8 +44,12 @@ component-scoped `--ui-*` tokens (such as `--ui-button-global-radius`) and are
 
 ## Brand overrides
 
-Besides `default`, the package ships `deep_sky_itkontoret`, `light-gray`,
-`telstra`, `virtuozzo`, and `yellow-1c` — each as an **override-only** file
+Besides `default`, the package ships 19 brands — `blue_yellow_uss_signal`,
+`brown`, `dark_gray`, `deep_purple`, `deep_sky_itkontoret`,
+`green_also_choise_df`, `ingram_micro`, `light-gray`, `light_blue_hp`,
+`orange_tsukaeru_helpox`, `pinky`, `purple`, `purple_fusion_media`,
+`red_fire_brick`, `red_home_pl`, `sand`, `telstra`, `virtuozzo`, and
+`yellow-1c` — each as an **override-only** file
 (`css/<brand>.css` for the semantic tier, `css/<Component>/<brand>.css` for a
 component tier). A brand file contains a token only when its value differs from
 `default` or is new in that brand. Brand selection is not a class toggle: within
@@ -77,7 +80,7 @@ bare `:root {}` blocks layered over it.
 ## Full brand bundles
 
 `bundles/<brand>.css` is one **self-contained, full-strength** file per brand —
-the semantic tier *and* every component tier merged into a single
+the semantic tier _and_ every component tier merged into a single
 `:root, :host {}` block, alongside the `[data-theme]` light/dark blocks and the
 `.ui-typography-*` classes. Every brand has one, `default` included.
 
@@ -117,36 +120,6 @@ stylesheet — one set of variables covers both:
 <html data-theme="dark"></html>
 ```
 
-## Tailwind presets
-
-`tailwind/<brand>/tokens.js` is a Tailwind preset of the shared semantic
-vocabulary, with **baked literal values** (no `--ui-*` dependency), consumed via
-`@config`. Each component also ships its own preset under
-`tailwind/<brand>/components/<Component>.js`, kept separate so component
-utilities stay opt-in.
-
-```css
-/* in your app's CSS entry */
-@config "../tailwind.config.ts";
-```
-
-```ts
-// tailwind.config.ts
-import tokens from '@acronis-platform/tokens-pd/tailwind/default/tokens.js';
-import buttonTokens from '@acronis-platform/tokens-pd/tailwind/default/components/Button.js';
-
-export default {
-  presets: [tokens, buttonTokens],
-};
-```
-
-Color roles land in Tailwind's role-namespaced keys with the role word and the
-`ui-` prefix dropped — `bg-surface-primary`, `text-on-surface-primary`,
-`border-on-surface-border`, `ring-brand`. Shadows land in `boxShadow`, so the
-preset's `shadow-sm`/`shadow-md`/`shadow-lg` carry the design-system elevation
-instead of Tailwind's defaults. Because the values are baked, a preset is
-self-contained, but brand selection happens at build time.
-
 ## The `--ui-*` naming convention
 
 Every CSS custom property is prefixed `ui` and the token path is flattened with
@@ -160,7 +133,7 @@ hyphens. The `colors` tier root is dropped:
 
 ## DTCG intermediate
 
-`dtcg/*.json` holds the per-mode, 100%-DTCG intermediate the CSS and presets are
+`dtcg/*.json` holds the per-mode, 100%-DTCG intermediate the CSS is
 generated from (e.g. `primitives-light.json`, `semantics-default.json`,
 `components-default.json`). It is rarely consumed directly but is published for
 tools that prefer DTCG over CSS.

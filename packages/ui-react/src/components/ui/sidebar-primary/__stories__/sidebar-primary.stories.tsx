@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Brand } from '../../../../../.storybook/globals';
 import {
   BoltIcon,
   BriefcaseIcon,
@@ -417,3 +418,89 @@ export const TallBrandedLogoOverrideCollapsed: Story = {
     return <TallBrandedLogoOverrideDemo defaultExpanded={false} />;
   },
 };
+
+// VR coverage for every non-default brand (pr-737-review-merged.md Finding
+// #3). One compact SidebarPrimary render, swapped per-brand via the
+// `brand` global — same mechanism as the Storybook toolbar
+// (packages/ui-react/.storybook/globals.ts's `applyBrand`). The brand list
+// mirrors preview.ts's toolbar `items` exactly, so a brand added there
+// should get a row here too.
+function BrandDemo() {
+  return (
+    <Shell height={420}>
+      <TooltipProvider delay={0}>
+        <SidebarPrimary defaultExpanded>
+          <SidebarPrimaryHeader
+            logo={<LogoMark />}
+            collapsedLogo={<LogoMarkCollapsed />}
+          />
+          <SidebarPrimaryContent>
+            <SidebarPrimarySection>
+              <SidebarPrimaryMenu>
+                <SidebarPrimaryMenuItem href="#" icon={<ChartPieIcon />} selected>
+                  Intelligence
+                </SidebarPrimaryMenuItem>
+                <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />}>
+                  Assets
+                </SidebarPrimaryMenuItem>
+                <SidebarPrimaryMenuItem href="#" icon={<ShieldCheckIcon />}>
+                  Protection
+                </SidebarPrimaryMenuItem>
+              </SidebarPrimaryMenu>
+            </SidebarPrimarySection>
+          </SidebarPrimaryContent>
+          <SidebarPrimaryFooter>
+            <SidebarPrimaryMenu>
+              <SidebarPrimaryMenuItem href="#" icon={<CircleHelpIcon />}>
+                Help
+              </SidebarPrimaryMenuItem>
+            </SidebarPrimaryMenu>
+          </SidebarPrimaryFooter>
+        </SidebarPrimary>
+      </TooltipProvider>
+    </Shell>
+  );
+}
+
+function makeBrandStory(brand: Exclude<Brand, 'default'>, title: string): Story {
+  return {
+    name: `Brand - ${title}`,
+    globals: { brand },
+    render: BrandDemo,
+  };
+}
+
+export const BrandDeepSkyItkontoret: Story = makeBrandStory(
+  'deep_sky_itkontoret',
+  'Deep Sky (ITkontoret)'
+);
+export const BrandLightGray: Story = makeBrandStory('light-gray', 'Light Gray');
+export const BrandTelstra: Story = makeBrandStory('telstra', 'Telstra');
+export const BrandVirtuozzo: Story = makeBrandStory('virtuozzo', 'Virtuozzo');
+export const BrandYellow1c: Story = makeBrandStory('yellow-1c', 'Yellow (1C)');
+export const BrandBlueYellowUssSignal: Story = makeBrandStory(
+  'blue_yellow_uss_signal',
+  'Blue & Yellow (USS Signal)'
+);
+export const BrandBrown: Story = makeBrandStory('brown', 'Brown');
+export const BrandDarkGray: Story = makeBrandStory('dark_gray', 'Dark Gray');
+export const BrandDeepPurple: Story = makeBrandStory('deep_purple', 'Deep Purple');
+export const BrandGreenAlsoChoiseDf: Story = makeBrandStory(
+  'green_also_choise_df',
+  'Green (ALSO/Choice DF)'
+);
+export const BrandIngramMicro: Story = makeBrandStory('ingram_micro', 'Ingram Micro');
+export const BrandLightBlueHp: Story = makeBrandStory('light_blue_hp', 'Light Blue (HP)');
+export const BrandOrangeTsukaeruHelpox: Story = makeBrandStory(
+  'orange_tsukaeru_helpox',
+  'Orange (Tsukaeru/Helpox)'
+);
+export const BrandPinky: Story = makeBrandStory('pinky', 'Pinky');
+export const BrandPurple: Story = makeBrandStory('purple', 'Purple');
+export const BrandPurpleFusionMedia: Story = makeBrandStory(
+  'purple_fusion_media',
+  'Purple (Fusion Media)'
+);
+export const BrandRedFireBrick: Story = makeBrandStory('red_fire_brick', 'Red (Fire Brick)');
+export const BrandRedHomePl: Story = makeBrandStory('red_home_pl', 'Red (Home.pl)');
+export const BrandSand: Story = makeBrandStory('sand', 'Sand');

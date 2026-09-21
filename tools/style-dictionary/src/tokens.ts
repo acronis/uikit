@@ -79,35 +79,6 @@ export function semanticRoots(): Set<string> {
   );
 }
 
-/**
- * The role → Tailwind-namespace routing map, read from the source tiers'
- * root-level `com.acronis.tailwindRoles` extension (a build-time hint, not token
- * data). Keyed by a path segment (a semantic role like `background`, a component
- * part like `container`, or the `gradients` root); the value is the Tailwind
- * theme namespace the build routes that token into.
- *
- * Tier-scoped: pass `['semantics']` for the map a *semantic* token routes against
- * and the default (both tiers) for the map a *component* token routes against.
- * The split lets a component element reuse a name that exists as a *semantic token
- * segment* (e.g. the input `error` message vs the semantic `error` focus variant)
- * without the component entry shadowing semantic routing — semantic tokens never
- * see the component entries. Later tiers win on key conflicts within a single map.
- */
-export function tailwindRoleMap(
-  tiers: readonly TokenSourceName[] = ['semantics', 'components']
-): Map<string, string> {
-  const map = new Map<string, string>();
-  for (const tier of tiers) {
-    const ext = readTokenSource(tier)['$extensions'] as
-      | Record<string, Record<string, string>>
-      | undefined;
-    const roles = ext?.['com.acronis.tailwindRoles'];
-    if (roles)
-      for (const [segment, namespace] of Object.entries(roles)) map.set(segment, namespace);
-  }
-  return map;
-}
-
 // ── Shared design data ─────────────────────────────────────────────────────────
 
 /** The brand emitted in full; every other brand is a diff against it. */

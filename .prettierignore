@@ -5,7 +5,6 @@ pnpm-lock.yaml
 
 # Generated, committed token artifacts (built by tools/style-dictionary).
 packages/tokens-pd/css
-packages/tokens-pd/tailwind
 packages/tokens-pd/dtcg
 
 # Design-token source tiers are written by the external token-sync emitters, which

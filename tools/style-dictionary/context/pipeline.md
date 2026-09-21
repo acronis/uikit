@@ -88,5 +88,4 @@ output contract.
   only, so only the `semantics` + `component` tiers are emitted.
 - Emitted tokens partition by `token.path[0]` into the semantics root file vs a
   per-component file; non-default brands are diffed against `default` and written
-  as override-only files. `pd-tailwind` (`tailwind.ts`) reuses the same resolve to
-  emit baked per-brand Tailwind presets.
+  as override-only files.

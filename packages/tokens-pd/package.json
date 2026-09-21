@@ -6,7 +6,7 @@
     "url": "git+https://github.com/acronis/uikit.git",
     "directory": "packages/tokens-pd"
   },
-  "description": "Acronis platform (PD) design tokens: per-brand CSS custom properties, per-component CSS, Tailwind presets, and a DTCG intermediate — generated from @acronis-platform/design-tokens via @acronis-platform/style-dictionary.",
+  "description": "Acronis platform (PD) design tokens: per-brand CSS custom properties, per-component CSS, and a DTCG intermediate — generated from @acronis-platform/design-tokens via @acronis-platform/style-dictionary.",
   "license": "MIT",
   "type": "module",
   "publishConfig": {
@@ -16,8 +16,6 @@
   "files": [
     "css/**/*.css",
     "bundles/**/*.css",
-    "tailwind/**/*.js",
-    "tailwind/**/*.d.ts",
     "dtcg/**/*.json",
     "README.md",
     "LICENSE"
@@ -28,7 +26,7 @@
     "./*": "./*"
   },
   "scripts": {
-    "build": "pnpm --filter @acronis-platform/style-dictionary build pd-css pd-tailwind",
+    "build": "pnpm --filter @acronis-platform/style-dictionary build pd-css",
     "dev": "echo \"no dev (generated artifacts; run build)\" && exit 0",
     "clean": "echo \"no clean (generated artifacts are committed; run build to regenerate)\" && exit 0",
     "lint": "echo \"no lint (generated artifacts; source is @acronis-platform/design-tokens)\" && exit 0",
@@ -40,7 +38,6 @@
   "keywords": [
     "design-tokens",
     "css-variables",
-    "tailwind",
     "dtcg",
     "acronis"
   ],

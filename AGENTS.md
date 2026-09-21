@@ -39,8 +39,8 @@ distinct role:
 | `apps/docs/`                      | `@acronis-platform/uikit-docs`               | no         | Next.js 15 + Fumadocs                                                                                            | [AGENTS.md](apps/docs/AGENTS.md)                      |
 | `packages/design-tokens/`         | `@acronis-platform/design-tokens`            | **yes**    | JSON data only (DTCG-2025.10 design tokens), ajv-validated                                                       | [AGENTS.md](packages/design-tokens/AGENTS.md)         |
 | `packages/design-assets/`         | `@acronis-platform/design-assets`            | **yes**    | JSON data only (icon/illustration manifests + binaries), ajv-validated                                           | [AGENTS.md](packages/design-assets/AGENTS.md)         |
-| `packages/tokens-pd/`             | `@acronis-platform/tokens-pd`                | **yes**    | Generated (committed) CSS + Tailwind presets + DTCG, built by the tool                                           | [AGENTS.md](packages/tokens-pd/AGENTS.md)             |
-| `tools/style-dictionary/`         | `@acronis-platform/style-dictionary`         | no         | Style Dictionary v5 build: design-tokens → tokens-pd CSS/presets                                                 | [AGENTS.md](tools/style-dictionary/AGENTS.md)         |
+| `packages/tokens-pd/`             | `@acronis-platform/tokens-pd`                | **yes**    | Generated (committed) CSS + DTCG, built by the tool                                                              | [AGENTS.md](packages/tokens-pd/AGENTS.md)             |
+| `tools/style-dictionary/`         | `@acronis-platform/style-dictionary`         | no         | Style Dictionary v5 build: design-tokens → tokens-pd CSS                                                         | [AGENTS.md](tools/style-dictionary/AGENTS.md)         |
 | `tools/figma-design-assets-sync/` | `@acronis-platform/figma-design-assets-sync` | no         | Figma → `design-assets`: exports icon SVGs, SVGO-optimizes them, regenerates the pack manifest (tsx, diff-gated) | [README.md](tools/figma-design-assets-sync/README.md) |
 
 `packages/` holds the published workspaces:
@@ -57,7 +57,7 @@ distinct role:
   is `validate` (ajv); `build`/`dev`/`clean`/`lint`/`typecheck` are
   no-ops and `test` aliases `validate`.
 - `packages/tokens-pd` ships the consumable token artifacts (per-brand CSS,
-  per-component CSS, Tailwind presets, DTCG). It has **no build logic of its own**
+  per-component CSS, DTCG). It has **no build logic of its own**
   — its `build` delegates to `tools/style-dictionary`, which writes the generated
   (and committed) output into the package.
 
