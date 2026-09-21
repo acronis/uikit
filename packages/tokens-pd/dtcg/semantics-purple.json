@@ -45,7 +45,7 @@
             "com.figma.variableId": "VariableID:50:1428"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.SidebarPrimary.idle}"
+          "$value": "{branding.purple.SidebarPrimary.idle}"
         },
         "primary-active": {
           "$extensions": {
@@ -55,7 +55,7 @@
             "com.figma.variableId": "VariableID:143:3"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.SidebarPrimary.active}"
+          "$value": "{branding.purple.SidebarPrimary.active}"
         },
         "primary-disabled": {
           "$extensions": {
@@ -65,7 +65,7 @@
             "com.figma.variableId": "VariableID:383:39"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.SidebarPrimary.disabled}"
+          "$value": "{branding.purple.SidebarPrimary.disabled}"
         },
         "primary-hover": {
           "$extensions": {
@@ -75,7 +75,7 @@
             "com.figma.variableId": "VariableID:143:2"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.SidebarPrimary.hover}"
+          "$value": "{branding.purple.SidebarPrimary.hover}"
         },
         "secondary": {
           "$extensions": {
@@ -85,7 +85,7 @@
             "com.figma.variableId": "VariableID:50:1429"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.ButtonPrimary.idle}"
+          "$value": "{branding.purple.ButtonPrimary.idle}"
         },
         "secondary-active": {
           "$extensions": {
@@ -95,7 +95,7 @@
             "com.figma.variableId": "VariableID:265:59"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.ButtonPrimary.active}"
+          "$value": "{branding.purple.ButtonPrimary.active}"
         },
         "secondary-disabled": {
           "$extensions": {
@@ -105,7 +105,7 @@
             "com.figma.variableId": "VariableID:227:24"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.ButtonPrimary.disabled}"
+          "$value": "{branding.purple.ButtonPrimary.disabled}"
         },
         "secondary-hover": {
           "$extensions": {
@@ -115,7 +115,7 @@
             "com.figma.variableId": "VariableID:265:58"
           },
           "$type": "color",
-          "$value": "{branding.deep_purple.ButtonPrimary.hover}"
+          "$value": "{branding.purple.ButtonPrimary.hover}"
         }
       },
       "inverse": {

@@ -2,10 +2,10 @@
 /* Source: @acronis-platform/design-tokens • brand: purple • tier: semantics • overrides only */
 
 :root, :host {
-  --ui-background-brand-primary: light-dark(rgb(87 0 102), rgb(12 12 14));
-  --ui-background-brand-primary-active: light-dark(rgb(235 42 145), rgb(81 157 246));
-  --ui-background-brand-primary-disabled: light-dark(rgb(252 227 241), rgb(85 89 94));
-  --ui-background-brand-primary-hover: light-dark(rgb(130 0 153), rgb(61 63 67));
+  --ui-background-brand-primary: light-dark(rgb(30 39 91), rgb(12 12 14));
+  --ui-background-brand-primary-active: light-dark(rgb(58 69 161), rgb(81 157 246));
+  --ui-background-brand-primary-disabled: light-dark(rgb(132 144 215), rgb(85 89 94));
+  --ui-background-brand-primary-hover: light-dark(rgb(43 56 130), rgb(61 63 67));
   --ui-background-brand-secondary: light-dark(rgb(73 76 80), rgb(81 157 246));
   --ui-background-brand-secondary-active: light-dark(rgb(48 50 54), rgb(18 77 161));
   --ui-background-brand-secondary-disabled: light-dark(rgb(215 217 219), rgb(48 50 54));

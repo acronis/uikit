@@ -2,23 +2,11 @@
 /* Source: @acronis-platform/design-tokens • brand: purple • tier: SidebarPrimary • overrides only */
 
 :root, :host {
-  --ui-sidebar-primary-global-container-color: light-dark(rgb(87 0 102), rgb(12 12 14));
-  --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(235 42 145), rgb(81 157 246));
-  --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(235 42 145), rgb(81 157 246));
-  --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(235 42 145), rgb(81 157 246));
-  --ui-sidebar-primary-menu-item-selected-icon-color-active: light-dark(rgb(25 27 35), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-selected-icon-color-hover: light-dark(rgb(25 27 35), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-selected-icon-color-idle: light-dark(rgb(25 27 35), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-selected-label-color-active: light-dark(rgb(25 27 35), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-selected-label-color-hover: light-dark(rgb(25 27 35), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-selected-label-color-idle: light-dark(rgb(25 27 35), rgb(255 255 255));
-  --ui-sidebar-primary-menu-item-unselected-container-color-active: light-dark(rgb(130 0 153), rgb(61 63 67));
-  --ui-sidebar-primary-menu-item-unselected-container-color-hover: light-dark(rgb(130 0 153), rgb(61 63 67));
-  --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(rgb(87 0 102), rgb(12 12 14));
-  --ui-sidebar-primary-menu-item-unselected-icon-color-active: light-dark(rgb(25 27 35 / 0.6), rgb(255 255 255 / 0.6));
-  --ui-sidebar-primary-menu-item-unselected-icon-color-hover: light-dark(rgb(25 27 35 / 0.6), rgb(255 255 255 / 0.6));
-  --ui-sidebar-primary-menu-item-unselected-icon-color-idle: light-dark(rgb(25 27 35 / 0.6), rgb(255 255 255 / 0.6));
-  --ui-sidebar-primary-menu-item-unselected-label-color-active: light-dark(rgb(25 27 35 / 0.6), rgb(255 255 255 / 0.6));
-  --ui-sidebar-primary-menu-item-unselected-label-color-hover: light-dark(rgb(25 27 35 / 0.6), rgb(255 255 255 / 0.6));
-  --ui-sidebar-primary-menu-item-unselected-label-color-idle: light-dark(rgb(25 27 35 / 0.6), rgb(255 255 255 / 0.6));
+  --ui-sidebar-primary-global-container-color: light-dark(rgb(30 39 91), rgb(12 12 14));
+  --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(58 69 161), rgb(81 157 246));
+  --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(58 69 161), rgb(81 157 246));
+  --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(58 69 161), rgb(81 157 246));
+  --ui-sidebar-primary-menu-item-unselected-container-color-active: light-dark(rgb(43 56 130), rgb(61 63 67));
+  --ui-sidebar-primary-menu-item-unselected-container-color-hover: light-dark(rgb(43 56 130), rgb(61 63 67));
+  --ui-sidebar-primary-menu-item-unselected-container-color-idle: light-dark(rgb(30 39 91), rgb(12 12 14));
 }
