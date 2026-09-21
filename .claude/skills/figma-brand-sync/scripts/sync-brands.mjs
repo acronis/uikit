@@ -343,13 +343,19 @@ function discoverExportBrands(brandDir) {
     .map((f) => f.replace(/\.tokens\.json$/, ''));
 }
 
-// A new brand's `values.<brand>` key: reuse the filename as-is if it already
-// matches an existing `branding.<brand>` primitive (keeps historical brands'
-// exact key), otherwise normalize hyphens to underscores to match this
-// repo's established convention for new brands (see SKILL.md).
-function brandKeyFor(filenameStem, primitives) {
-  if (filenameStem in (primitives.branding || {})) return filenameStem;
+// A brand's `values.<brand>` key. If the brand is ALREADY wired, its
+// committed `values` key wins outright — some legacy brands (light-gray,
+// yellow-1c) keep a hyphenated values key even though their `branding.*`
+// primitive group is underscored, and re-syncing must never fork that into a
+// second, duplicate key. Only for a genuinely new brand do we fall back to
+// matching the filename against `branding.<brand>` (keeps historical brands'
+// exact key), then normalize hyphens to underscores to match this repo's
+// established convention for new brands (see SKILL.md).
+function brandKeyFor(filenameStem, primitives, wiredBrands) {
   const underscored = filenameStem.replace(/-/g, '_');
+  if (wiredBrands?.has(filenameStem)) return filenameStem;
+  if (wiredBrands?.has(underscored)) return underscored;
+  if (filenameStem in (primitives.branding || {})) return filenameStem;
   if (underscored in (primitives.branding || {})) return underscored;
   return underscored;
 }
@@ -381,8 +387,8 @@ if (mode === 'check') {
   }
 } else {
   const requested = brandsArg ? brandsArg.split(',') : null;
-  const candidates = requested ?? exportBrands.filter((f) => !wiredBrands.has(brandKeyFor(f, primitives)));
-  targetBrands = candidates.map((f) => ({ key: brandKeyFor(f, primitives), file: f }));
+  const candidates = requested ?? exportBrands.filter((f) => !wiredBrands.has(brandKeyFor(f, primitives, wiredBrands)));
+  targetBrands = candidates.map((f) => ({ key: brandKeyFor(f, primitives, wiredBrands), file: f }));
 }
 
 const warnings = [];
