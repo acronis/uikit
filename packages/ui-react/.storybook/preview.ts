@@ -21,10 +21,10 @@ const preview: Preview = {
         items: [
           { value: 'default', title: 'Default' },
           { value: 'deep_sky_itkontoret', title: 'Deep Sky (ITkontoret)' },
-          { value: 'light-gray', title: 'Light Gray' },
+          { value: 'light_gray', title: 'Light Gray' },
           { value: 'telstra', title: 'Telstra' },
           { value: 'virtuozzo', title: 'Virtuozzo' },
-          { value: 'yellow-1c', title: 'Yellow (1C)' },
+          { value: 'yellow_1c', title: 'Yellow (1C)' },
           {
             value: 'blue_yellow_uss_signal',
             title: 'Blue & Yellow (USS Signal)',

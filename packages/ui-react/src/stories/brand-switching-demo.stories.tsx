@@ -17,11 +17,16 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 // `.storybook/globals.ts`'s `applyBrand`, which uses this same technique to
 // drive the Storybook toolbar's "Brand" control for every other story.
 import bundleDeepSky from '@acronis-platform/tokens-pd/bundles/deep_sky_itkontoret.css?raw';
-import bundleLightGray from '@acronis-platform/tokens-pd/bundles/light-gray.css?raw';
+import bundleLightGray from '@acronis-platform/tokens-pd/bundles/light_gray.css?raw';
 import bundleTelstra from '@acronis-platform/tokens-pd/bundles/telstra.css?raw';
 import bundleVirtuozzo from '@acronis-platform/tokens-pd/bundles/virtuozzo.css?raw';
-import bundleYellow1c from '@acronis-platform/tokens-pd/bundles/yellow-1c.css?raw';
-import { Alert, AlertContent, AlertTitle, AlertDescription } from '../components/ui/alert';
+import bundleYellow1c from '@acronis-platform/tokens-pd/bundles/yellow_1c.css?raw';
+import {
+  Alert,
+  AlertContent,
+  AlertTitle,
+  AlertDescription,
+} from '../components/ui/alert';
 import { Button } from '../components/ui/button';
 import { InputText } from '../components/ui/input-text';
 import { Switch } from '../components/ui/switch';
@@ -29,11 +34,15 @@ import { Tag } from '../components/ui/tag';
 
 const BRANDS = [
   { value: 'default', label: 'Default', bundle: null },
-  { value: 'deep_sky_itkontoret', label: 'Deep Sky (ITkontoret)', bundle: bundleDeepSky },
-  { value: 'light-gray', label: 'Light Gray', bundle: bundleLightGray },
+  {
+    value: 'deep_sky_itkontoret',
+    label: 'Deep Sky (ITkontoret)',
+    bundle: bundleDeepSky,
+  },
+  { value: 'light_gray', label: 'Light Gray', bundle: bundleLightGray },
   { value: 'telstra', label: 'Telstra', bundle: bundleTelstra },
   { value: 'virtuozzo', label: 'Virtuozzo', bundle: bundleVirtuozzo },
-  { value: 'yellow-1c', label: 'Yellow (1C)', bundle: bundleYellow1c },
+  { value: 'yellow_1c', label: 'Yellow (1C)', bundle: bundleYellow1c },
 ] as const;
 
 type BrandValue = (typeof BRANDS)[number]['value'];
@@ -147,7 +156,7 @@ const meta: Meta<typeof BrandSwitchingDemo> = {
     docs: {
       description: {
         component:
-          'Live demo of **runtime** brand switching via `@acronis-platform/tokens-pd`\'s ' +
+          "Live demo of **runtime** brand switching via `@acronis-platform/tokens-pd`'s " +
           'per-brand bundle (`bundles/<brand>.css`): clicking a brand swaps a single ' +
           '`<style>` element and re-themes every control on this page — semantic tokens ' +
           'and every component tier at once. This is the pattern for a consumer that ' +
@@ -156,7 +165,7 @@ const meta: Meta<typeof BrandSwitchingDemo> = {
           'imports `src/styles/index.css` uses (see the "Theme switching" section of ' +
           '`apps/docs/content/docs/theming.mdx`). Swapping only the semantic-tier file ' +
           '(`css/<brand>.css`) — the trap this story is built to make visible — would ' +
-          'leave every component below on the default brand\'s colors.',
+          "leave every component below on the default brand's colors.",
       },
     },
   },

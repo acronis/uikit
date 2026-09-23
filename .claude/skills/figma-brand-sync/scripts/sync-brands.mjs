@@ -52,9 +52,14 @@ function srgbToHsl(r, g, b) {
   const s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
   let h;
   switch (max) {
-    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-    case g: h = ((b - r) / d + 2) / 6; break;
-    default: h = ((r - g) / d + 4) / 6;
+    case r:
+      h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+      break;
+    case g:
+      h = ((b - r) / d + 2) / 6;
+      break;
+    default:
+      h = ((r - g) / d + 4) / 6;
   }
   return { h: round(h * 360), s: round(s * 100), l: round(l * 100) };
 }
@@ -71,26 +76,37 @@ function hexToHslValue(hex) {
 // map when validate/build surfaces an "alias does not resolve" warning for a
 // new palette group Figma introduces (see SKILL.md Gotchas).
 const NAME_MAP = {
-  Blue: 'blue', Teal: 'teal', Green: 'green', Yellow: 'yellow', Orange: 'orange',
-  Red: 'red', Violet: 'violet', ElectricBlue: 'electricblue',
-  Grayscale: 'grayscale', Transparent: 'transparent',
+  Blue: 'blue',
+  Teal: 'teal',
+  Green: 'green',
+  Yellow: 'yellow',
+  Orange: 'orange',
+  Red: 'red',
+  Violet: 'violet',
+  ElectricBlue: 'electricblue',
+  Grayscale: 'grayscale',
+  Transparent: 'transparent',
 };
 const TRANSPARENT_MAP = { Inverted: 'inverted', Dark: 'dark', Clear: 'clear' };
 function mapPaletteParts(parts) {
   if (parts.length === 1) return [parts[0].toLowerCase()];
   const [group, ...rest] = parts;
   const mappedGroup = NAME_MAP[group];
-  if (!mappedGroup) return parts.map((p) => p.toLowerCase().replace(/\s+/g, '-'));
+  if (!mappedGroup)
+    return parts.map((p) => p.toLowerCase().replace(/\s+/g, '-'));
   if (mappedGroup === 'grayscale') {
     const num = rest.join('/').match(/(\d+)$/)?.[1];
-    return num ? [mappedGroup, num] : [mappedGroup, rest.join('-').toLowerCase()];
+    return num
+      ? [mappedGroup, num]
+      : [mappedGroup, rest.join('-').toLowerCase()];
   }
   if (mappedGroup === 'transparent') {
     const subParts = rest.join('/').split(/[-/]/);
     const subName = subParts[0];
     const subNum = subParts[subParts.length - 1];
     const mappedSub = TRANSPARENT_MAP[subName];
-    if (mappedSub && /^\d+$/.test(subNum)) return [mappedGroup, mappedSub, subNum];
+    if (mappedSub && /^\d+$/.test(subNum))
+      return [mappedGroup, mappedSub, subNum];
     return [mappedGroup, ...subParts.map((p) => p.toLowerCase())];
   }
   const raw = rest.join('.');
@@ -105,15 +121,22 @@ function mapPaletteParts(parts) {
 // `linear-gradient(90deg, #hex pct%, ...)` literal (DTCG has no gradient
 // variable type) into our `{ color, position }[]` stop array.
 function parseCssGradient(css) {
-  const m = css.trim().replace(/;$/, '').match(/^linear-gradient\(([^)]+)\)$/);
+  const m = css
+    .trim()
+    .replace(/;$/, '')
+    .match(/^linear-gradient\(([^)]+)\)$/);
   if (!m) throw new Error(`Unparseable gradient: ${css}`);
   const parts = m[1].split(',').map((s) => s.trim());
   const angle = parts.shift();
-  if (!/^\d+deg$/.test(angle)) throw new Error(`Unexpected gradient angle: ${angle}`);
+  if (!/^\d+deg$/.test(angle))
+    throw new Error(`Unexpected gradient angle: ${angle}`);
   return parts.map((p) => {
     const sm = p.match(/^(#[0-9A-Fa-f]{6})\s+([\d.]+)%$/);
     if (!sm) throw new Error(`Unparseable gradient stop: ${p}`);
-    return { color: hexToHslValue(sm[1]), position: round(Number(sm[2]) / 100, 4) };
+    return {
+      color: hexToHslValue(sm[1]),
+      position: round(Number(sm[2]) / 100, 4),
+    };
   });
 }
 
@@ -135,7 +158,8 @@ function compareKeys(a, b) {
 function sortNode(node) {
   if (!node || typeof node !== 'object' || Array.isArray(node)) return node;
   const out = {};
-  for (const k of Object.keys(node).sort(compareKeys)) out[k] = sortNode(node[k]);
+  for (const k of Object.keys(node).sort(compareKeys))
+    out[k] = sortNode(node[k]);
   return out;
 }
 
@@ -148,7 +172,9 @@ function sortNode(node) {
 // difference. Don't try to make this formatter perfect; let Prettier do it.
 const PRINT_WIDTH = 80;
 function isScalarObject(obj) {
-  return Object.values(obj).every((v) => v === null || typeof v !== 'object' || Array.isArray(v));
+  return Object.values(obj).every(
+    (v) => v === null || typeof v !== 'object' || Array.isArray(v)
+  );
 }
 function inlineFmt(value) {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
@@ -163,21 +189,32 @@ function formatNode(value, indent, key) {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
   const pad = '  '.repeat(indent);
   const childPad = '  '.repeat(indent + 1);
-  const prefixLen = pad.length + (key !== null ? `${JSON.stringify(key)}: `.length : 0);
+  const prefixLen =
+    pad.length + (key !== null ? `${JSON.stringify(key)}: `.length : 0);
   if (Array.isArray(value)) {
     if (value.length === 0) return '[]';
     const inline = inlineFmt(value);
     if (prefixLen + inline.length <= PRINT_WIDTH) return inline;
-    const lines = value.map((v) => `${childPad}${formatNode(v, indent + 1, null)}`);
+    const lines = value.map(
+      (v) => `${childPad}${formatNode(v, indent + 1, null)}`
+    );
     return `[\n${lines.join(',\n')}\n${pad}]`;
   }
   const keys = Object.keys(value);
   if (keys.length === 0) return '{}';
-  if (indent > 0 && key !== '$extensions' && key !== 'values' && isScalarObject(value)) {
+  if (
+    indent > 0 &&
+    key !== '$extensions' &&
+    key !== 'values' &&
+    isScalarObject(value)
+  ) {
     const inline = inlineFmt(value);
     if (prefixLen + inline.length <= PRINT_WIDTH) return inline;
   }
-  const lines = keys.map((k) => `${childPad}${JSON.stringify(k)}: ${formatNode(value[k], indent + 1, k)}`);
+  const lines = keys.map(
+    (k) =>
+      `${childPad}${JSON.stringify(k)}: ${formatNode(value[k], indent + 1, k)}`
+  );
   return `{\n${lines.join(',\n')}\n${pad}}`;
 }
 function serialize(root) {
@@ -194,7 +231,7 @@ class BrandAliasMismatchError extends Error {
   constructor(ctx, expectedBrand, actualBrand, targetName) {
     super(
       `${ctx}: Branding alias targets brand "${actualBrand}" but is being ` +
-        `translated for brand "${expectedBrand}" (targetVariableName: ${targetName})`,
+        `translated for brand "${expectedBrand}" (targetVariableName: ${targetName})`
     );
     this.name = 'BrandAliasMismatchError';
     this.ctx = ctx;
@@ -218,7 +255,14 @@ function aliasResolves(alias, root) {
 }
 
 // ---------- Leaf translation ----------
-function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, brandKey) {
+function translateLeafValue(
+  exportLeaf,
+  primitives,
+  semantics,
+  warnings,
+  ctx,
+  brandKey
+) {
   const val = exportLeaf.$value;
   const ext = exportLeaf.$extensions || {};
   const aliasData = ext['com.figma.aliasData'];
@@ -227,12 +271,24 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, br
   // "transparent" — UNLESS it's also backed by an alias (e.g. a stroke
   // aliasing Transparent/Clear), in which case the alias below takes
   // precedence and resolves to a real primitive reference instead.
-  if (val && typeof val === 'object' && 'alpha' in val && val.alpha === 0 && !aliasData) {
+  if (
+    val &&
+    typeof val === 'object' &&
+    'alpha' in val &&
+    val.alpha === 0 &&
+    !aliasData
+  ) {
     return 'transparent';
   }
 
-  if (typeof val === 'string' && /^\{(?:brand\.)?(semantics|components)\./.test(val)) {
-    const stripped = val.replace(/^\{(?:brand\.)?(?:semantics|components)\./, '{');
+  if (
+    typeof val === 'string' &&
+    /^\{(?:brand\.)?(semantics|components)\./.test(val)
+  ) {
+    const stripped = val.replace(
+      /^\{(?:brand\.)?(?:semantics|components)\./,
+      '{'
+    );
     if (aliasResolves(stripped, semantics)) return stripped;
     // Figma's current path nests one extra group that our committed tree
     // doesn't (schema drift) — retry after removing each middle segment
@@ -242,16 +298,24 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, br
       const candidate = `{${[...inner.slice(0, i), ...inner.slice(i + 1)].join('.')}}`;
       if (aliasResolves(candidate, semantics)) return candidate;
     }
-    warnings.push(`${ctx}: semantics self-ref does not resolve: ${stripped} (from ${val})`);
+    warnings.push(
+      `${ctx}: semantics self-ref does not resolve: ${stripped} (from ${val})`
+    );
     return stripped;
   }
 
   // Mocked shadow reference: a bare `shadow-<name>` string (no primitive
   // shadow tier exists — semantics.shadow is the composite root directly).
-  if (exportLeaf.$type === 'string' && typeof val === 'string' && /^shadow-[a-z0-9-]+$/.test(val)) {
+  if (
+    exportLeaf.$type === 'string' &&
+    typeof val === 'string' &&
+    /^shadow-[a-z0-9-]+$/.test(val)
+  ) {
     const alias = `{shadow.${val.slice('shadow-'.length)}}`;
     if (aliasResolves(alias, semantics)) return alias;
-    warnings.push(`${ctx}: shadow alias does not resolve: ${alias} (from ${val})`);
+    warnings.push(
+      `${ctx}: shadow alias does not resolve: ${alias} (from ${val})`
+    );
     return alias;
   }
 
@@ -260,7 +324,8 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, br
   if (typeof val === 'string' && !val.startsWith('{') && val.includes('.')) {
     const bare = val.startsWith('typography.') ? val : `typography.${val}`;
     const alias = `{${bare}}`;
-    if (aliasResolves(alias, { typography: semantics.typography })) return alias;
+    if (aliasResolves(alias, { typography: semantics.typography }))
+      return alias;
     // Hyphen-as-dot mismatch fallback: "typography.title.accent" -> find a
     // leaf under typography whose group.name, with '-' replaced by '.',
     // equals the dotted leaf we were given.
@@ -269,7 +334,8 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, br
       if (group.startsWith('$') || typeof sub !== 'object') continue;
       for (const name of Object.keys(sub)) {
         if (name.startsWith('$')) continue;
-        if (name.replace(/-/g, '.') === dottedLeaf) return `{typography.${group}.${name}}`;
+        if (name.replace(/-/g, '.') === dottedLeaf)
+          return `{typography.${group}.${name}}`;
       }
     }
     warnings.push(`${ctx}: typography alias does not resolve: ${alias}`);
@@ -286,7 +352,9 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, br
       }
       const alias = `{branding.${brandSeg}.${rest.join('.')}}`;
       if (aliasResolves(alias, primitives)) return alias;
-      warnings.push(`${ctx}: branding alias does not resolve: ${alias} (from ${targetName})`);
+      warnings.push(
+        `${ctx}: branding alias does not resolve: ${alias} (from ${targetName})`
+      );
     } else if (['gap', 'size', 'radius', 'stroke'].includes(parts[0])) {
       // Strip Figma's local variable-name prefix (which may differ from the
       // section name, e.g. section "stroke" uses "width-" as its prefix) to
@@ -295,18 +363,26 @@ function translateLeafValue(exportLeaf, primitives, semantics, warnings, ctx, br
       const key = parts[1]?.replace(/^[a-zA-Z]+-/, '');
       const alias = key ? `{units.${parts[0]}.${key}}` : null;
       if (alias && aliasResolves(alias, primitives)) return alias;
-      warnings.push(`${ctx}: units alias does not resolve: ${alias} (from ${targetName})`);
+      warnings.push(
+        `${ctx}: units alias does not resolve: ${alias} (from ${targetName})`
+      );
     } else {
       const mapped = mapPaletteParts(parts);
       const alias = `{palette.${mapped.join('.')}}`;
       if (aliasResolves(alias, primitives)) return alias;
-      warnings.push(`${ctx}: palette alias does not resolve: ${alias} (from ${targetName})`);
+      warnings.push(
+        `${ctx}: palette alias does not resolve: ${alias} (from ${targetName})`
+      );
     }
   }
 
   // Literal fallback
   if (val && typeof val === 'object' && val.hex) return hexToHslValue(val.hex);
-  if (exportLeaf.$type === 'string' && typeof val === 'string' && val.startsWith('linear-gradient(')) {
+  if (
+    exportLeaf.$type === 'string' &&
+    typeof val === 'string' &&
+    val.startsWith('linear-gradient(')
+  ) {
     return parseCssGradient(val);
   }
   return val;
@@ -331,7 +407,8 @@ function collectValueLeaves(node, curPath = [], out = []) {
 function discoverWiredBrands(semantics) {
   const leaves = collectValueLeaves(semantics);
   const keys = new Set();
-  for (const { node } of leaves) for (const k of Object.keys(node.values)) keys.add(k);
+  for (const { node } of leaves)
+    for (const k of Object.keys(node.values)) keys.add(k);
   keys.delete('default');
   return keys;
 }
@@ -344,13 +421,12 @@ function discoverExportBrands(brandDir) {
 }
 
 // A brand's `values.<brand>` key. If the brand is ALREADY wired, its
-// committed `values` key wins outright — some legacy brands (light-gray,
-// yellow-1c) keep a hyphenated values key even though their `branding.*`
-// primitive group is underscored, and re-syncing must never fork that into a
-// second, duplicate key. Only for a genuinely new brand do we fall back to
-// matching the filename against `branding.<brand>` (keeps historical brands'
-// exact key), then normalize hyphens to underscores to match this repo's
-// established convention for new brands (see SKILL.md).
+// committed `values` key wins outright — re-syncing must never fork an
+// existing key (hyphenated or not) into a second, duplicate key just because
+// the export filename normalizes differently. Only for a genuinely new brand
+// do we fall back to matching the filename against `branding.<brand>` (keeps
+// historical brands' exact key), then normalize hyphens to underscores to
+// match this repo's established convention for new brands (see SKILL.md).
 function brandKeyFor(filenameStem, primitives, wiredBrands) {
   const underscored = filenameStem.replace(/-/g, '_');
   if (wiredBrands?.has(filenameStem)) return filenameStem;
@@ -363,7 +439,9 @@ function brandKeyFor(filenameStem, primitives, wiredBrands) {
 // ---------- Main ----------
 const [, , mode, brandDirArg, brandsArg] = process.argv;
 if (!mode || !['check', 'apply'].includes(mode) || !brandDirArg) {
-  console.error('Usage: node sync-brands.mjs <check|apply> <brandDir> [brand1,brand2,...]');
+  console.error(
+    'Usage: node sync-brands.mjs <check|apply> <brandDir> [brand1,brand2,...]'
+  );
   process.exit(1);
 }
 const brandDir = path.resolve(brandDirArg);
@@ -378,17 +456,28 @@ const exportBrands = discoverExportBrands(brandDir);
 let targetBrands;
 if (mode === 'check') {
   // Regression-check: every export brand whose filename matches an already-wired key.
-  targetBrands = exportBrands.filter((f) => wiredBrands.has(f)).map((f) => ({ key: f, file: f }));
+  targetBrands = exportBrands
+    .filter((f) => wiredBrands.has(f))
+    .map((f) => ({ key: f, file: f }));
   if (targetBrands.length === 0) {
-    console.error('No already-wired brand found in this export to regression-check against.');
+    console.error(
+      'No already-wired brand found in this export to regression-check against.'
+    );
     console.error(`Wired brands: ${[...wiredBrands].join(', ')}`);
     console.error(`Export brands: ${exportBrands.join(', ')}`);
     process.exit(1);
   }
 } else {
   const requested = brandsArg ? brandsArg.split(',') : null;
-  const candidates = requested ?? exportBrands.filter((f) => !wiredBrands.has(brandKeyFor(f, primitives, wiredBrands)));
-  targetBrands = candidates.map((f) => ({ key: brandKeyFor(f, primitives, wiredBrands), file: f }));
+  const candidates =
+    requested ??
+    exportBrands.filter(
+      (f) => !wiredBrands.has(brandKeyFor(f, primitives, wiredBrands))
+    );
+  targetBrands = candidates.map((f) => ({
+    key: brandKeyFor(f, primitives, wiredBrands),
+    file: f,
+  }));
 }
 
 const warnings = [];
@@ -423,11 +512,23 @@ function runTranslation() {
       let translated;
       try {
         translated = exportLeaf
-          ? translateLeafValue(exportLeaf, primitives, semantics, warnings, `semantics.${p.join('.')}`, brandKey)
+          ? translateLeafValue(
+              exportLeaf,
+              primitives,
+              semantics,
+              warnings,
+              `semantics.${p.join('.')}`,
+              brandKey
+            )
           : undefined;
       } catch (err) {
         if (err instanceof BrandAliasMismatchError && mode === 'check') {
-          mismatches.push({ tier: 'semantics', path: p.join('.'), brand: brandKey, error: err.message });
+          mismatches.push({
+            tier: 'semantics',
+            path: p.join('.'),
+            brand: brandKey,
+            error: err.message,
+          });
           continue;
         }
         throw err;
@@ -436,13 +537,21 @@ function runTranslation() {
         // Genuinely absent from this export (e.g. `shadow.*`, which has no
         // Figma Variable backing at all) — brand-invariant across every
         // currently-wired brand, so carry the default value forward.
-        warnings.push(`semantics.${p.join('.')}: no leaf at this path in export — used default fallback`);
+        warnings.push(
+          `semantics.${p.join('.')}: no leaf at this path in export — used default fallback`
+        );
         translated = node.values.default;
       }
       if (mode === 'check') {
         const existing = node.values[brandKey];
         if (JSON.stringify(existing) !== JSON.stringify(translated)) {
-          mismatches.push({ tier: 'semantics', path: p.join('.'), brand: brandKey, existing, translated });
+          mismatches.push({
+            tier: 'semantics',
+            path: p.join('.'),
+            brand: brandKey,
+            existing,
+            translated,
+          });
         }
       } else {
         node.values[brandKey] = translated;
@@ -456,23 +565,43 @@ function runTranslation() {
       let translated;
       try {
         translated = exportLeaf
-          ? translateLeafValue(exportLeaf, primitives, semantics, warnings, `components.${p.join('.')}`, brandKey)
+          ? translateLeafValue(
+              exportLeaf,
+              primitives,
+              semantics,
+              warnings,
+              `components.${p.join('.')}`,
+              brandKey
+            )
           : undefined;
       } catch (err) {
         if (err instanceof BrandAliasMismatchError && mode === 'check') {
-          mismatches.push({ tier: 'components', path: p.join('.'), brand: brandKey, error: err.message });
+          mismatches.push({
+            tier: 'components',
+            path: p.join('.'),
+            brand: brandKey,
+            error: err.message,
+          });
           continue;
         }
         throw err;
       }
       if (translated === undefined) {
-        warnings.push(`components.${p.join('.')}: no leaf at this path in export — used default fallback`);
+        warnings.push(
+          `components.${p.join('.')}: no leaf at this path in export — used default fallback`
+        );
         translated = node.values.default;
       }
       if (mode === 'check') {
         const existing = node.values[brandKey];
         if (JSON.stringify(existing) !== JSON.stringify(translated)) {
-          mismatches.push({ tier: 'components', path: p.join('.'), brand: brandKey, existing, translated });
+          mismatches.push({
+            tier: 'components',
+            path: p.join('.'),
+            brand: brandKey,
+            existing,
+            translated,
+          });
         }
       } else {
         node.values[brandKey] = translated;
@@ -481,9 +610,16 @@ function runTranslation() {
   }
 }
 
-fs.writeFileSync('/tmp/sync-brands-warnings.json', JSON.stringify(warnings, null, 2));
-console.log(`\n=== ${mode.toUpperCase()} — brands: ${targetBrands.map((b) => b.key).join(', ')} ===`);
-console.log(`Warnings: ${warnings.length} (full list: /tmp/sync-brands-warnings.json)`);
+fs.writeFileSync(
+  '/tmp/sync-brands-warnings.json',
+  JSON.stringify(warnings, null, 2)
+);
+console.log(
+  `\n=== ${mode.toUpperCase()} — brands: ${targetBrands.map((b) => b.key).join(', ')} ===`
+);
+console.log(
+  `Warnings: ${warnings.length} (full list: /tmp/sync-brands-warnings.json)`
+);
 for (const w of warnings.slice(0, 40)) console.log('  WARN:', w);
 if (warnings.length > 40) console.log(`  ...and ${warnings.length - 40} more`);
 
@@ -494,13 +630,25 @@ if (mode === 'check') {
     console.log(`    existing:    ${JSON.stringify(m.existing)}`);
     console.log(`    translated:  ${JSON.stringify(m.translated)}`);
   }
-  if (mismatches.length > 40) console.log(`  ...and ${mismatches.length - 40} more`);
-  fs.writeFileSync('/tmp/sync-brands-check-mismatches.json', JSON.stringify(mismatches, null, 2));
+  if (mismatches.length > 40)
+    console.log(`  ...and ${mismatches.length - 40} more`);
+  fs.writeFileSync(
+    '/tmp/sync-brands-check-mismatches.json',
+    JSON.stringify(mismatches, null, 2)
+  );
   console.log('\nFull mismatch list: /tmp/sync-brands-check-mismatches.json');
   process.exit(mismatches.length > 0 ? 1 : 0);
 } else {
-  fs.writeFileSync(path.join(TIERS_DIR, 'semantics.json'), serialize(sortNode(semantics)));
-  fs.writeFileSync(path.join(TIERS_DIR, 'components.json'), serialize(sortNode(components)));
+  fs.writeFileSync(
+    path.join(TIERS_DIR, 'semantics.json'),
+    serialize(sortNode(semantics))
+  );
+  fs.writeFileSync(
+    path.join(TIERS_DIR, 'components.json'),
+    serialize(sortNode(components))
+  );
   console.log('\nWrote tiers/semantics.json and tiers/components.json');
-  console.log(`Brand keys written: ${targetBrands.map((b) => b.key).join(', ')}`);
+  console.log(
+    `Brand keys written: ${targetBrands.map((b) => b.key).join(', ')}`
+  );
 }

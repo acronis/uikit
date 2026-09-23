@@ -30,7 +30,7 @@
               "default": "{palette.transparent.white.inverse.95}",
               "green_also_choise_df": "{palette.transparent.white.inverse.95}",
               "ingram_micro": "{palette.transparent.white.inverse.95}",
-              "light-gray": "{palette.transparent.white.inverse.95}",
+              "light_gray": "{palette.transparent.white.inverse.95}",
               "light_blue_hp": "{palette.transparent.white.inverse.95}",
               "orange_tsukaeru_helpox": "{palette.transparent.white.inverse.95}",
               "pinky": "{palette.transparent.white.inverse.95}",
@@ -42,7 +42,7 @@
               "telstra": "{palette.transparent.white.inverse.95}",
               "virtual_one": "{palette.transparent.white.inverse.95}",
               "virtuozzo": "{palette.transparent.white.inverse.95}",
-              "yellow-1c": "{palette.transparent.white.inverse.95}"
+              "yellow_1c": "{palette.transparent.white.inverse.95}"
             }
           },
           "secondary": {
@@ -60,7 +60,7 @@
               "default": "{palette.transparent.blue.inverse.95}",
               "green_also_choise_df": "{palette.transparent.blue.inverse.95}",
               "ingram_micro": "{palette.transparent.blue.inverse.95}",
-              "light-gray": "{palette.transparent.blue.inverse.95}",
+              "light_gray": "{palette.transparent.blue.inverse.95}",
               "light_blue_hp": "{palette.transparent.blue.inverse.95}",
               "orange_tsukaeru_helpox": "{palette.transparent.blue.inverse.95}",
               "pinky": "{palette.transparent.blue.inverse.95}",
@@ -72,7 +72,7 @@
               "telstra": "{palette.transparent.blue.inverse.95}",
               "virtual_one": "{palette.transparent.blue.inverse.95}",
               "virtuozzo": "{palette.transparent.blue.inverse.95}",
-              "yellow-1c": "{palette.transparent.blue.inverse.95}"
+              "yellow_1c": "{palette.transparent.blue.inverse.95}"
             }
           }
         },
@@ -91,7 +91,7 @@
             "default": "{palette.transparent.dark.fixed.90}",
             "green_also_choise_df": "{palette.transparent.dark.fixed.90}",
             "ingram_micro": "{palette.transparent.dark.fixed.90}",
-            "light-gray": "{palette.transparent.dark.fixed.90}",
+            "light_gray": "{palette.transparent.dark.fixed.90}",
             "light_blue_hp": "{palette.transparent.dark.fixed.90}",
             "orange_tsukaeru_helpox": "{palette.transparent.dark.fixed.90}",
             "pinky": "{palette.transparent.dark.fixed.90}",
@@ -103,7 +103,7 @@
             "telstra": "{palette.transparent.dark.fixed.90}",
             "virtual_one": "{palette.transparent.dark.fixed.90}",
             "virtuozzo": "{palette.transparent.dark.fixed.90}",
-            "yellow-1c": "{palette.transparent.dark.fixed.90}"
+            "yellow_1c": "{palette.transparent.dark.fixed.90}"
           }
         }
       },
@@ -123,7 +123,7 @@
             "default": "{palette.blue.13}",
             "green_also_choise_df": "{branding.green_also_choise_df.SidebarPrimary.idle}",
             "ingram_micro": "{branding.ingram_micro.SidebarPrimary.idle}",
-            "light-gray": "{branding.light_gray.SidebarPrimary.background.idle}",
+            "light_gray": "{branding.light_gray.SidebarPrimary.background.idle}",
             "light_blue_hp": "{branding.light_blue_hp.SidebarPrimary.idle}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.SidebarPrimary.idle}",
             "pinky": "{branding.pinky.SidebarPrimary.idle}",
@@ -135,7 +135,7 @@
             "telstra": "{branding.telstra.SidebarPrimary.background.idle}",
             "virtual_one": "{branding.virtual_one.SidebarPrimary.idle}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.idle}",
-            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.idle}"
+            "yellow_1c": "{branding.yellow_1c.SidebarPrimary.background.idle}"
           }
         },
         "primary-active": {
@@ -153,7 +153,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{branding.green_also_choise_df.SidebarPrimary.active}",
             "ingram_micro": "{branding.ingram_micro.SidebarPrimary.active}",
-            "light-gray": "{branding.light_gray.SidebarPrimary.background.active}",
+            "light_gray": "{branding.light_gray.SidebarPrimary.background.active}",
             "light_blue_hp": "{branding.light_blue_hp.SidebarPrimary.active}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.SidebarPrimary.active}",
             "pinky": "{branding.pinky.SidebarPrimary.active}",
@@ -165,7 +165,7 @@
             "telstra": "{branding.telstra.SidebarPrimary.background.active}",
             "virtual_one": "{branding.virtual_one.SidebarPrimary.active}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.active}",
-            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.active}"
+            "yellow_1c": "{branding.yellow_1c.SidebarPrimary.background.active}"
           }
         },
         "primary-disabled": {
@@ -183,7 +183,7 @@
             "default": "{palette.blue.5}",
             "green_also_choise_df": "{branding.green_also_choise_df.SidebarPrimary.disabled}",
             "ingram_micro": "{branding.ingram_micro.SidebarPrimary.disabled}",
-            "light-gray": "{branding.light_gray.SidebarPrimary.background.disabled}",
+            "light_gray": "{branding.light_gray.SidebarPrimary.background.disabled}",
             "light_blue_hp": "{branding.light_blue_hp.SidebarPrimary.disabled}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.SidebarPrimary.disabled}",
             "pinky": "{branding.pinky.SidebarPrimary.disabled}",
@@ -195,7 +195,7 @@
             "telstra": "{branding.telstra.SidebarPrimary.background.disabled}",
             "virtual_one": "{branding.virtual_one.SidebarPrimary.disabled}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.disabled}",
-            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.disabled}"
+            "yellow_1c": "{branding.yellow_1c.SidebarPrimary.background.disabled}"
           }
         },
         "primary-hover": {
@@ -213,7 +213,7 @@
             "default": "{palette.blue.12}",
             "green_also_choise_df": "{branding.green_also_choise_df.SidebarPrimary.hover}",
             "ingram_micro": "{branding.ingram_micro.SidebarPrimary.hover}",
-            "light-gray": "{branding.light_gray.SidebarPrimary.background.hover}",
+            "light_gray": "{branding.light_gray.SidebarPrimary.background.hover}",
             "light_blue_hp": "{branding.light_blue_hp.SidebarPrimary.hover}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.SidebarPrimary.hover}",
             "pinky": "{branding.pinky.SidebarPrimary.hover}",
@@ -225,7 +225,7 @@
             "telstra": "{branding.telstra.SidebarPrimary.background.hover}",
             "virtual_one": "{branding.virtual_one.SidebarPrimary.hover}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.hover}",
-            "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.hover}"
+            "yellow_1c": "{branding.yellow_1c.SidebarPrimary.background.hover}"
           }
         },
         "secondary": {
@@ -243,7 +243,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{branding.green_also_choise_df.ButtonPrimary.idle}",
             "ingram_micro": "{branding.ingram_micro.ButtonPrimary.idle}",
-            "light-gray": "{branding.light_gray.ButtonPrimary.idle}",
+            "light_gray": "{branding.light_gray.ButtonPrimary.idle}",
             "light_blue_hp": "{branding.light_blue_hp.ButtonPrimary.idle}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.ButtonPrimary.idle}",
             "pinky": "{branding.pinky.ButtonPrimary.idle}",
@@ -255,7 +255,7 @@
             "telstra": "{branding.telstra.ButtonPrimary.idle}",
             "virtual_one": "{branding.virtual_one.ButtonPrimary.idle}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.idle}",
-            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.idle}"
+            "yellow_1c": "{branding.yellow_1c.ButtonPrimary.idle}"
           }
         },
         "secondary-active": {
@@ -273,7 +273,7 @@
             "default": "{palette.blue.9}",
             "green_also_choise_df": "{branding.green_also_choise_df.ButtonPrimary.active}",
             "ingram_micro": "{branding.ingram_micro.ButtonPrimary.active}",
-            "light-gray": "{branding.light_gray.ButtonPrimary.active}",
+            "light_gray": "{branding.light_gray.ButtonPrimary.active}",
             "light_blue_hp": "{branding.light_blue_hp.ButtonPrimary.active}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.ButtonPrimary.active}",
             "pinky": "{branding.pinky.ButtonPrimary.active}",
@@ -285,7 +285,7 @@
             "telstra": "{branding.telstra.ButtonPrimary.active}",
             "virtual_one": "{branding.virtual_one.ButtonPrimary.active}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.active}",
-            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.active}"
+            "yellow_1c": "{branding.yellow_1c.ButtonPrimary.active}"
           }
         },
         "secondary-disabled": {
@@ -303,7 +303,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{branding.green_also_choise_df.ButtonPrimary.disabled}",
             "ingram_micro": "{branding.ingram_micro.ButtonPrimary.disabled}",
-            "light-gray": "{branding.light_gray.ButtonPrimary.disabled}",
+            "light_gray": "{branding.light_gray.ButtonPrimary.disabled}",
             "light_blue_hp": "{branding.light_blue_hp.ButtonPrimary.disabled}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.ButtonPrimary.disabled}",
             "pinky": "{branding.pinky.ButtonPrimary.disabled}",
@@ -315,7 +315,7 @@
             "telstra": "{branding.telstra.ButtonPrimary.disabled}",
             "virtual_one": "{branding.virtual_one.ButtonPrimary.disabled}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.disabled}",
-            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.disabled}"
+            "yellow_1c": "{branding.yellow_1c.ButtonPrimary.disabled}"
           }
         },
         "secondary-hover": {
@@ -333,7 +333,7 @@
             "default": "{palette.blue.8}",
             "green_also_choise_df": "{branding.green_also_choise_df.ButtonPrimary.hover}",
             "ingram_micro": "{branding.ingram_micro.ButtonPrimary.hover}",
-            "light-gray": "{branding.light_gray.ButtonPrimary.hover}",
+            "light_gray": "{branding.light_gray.ButtonPrimary.hover}",
             "light_blue_hp": "{branding.light_blue_hp.ButtonPrimary.hover}",
             "orange_tsukaeru_helpox": "{branding.orange_tsukaeru_helpox.ButtonPrimary.hover}",
             "pinky": "{branding.pinky.ButtonPrimary.hover}",
@@ -345,7 +345,7 @@
             "telstra": "{branding.telstra.ButtonPrimary.hover}",
             "virtual_one": "{branding.virtual_one.ButtonPrimary.hover}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.hover}",
-            "yellow-1c": "{branding.yellow_1c.ButtonPrimary.hover}"
+            "yellow_1c": "{branding.yellow_1c.ButtonPrimary.hover}"
           }
         }
       },
@@ -365,7 +365,7 @@
             "default": "{palette.transparent.dark.inverse.100}",
             "green_also_choise_df": "{palette.transparent.dark.inverse.100}",
             "ingram_micro": "{palette.transparent.dark.inverse.100}",
-            "light-gray": "{palette.transparent.dark.inverse.100}",
+            "light_gray": "{palette.transparent.dark.inverse.100}",
             "light_blue_hp": "{palette.transparent.dark.inverse.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.dark.inverse.100}",
             "pinky": "{palette.transparent.dark.inverse.100}",
@@ -377,7 +377,7 @@
             "telstra": "{palette.transparent.dark.inverse.100}",
             "virtual_one": "{palette.transparent.dark.inverse.100}",
             "virtuozzo": "{palette.transparent.dark.inverse.100}",
-            "yellow-1c": "{palette.transparent.dark.inverse.100}"
+            "yellow_1c": "{palette.transparent.dark.inverse.100}"
           }
         }
       },
@@ -397,7 +397,7 @@
             "default": "{palette.violet.1}",
             "green_also_choise_df": "{palette.violet.1}",
             "ingram_micro": "{palette.violet.1}",
-            "light-gray": "{palette.violet.1}",
+            "light_gray": "{palette.violet.1}",
             "light_blue_hp": "{palette.violet.1}",
             "orange_tsukaeru_helpox": "{palette.violet.1}",
             "pinky": "{palette.violet.1}",
@@ -409,7 +409,7 @@
             "telstra": "{palette.violet.1}",
             "virtual_one": "{palette.violet.1}",
             "virtuozzo": "{palette.violet.1}",
-            "yellow-1c": "{palette.violet.1}"
+            "yellow_1c": "{palette.violet.1}"
           }
         },
         "ai-hover": {
@@ -427,7 +427,7 @@
             "default": "{palette.violet.2}",
             "green_also_choise_df": "{palette.violet.2}",
             "ingram_micro": "{palette.violet.2}",
-            "light-gray": "{palette.violet.2}",
+            "light_gray": "{palette.violet.2}",
             "light_blue_hp": "{palette.violet.2}",
             "orange_tsukaeru_helpox": "{palette.violet.2}",
             "pinky": "{palette.violet.2}",
@@ -439,7 +439,7 @@
             "telstra": "{palette.violet.2}",
             "virtual_one": "{palette.violet.2}",
             "virtuozzo": "{palette.violet.2}",
-            "yellow-1c": "{palette.violet.2}"
+            "yellow_1c": "{palette.violet.2}"
           }
         },
         "ai-pressed": {
@@ -457,7 +457,7 @@
             "default": "{palette.violet.3}",
             "green_also_choise_df": "{palette.violet.3}",
             "ingram_micro": "{palette.violet.3}",
-            "light-gray": "{palette.violet.3}",
+            "light_gray": "{palette.violet.3}",
             "light_blue_hp": "{palette.violet.3}",
             "orange_tsukaeru_helpox": "{palette.violet.3}",
             "pinky": "{palette.violet.3}",
@@ -469,7 +469,7 @@
             "telstra": "{palette.violet.3}",
             "virtual_one": "{palette.violet.3}",
             "virtuozzo": "{palette.violet.3}",
-            "yellow-1c": "{palette.violet.3}"
+            "yellow_1c": "{palette.violet.3}"
           }
         },
         "critical": {
@@ -487,7 +487,7 @@
             "default": "{palette.orange.1}",
             "green_also_choise_df": "{palette.orange.1}",
             "ingram_micro": "{palette.orange.1}",
-            "light-gray": "{palette.orange.1}",
+            "light_gray": "{palette.orange.1}",
             "light_blue_hp": "{palette.orange.1}",
             "orange_tsukaeru_helpox": "{palette.orange.1}",
             "pinky": "{palette.orange.1}",
@@ -499,7 +499,7 @@
             "telstra": "{palette.orange.1}",
             "virtual_one": "{palette.orange.1}",
             "virtuozzo": "{palette.orange.1}",
-            "yellow-1c": "{palette.orange.1}"
+            "yellow_1c": "{palette.orange.1}"
           }
         },
         "critical-hover": {
@@ -517,7 +517,7 @@
             "default": "{palette.orange.2}",
             "green_also_choise_df": "{palette.orange.2}",
             "ingram_micro": "{palette.orange.2}",
-            "light-gray": "{palette.orange.2}",
+            "light_gray": "{palette.orange.2}",
             "light_blue_hp": "{palette.orange.2}",
             "orange_tsukaeru_helpox": "{palette.orange.2}",
             "pinky": "{palette.orange.2}",
@@ -529,7 +529,7 @@
             "telstra": "{palette.orange.2}",
             "virtual_one": "{palette.orange.2}",
             "virtuozzo": "{palette.orange.2}",
-            "yellow-1c": "{palette.orange.2}"
+            "yellow_1c": "{palette.orange.2}"
           }
         },
         "critical-pressed": {
@@ -547,7 +547,7 @@
             "default": "{palette.orange.3}",
             "green_also_choise_df": "{palette.orange.3}",
             "ingram_micro": "{palette.orange.3}",
-            "light-gray": "{palette.orange.3}",
+            "light_gray": "{palette.orange.3}",
             "light_blue_hp": "{palette.orange.3}",
             "orange_tsukaeru_helpox": "{palette.orange.3}",
             "pinky": "{palette.orange.3}",
@@ -559,7 +559,7 @@
             "telstra": "{palette.orange.3}",
             "virtual_one": "{palette.orange.3}",
             "virtuozzo": "{palette.orange.3}",
-            "yellow-1c": "{palette.orange.3}"
+            "yellow_1c": "{palette.orange.3}"
           }
         },
         "danger": {
@@ -577,7 +577,7 @@
             "default": "{palette.red.1}",
             "green_also_choise_df": "{palette.red.1}",
             "ingram_micro": "{palette.red.1}",
-            "light-gray": "{palette.red.1}",
+            "light_gray": "{palette.red.1}",
             "light_blue_hp": "{palette.red.1}",
             "orange_tsukaeru_helpox": "{palette.red.1}",
             "pinky": "{palette.red.1}",
@@ -589,7 +589,7 @@
             "telstra": "{palette.red.1}",
             "virtual_one": "{palette.red.1}",
             "virtuozzo": "{palette.red.1}",
-            "yellow-1c": "{palette.red.1}"
+            "yellow_1c": "{palette.red.1}"
           }
         },
         "danger-hover": {
@@ -607,7 +607,7 @@
             "default": "{palette.red.2}",
             "green_also_choise_df": "{palette.red.2}",
             "ingram_micro": "{palette.red.2}",
-            "light-gray": "{palette.red.2}",
+            "light_gray": "{palette.red.2}",
             "light_blue_hp": "{palette.red.2}",
             "orange_tsukaeru_helpox": "{palette.red.2}",
             "pinky": "{palette.red.2}",
@@ -619,7 +619,7 @@
             "telstra": "{palette.red.2}",
             "virtual_one": "{palette.red.2}",
             "virtuozzo": "{palette.red.2}",
-            "yellow-1c": "{palette.red.2}"
+            "yellow_1c": "{palette.red.2}"
           }
         },
         "danger-pressed": {
@@ -637,7 +637,7 @@
             "default": "{palette.red.3}",
             "green_also_choise_df": "{palette.red.3}",
             "ingram_micro": "{palette.red.3}",
-            "light-gray": "{palette.red.3}",
+            "light_gray": "{palette.red.3}",
             "light_blue_hp": "{palette.red.3}",
             "orange_tsukaeru_helpox": "{palette.red.3}",
             "pinky": "{palette.red.3}",
@@ -649,7 +649,7 @@
             "telstra": "{palette.red.3}",
             "virtual_one": "{palette.red.3}",
             "virtuozzo": "{palette.red.3}",
-            "yellow-1c": "{palette.red.3}"
+            "yellow_1c": "{palette.red.3}"
           }
         },
         "info": {
@@ -667,7 +667,7 @@
             "default": "{palette.electricblue.1}",
             "green_also_choise_df": "{palette.electricblue.1}",
             "ingram_micro": "{palette.electricblue.1}",
-            "light-gray": "{palette.electricblue.1}",
+            "light_gray": "{palette.electricblue.1}",
             "light_blue_hp": "{palette.electricblue.1}",
             "orange_tsukaeru_helpox": "{palette.electricblue.1}",
             "pinky": "{palette.electricblue.1}",
@@ -679,7 +679,7 @@
             "telstra": "{palette.electricblue.1}",
             "virtual_one": "{palette.electricblue.1}",
             "virtuozzo": "{palette.electricblue.1}",
-            "yellow-1c": "{palette.electricblue.1}"
+            "yellow_1c": "{palette.electricblue.1}"
           }
         },
         "info-hover": {
@@ -697,7 +697,7 @@
             "default": "{palette.electricblue.2}",
             "green_also_choise_df": "{palette.electricblue.2}",
             "ingram_micro": "{palette.electricblue.2}",
-            "light-gray": "{palette.electricblue.2}",
+            "light_gray": "{palette.electricblue.2}",
             "light_blue_hp": "{palette.electricblue.2}",
             "orange_tsukaeru_helpox": "{palette.electricblue.2}",
             "pinky": "{palette.electricblue.2}",
@@ -709,7 +709,7 @@
             "telstra": "{palette.electricblue.2}",
             "virtual_one": "{palette.electricblue.2}",
             "virtuozzo": "{palette.electricblue.2}",
-            "yellow-1c": "{palette.electricblue.2}"
+            "yellow_1c": "{palette.electricblue.2}"
           }
         },
         "info-pressed": {
@@ -727,7 +727,7 @@
             "default": "{palette.electricblue.3}",
             "green_also_choise_df": "{palette.electricblue.3}",
             "ingram_micro": "{palette.electricblue.3}",
-            "light-gray": "{palette.electricblue.3}",
+            "light_gray": "{palette.electricblue.3}",
             "light_blue_hp": "{palette.electricblue.3}",
             "orange_tsukaeru_helpox": "{palette.electricblue.3}",
             "pinky": "{palette.electricblue.3}",
@@ -739,7 +739,7 @@
             "telstra": "{palette.electricblue.3}",
             "virtual_one": "{palette.electricblue.3}",
             "virtuozzo": "{palette.electricblue.3}",
-            "yellow-1c": "{palette.electricblue.3}"
+            "yellow_1c": "{palette.electricblue.3}"
           }
         },
         "neutral": {
@@ -757,7 +757,7 @@
             "default": "{palette.base}",
             "green_also_choise_df": "{palette.base}",
             "ingram_micro": "{palette.base}",
-            "light-gray": "{palette.base}",
+            "light_gray": "{palette.base}",
             "light_blue_hp": "{palette.base}",
             "orange_tsukaeru_helpox": "{palette.base}",
             "pinky": "{palette.base}",
@@ -769,7 +769,7 @@
             "telstra": "{palette.base}",
             "virtual_one": "{palette.base}",
             "virtuozzo": "{palette.base}",
-            "yellow-1c": "{palette.base}"
+            "yellow_1c": "{palette.base}"
           }
         },
         "neutral-hover": {
@@ -787,7 +787,7 @@
             "default": "{palette.grayscale.1}",
             "green_also_choise_df": "{palette.grayscale.1}",
             "ingram_micro": "{palette.grayscale.1}",
-            "light-gray": "{palette.grayscale.1}",
+            "light_gray": "{palette.grayscale.1}",
             "light_blue_hp": "{palette.grayscale.1}",
             "orange_tsukaeru_helpox": "{palette.grayscale.1}",
             "pinky": "{palette.grayscale.1}",
@@ -799,7 +799,7 @@
             "telstra": "{palette.grayscale.1}",
             "virtual_one": "{palette.grayscale.1}",
             "virtuozzo": "{palette.grayscale.1}",
-            "yellow-1c": "{palette.grayscale.1}"
+            "yellow_1c": "{palette.grayscale.1}"
           }
         },
         "neutral-pressed": {
@@ -817,7 +817,7 @@
             "default": "{palette.grayscale.2}",
             "green_also_choise_df": "{palette.grayscale.2}",
             "ingram_micro": "{palette.grayscale.2}",
-            "light-gray": "{palette.grayscale.2}",
+            "light_gray": "{palette.grayscale.2}",
             "light_blue_hp": "{palette.grayscale.2}",
             "orange_tsukaeru_helpox": "{palette.grayscale.2}",
             "pinky": "{palette.grayscale.2}",
@@ -829,7 +829,7 @@
             "telstra": "{palette.grayscale.2}",
             "virtual_one": "{palette.grayscale.2}",
             "virtuozzo": "{palette.grayscale.2}",
-            "yellow-1c": "{palette.grayscale.2}"
+            "yellow_1c": "{palette.grayscale.2}"
           }
         },
         "off": {
@@ -847,7 +847,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.grayscale.3}",
             "ingram_micro": "{palette.grayscale.3}",
-            "light-gray": "{palette.grayscale.3}",
+            "light_gray": "{palette.grayscale.3}",
             "light_blue_hp": "{palette.grayscale.3}",
             "orange_tsukaeru_helpox": "{palette.grayscale.3}",
             "pinky": "{palette.grayscale.3}",
@@ -859,7 +859,7 @@
             "telstra": "{palette.grayscale.3}",
             "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
-            "yellow-1c": "{palette.grayscale.3}"
+            "yellow_1c": "{palette.grayscale.3}"
           }
         },
         "on": {
@@ -877,7 +877,7 @@
             "default": "{palette.green.6}",
             "green_also_choise_df": "{palette.green.6}",
             "ingram_micro": "{palette.green.6}",
-            "light-gray": "{palette.green.6}",
+            "light_gray": "{palette.green.6}",
             "light_blue_hp": "{palette.green.6}",
             "orange_tsukaeru_helpox": "{palette.green.6}",
             "pinky": "{palette.green.6}",
@@ -889,7 +889,7 @@
             "telstra": "{palette.green.6}",
             "virtual_one": "{palette.green.6}",
             "virtuozzo": "{palette.green.6}",
-            "yellow-1c": "{palette.green.6}"
+            "yellow_1c": "{palette.green.6}"
           }
         },
         "success": {
@@ -907,7 +907,7 @@
             "default": "{palette.green.1}",
             "green_also_choise_df": "{palette.green.1}",
             "ingram_micro": "{palette.green.1}",
-            "light-gray": "{palette.green.1}",
+            "light_gray": "{palette.green.1}",
             "light_blue_hp": "{palette.green.1}",
             "orange_tsukaeru_helpox": "{palette.green.1}",
             "pinky": "{palette.green.1}",
@@ -919,7 +919,7 @@
             "telstra": "{palette.green.1}",
             "virtual_one": "{palette.green.1}",
             "virtuozzo": "{palette.green.1}",
-            "yellow-1c": "{palette.green.1}"
+            "yellow_1c": "{palette.green.1}"
           }
         },
         "success-hover": {
@@ -937,7 +937,7 @@
             "default": "{palette.green.2}",
             "green_also_choise_df": "{palette.green.2}",
             "ingram_micro": "{palette.green.2}",
-            "light-gray": "{palette.green.2}",
+            "light_gray": "{palette.green.2}",
             "light_blue_hp": "{palette.green.2}",
             "orange_tsukaeru_helpox": "{palette.green.2}",
             "pinky": "{palette.green.2}",
@@ -949,7 +949,7 @@
             "telstra": "{palette.green.2}",
             "virtual_one": "{palette.green.2}",
             "virtuozzo": "{palette.green.2}",
-            "yellow-1c": "{palette.green.2}"
+            "yellow_1c": "{palette.green.2}"
           }
         },
         "success-pressed": {
@@ -967,7 +967,7 @@
             "default": "{palette.green.3}",
             "green_also_choise_df": "{palette.green.3}",
             "ingram_micro": "{palette.green.3}",
-            "light-gray": "{palette.green.3}",
+            "light_gray": "{palette.green.3}",
             "light_blue_hp": "{palette.green.3}",
             "orange_tsukaeru_helpox": "{palette.green.3}",
             "pinky": "{palette.green.3}",
@@ -979,7 +979,7 @@
             "telstra": "{palette.green.3}",
             "virtual_one": "{palette.green.3}",
             "virtuozzo": "{palette.green.3}",
-            "yellow-1c": "{palette.green.3}"
+            "yellow_1c": "{palette.green.3}"
           }
         },
         "warning": {
@@ -997,7 +997,7 @@
             "default": "{palette.yellow.1}",
             "green_also_choise_df": "{palette.yellow.1}",
             "ingram_micro": "{palette.yellow.1}",
-            "light-gray": "{palette.yellow.1}",
+            "light_gray": "{palette.yellow.1}",
             "light_blue_hp": "{palette.yellow.1}",
             "orange_tsukaeru_helpox": "{palette.yellow.1}",
             "pinky": "{palette.yellow.1}",
@@ -1009,7 +1009,7 @@
             "telstra": "{palette.yellow.1}",
             "virtual_one": "{palette.yellow.1}",
             "virtuozzo": "{palette.yellow.1}",
-            "yellow-1c": "{palette.yellow.1}"
+            "yellow_1c": "{palette.yellow.1}"
           }
         },
         "warning-hover": {
@@ -1027,7 +1027,7 @@
             "default": "{palette.yellow.2}",
             "green_also_choise_df": "{palette.yellow.2}",
             "ingram_micro": "{palette.yellow.2}",
-            "light-gray": "{palette.yellow.2}",
+            "light_gray": "{palette.yellow.2}",
             "light_blue_hp": "{palette.yellow.2}",
             "orange_tsukaeru_helpox": "{palette.yellow.2}",
             "pinky": "{palette.yellow.2}",
@@ -1039,7 +1039,7 @@
             "telstra": "{palette.yellow.2}",
             "virtual_one": "{palette.yellow.2}",
             "virtuozzo": "{palette.yellow.2}",
-            "yellow-1c": "{palette.yellow.2}"
+            "yellow_1c": "{palette.yellow.2}"
           }
         },
         "warning-pressed": {
@@ -1057,7 +1057,7 @@
             "default": "{palette.yellow.3}",
             "green_also_choise_df": "{palette.yellow.3}",
             "ingram_micro": "{palette.yellow.3}",
-            "light-gray": "{palette.yellow.3}",
+            "light_gray": "{palette.yellow.3}",
             "light_blue_hp": "{palette.yellow.3}",
             "orange_tsukaeru_helpox": "{palette.yellow.3}",
             "pinky": "{palette.yellow.3}",
@@ -1069,7 +1069,7 @@
             "telstra": "{palette.yellow.3}",
             "virtual_one": "{palette.yellow.3}",
             "virtuozzo": "{palette.yellow.3}",
-            "yellow-1c": "{palette.yellow.3}"
+            "yellow_1c": "{palette.yellow.3}"
           }
         }
       },
@@ -1089,7 +1089,7 @@
             "default": "{palette.orange.7}",
             "green_also_choise_df": "{palette.orange.7}",
             "ingram_micro": "{palette.orange.7}",
-            "light-gray": "{palette.orange.7}",
+            "light_gray": "{palette.orange.7}",
             "light_blue_hp": "{palette.orange.7}",
             "orange_tsukaeru_helpox": "{palette.orange.7}",
             "pinky": "{palette.orange.7}",
@@ -1101,7 +1101,7 @@
             "telstra": "{palette.orange.7}",
             "virtual_one": "{palette.orange.7}",
             "virtuozzo": "{palette.orange.7}",
-            "yellow-1c": "{palette.orange.7}"
+            "yellow_1c": "{palette.orange.7}"
           }
         },
         "critical-hover": {
@@ -1119,7 +1119,7 @@
             "default": "{palette.orange.8}",
             "green_also_choise_df": "{palette.orange.8}",
             "ingram_micro": "{palette.orange.8}",
-            "light-gray": "{palette.orange.8}",
+            "light_gray": "{palette.orange.8}",
             "light_blue_hp": "{palette.orange.8}",
             "orange_tsukaeru_helpox": "{palette.orange.8}",
             "pinky": "{palette.orange.8}",
@@ -1131,7 +1131,7 @@
             "telstra": "{palette.orange.8}",
             "virtual_one": "{palette.orange.8}",
             "virtuozzo": "{palette.orange.8}",
-            "yellow-1c": "{palette.orange.8}"
+            "yellow_1c": "{palette.orange.8}"
           }
         },
         "critical-pressed": {
@@ -1149,7 +1149,7 @@
             "default": "{palette.orange.9}",
             "green_also_choise_df": "{palette.orange.9}",
             "ingram_micro": "{palette.orange.9}",
-            "light-gray": "{palette.orange.9}",
+            "light_gray": "{palette.orange.9}",
             "light_blue_hp": "{palette.orange.9}",
             "orange_tsukaeru_helpox": "{palette.orange.9}",
             "pinky": "{palette.orange.9}",
@@ -1161,7 +1161,7 @@
             "telstra": "{palette.orange.9}",
             "virtual_one": "{palette.orange.9}",
             "virtuozzo": "{palette.orange.9}",
-            "yellow-1c": "{palette.orange.9}"
+            "yellow_1c": "{palette.orange.9}"
           }
         },
         "danger": {
@@ -1179,7 +1179,7 @@
             "default": "{palette.red.7}",
             "green_also_choise_df": "{palette.red.7}",
             "ingram_micro": "{palette.red.7}",
-            "light-gray": "{palette.red.7}",
+            "light_gray": "{palette.red.7}",
             "light_blue_hp": "{palette.red.7}",
             "orange_tsukaeru_helpox": "{palette.red.7}",
             "pinky": "{palette.red.7}",
@@ -1191,7 +1191,7 @@
             "telstra": "{palette.red.7}",
             "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
-            "yellow-1c": "{palette.red.7}"
+            "yellow_1c": "{palette.red.7}"
           }
         },
         "danger-hover": {
@@ -1209,7 +1209,7 @@
             "default": "{palette.red.9}",
             "green_also_choise_df": "{palette.red.9}",
             "ingram_micro": "{palette.red.9}",
-            "light-gray": "{palette.red.9}",
+            "light_gray": "{palette.red.9}",
             "light_blue_hp": "{palette.red.9}",
             "orange_tsukaeru_helpox": "{palette.red.9}",
             "pinky": "{palette.red.9}",
@@ -1221,7 +1221,7 @@
             "telstra": "{palette.red.9}",
             "virtual_one": "{palette.red.9}",
             "virtuozzo": "{palette.red.9}",
-            "yellow-1c": "{palette.red.9}"
+            "yellow_1c": "{palette.red.9}"
           }
         },
         "danger-pressed": {
@@ -1239,7 +1239,7 @@
             "default": "{palette.red.10}",
             "green_also_choise_df": "{palette.red.10}",
             "ingram_micro": "{palette.red.10}",
-            "light-gray": "{palette.red.10}",
+            "light_gray": "{palette.red.10}",
             "light_blue_hp": "{palette.red.10}",
             "orange_tsukaeru_helpox": "{palette.red.10}",
             "pinky": "{palette.red.10}",
@@ -1251,7 +1251,7 @@
             "telstra": "{palette.red.10}",
             "virtual_one": "{palette.red.10}",
             "virtuozzo": "{palette.red.10}",
-            "yellow-1c": "{palette.red.10}"
+            "yellow_1c": "{palette.red.10}"
           }
         },
         "info": {
@@ -1269,7 +1269,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{palette.blue.7}",
             "ingram_micro": "{palette.blue.7}",
-            "light-gray": "{palette.blue.7}",
+            "light_gray": "{palette.blue.7}",
             "light_blue_hp": "{palette.blue.7}",
             "orange_tsukaeru_helpox": "{palette.blue.7}",
             "pinky": "{palette.blue.7}",
@@ -1281,7 +1281,7 @@
             "telstra": "{palette.blue.7}",
             "virtual_one": "{palette.blue.7}",
             "virtuozzo": "{palette.blue.7}",
-            "yellow-1c": "{palette.blue.7}"
+            "yellow_1c": "{palette.blue.7}"
           }
         },
         "info-hover": {
@@ -1299,7 +1299,7 @@
             "default": "{palette.blue.8}",
             "green_also_choise_df": "{palette.blue.8}",
             "ingram_micro": "{palette.blue.8}",
-            "light-gray": "{palette.blue.8}",
+            "light_gray": "{palette.blue.8}",
             "light_blue_hp": "{palette.blue.8}",
             "orange_tsukaeru_helpox": "{palette.blue.8}",
             "pinky": "{palette.blue.8}",
@@ -1311,7 +1311,7 @@
             "telstra": "{palette.blue.8}",
             "virtual_one": "{palette.blue.8}",
             "virtuozzo": "{palette.blue.8}",
-            "yellow-1c": "{palette.blue.8}"
+            "yellow_1c": "{palette.blue.8}"
           }
         },
         "info-pressed": {
@@ -1329,7 +1329,7 @@
             "default": "{palette.blue.9}",
             "green_also_choise_df": "{palette.blue.9}",
             "ingram_micro": "{palette.blue.9}",
-            "light-gray": "{palette.blue.9}",
+            "light_gray": "{palette.blue.9}",
             "light_blue_hp": "{palette.blue.9}",
             "orange_tsukaeru_helpox": "{palette.blue.9}",
             "pinky": "{palette.blue.9}",
@@ -1341,7 +1341,7 @@
             "telstra": "{palette.blue.9}",
             "virtual_one": "{palette.blue.9}",
             "virtuozzo": "{palette.blue.9}",
-            "yellow-1c": "{palette.blue.9}"
+            "yellow_1c": "{palette.blue.9}"
           }
         },
         "neutral": {
@@ -1359,7 +1359,7 @@
             "default": "{palette.grayscale.7}",
             "green_also_choise_df": "{palette.grayscale.7}",
             "ingram_micro": "{palette.grayscale.7}",
-            "light-gray": "{palette.grayscale.7}",
+            "light_gray": "{palette.grayscale.7}",
             "light_blue_hp": "{palette.grayscale.7}",
             "orange_tsukaeru_helpox": "{palette.grayscale.7}",
             "pinky": "{palette.grayscale.7}",
@@ -1371,7 +1371,7 @@
             "telstra": "{palette.grayscale.7}",
             "virtual_one": "{palette.grayscale.7}",
             "virtuozzo": "{palette.grayscale.7}",
-            "yellow-1c": "{palette.grayscale.7}"
+            "yellow_1c": "{palette.grayscale.7}"
           }
         },
         "neutral-hover": {
@@ -1389,7 +1389,7 @@
             "default": "{palette.grayscale.8}",
             "green_also_choise_df": "{palette.grayscale.8}",
             "ingram_micro": "{palette.grayscale.8}",
-            "light-gray": "{palette.grayscale.8}",
+            "light_gray": "{palette.grayscale.8}",
             "light_blue_hp": "{palette.grayscale.8}",
             "orange_tsukaeru_helpox": "{palette.grayscale.8}",
             "pinky": "{palette.grayscale.8}",
@@ -1401,7 +1401,7 @@
             "telstra": "{palette.grayscale.8}",
             "virtual_one": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
-            "yellow-1c": "{palette.grayscale.8}"
+            "yellow_1c": "{palette.grayscale.8}"
           }
         },
         "neutral-pressed": {
@@ -1419,7 +1419,7 @@
             "default": "{palette.grayscale.9}",
             "green_also_choise_df": "{palette.grayscale.9}",
             "ingram_micro": "{palette.grayscale.9}",
-            "light-gray": "{palette.grayscale.9}",
+            "light_gray": "{palette.grayscale.9}",
             "light_blue_hp": "{palette.grayscale.9}",
             "orange_tsukaeru_helpox": "{palette.grayscale.9}",
             "pinky": "{palette.grayscale.9}",
@@ -1431,7 +1431,7 @@
             "telstra": "{palette.grayscale.9}",
             "virtual_one": "{palette.grayscale.9}",
             "virtuozzo": "{palette.grayscale.9}",
-            "yellow-1c": "{palette.grayscale.9}"
+            "yellow_1c": "{palette.grayscale.9}"
           }
         },
         "success": {
@@ -1449,7 +1449,7 @@
             "default": "{palette.green.7}",
             "green_also_choise_df": "{palette.green.7}",
             "ingram_micro": "{palette.green.7}",
-            "light-gray": "{palette.green.7}",
+            "light_gray": "{palette.green.7}",
             "light_blue_hp": "{palette.green.7}",
             "orange_tsukaeru_helpox": "{palette.green.7}",
             "pinky": "{palette.green.7}",
@@ -1461,7 +1461,7 @@
             "telstra": "{palette.green.7}",
             "virtual_one": "{palette.green.7}",
             "virtuozzo": "{palette.green.7}",
-            "yellow-1c": "{palette.green.7}"
+            "yellow_1c": "{palette.green.7}"
           }
         },
         "success-hover": {
@@ -1479,7 +1479,7 @@
             "default": "{palette.green.8}",
             "green_also_choise_df": "{palette.green.8}",
             "ingram_micro": "{palette.green.8}",
-            "light-gray": "{palette.green.8}",
+            "light_gray": "{palette.green.8}",
             "light_blue_hp": "{palette.green.8}",
             "orange_tsukaeru_helpox": "{palette.green.8}",
             "pinky": "{palette.green.8}",
@@ -1491,7 +1491,7 @@
             "telstra": "{palette.green.8}",
             "virtual_one": "{palette.green.8}",
             "virtuozzo": "{palette.green.8}",
-            "yellow-1c": "{palette.green.8}"
+            "yellow_1c": "{palette.green.8}"
           }
         },
         "success-pressed": {
@@ -1509,7 +1509,7 @@
             "default": "{palette.green.9}",
             "green_also_choise_df": "{palette.green.9}",
             "ingram_micro": "{palette.green.9}",
-            "light-gray": "{palette.green.9}",
+            "light_gray": "{palette.green.9}",
             "light_blue_hp": "{palette.green.9}",
             "orange_tsukaeru_helpox": "{palette.green.9}",
             "pinky": "{palette.green.9}",
@@ -1521,7 +1521,7 @@
             "telstra": "{palette.green.9}",
             "virtual_one": "{palette.green.9}",
             "virtuozzo": "{palette.green.9}",
-            "yellow-1c": "{palette.green.9}"
+            "yellow_1c": "{palette.green.9}"
           }
         },
         "warning": {
@@ -1539,7 +1539,7 @@
             "default": "{palette.yellow.7}",
             "green_also_choise_df": "{palette.yellow.7}",
             "ingram_micro": "{palette.yellow.7}",
-            "light-gray": "{palette.yellow.7}",
+            "light_gray": "{palette.yellow.7}",
             "light_blue_hp": "{palette.yellow.7}",
             "orange_tsukaeru_helpox": "{palette.yellow.7}",
             "pinky": "{palette.yellow.7}",
@@ -1551,7 +1551,7 @@
             "telstra": "{palette.yellow.7}",
             "virtual_one": "{palette.yellow.7}",
             "virtuozzo": "{palette.yellow.7}",
-            "yellow-1c": "{palette.yellow.7}"
+            "yellow_1c": "{palette.yellow.7}"
           }
         },
         "warning-hover": {
@@ -1569,7 +1569,7 @@
             "default": "{palette.yellow.8}",
             "green_also_choise_df": "{palette.yellow.8}",
             "ingram_micro": "{palette.yellow.8}",
-            "light-gray": "{palette.yellow.8}",
+            "light_gray": "{palette.yellow.8}",
             "light_blue_hp": "{palette.yellow.8}",
             "orange_tsukaeru_helpox": "{palette.yellow.8}",
             "pinky": "{palette.yellow.8}",
@@ -1581,7 +1581,7 @@
             "telstra": "{palette.yellow.8}",
             "virtual_one": "{palette.yellow.8}",
             "virtuozzo": "{palette.yellow.8}",
-            "yellow-1c": "{palette.yellow.8}"
+            "yellow_1c": "{palette.yellow.8}"
           }
         },
         "warning-pressed": {
@@ -1599,7 +1599,7 @@
             "default": "{palette.yellow.9}",
             "green_also_choise_df": "{palette.yellow.9}",
             "ingram_micro": "{palette.yellow.9}",
-            "light-gray": "{palette.yellow.9}",
+            "light_gray": "{palette.yellow.9}",
             "light_blue_hp": "{palette.yellow.9}",
             "orange_tsukaeru_helpox": "{palette.yellow.9}",
             "pinky": "{palette.yellow.9}",
@@ -1611,7 +1611,7 @@
             "telstra": "{palette.yellow.9}",
             "virtual_one": "{palette.yellow.9}",
             "virtuozzo": "{palette.yellow.9}",
-            "yellow-1c": "{palette.yellow.9}"
+            "yellow_1c": "{palette.yellow.9}"
           }
         }
       },
@@ -1631,7 +1631,7 @@
             "default": "{palette.blue.2}",
             "green_also_choise_df": "{palette.grayscale.2}",
             "ingram_micro": "{palette.grayscale.2}",
-            "light-gray": "{palette.grayscale.2}",
+            "light_gray": "{palette.grayscale.2}",
             "light_blue_hp": "{palette.grayscale.2}",
             "orange_tsukaeru_helpox": "{palette.grayscale.2}",
             "pinky": "{palette.grayscale.2}",
@@ -1643,7 +1643,7 @@
             "telstra": "{palette.grayscale.2}",
             "virtual_one": "{palette.grayscale.2}",
             "virtuozzo": "{palette.grayscale.2}",
-            "yellow-1c": "{palette.grayscale.2}"
+            "yellow_1c": "{palette.grayscale.2}"
           }
         },
         "hover": {
@@ -1661,7 +1661,7 @@
             "default": "{palette.blue.1}",
             "green_also_choise_df": "{palette.grayscale.1}",
             "ingram_micro": "{palette.grayscale.1}",
-            "light-gray": "{palette.grayscale.1}",
+            "light_gray": "{palette.grayscale.1}",
             "light_blue_hp": "{palette.grayscale.1}",
             "orange_tsukaeru_helpox": "{palette.grayscale.1}",
             "pinky": "{palette.grayscale.1}",
@@ -1673,7 +1673,7 @@
             "telstra": "{palette.grayscale.1}",
             "virtual_one": "{palette.grayscale.1}",
             "virtuozzo": "{palette.grayscale.1}",
-            "yellow-1c": "{palette.grayscale.1}"
+            "yellow_1c": "{palette.grayscale.1}"
           }
         },
         "primary": {
@@ -1691,7 +1691,7 @@
             "default": "{palette.base}",
             "green_also_choise_df": "{palette.base}",
             "ingram_micro": "{palette.base}",
-            "light-gray": "{palette.base}",
+            "light_gray": "{palette.base}",
             "light_blue_hp": "{palette.base}",
             "orange_tsukaeru_helpox": "{palette.base}",
             "pinky": "{palette.base}",
@@ -1703,7 +1703,7 @@
             "telstra": "{palette.base}",
             "virtual_one": "{palette.base}",
             "virtuozzo": "{palette.base}",
-            "yellow-1c": "{palette.base}"
+            "yellow_1c": "{palette.base}"
           }
         },
         "secondary": {
@@ -1721,7 +1721,7 @@
             "default": "{palette.blue.0}",
             "green_also_choise_df": "{palette.grayscale.0}",
             "ingram_micro": "{palette.grayscale.0}",
-            "light-gray": "{palette.grayscale.0}",
+            "light_gray": "{palette.grayscale.0}",
             "light_blue_hp": "{palette.grayscale.0}",
             "orange_tsukaeru_helpox": "{palette.grayscale.0}",
             "pinky": "{palette.grayscale.0}",
@@ -1733,7 +1733,7 @@
             "telstra": "{palette.grayscale.0}",
             "virtual_one": "{palette.grayscale.0}",
             "virtuozzo": "{palette.grayscale.0}",
-            "yellow-1c": "{palette.grayscale.0}"
+            "yellow_1c": "{palette.grayscale.0}"
           }
         }
       },
@@ -1752,7 +1752,7 @@
           "default": "{palette.transparent.clear}",
           "green_also_choise_df": "{palette.transparent.clear}",
           "ingram_micro": "{palette.transparent.clear}",
-          "light-gray": "{palette.transparent.clear}",
+          "light_gray": "{palette.transparent.clear}",
           "light_blue_hp": "{palette.transparent.clear}",
           "orange_tsukaeru_helpox": "{palette.transparent.clear}",
           "pinky": "{palette.transparent.clear}",
@@ -1764,7 +1764,7 @@
           "telstra": "{palette.transparent.clear}",
           "virtual_one": "{palette.transparent.clear}",
           "virtuozzo": "{palette.transparent.clear}",
-          "yellow-1c": "{palette.transparent.clear}"
+          "yellow_1c": "{palette.transparent.clear}"
         }
       }
     },
@@ -1785,7 +1785,7 @@
             "default": "{palette.transparent.white.fixed.10}",
             "green_also_choise_df": "{palette.transparent.white.fixed.10}",
             "ingram_micro": "{palette.transparent.white.fixed.10}",
-            "light-gray": "{palette.transparent.white.fixed.10}",
+            "light_gray": "{palette.transparent.white.fixed.10}",
             "light_blue_hp": "{palette.transparent.white.fixed.10}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.10}",
             "pinky": "{palette.transparent.white.fixed.10}",
@@ -1797,7 +1797,7 @@
             "telstra": "{palette.transparent.white.fixed.10}",
             "virtual_one": "{palette.transparent.white.fixed.10}",
             "virtuozzo": "{palette.transparent.white.fixed.10}",
-            "yellow-1c": "{palette.transparent.white.fixed.10}"
+            "yellow_1c": "{palette.transparent.white.fixed.10}"
           }
         },
         "border-active": {
@@ -1815,7 +1815,7 @@
             "default": "{palette.grayscale.0}",
             "green_also_choise_df": "{palette.grayscale.0}",
             "ingram_micro": "{palette.grayscale.0}",
-            "light-gray": "{palette.grayscale.0}",
+            "light_gray": "{palette.grayscale.0}",
             "light_blue_hp": "{palette.grayscale.0}",
             "orange_tsukaeru_helpox": "{palette.grayscale.0}",
             "pinky": "{palette.grayscale.0}",
@@ -1827,7 +1827,7 @@
             "telstra": "{palette.grayscale.0}",
             "virtual_one": "{palette.grayscale.0}",
             "virtuozzo": "{palette.grayscale.0}",
-            "yellow-1c": "{palette.grayscale.0}"
+            "yellow_1c": "{palette.grayscale.0}"
           }
         },
         "divider": {
@@ -1845,7 +1845,7 @@
             "default": "{palette.transparent.white.fixed.10}",
             "green_also_choise_df": "{palette.transparent.white.fixed.10}",
             "ingram_micro": "{palette.transparent.white.fixed.10}",
-            "light-gray": "{palette.transparent.white.fixed.10}",
+            "light_gray": "{palette.transparent.white.fixed.10}",
             "light_blue_hp": "{palette.transparent.white.fixed.10}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.10}",
             "pinky": "{palette.transparent.white.fixed.10}",
@@ -1857,7 +1857,7 @@
             "telstra": "{palette.transparent.white.fixed.10}",
             "virtual_one": "{palette.transparent.white.fixed.10}",
             "virtuozzo": "{palette.transparent.white.fixed.10}",
-            "yellow-1c": "{palette.transparent.white.fixed.10}"
+            "yellow_1c": "{palette.transparent.white.fixed.10}"
           }
         }
       },
@@ -1877,7 +1877,7 @@
             "default": "{palette.violet.4}",
             "green_also_choise_df": "{palette.violet.4}",
             "ingram_micro": "{palette.violet.4}",
-            "light-gray": "{palette.violet.4}",
+            "light_gray": "{palette.violet.4}",
             "light_blue_hp": "{palette.violet.4}",
             "orange_tsukaeru_helpox": "{palette.violet.4}",
             "pinky": "{palette.violet.4}",
@@ -1889,7 +1889,7 @@
             "telstra": "{palette.violet.4}",
             "virtual_one": "{palette.violet.4}",
             "virtuozzo": "{palette.violet.4}",
-            "yellow-1c": "{palette.violet.4}"
+            "yellow_1c": "{palette.violet.4}"
           }
         },
         "aiStrong": {
@@ -1908,7 +1908,7 @@
             "default": "{gradients.ai.idle}",
             "green_also_choise_df": "{gradients.ai.idle}",
             "ingram_micro": "{gradients.ai.idle}",
-            "light-gray": "{gradients.ai.idle}",
+            "light_gray": "{gradients.ai.idle}",
             "light_blue_hp": "{gradients.ai.idle}",
             "orange_tsukaeru_helpox": "{gradients.ai.idle}",
             "pinky": "{gradients.ai.idle}",
@@ -1920,7 +1920,7 @@
             "telstra": "{gradients.ai.idle}",
             "virtual_one": "{gradients.ai.idle}",
             "virtuozzo": "{gradients.ai.idle}",
-            "yellow-1c": "{gradients.ai.idle}"
+            "yellow_1c": "{gradients.ai.idle}"
           }
         },
         "critical": {
@@ -1938,7 +1938,7 @@
             "default": "{palette.orange.4}",
             "green_also_choise_df": "{palette.orange.4}",
             "ingram_micro": "{palette.orange.4}",
-            "light-gray": "{palette.orange.4}",
+            "light_gray": "{palette.orange.4}",
             "light_blue_hp": "{palette.orange.4}",
             "orange_tsukaeru_helpox": "{palette.orange.4}",
             "pinky": "{palette.orange.4}",
@@ -1950,7 +1950,7 @@
             "telstra": "{palette.orange.4}",
             "virtual_one": "{palette.orange.4}",
             "virtuozzo": "{palette.orange.4}",
-            "yellow-1c": "{palette.orange.4}"
+            "yellow_1c": "{palette.orange.4}"
           }
         },
         "criticalStrong": {
@@ -1968,7 +1968,7 @@
             "default": "{palette.orange.8}",
             "green_also_choise_df": "{palette.orange.8}",
             "ingram_micro": "{palette.orange.8}",
-            "light-gray": "{palette.orange.8}",
+            "light_gray": "{palette.orange.8}",
             "light_blue_hp": "{palette.orange.8}",
             "orange_tsukaeru_helpox": "{palette.orange.8}",
             "pinky": "{palette.orange.8}",
@@ -1980,7 +1980,7 @@
             "telstra": "{palette.orange.8}",
             "virtual_one": "{palette.orange.8}",
             "virtuozzo": "{palette.orange.8}",
-            "yellow-1c": "{palette.orange.8}"
+            "yellow_1c": "{palette.orange.8}"
           }
         },
         "danger": {
@@ -1998,7 +1998,7 @@
             "default": "{palette.red.4}",
             "green_also_choise_df": "{palette.red.4}",
             "ingram_micro": "{palette.red.4}",
-            "light-gray": "{palette.red.4}",
+            "light_gray": "{palette.red.4}",
             "light_blue_hp": "{palette.red.4}",
             "orange_tsukaeru_helpox": "{palette.red.4}",
             "pinky": "{palette.red.4}",
@@ -2010,7 +2010,7 @@
             "telstra": "{palette.red.4}",
             "virtual_one": "{palette.red.4}",
             "virtuozzo": "{palette.red.4}",
-            "yellow-1c": "{palette.red.4}"
+            "yellow_1c": "{palette.red.4}"
           }
         },
         "dangerStrong": {
@@ -2028,7 +2028,7 @@
             "default": "{palette.red.8}",
             "green_also_choise_df": "{palette.red.8}",
             "ingram_micro": "{palette.red.8}",
-            "light-gray": "{palette.red.8}",
+            "light_gray": "{palette.red.8}",
             "light_blue_hp": "{palette.red.8}",
             "orange_tsukaeru_helpox": "{palette.red.8}",
             "pinky": "{palette.red.8}",
@@ -2040,7 +2040,7 @@
             "telstra": "{palette.red.8}",
             "virtual_one": "{palette.red.8}",
             "virtuozzo": "{palette.red.8}",
-            "yellow-1c": "{palette.red.8}"
+            "yellow_1c": "{palette.red.8}"
           }
         },
         "info": {
@@ -2058,7 +2058,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -2070,7 +2070,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "infoStrong": {
@@ -2088,7 +2088,7 @@
             "default": "{palette.electricblue.8}",
             "green_also_choise_df": "{palette.electricblue.8}",
             "ingram_micro": "{palette.electricblue.8}",
-            "light-gray": "{palette.electricblue.8}",
+            "light_gray": "{palette.electricblue.8}",
             "light_blue_hp": "{palette.electricblue.8}",
             "orange_tsukaeru_helpox": "{palette.electricblue.8}",
             "pinky": "{palette.electricblue.8}",
@@ -2100,7 +2100,7 @@
             "telstra": "{palette.electricblue.8}",
             "virtual_one": "{palette.electricblue.8}",
             "virtuozzo": "{palette.electricblue.8}",
-            "yellow-1c": "{palette.electricblue.8}"
+            "yellow_1c": "{palette.electricblue.8}"
           }
         },
         "neutral": {
@@ -2118,7 +2118,7 @@
             "default": "{palette.grayscale.4}",
             "green_also_choise_df": "{palette.grayscale.4}",
             "ingram_micro": "{palette.grayscale.4}",
-            "light-gray": "{palette.grayscale.4}",
+            "light_gray": "{palette.grayscale.4}",
             "light_blue_hp": "{palette.grayscale.4}",
             "orange_tsukaeru_helpox": "{palette.grayscale.4}",
             "pinky": "{palette.grayscale.4}",
@@ -2130,7 +2130,7 @@
             "telstra": "{palette.grayscale.4}",
             "virtual_one": "{palette.grayscale.4}",
             "virtuozzo": "{palette.grayscale.4}",
-            "yellow-1c": "{palette.grayscale.4}"
+            "yellow_1c": "{palette.grayscale.4}"
           }
         },
         "neutralStrong": {
@@ -2148,7 +2148,7 @@
             "default": "{palette.grayscale.8}",
             "green_also_choise_df": "{palette.grayscale.8}",
             "ingram_micro": "{palette.grayscale.8}",
-            "light-gray": "{palette.grayscale.8}",
+            "light_gray": "{palette.grayscale.8}",
             "light_blue_hp": "{palette.grayscale.8}",
             "orange_tsukaeru_helpox": "{palette.grayscale.8}",
             "pinky": "{palette.grayscale.8}",
@@ -2160,7 +2160,7 @@
             "telstra": "{palette.grayscale.8}",
             "virtual_one": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
-            "yellow-1c": "{palette.grayscale.8}"
+            "yellow_1c": "{palette.grayscale.8}"
           }
         },
         "success": {
@@ -2178,7 +2178,7 @@
             "default": "{palette.green.4}",
             "green_also_choise_df": "{palette.green.4}",
             "ingram_micro": "{palette.green.4}",
-            "light-gray": "{palette.green.4}",
+            "light_gray": "{palette.green.4}",
             "light_blue_hp": "{palette.green.4}",
             "orange_tsukaeru_helpox": "{palette.green.4}",
             "pinky": "{palette.green.4}",
@@ -2190,7 +2190,7 @@
             "telstra": "{palette.green.4}",
             "virtual_one": "{palette.green.4}",
             "virtuozzo": "{palette.green.4}",
-            "yellow-1c": "{palette.green.4}"
+            "yellow_1c": "{palette.green.4}"
           }
         },
         "successStrong": {
@@ -2208,7 +2208,7 @@
             "default": "{palette.green.8}",
             "green_also_choise_df": "{palette.green.8}",
             "ingram_micro": "{palette.green.8}",
-            "light-gray": "{palette.green.8}",
+            "light_gray": "{palette.green.8}",
             "light_blue_hp": "{palette.green.8}",
             "orange_tsukaeru_helpox": "{palette.green.8}",
             "pinky": "{palette.green.8}",
@@ -2220,7 +2220,7 @@
             "telstra": "{palette.green.8}",
             "virtual_one": "{palette.green.8}",
             "virtuozzo": "{palette.green.8}",
-            "yellow-1c": "{palette.green.8}"
+            "yellow_1c": "{palette.green.8}"
           }
         },
         "warning": {
@@ -2238,7 +2238,7 @@
             "default": "{palette.yellow.4}",
             "green_also_choise_df": "{palette.yellow.4}",
             "ingram_micro": "{palette.yellow.4}",
-            "light-gray": "{palette.yellow.4}",
+            "light_gray": "{palette.yellow.4}",
             "light_blue_hp": "{palette.yellow.4}",
             "orange_tsukaeru_helpox": "{palette.yellow.4}",
             "pinky": "{palette.yellow.4}",
@@ -2250,7 +2250,7 @@
             "telstra": "{palette.yellow.4}",
             "virtual_one": "{palette.yellow.4}",
             "virtuozzo": "{palette.yellow.4}",
-            "yellow-1c": "{palette.yellow.4}"
+            "yellow_1c": "{palette.yellow.4}"
           }
         },
         "warningStrong": {
@@ -2268,7 +2268,7 @@
             "default": "{palette.yellow.8}",
             "green_also_choise_df": "{palette.yellow.8}",
             "ingram_micro": "{palette.yellow.8}",
-            "light-gray": "{palette.yellow.8}",
+            "light_gray": "{palette.yellow.8}",
             "light_blue_hp": "{palette.yellow.8}",
             "orange_tsukaeru_helpox": "{palette.yellow.8}",
             "pinky": "{palette.yellow.8}",
@@ -2280,7 +2280,7 @@
             "telstra": "{palette.yellow.8}",
             "virtual_one": "{palette.yellow.8}",
             "virtuozzo": "{palette.yellow.8}",
-            "yellow-1c": "{palette.yellow.8}"
+            "yellow_1c": "{palette.yellow.8}"
           }
         }
       },
@@ -2300,7 +2300,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.grayscale.3}",
             "ingram_micro": "{palette.grayscale.3}",
-            "light-gray": "{palette.grayscale.3}",
+            "light_gray": "{palette.grayscale.3}",
             "light_blue_hp": "{palette.grayscale.3}",
             "orange_tsukaeru_helpox": "{palette.grayscale.3}",
             "pinky": "{palette.grayscale.3}",
@@ -2312,7 +2312,7 @@
             "telstra": "{palette.grayscale.3}",
             "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
-            "yellow-1c": "{palette.grayscale.3}"
+            "yellow_1c": "{palette.grayscale.3}"
           }
         },
         "border-active": {
@@ -2330,7 +2330,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{palette.grayscale.7}",
             "ingram_micro": "{palette.grayscale.7}",
-            "light-gray": "{palette.grayscale.7}",
+            "light_gray": "{palette.grayscale.7}",
             "light_blue_hp": "{palette.grayscale.7}",
             "orange_tsukaeru_helpox": "{palette.grayscale.7}",
             "pinky": "{palette.grayscale.7}",
@@ -2342,7 +2342,7 @@
             "telstra": "{palette.grayscale.7}",
             "virtual_one": "{palette.grayscale.7}",
             "virtuozzo": "{palette.grayscale.7}",
-            "yellow-1c": "{palette.grayscale.7}"
+            "yellow_1c": "{palette.grayscale.7}"
           }
         },
         "border-error": {
@@ -2360,7 +2360,7 @@
             "default": "{palette.red.7}",
             "green_also_choise_df": "{palette.red.7}",
             "ingram_micro": "{palette.red.7}",
-            "light-gray": "{palette.red.7}",
+            "light_gray": "{palette.red.7}",
             "light_blue_hp": "{palette.red.7}",
             "orange_tsukaeru_helpox": "{palette.red.7}",
             "pinky": "{palette.red.7}",
@@ -2372,7 +2372,7 @@
             "telstra": "{palette.red.7}",
             "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
-            "yellow-1c": "{palette.red.7}"
+            "yellow_1c": "{palette.red.7}"
           }
         },
         "divider": {
@@ -2390,7 +2390,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.grayscale.3}",
             "ingram_micro": "{palette.grayscale.3}",
-            "light-gray": "{palette.grayscale.3}",
+            "light_gray": "{palette.grayscale.3}",
             "light_blue_hp": "{palette.grayscale.3}",
             "orange_tsukaeru_helpox": "{palette.grayscale.3}",
             "pinky": "{palette.grayscale.3}",
@@ -2402,7 +2402,7 @@
             "telstra": "{palette.grayscale.3}",
             "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
-            "yellow-1c": "{palette.grayscale.3}"
+            "yellow_1c": "{palette.grayscale.3}"
           }
         }
       },
@@ -2421,7 +2421,7 @@
           "default": "{palette.transparent.clear}",
           "green_also_choise_df": "{palette.transparent.clear}",
           "ingram_micro": "{palette.transparent.clear}",
-          "light-gray": "{palette.transparent.clear}",
+          "light_gray": "{palette.transparent.clear}",
           "light_blue_hp": "{palette.transparent.clear}",
           "orange_tsukaeru_helpox": "{palette.transparent.clear}",
           "pinky": "{palette.transparent.clear}",
@@ -2433,7 +2433,7 @@
           "telstra": "{palette.transparent.clear}",
           "virtual_one": "{palette.transparent.clear}",
           "virtuozzo": "{palette.transparent.clear}",
-          "yellow-1c": "{palette.transparent.clear}"
+          "yellow_1c": "{palette.transparent.clear}"
         }
       }
     },
@@ -2453,7 +2453,7 @@
           "default": "{palette.blue.4}",
           "green_also_choise_df": "{palette.blue.4}",
           "ingram_micro": "{palette.blue.4}",
-          "light-gray": "{palette.blue.4}",
+          "light_gray": "{palette.blue.4}",
           "light_blue_hp": "{palette.blue.4}",
           "orange_tsukaeru_helpox": "{palette.blue.4}",
           "pinky": "{palette.blue.4}",
@@ -2465,7 +2465,7 @@
           "telstra": "{palette.blue.4}",
           "virtual_one": "{palette.blue.4}",
           "virtuozzo": "{palette.blue.4}",
-          "yellow-1c": "{palette.blue.4}"
+          "yellow_1c": "{palette.blue.4}"
         }
       },
       "error": {
@@ -2483,7 +2483,7 @@
           "default": "{palette.red.4}",
           "green_also_choise_df": "{palette.red.4}",
           "ingram_micro": "{palette.red.4}",
-          "light-gray": "{palette.red.4}",
+          "light_gray": "{palette.red.4}",
           "light_blue_hp": "{palette.red.4}",
           "orange_tsukaeru_helpox": "{palette.red.4}",
           "pinky": "{palette.red.4}",
@@ -2495,7 +2495,7 @@
           "telstra": "{palette.red.4}",
           "virtual_one": "{palette.red.4}",
           "virtuozzo": "{palette.red.4}",
-          "yellow-1c": "{palette.red.4}"
+          "yellow_1c": "{palette.red.4}"
         }
       },
       "primary": {
@@ -2513,7 +2513,7 @@
           "default": "{palette.blue.4}",
           "green_also_choise_df": "{palette.blue.4}",
           "ingram_micro": "{palette.blue.4}",
-          "light-gray": "{palette.blue.4}",
+          "light_gray": "{palette.blue.4}",
           "light_blue_hp": "{palette.blue.4}",
           "orange_tsukaeru_helpox": "{palette.blue.4}",
           "pinky": "{palette.blue.4}",
@@ -2525,7 +2525,7 @@
           "telstra": "{palette.blue.4}",
           "virtual_one": "{palette.blue.4}",
           "virtuozzo": "{palette.blue.4}",
-          "yellow-1c": "{palette.blue.4}"
+          "yellow_1c": "{palette.blue.4}"
         }
       },
       "secondary": {
@@ -2543,7 +2543,7 @@
           "default": "{palette.blue.4}",
           "green_also_choise_df": "{palette.blue.4}",
           "ingram_micro": "{palette.blue.4}",
-          "light-gray": "{palette.blue.4}",
+          "light_gray": "{palette.blue.4}",
           "light_blue_hp": "{palette.blue.4}",
           "orange_tsukaeru_helpox": "{palette.blue.4}",
           "pinky": "{palette.blue.4}",
@@ -2555,7 +2555,7 @@
           "telstra": "{palette.blue.4}",
           "virtual_one": "{palette.blue.4}",
           "virtuozzo": "{palette.blue.4}",
-          "yellow-1c": "{palette.blue.4}"
+          "yellow_1c": "{palette.blue.4}"
         }
       }
     },
@@ -2576,7 +2576,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{palette.grayscale.7}",
             "ingram_micro": "{palette.grayscale.7}",
-            "light-gray": "{palette.grayscale.7}",
+            "light_gray": "{palette.grayscale.7}",
             "light_blue_hp": "{palette.grayscale.7}",
             "orange_tsukaeru_helpox": "{palette.grayscale.7}",
             "pinky": "{palette.grayscale.7}",
@@ -2588,7 +2588,7 @@
             "telstra": "{palette.grayscale.7}",
             "virtual_one": "{palette.grayscale.7}",
             "virtuozzo": "{palette.grayscale.7}",
-            "yellow-1c": "{palette.grayscale.7}"
+            "yellow_1c": "{palette.grayscale.7}"
           }
         },
         "screenPrimary": {
@@ -2606,7 +2606,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -2618,7 +2618,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -2638,7 +2638,7 @@
             "default": "{palette.transparent.white.fixed.10}",
             "green_also_choise_df": "{palette.transparent.white.fixed.10}",
             "ingram_micro": "{palette.transparent.white.fixed.10}",
-            "light-gray": "{palette.transparent.white.fixed.10}",
+            "light_gray": "{palette.transparent.white.fixed.10}",
             "light_blue_hp": "{palette.transparent.white.fixed.10}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.10}",
             "pinky": "{palette.transparent.white.fixed.10}",
@@ -2650,7 +2650,7 @@
             "telstra": "{palette.transparent.white.fixed.10}",
             "virtual_one": "{palette.transparent.white.fixed.10}",
             "virtuozzo": "{palette.transparent.white.fixed.10}",
-            "yellow-1c": "{palette.transparent.white.fixed.10}"
+            "yellow_1c": "{palette.transparent.white.fixed.10}"
           }
         },
         "primary": {
@@ -2668,7 +2668,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -2680,7 +2680,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -2698,7 +2698,7 @@
             "default": "{palette.transparent.white.fixed.60}",
             "green_also_choise_df": "{palette.transparent.white.fixed.60}",
             "ingram_micro": "{palette.transparent.white.fixed.60}",
-            "light-gray": "{palette.transparent.white.fixed.60}",
+            "light_gray": "{palette.transparent.white.fixed.60}",
             "light_blue_hp": "{palette.transparent.white.fixed.60}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.60}",
             "pinky": "{palette.transparent.white.fixed.60}",
@@ -2710,7 +2710,7 @@
             "telstra": "{palette.transparent.white.fixed.60}",
             "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
-            "yellow-1c": "{palette.transparent.white.fixed.60}"
+            "yellow_1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -2730,7 +2730,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -2742,7 +2742,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -2762,7 +2762,7 @@
             "default": "{palette.violet.11}",
             "green_also_choise_df": "{palette.violet.11}",
             "ingram_micro": "{palette.violet.11}",
-            "light-gray": "{palette.violet.11}",
+            "light_gray": "{palette.violet.11}",
             "light_blue_hp": "{palette.violet.11}",
             "orange_tsukaeru_helpox": "{palette.violet.11}",
             "pinky": "{palette.violet.11}",
@@ -2774,7 +2774,7 @@
             "telstra": "{palette.violet.11}",
             "virtual_one": "{palette.violet.11}",
             "virtuozzo": "{palette.violet.11}",
-            "yellow-1c": "{palette.violet.11}"
+            "yellow_1c": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -2792,7 +2792,7 @@
             "default": "{palette.orange.11}",
             "green_also_choise_df": "{palette.orange.11}",
             "ingram_micro": "{palette.orange.11}",
-            "light-gray": "{palette.orange.11}",
+            "light_gray": "{palette.orange.11}",
             "light_blue_hp": "{palette.orange.11}",
             "orange_tsukaeru_helpox": "{palette.orange.11}",
             "pinky": "{palette.orange.11}",
@@ -2804,7 +2804,7 @@
             "telstra": "{palette.orange.11}",
             "virtual_one": "{palette.orange.11}",
             "virtuozzo": "{palette.orange.11}",
-            "yellow-1c": "{palette.orange.11}"
+            "yellow_1c": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -2822,7 +2822,7 @@
             "default": "{palette.red.11}",
             "green_also_choise_df": "{palette.red.11}",
             "ingram_micro": "{palette.red.11}",
-            "light-gray": "{palette.red.11}",
+            "light_gray": "{palette.red.11}",
             "light_blue_hp": "{palette.red.11}",
             "orange_tsukaeru_helpox": "{palette.red.11}",
             "pinky": "{palette.red.11}",
@@ -2834,7 +2834,7 @@
             "telstra": "{palette.red.11}",
             "virtual_one": "{palette.red.11}",
             "virtuozzo": "{palette.red.11}",
-            "yellow-1c": "{palette.red.11}"
+            "yellow_1c": "{palette.red.11}"
           }
         },
         "disabled": {
@@ -2852,7 +2852,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.grayscale.3}",
             "ingram_micro": "{palette.grayscale.3}",
-            "light-gray": "{palette.grayscale.3}",
+            "light_gray": "{palette.grayscale.3}",
             "light_blue_hp": "{palette.grayscale.3}",
             "orange_tsukaeru_helpox": "{palette.grayscale.3}",
             "pinky": "{palette.grayscale.3}",
@@ -2864,7 +2864,7 @@
             "telstra": "{palette.grayscale.3}",
             "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
-            "yellow-1c": "{palette.grayscale.3}"
+            "yellow_1c": "{palette.grayscale.3}"
           }
         },
         "info": {
@@ -2882,7 +2882,7 @@
             "default": "{palette.electricblue.11}",
             "green_also_choise_df": "{palette.electricblue.11}",
             "ingram_micro": "{palette.electricblue.11}",
-            "light-gray": "{palette.electricblue.11}",
+            "light_gray": "{palette.electricblue.11}",
             "light_blue_hp": "{palette.electricblue.11}",
             "orange_tsukaeru_helpox": "{palette.electricblue.11}",
             "pinky": "{palette.electricblue.11}",
@@ -2894,7 +2894,7 @@
             "telstra": "{palette.electricblue.11}",
             "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
-            "yellow-1c": "{palette.electricblue.11}"
+            "yellow_1c": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -2912,7 +2912,7 @@
             "default": "{palette.grayscale.11}",
             "green_also_choise_df": "{palette.grayscale.11}",
             "ingram_micro": "{palette.grayscale.11}",
-            "light-gray": "{palette.grayscale.11}",
+            "light_gray": "{palette.grayscale.11}",
             "light_blue_hp": "{palette.grayscale.11}",
             "orange_tsukaeru_helpox": "{palette.grayscale.11}",
             "pinky": "{palette.grayscale.11}",
@@ -2924,7 +2924,7 @@
             "telstra": "{palette.grayscale.11}",
             "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
-            "yellow-1c": "{palette.grayscale.11}"
+            "yellow_1c": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -2942,7 +2942,7 @@
             "default": "{palette.electricblue.11}",
             "green_also_choise_df": "{palette.electricblue.11}",
             "ingram_micro": "{palette.electricblue.11}",
-            "light-gray": "{palette.electricblue.11}",
+            "light_gray": "{palette.electricblue.11}",
             "light_blue_hp": "{palette.electricblue.11}",
             "orange_tsukaeru_helpox": "{palette.electricblue.11}",
             "pinky": "{palette.electricblue.11}",
@@ -2954,7 +2954,7 @@
             "telstra": "{palette.electricblue.11}",
             "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
-            "yellow-1c": "{palette.electricblue.11}"
+            "yellow_1c": "{palette.electricblue.11}"
           }
         },
         "success": {
@@ -2972,7 +2972,7 @@
             "default": "{palette.green.11}",
             "green_also_choise_df": "{palette.green.11}",
             "ingram_micro": "{palette.green.11}",
-            "light-gray": "{palette.green.11}",
+            "light_gray": "{palette.green.11}",
             "light_blue_hp": "{palette.green.11}",
             "orange_tsukaeru_helpox": "{palette.green.11}",
             "pinky": "{palette.green.11}",
@@ -2984,7 +2984,7 @@
             "telstra": "{palette.green.11}",
             "virtual_one": "{palette.green.11}",
             "virtuozzo": "{palette.green.11}",
-            "yellow-1c": "{palette.green.11}"
+            "yellow_1c": "{palette.green.11}"
           }
         },
         "warning": {
@@ -3002,7 +3002,7 @@
             "default": "{palette.yellow.11}",
             "green_also_choise_df": "{palette.yellow.11}",
             "ingram_micro": "{palette.yellow.11}",
-            "light-gray": "{palette.yellow.11}",
+            "light_gray": "{palette.yellow.11}",
             "light_blue_hp": "{palette.yellow.11}",
             "orange_tsukaeru_helpox": "{palette.yellow.11}",
             "pinky": "{palette.yellow.11}",
@@ -3014,7 +3014,7 @@
             "telstra": "{palette.yellow.11}",
             "virtual_one": "{palette.yellow.11}",
             "virtuozzo": "{palette.yellow.11}",
-            "yellow-1c": "{palette.yellow.11}"
+            "yellow_1c": "{palette.yellow.11}"
           }
         }
       },
@@ -3034,7 +3034,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -3046,7 +3046,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -3066,7 +3066,7 @@
             "default": "{palette.blue.13}",
             "green_also_choise_df": "{palette.blue.13}",
             "ingram_micro": "{palette.blue.13}",
-            "light-gray": "{palette.blue.13}",
+            "light_gray": "{palette.blue.13}",
             "light_blue_hp": "{palette.blue.13}",
             "orange_tsukaeru_helpox": "{palette.blue.13}",
             "pinky": "{palette.blue.13}",
@@ -3078,7 +3078,7 @@
             "telstra": "{palette.blue.13}",
             "virtual_one": "{palette.blue.13}",
             "virtuozzo": "{palette.blue.13}",
-            "yellow-1c": "{palette.blue.13}"
+            "yellow_1c": "{palette.blue.13}"
           }
         },
         "destructive": {
@@ -3096,7 +3096,7 @@
             "default": "{palette.red.7}",
             "green_also_choise_df": "{palette.red.7}",
             "ingram_micro": "{palette.red.7}",
-            "light-gray": "{palette.red.7}",
+            "light_gray": "{palette.red.7}",
             "light_blue_hp": "{palette.red.7}",
             "orange_tsukaeru_helpox": "{palette.red.7}",
             "pinky": "{palette.red.7}",
@@ -3108,7 +3108,7 @@
             "telstra": "{palette.red.7}",
             "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
-            "yellow-1c": "{palette.red.7}"
+            "yellow_1c": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -3126,7 +3126,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.grayscale.5}",
             "ingram_micro": "{palette.grayscale.5}",
-            "light-gray": "{palette.grayscale.5}",
+            "light_gray": "{palette.grayscale.5}",
             "light_blue_hp": "{palette.grayscale.5}",
             "orange_tsukaeru_helpox": "{palette.grayscale.5}",
             "pinky": "{palette.grayscale.5}",
@@ -3138,7 +3138,7 @@
             "telstra": "{palette.grayscale.5}",
             "virtual_one": "{palette.grayscale.5}",
             "virtuozzo": "{palette.grayscale.5}",
-            "yellow-1c": "{palette.grayscale.5}"
+            "yellow_1c": "{palette.grayscale.5}"
           }
         },
         "neutral": {
@@ -3156,7 +3156,7 @@
             "default": "{palette.grayscale.4}",
             "green_also_choise_df": "{palette.grayscale.4}",
             "ingram_micro": "{palette.grayscale.4}",
-            "light-gray": "{palette.grayscale.4}",
+            "light_gray": "{palette.grayscale.4}",
             "light_blue_hp": "{palette.grayscale.4}",
             "orange_tsukaeru_helpox": "{palette.grayscale.4}",
             "pinky": "{palette.grayscale.4}",
@@ -3168,7 +3168,7 @@
             "telstra": "{palette.grayscale.4}",
             "virtual_one": "{palette.grayscale.4}",
             "virtuozzo": "{palette.grayscale.4}",
-            "yellow-1c": "{palette.grayscale.4}"
+            "yellow_1c": "{palette.grayscale.4}"
           }
         },
         "neutral-dark": {
@@ -3186,7 +3186,7 @@
             "default": "{palette.grayscale.10}",
             "green_also_choise_df": "{palette.grayscale.10}",
             "ingram_micro": "{palette.grayscale.10}",
-            "light-gray": "{palette.grayscale.10}",
+            "light_gray": "{palette.grayscale.10}",
             "light_blue_hp": "{palette.grayscale.10}",
             "orange_tsukaeru_helpox": "{palette.grayscale.10}",
             "pinky": "{palette.grayscale.10}",
@@ -3198,7 +3198,7 @@
             "telstra": "{palette.grayscale.10}",
             "virtual_one": "{palette.grayscale.10}",
             "virtuozzo": "{palette.grayscale.10}",
-            "yellow-1c": "{palette.grayscale.10}"
+            "yellow_1c": "{palette.grayscale.10}"
           }
         },
         "primary": {
@@ -3216,7 +3216,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{palette.grayscale.10}",
             "ingram_micro": "{palette.grayscale.10}",
-            "light-gray": "{palette.grayscale.10}",
+            "light_gray": "{palette.grayscale.10}",
             "light_blue_hp": "{palette.grayscale.10}",
             "orange_tsukaeru_helpox": "{palette.grayscale.10}",
             "pinky": "{palette.grayscale.10}",
@@ -3228,7 +3228,7 @@
             "telstra": "{palette.grayscale.10}",
             "virtual_one": "{palette.grayscale.10}",
             "virtuozzo": "{palette.grayscale.10}",
-            "yellow-1c": "{palette.grayscale.10}"
+            "yellow_1c": "{palette.grayscale.10}"
           }
         }
       }
@@ -3250,7 +3250,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -3262,7 +3262,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "elementLink-hover": {
@@ -3280,7 +3280,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -3292,7 +3292,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "elementLink-idle": {
@@ -3310,7 +3310,7 @@
             "default": "{palette.electricblue.7}",
             "green_also_choise_df": "{palette.electricblue.7}",
             "ingram_micro": "{palette.electricblue.7}",
-            "light-gray": "{palette.electricblue.7}",
+            "light_gray": "{palette.electricblue.7}",
             "light_blue_hp": "{palette.electricblue.7}",
             "orange_tsukaeru_helpox": "{palette.electricblue.7}",
             "pinky": "{palette.electricblue.7}",
@@ -3322,7 +3322,7 @@
             "telstra": "{palette.electricblue.7}",
             "virtual_one": "{palette.electricblue.7}",
             "virtuozzo": "{palette.electricblue.7}",
-            "yellow-1c": "{palette.electricblue.7}"
+            "yellow_1c": "{palette.electricblue.7}"
           }
         },
         "elementPrimary": {
@@ -3340,7 +3340,7 @@
             "default": "{palette.transparent.dark.inverse.100}",
             "green_also_choise_df": "{palette.transparent.dark.inverse.100}",
             "ingram_micro": "{palette.transparent.dark.inverse.100}",
-            "light-gray": "{palette.transparent.dark.inverse.100}",
+            "light_gray": "{palette.transparent.dark.inverse.100}",
             "light_blue_hp": "{palette.transparent.dark.inverse.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.dark.inverse.100}",
             "pinky": "{palette.transparent.dark.inverse.100}",
@@ -3352,7 +3352,7 @@
             "telstra": "{palette.transparent.dark.inverse.100}",
             "virtual_one": "{palette.transparent.dark.inverse.100}",
             "virtuozzo": "{palette.transparent.dark.inverse.100}",
-            "yellow-1c": "{palette.transparent.dark.inverse.100}"
+            "yellow_1c": "{palette.transparent.dark.inverse.100}"
           }
         },
         "screenLink-active": {
@@ -3370,7 +3370,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -3382,7 +3382,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "screenLink-hover": {
@@ -3400,7 +3400,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -3412,7 +3412,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "screenLink-idle": {
@@ -3430,7 +3430,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -3442,7 +3442,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "screenPrimary": {
@@ -3460,7 +3460,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -3472,7 +3472,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "screenSecondary": {
@@ -3490,7 +3490,7 @@
             "default": "{palette.transparent.white.fixed.60}",
             "green_also_choise_df": "{palette.transparent.white.fixed.60}",
             "ingram_micro": "{palette.transparent.white.fixed.60}",
-            "light-gray": "{palette.transparent.white.fixed.60}",
+            "light_gray": "{palette.transparent.white.fixed.60}",
             "light_blue_hp": "{palette.transparent.white.fixed.60}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.60}",
             "pinky": "{palette.transparent.white.fixed.60}",
@@ -3502,7 +3502,7 @@
             "telstra": "{palette.transparent.white.fixed.60}",
             "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
-            "yellow-1c": "{palette.transparent.white.fixed.60}"
+            "yellow_1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -3522,7 +3522,7 @@
             "default": "{palette.transparent.white.fixed.30}",
             "green_also_choise_df": "{palette.transparent.white.fixed.30}",
             "ingram_micro": "{palette.transparent.white.fixed.30}",
-            "light-gray": "{palette.transparent.white.fixed.30}",
+            "light_gray": "{palette.transparent.white.fixed.30}",
             "light_blue_hp": "{palette.transparent.white.fixed.30}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.30}",
             "pinky": "{palette.transparent.white.fixed.30}",
@@ -3534,7 +3534,7 @@
             "telstra": "{palette.transparent.white.fixed.30}",
             "virtual_one": "{palette.transparent.white.fixed.30}",
             "virtuozzo": "{palette.transparent.white.fixed.30}",
-            "yellow-1c": "{palette.transparent.white.fixed.30}"
+            "yellow_1c": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-disabled": {
@@ -3552,7 +3552,7 @@
             "default": "{palette.transparent.white.fixed.30}",
             "green_also_choise_df": "{palette.transparent.white.fixed.30}",
             "ingram_micro": "{palette.transparent.white.fixed.30}",
-            "light-gray": "{palette.transparent.white.fixed.30}",
+            "light_gray": "{palette.transparent.white.fixed.30}",
             "light_blue_hp": "{palette.transparent.white.fixed.30}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.30}",
             "pinky": "{palette.transparent.white.fixed.30}",
@@ -3564,7 +3564,7 @@
             "telstra": "{palette.transparent.white.fixed.30}",
             "virtual_one": "{palette.transparent.white.fixed.30}",
             "virtuozzo": "{palette.transparent.white.fixed.30}",
-            "yellow-1c": "{palette.transparent.white.fixed.30}"
+            "yellow_1c": "{palette.transparent.white.fixed.30}"
           }
         },
         "link-hover": {
@@ -3582,7 +3582,7 @@
             "default": "{palette.blue.5}",
             "green_also_choise_df": "{palette.blue.5}",
             "ingram_micro": "{palette.blue.5}",
-            "light-gray": "{palette.blue.5}",
+            "light_gray": "{palette.blue.5}",
             "light_blue_hp": "{palette.blue.5}",
             "orange_tsukaeru_helpox": "{palette.blue.5}",
             "pinky": "{palette.blue.5}",
@@ -3594,7 +3594,7 @@
             "telstra": "{palette.blue.5}",
             "virtual_one": "{palette.blue.5}",
             "virtuozzo": "{palette.blue.5}",
-            "yellow-1c": "{palette.blue.5}"
+            "yellow_1c": "{palette.blue.5}"
           }
         },
         "link-idle": {
@@ -3612,7 +3612,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{palette.blue.7}",
             "ingram_micro": "{palette.blue.7}",
-            "light-gray": "{palette.blue.7}",
+            "light_gray": "{palette.blue.7}",
             "light_blue_hp": "{palette.blue.7}",
             "orange_tsukaeru_helpox": "{palette.blue.7}",
             "pinky": "{palette.blue.7}",
@@ -3624,7 +3624,7 @@
             "telstra": "{palette.blue.7}",
             "virtual_one": "{palette.blue.7}",
             "virtuozzo": "{palette.blue.7}",
-            "yellow-1c": "{palette.blue.7}"
+            "yellow_1c": "{palette.blue.7}"
           }
         },
         "link-pressed": {
@@ -3642,7 +3642,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.blue.3}",
             "ingram_micro": "{palette.blue.3}",
-            "light-gray": "{palette.blue.3}",
+            "light_gray": "{palette.blue.3}",
             "light_blue_hp": "{palette.blue.3}",
             "orange_tsukaeru_helpox": "{palette.blue.3}",
             "pinky": "{palette.blue.3}",
@@ -3654,7 +3654,7 @@
             "telstra": "{palette.blue.3}",
             "virtual_one": "{palette.blue.3}",
             "virtuozzo": "{palette.blue.3}",
-            "yellow-1c": "{palette.blue.3}"
+            "yellow_1c": "{palette.blue.3}"
           }
         },
         "primary": {
@@ -3672,7 +3672,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -3684,7 +3684,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "secondary": {
@@ -3702,7 +3702,7 @@
             "default": "{palette.transparent.white.fixed.60}",
             "green_also_choise_df": "{palette.transparent.white.fixed.60}",
             "ingram_micro": "{palette.transparent.white.fixed.60}",
-            "light-gray": "{palette.transparent.white.fixed.60}",
+            "light_gray": "{palette.transparent.white.fixed.60}",
             "light_blue_hp": "{palette.transparent.white.fixed.60}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.60}",
             "pinky": "{palette.transparent.white.fixed.60}",
@@ -3714,7 +3714,7 @@
             "telstra": "{palette.transparent.white.fixed.60}",
             "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
-            "yellow-1c": "{palette.transparent.white.fixed.60}"
+            "yellow_1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -3734,7 +3734,7 @@
             "default": "{palette.transparent.white.inverse.100}",
             "green_also_choise_df": "{palette.transparent.white.inverse.100}",
             "ingram_micro": "{palette.transparent.white.inverse.100}",
-            "light-gray": "{palette.transparent.white.inverse.100}",
+            "light_gray": "{palette.transparent.white.inverse.100}",
             "light_blue_hp": "{palette.transparent.white.inverse.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.inverse.100}",
             "pinky": "{palette.transparent.white.inverse.100}",
@@ -3746,7 +3746,7 @@
             "telstra": "{palette.transparent.white.inverse.100}",
             "virtual_one": "{palette.transparent.white.inverse.100}",
             "virtuozzo": "{palette.transparent.white.inverse.100}",
-            "yellow-1c": "{palette.transparent.white.inverse.100}"
+            "yellow_1c": "{palette.transparent.white.inverse.100}"
           }
         },
         "secondary": {
@@ -3764,7 +3764,7 @@
             "default": "{palette.transparent.white.fixed.60}",
             "green_also_choise_df": "{palette.transparent.white.fixed.60}",
             "ingram_micro": "{palette.transparent.white.fixed.60}",
-            "light-gray": "{palette.transparent.white.fixed.60}",
+            "light_gray": "{palette.transparent.white.fixed.60}",
             "light_blue_hp": "{palette.transparent.white.fixed.60}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.60}",
             "pinky": "{palette.transparent.white.fixed.60}",
@@ -3776,7 +3776,7 @@
             "telstra": "{palette.transparent.white.fixed.60}",
             "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
-            "yellow-1c": "{palette.transparent.white.fixed.60}"
+            "yellow_1c": "{palette.transparent.white.fixed.60}"
           }
         }
       },
@@ -3796,7 +3796,7 @@
             "default": "{palette.violet.11}",
             "green_also_choise_df": "{palette.violet.11}",
             "ingram_micro": "{palette.violet.11}",
-            "light-gray": "{palette.violet.11}",
+            "light_gray": "{palette.violet.11}",
             "light_blue_hp": "{palette.violet.11}",
             "orange_tsukaeru_helpox": "{palette.violet.11}",
             "pinky": "{palette.violet.11}",
@@ -3808,7 +3808,7 @@
             "telstra": "{palette.violet.11}",
             "virtual_one": "{palette.violet.11}",
             "virtuozzo": "{palette.violet.11}",
-            "yellow-1c": "{palette.violet.11}"
+            "yellow_1c": "{palette.violet.11}"
           }
         },
         "critical": {
@@ -3826,7 +3826,7 @@
             "default": "{palette.orange.11}",
             "green_also_choise_df": "{palette.orange.11}",
             "ingram_micro": "{palette.orange.11}",
-            "light-gray": "{palette.orange.11}",
+            "light_gray": "{palette.orange.11}",
             "light_blue_hp": "{palette.orange.11}",
             "orange_tsukaeru_helpox": "{palette.orange.11}",
             "pinky": "{palette.orange.11}",
@@ -3838,7 +3838,7 @@
             "telstra": "{palette.orange.11}",
             "virtual_one": "{palette.orange.11}",
             "virtuozzo": "{palette.orange.11}",
-            "yellow-1c": "{palette.orange.11}"
+            "yellow_1c": "{palette.orange.11}"
           }
         },
         "danger": {
@@ -3856,7 +3856,7 @@
             "default": "{palette.red.11}",
             "green_also_choise_df": "{palette.red.11}",
             "ingram_micro": "{palette.red.11}",
-            "light-gray": "{palette.red.11}",
+            "light_gray": "{palette.red.11}",
             "light_blue_hp": "{palette.red.11}",
             "orange_tsukaeru_helpox": "{palette.red.11}",
             "pinky": "{palette.red.11}",
@@ -3868,7 +3868,7 @@
             "telstra": "{palette.red.11}",
             "virtual_one": "{palette.red.11}",
             "virtuozzo": "{palette.red.11}",
-            "yellow-1c": "{palette.red.11}"
+            "yellow_1c": "{palette.red.11}"
           }
         },
         "info": {
@@ -3886,7 +3886,7 @@
             "default": "{palette.electricblue.11}",
             "green_also_choise_df": "{palette.electricblue.11}",
             "ingram_micro": "{palette.electricblue.11}",
-            "light-gray": "{palette.electricblue.11}",
+            "light_gray": "{palette.electricblue.11}",
             "light_blue_hp": "{palette.electricblue.11}",
             "orange_tsukaeru_helpox": "{palette.electricblue.11}",
             "pinky": "{palette.electricblue.11}",
@@ -3898,7 +3898,7 @@
             "telstra": "{palette.electricblue.11}",
             "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
-            "yellow-1c": "{palette.electricblue.11}"
+            "yellow_1c": "{palette.electricblue.11}"
           }
         },
         "link-disabled": {
@@ -3916,7 +3916,7 @@
             "default": "{palette.electricblue.5}",
             "green_also_choise_df": "{palette.electricblue.5}",
             "ingram_micro": "{palette.electricblue.5}",
-            "light-gray": "{palette.electricblue.5}",
+            "light_gray": "{palette.electricblue.5}",
             "light_blue_hp": "{palette.electricblue.5}",
             "orange_tsukaeru_helpox": "{palette.electricblue.5}",
             "pinky": "{palette.electricblue.5}",
@@ -3928,7 +3928,7 @@
             "telstra": "{palette.electricblue.5}",
             "virtual_one": "{palette.electricblue.5}",
             "virtuozzo": "{palette.electricblue.5}",
-            "yellow-1c": "{palette.electricblue.5}"
+            "yellow_1c": "{palette.electricblue.5}"
           }
         },
         "link-hover": {
@@ -3946,7 +3946,7 @@
             "default": "{palette.electricblue.13}",
             "green_also_choise_df": "{palette.electricblue.13}",
             "ingram_micro": "{palette.electricblue.13}",
-            "light-gray": "{palette.electricblue.13}",
+            "light_gray": "{palette.electricblue.13}",
             "light_blue_hp": "{palette.electricblue.13}",
             "orange_tsukaeru_helpox": "{palette.electricblue.13}",
             "pinky": "{palette.electricblue.13}",
@@ -3958,7 +3958,7 @@
             "telstra": "{palette.electricblue.13}",
             "virtual_one": "{palette.electricblue.13}",
             "virtuozzo": "{palette.electricblue.13}",
-            "yellow-1c": "{palette.electricblue.13}"
+            "yellow_1c": "{palette.electricblue.13}"
           }
         },
         "link-idle": {
@@ -3976,7 +3976,7 @@
             "default": "{palette.electricblue.11}",
             "green_also_choise_df": "{palette.electricblue.11}",
             "ingram_micro": "{palette.electricblue.11}",
-            "light-gray": "{palette.electricblue.11}",
+            "light_gray": "{palette.electricblue.11}",
             "light_blue_hp": "{palette.electricblue.11}",
             "orange_tsukaeru_helpox": "{palette.electricblue.11}",
             "pinky": "{palette.electricblue.11}",
@@ -3988,7 +3988,7 @@
             "telstra": "{palette.electricblue.11}",
             "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
-            "yellow-1c": "{palette.electricblue.11}"
+            "yellow_1c": "{palette.electricblue.11}"
           }
         },
         "link-pressed": {
@@ -4006,7 +4006,7 @@
             "default": "{palette.electricblue.14}",
             "green_also_choise_df": "{palette.electricblue.14}",
             "ingram_micro": "{palette.electricblue.14}",
-            "light-gray": "{palette.electricblue.14}",
+            "light_gray": "{palette.electricblue.14}",
             "light_blue_hp": "{palette.electricblue.14}",
             "orange_tsukaeru_helpox": "{palette.electricblue.14}",
             "pinky": "{palette.electricblue.14}",
@@ -4018,7 +4018,7 @@
             "telstra": "{palette.electricblue.14}",
             "virtual_one": "{palette.electricblue.14}",
             "virtuozzo": "{palette.electricblue.14}",
-            "yellow-1c": "{palette.electricblue.14}"
+            "yellow_1c": "{palette.electricblue.14}"
           }
         },
         "neutral": {
@@ -4036,7 +4036,7 @@
             "default": "{palette.grayscale.11}",
             "green_also_choise_df": "{palette.grayscale.11}",
             "ingram_micro": "{palette.grayscale.11}",
-            "light-gray": "{palette.grayscale.11}",
+            "light_gray": "{palette.grayscale.11}",
             "light_blue_hp": "{palette.grayscale.11}",
             "orange_tsukaeru_helpox": "{palette.grayscale.11}",
             "pinky": "{palette.grayscale.11}",
@@ -4048,7 +4048,7 @@
             "telstra": "{palette.grayscale.11}",
             "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
-            "yellow-1c": "{palette.grayscale.11}"
+            "yellow_1c": "{palette.grayscale.11}"
           }
         },
         "primary": {
@@ -4066,7 +4066,7 @@
             "default": "{palette.grayscale.14}",
             "green_also_choise_df": "{palette.grayscale.14}",
             "ingram_micro": "{palette.grayscale.14}",
-            "light-gray": "{palette.grayscale.14}",
+            "light_gray": "{palette.grayscale.14}",
             "light_blue_hp": "{palette.grayscale.14}",
             "orange_tsukaeru_helpox": "{palette.grayscale.14}",
             "pinky": "{palette.grayscale.14}",
@@ -4078,7 +4078,7 @@
             "telstra": "{palette.grayscale.14}",
             "virtual_one": "{palette.grayscale.14}",
             "virtuozzo": "{palette.grayscale.14}",
-            "yellow-1c": "{palette.grayscale.14}"
+            "yellow_1c": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -4096,7 +4096,7 @@
             "default": "{palette.grayscale.11}",
             "green_also_choise_df": "{palette.grayscale.11}",
             "ingram_micro": "{palette.grayscale.11}",
-            "light-gray": "{palette.grayscale.11}",
+            "light_gray": "{palette.grayscale.11}",
             "light_blue_hp": "{palette.grayscale.11}",
             "orange_tsukaeru_helpox": "{palette.grayscale.11}",
             "pinky": "{palette.grayscale.11}",
@@ -4108,7 +4108,7 @@
             "telstra": "{palette.grayscale.11}",
             "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
-            "yellow-1c": "{palette.grayscale.11}"
+            "yellow_1c": "{palette.grayscale.11}"
           }
         },
         "success": {
@@ -4126,7 +4126,7 @@
             "default": "{palette.green.11}",
             "green_also_choise_df": "{palette.green.11}",
             "ingram_micro": "{palette.green.11}",
-            "light-gray": "{palette.green.11}",
+            "light_gray": "{palette.green.11}",
             "light_blue_hp": "{palette.green.11}",
             "orange_tsukaeru_helpox": "{palette.green.11}",
             "pinky": "{palette.green.11}",
@@ -4138,7 +4138,7 @@
             "telstra": "{palette.green.11}",
             "virtual_one": "{palette.green.11}",
             "virtuozzo": "{palette.green.11}",
-            "yellow-1c": "{palette.green.11}"
+            "yellow_1c": "{palette.green.11}"
           }
         },
         "warning": {
@@ -4156,7 +4156,7 @@
             "default": "{palette.yellow.11}",
             "green_also_choise_df": "{palette.yellow.11}",
             "ingram_micro": "{palette.yellow.11}",
-            "light-gray": "{palette.yellow.11}",
+            "light_gray": "{palette.yellow.11}",
             "light_blue_hp": "{palette.yellow.11}",
             "orange_tsukaeru_helpox": "{palette.yellow.11}",
             "pinky": "{palette.yellow.11}",
@@ -4168,7 +4168,7 @@
             "telstra": "{palette.yellow.11}",
             "virtual_one": "{palette.yellow.11}",
             "virtuozzo": "{palette.yellow.11}",
-            "yellow-1c": "{palette.yellow.11}"
+            "yellow_1c": "{palette.yellow.11}"
           }
         }
       },
@@ -4188,7 +4188,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4200,7 +4200,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "critical": {
@@ -4218,7 +4218,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4230,7 +4230,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "danger": {
@@ -4248,7 +4248,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4260,7 +4260,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "info": {
@@ -4278,7 +4278,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4290,7 +4290,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "link": {
@@ -4308,7 +4308,7 @@
             "default": "{palette.electricblue.11}",
             "green_also_choise_df": "{palette.electricblue.11}",
             "ingram_micro": "{palette.electricblue.11}",
-            "light-gray": "{palette.electricblue.11}",
+            "light_gray": "{palette.electricblue.11}",
             "light_blue_hp": "{palette.electricblue.11}",
             "orange_tsukaeru_helpox": "{palette.electricblue.11}",
             "pinky": "{palette.electricblue.11}",
@@ -4320,7 +4320,7 @@
             "telstra": "{palette.electricblue.11}",
             "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
-            "yellow-1c": "{palette.electricblue.11}"
+            "yellow_1c": "{palette.electricblue.11}"
           }
         },
         "neutral": {
@@ -4338,7 +4338,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4350,7 +4350,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "primary": {
@@ -4368,7 +4368,7 @@
             "default": "{palette.grayscale.0}",
             "green_also_choise_df": "{palette.grayscale.0}",
             "ingram_micro": "{palette.grayscale.0}",
-            "light-gray": "{palette.grayscale.0}",
+            "light_gray": "{palette.grayscale.0}",
             "light_blue_hp": "{palette.grayscale.0}",
             "orange_tsukaeru_helpox": "{palette.grayscale.0}",
             "pinky": "{palette.grayscale.0}",
@@ -4380,7 +4380,7 @@
             "telstra": "{palette.grayscale.0}",
             "virtual_one": "{palette.grayscale.0}",
             "virtuozzo": "{palette.grayscale.0}",
-            "yellow-1c": "{palette.grayscale.0}"
+            "yellow_1c": "{palette.grayscale.0}"
           }
         },
         "secondary": {
@@ -4398,7 +4398,7 @@
             "default": "{palette.grayscale.2}",
             "green_also_choise_df": "{palette.grayscale.2}",
             "ingram_micro": "{palette.grayscale.2}",
-            "light-gray": "{palette.grayscale.2}",
+            "light_gray": "{palette.grayscale.2}",
             "light_blue_hp": "{palette.grayscale.2}",
             "orange_tsukaeru_helpox": "{palette.grayscale.2}",
             "pinky": "{palette.grayscale.2}",
@@ -4410,7 +4410,7 @@
             "telstra": "{palette.grayscale.2}",
             "virtual_one": "{palette.grayscale.2}",
             "virtuozzo": "{palette.grayscale.2}",
-            "yellow-1c": "{palette.grayscale.2}"
+            "yellow_1c": "{palette.grayscale.2}"
           }
         },
         "success": {
@@ -4428,7 +4428,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4440,7 +4440,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         },
         "warning": {
@@ -4458,7 +4458,7 @@
             "default": "{palette.transparent.white.fixed.100}",
             "green_also_choise_df": "{palette.transparent.white.fixed.100}",
             "ingram_micro": "{palette.transparent.white.fixed.100}",
-            "light-gray": "{palette.transparent.white.fixed.100}",
+            "light_gray": "{palette.transparent.white.fixed.100}",
             "light_blue_hp": "{palette.transparent.white.fixed.100}",
             "orange_tsukaeru_helpox": "{palette.transparent.white.fixed.100}",
             "pinky": "{palette.transparent.white.fixed.100}",
@@ -4470,7 +4470,7 @@
             "telstra": "{palette.transparent.white.fixed.100}",
             "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
-            "yellow-1c": "{palette.transparent.white.fixed.100}"
+            "yellow_1c": "{palette.transparent.white.fixed.100}"
           }
         }
       },
@@ -4490,7 +4490,7 @@
             "default": "{palette.red.7}",
             "green_also_choise_df": "{palette.red.7}",
             "ingram_micro": "{palette.red.7}",
-            "light-gray": "{palette.red.7}",
+            "light_gray": "{palette.red.7}",
             "light_blue_hp": "{palette.red.7}",
             "orange_tsukaeru_helpox": "{palette.red.7}",
             "pinky": "{palette.red.7}",
@@ -4502,7 +4502,7 @@
             "telstra": "{palette.red.7}",
             "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
-            "yellow-1c": "{palette.red.7}"
+            "yellow_1c": "{palette.red.7}"
           }
         },
         "disabled": {
@@ -4520,7 +4520,7 @@
             "default": "{palette.grayscale.5}",
             "green_also_choise_df": "{palette.grayscale.5}",
             "ingram_micro": "{palette.grayscale.5}",
-            "light-gray": "{palette.grayscale.5}",
+            "light_gray": "{palette.grayscale.5}",
             "light_blue_hp": "{palette.grayscale.5}",
             "orange_tsukaeru_helpox": "{palette.grayscale.5}",
             "pinky": "{palette.grayscale.5}",
@@ -4532,7 +4532,7 @@
             "telstra": "{palette.grayscale.5}",
             "virtual_one": "{palette.grayscale.5}",
             "virtuozzo": "{palette.grayscale.5}",
-            "yellow-1c": "{palette.grayscale.5}"
+            "yellow_1c": "{palette.grayscale.5}"
           }
         },
         "link-disabled": {
@@ -4550,7 +4550,7 @@
             "default": "{palette.blue.3}",
             "green_also_choise_df": "{palette.grayscale.3}",
             "ingram_micro": "{palette.grayscale.3}",
-            "light-gray": "{palette.grayscale.3}",
+            "light_gray": "{palette.grayscale.3}",
             "light_blue_hp": "{palette.grayscale.3}",
             "orange_tsukaeru_helpox": "{palette.grayscale.3}",
             "pinky": "{palette.grayscale.3}",
@@ -4562,7 +4562,7 @@
             "telstra": "{palette.grayscale.3}",
             "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
-            "yellow-1c": "{palette.grayscale.3}"
+            "yellow_1c": "{palette.grayscale.3}"
           }
         },
         "link-hover": {
@@ -4580,7 +4580,7 @@
             "default": "{palette.blue.8}",
             "green_also_choise_df": "{palette.grayscale.11}",
             "ingram_micro": "{palette.grayscale.11}",
-            "light-gray": "{palette.grayscale.11}",
+            "light_gray": "{palette.grayscale.11}",
             "light_blue_hp": "{palette.grayscale.11}",
             "orange_tsukaeru_helpox": "{palette.grayscale.11}",
             "pinky": "{palette.grayscale.11}",
@@ -4592,7 +4592,7 @@
             "telstra": "{palette.grayscale.11}",
             "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
-            "yellow-1c": "{palette.grayscale.11}"
+            "yellow_1c": "{palette.grayscale.11}"
           }
         },
         "link-idle": {
@@ -4610,7 +4610,7 @@
             "default": "{palette.blue.7}",
             "green_also_choise_df": "{palette.grayscale.10}",
             "ingram_micro": "{palette.grayscale.10}",
-            "light-gray": "{palette.grayscale.10}",
+            "light_gray": "{palette.grayscale.10}",
             "light_blue_hp": "{palette.grayscale.10}",
             "orange_tsukaeru_helpox": "{palette.grayscale.10}",
             "pinky": "{palette.grayscale.10}",
@@ -4622,7 +4622,7 @@
             "telstra": "{palette.grayscale.10}",
             "virtual_one": "{palette.grayscale.10}",
             "virtuozzo": "{palette.grayscale.10}",
-            "yellow-1c": "{palette.grayscale.10}"
+            "yellow_1c": "{palette.grayscale.10}"
           }
         },
         "link-pressed": {
@@ -4640,7 +4640,7 @@
             "default": "{palette.blue.11}",
             "green_also_choise_df": "{palette.grayscale.12}",
             "ingram_micro": "{palette.grayscale.12}",
-            "light-gray": "{palette.grayscale.12}",
+            "light_gray": "{palette.grayscale.12}",
             "light_blue_hp": "{palette.grayscale.12}",
             "orange_tsukaeru_helpox": "{palette.grayscale.12}",
             "pinky": "{palette.grayscale.12}",
@@ -4652,7 +4652,7 @@
             "telstra": "{palette.grayscale.12}",
             "virtual_one": "{palette.grayscale.12}",
             "virtuozzo": "{palette.grayscale.12}",
-            "yellow-1c": "{palette.grayscale.12}"
+            "yellow_1c": "{palette.grayscale.12}"
           }
         },
         "primary": {
@@ -4670,7 +4670,7 @@
             "default": "{palette.grayscale.14}",
             "green_also_choise_df": "{palette.grayscale.14}",
             "ingram_micro": "{palette.grayscale.14}",
-            "light-gray": "{palette.grayscale.14}",
+            "light_gray": "{palette.grayscale.14}",
             "light_blue_hp": "{palette.grayscale.14}",
             "orange_tsukaeru_helpox": "{palette.grayscale.14}",
             "pinky": "{palette.grayscale.14}",
@@ -4682,7 +4682,7 @@
             "telstra": "{palette.grayscale.14}",
             "virtual_one": "{palette.grayscale.14}",
             "virtuozzo": "{palette.grayscale.14}",
-            "yellow-1c": "{palette.grayscale.14}"
+            "yellow_1c": "{palette.grayscale.14}"
           }
         },
         "secondary": {
@@ -4700,7 +4700,7 @@
             "default": "{palette.grayscale.8}",
             "green_also_choise_df": "{palette.grayscale.8}",
             "ingram_micro": "{palette.grayscale.8}",
-            "light-gray": "{palette.grayscale.8}",
+            "light_gray": "{palette.grayscale.8}",
             "light_blue_hp": "{palette.grayscale.8}",
             "orange_tsukaeru_helpox": "{palette.grayscale.8}",
             "pinky": "{palette.grayscale.8}",
@@ -4712,7 +4712,7 @@
             "telstra": "{palette.grayscale.8}",
             "virtual_one": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
-            "yellow-1c": "{palette.grayscale.8}"
+            "yellow_1c": "{palette.grayscale.8}"
           }
         }
       }
@@ -4736,7 +4736,7 @@
           "default": "{palette.blue.7}",
           "green_also_choise_df": "{palette.blue.7}",
           "ingram_micro": "{palette.blue.7}",
-          "light-gray": "{palette.blue.7}",
+          "light_gray": "{palette.blue.7}",
           "light_blue_hp": "{palette.blue.7}",
           "orange_tsukaeru_helpox": "{palette.blue.7}",
           "pinky": "{palette.blue.7}",
@@ -4748,7 +4748,7 @@
           "telstra": "{palette.blue.7}",
           "virtual_one": "{palette.blue.7}",
           "virtuozzo": "{palette.blue.7}",
-          "yellow-1c": "{palette.blue.7}"
+          "yellow_1c": "{palette.blue.7}"
         }
       },
       "2": {
@@ -4766,7 +4766,7 @@
           "default": "{palette.orange.9}",
           "green_also_choise_df": "{palette.orange.9}",
           "ingram_micro": "{palette.orange.9}",
-          "light-gray": "{palette.orange.9}",
+          "light_gray": "{palette.orange.9}",
           "light_blue_hp": "{palette.orange.9}",
           "orange_tsukaeru_helpox": "{palette.orange.9}",
           "pinky": "{palette.orange.9}",
@@ -4778,7 +4778,7 @@
           "telstra": "{palette.orange.9}",
           "virtual_one": "{palette.orange.9}",
           "virtuozzo": "{palette.orange.9}",
-          "yellow-1c": "{palette.orange.9}"
+          "yellow_1c": "{palette.orange.9}"
         }
       },
       "3": {
@@ -4796,7 +4796,7 @@
           "default": "{palette.teal.7}",
           "green_also_choise_df": "{palette.teal.7}",
           "ingram_micro": "{palette.teal.7}",
-          "light-gray": "{palette.teal.7}",
+          "light_gray": "{palette.teal.7}",
           "light_blue_hp": "{palette.teal.7}",
           "orange_tsukaeru_helpox": "{palette.teal.7}",
           "pinky": "{palette.teal.7}",
@@ -4808,7 +4808,7 @@
           "telstra": "{palette.teal.7}",
           "virtual_one": "{palette.teal.7}",
           "virtuozzo": "{palette.teal.7}",
-          "yellow-1c": "{palette.teal.7}"
+          "yellow_1c": "{palette.teal.7}"
         }
       },
       "4": {
@@ -4826,7 +4826,7 @@
           "default": "{palette.violet.7}",
           "green_also_choise_df": "{palette.violet.7}",
           "ingram_micro": "{palette.violet.7}",
-          "light-gray": "{palette.violet.7}",
+          "light_gray": "{palette.violet.7}",
           "light_blue_hp": "{palette.violet.7}",
           "orange_tsukaeru_helpox": "{palette.violet.7}",
           "pinky": "{palette.violet.7}",
@@ -4838,7 +4838,7 @@
           "telstra": "{palette.violet.7}",
           "virtual_one": "{palette.violet.7}",
           "virtuozzo": "{palette.violet.7}",
-          "yellow-1c": "{palette.violet.7}"
+          "yellow_1c": "{palette.violet.7}"
         }
       },
       "5": {
@@ -4856,7 +4856,7 @@
           "default": "{palette.yellow.10}",
           "green_also_choise_df": "{palette.yellow.10}",
           "ingram_micro": "{palette.yellow.10}",
-          "light-gray": "{palette.yellow.10}",
+          "light_gray": "{palette.yellow.10}",
           "light_blue_hp": "{palette.yellow.10}",
           "orange_tsukaeru_helpox": "{palette.yellow.10}",
           "pinky": "{palette.yellow.10}",
@@ -4868,7 +4868,7 @@
           "telstra": "{palette.yellow.10}",
           "virtual_one": "{palette.yellow.10}",
           "virtuozzo": "{palette.yellow.10}",
-          "yellow-1c": "{palette.yellow.10}"
+          "yellow_1c": "{palette.yellow.10}"
         }
       },
       "6": {
@@ -4886,7 +4886,7 @@
           "default": "{palette.red.7}",
           "green_also_choise_df": "{palette.red.7}",
           "ingram_micro": "{palette.red.7}",
-          "light-gray": "{palette.red.7}",
+          "light_gray": "{palette.red.7}",
           "light_blue_hp": "{palette.red.7}",
           "orange_tsukaeru_helpox": "{palette.red.7}",
           "pinky": "{palette.red.7}",
@@ -4898,7 +4898,7 @@
           "telstra": "{palette.red.7}",
           "virtual_one": "{palette.red.7}",
           "virtuozzo": "{palette.red.7}",
-          "yellow-1c": "{palette.red.7}"
+          "yellow_1c": "{palette.red.7}"
         }
       },
       "7": {
@@ -4916,7 +4916,7 @@
           "default": "{palette.green.8}",
           "green_also_choise_df": "{palette.green.8}",
           "ingram_micro": "{palette.green.8}",
-          "light-gray": "{palette.green.8}",
+          "light_gray": "{palette.green.8}",
           "light_blue_hp": "{palette.green.8}",
           "orange_tsukaeru_helpox": "{palette.green.8}",
           "pinky": "{palette.green.8}",
@@ -4928,7 +4928,7 @@
           "telstra": "{palette.green.8}",
           "virtual_one": "{palette.green.8}",
           "virtuozzo": "{palette.green.8}",
-          "yellow-1c": "{palette.green.8}"
+          "yellow_1c": "{palette.green.8}"
         }
       },
       "8": {
@@ -4946,7 +4946,7 @@
           "default": "{palette.electricblue.5}",
           "green_also_choise_df": "{palette.electricblue.5}",
           "ingram_micro": "{palette.electricblue.5}",
-          "light-gray": "{palette.electricblue.5}",
+          "light_gray": "{palette.electricblue.5}",
           "light_blue_hp": "{palette.electricblue.5}",
           "orange_tsukaeru_helpox": "{palette.electricblue.5}",
           "pinky": "{palette.electricblue.5}",
@@ -4958,7 +4958,7 @@
           "telstra": "{palette.electricblue.5}",
           "virtual_one": "{palette.electricblue.5}",
           "virtuozzo": "{palette.electricblue.5}",
-          "yellow-1c": "{palette.electricblue.5}"
+          "yellow_1c": "{palette.electricblue.5}"
         }
       },
       "9": {
@@ -4976,7 +4976,7 @@
           "default": "{palette.yellow.7}",
           "green_also_choise_df": "{palette.yellow.7}",
           "ingram_micro": "{palette.yellow.7}",
-          "light-gray": "{palette.yellow.7}",
+          "light_gray": "{palette.yellow.7}",
           "light_blue_hp": "{palette.yellow.7}",
           "orange_tsukaeru_helpox": "{palette.yellow.7}",
           "pinky": "{palette.yellow.7}",
@@ -4988,7 +4988,7 @@
           "telstra": "{palette.yellow.7}",
           "virtual_one": "{palette.yellow.7}",
           "virtuozzo": "{palette.yellow.7}",
-          "yellow-1c": "{palette.yellow.7}"
+          "yellow_1c": "{palette.yellow.7}"
         }
       },
       "10": {
@@ -5006,7 +5006,7 @@
           "default": "{palette.violet.10}",
           "green_also_choise_df": "{palette.violet.10}",
           "ingram_micro": "{palette.violet.10}",
-          "light-gray": "{palette.violet.10}",
+          "light_gray": "{palette.violet.10}",
           "light_blue_hp": "{palette.violet.10}",
           "orange_tsukaeru_helpox": "{palette.violet.10}",
           "pinky": "{palette.violet.10}",
@@ -5018,7 +5018,7 @@
           "telstra": "{palette.violet.10}",
           "virtual_one": "{palette.violet.10}",
           "virtuozzo": "{palette.violet.10}",
-          "yellow-1c": "{palette.violet.10}"
+          "yellow_1c": "{palette.violet.10}"
         }
       },
       "11": {
@@ -5036,7 +5036,7 @@
           "default": "{palette.teal.10}",
           "green_also_choise_df": "{palette.teal.10}",
           "ingram_micro": "{palette.teal.10}",
-          "light-gray": "{palette.teal.10}",
+          "light_gray": "{palette.teal.10}",
           "light_blue_hp": "{palette.teal.10}",
           "orange_tsukaeru_helpox": "{palette.teal.10}",
           "pinky": "{palette.teal.10}",
@@ -5048,7 +5048,7 @@
           "telstra": "{palette.teal.10}",
           "virtual_one": "{palette.teal.10}",
           "virtuozzo": "{palette.teal.10}",
-          "yellow-1c": "{palette.teal.10}"
+          "yellow_1c": "{palette.teal.10}"
         }
       },
       "12": {
@@ -5066,7 +5066,7 @@
           "default": "{palette.red.10}",
           "green_also_choise_df": "{palette.red.10}",
           "ingram_micro": "{palette.red.10}",
-          "light-gray": "{palette.red.10}",
+          "light_gray": "{palette.red.10}",
           "light_blue_hp": "{palette.red.10}",
           "orange_tsukaeru_helpox": "{palette.red.10}",
           "pinky": "{palette.red.10}",
@@ -5078,7 +5078,7 @@
           "telstra": "{palette.red.10}",
           "virtual_one": "{palette.red.10}",
           "virtuozzo": "{palette.red.10}",
-          "yellow-1c": "{palette.red.10}"
+          "yellow_1c": "{palette.red.10}"
         }
       },
       "13": {
@@ -5096,7 +5096,7 @@
           "default": "{palette.blue.10}",
           "green_also_choise_df": "{palette.blue.10}",
           "ingram_micro": "{palette.blue.10}",
-          "light-gray": "{palette.blue.10}",
+          "light_gray": "{palette.blue.10}",
           "light_blue_hp": "{palette.blue.10}",
           "orange_tsukaeru_helpox": "{palette.blue.10}",
           "pinky": "{palette.blue.10}",
@@ -5108,7 +5108,7 @@
           "telstra": "{palette.blue.10}",
           "virtual_one": "{palette.blue.10}",
           "virtuozzo": "{palette.blue.10}",
-          "yellow-1c": "{palette.blue.10}"
+          "yellow_1c": "{palette.blue.10}"
         }
       },
       "14": {
@@ -5126,7 +5126,7 @@
           "default": "{palette.yellow.12}",
           "green_also_choise_df": "{palette.yellow.12}",
           "ingram_micro": "{palette.yellow.12}",
-          "light-gray": "{palette.yellow.12}",
+          "light_gray": "{palette.yellow.12}",
           "light_blue_hp": "{palette.yellow.12}",
           "orange_tsukaeru_helpox": "{palette.yellow.12}",
           "pinky": "{palette.yellow.12}",
@@ -5138,7 +5138,7 @@
           "telstra": "{palette.yellow.12}",
           "virtual_one": "{palette.yellow.12}",
           "virtuozzo": "{palette.yellow.12}",
-          "yellow-1c": "{palette.yellow.12}"
+          "yellow_1c": "{palette.yellow.12}"
         }
       },
       "15": {
@@ -5156,7 +5156,7 @@
           "default": "{palette.green.11}",
           "green_also_choise_df": "{palette.green.11}",
           "ingram_micro": "{palette.green.11}",
-          "light-gray": "{palette.green.11}",
+          "light_gray": "{palette.green.11}",
           "light_blue_hp": "{palette.green.11}",
           "orange_tsukaeru_helpox": "{palette.green.11}",
           "pinky": "{palette.green.11}",
@@ -5168,7 +5168,7 @@
           "telstra": "{palette.green.11}",
           "virtual_one": "{palette.green.11}",
           "virtuozzo": "{palette.green.11}",
-          "yellow-1c": "{palette.green.11}"
+          "yellow_1c": "{palette.green.11}"
         }
       },
       "16": {
@@ -5186,7 +5186,7 @@
           "default": "{palette.electricblue.3}",
           "green_also_choise_df": "{palette.electricblue.3}",
           "ingram_micro": "{palette.electricblue.3}",
-          "light-gray": "{palette.electricblue.3}",
+          "light_gray": "{palette.electricblue.3}",
           "light_blue_hp": "{palette.electricblue.3}",
           "orange_tsukaeru_helpox": "{palette.electricblue.3}",
           "pinky": "{palette.electricblue.3}",
@@ -5198,7 +5198,7 @@
           "telstra": "{palette.electricblue.3}",
           "virtual_one": "{palette.electricblue.3}",
           "virtuozzo": "{palette.electricblue.3}",
-          "yellow-1c": "{palette.electricblue.3}"
+          "yellow_1c": "{palette.electricblue.3}"
         }
       }
     },
@@ -5219,7 +5219,7 @@
             "default": "{palette.electricblue.4}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -5231,7 +5231,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "a2": {
@@ -5249,7 +5249,7 @@
             "default": "{palette.electricblue.5}",
             "green_also_choise_df": "{palette.electricblue.5}",
             "ingram_micro": "{palette.electricblue.5}",
-            "light-gray": "{palette.electricblue.5}",
+            "light_gray": "{palette.electricblue.5}",
             "light_blue_hp": "{palette.electricblue.5}",
             "orange_tsukaeru_helpox": "{palette.electricblue.5}",
             "pinky": "{palette.electricblue.5}",
@@ -5261,7 +5261,7 @@
             "telstra": "{palette.electricblue.5}",
             "virtual_one": "{palette.electricblue.5}",
             "virtuozzo": "{palette.electricblue.5}",
-            "yellow-1c": "{palette.electricblue.5}"
+            "yellow_1c": "{palette.electricblue.5}"
           }
         },
         "a3": {
@@ -5279,7 +5279,7 @@
             "default": "{palette.electricblue.7}",
             "green_also_choise_df": "{palette.electricblue.7}",
             "ingram_micro": "{palette.electricblue.7}",
-            "light-gray": "{palette.electricblue.7}",
+            "light_gray": "{palette.electricblue.7}",
             "light_blue_hp": "{palette.electricblue.7}",
             "orange_tsukaeru_helpox": "{palette.electricblue.7}",
             "pinky": "{palette.electricblue.7}",
@@ -5291,7 +5291,7 @@
             "telstra": "{palette.electricblue.7}",
             "virtual_one": "{palette.electricblue.7}",
             "virtuozzo": "{palette.electricblue.7}",
-            "yellow-1c": "{palette.electricblue.7}"
+            "yellow_1c": "{palette.electricblue.7}"
           }
         },
         "b1": {
@@ -5309,7 +5309,7 @@
             "default": "{palette.orange.4}",
             "green_also_choise_df": "{palette.orange.4}",
             "ingram_micro": "{palette.orange.4}",
-            "light-gray": "{palette.orange.4}",
+            "light_gray": "{palette.orange.4}",
             "light_blue_hp": "{palette.orange.4}",
             "orange_tsukaeru_helpox": "{palette.orange.4}",
             "pinky": "{palette.orange.4}",
@@ -5321,7 +5321,7 @@
             "telstra": "{palette.orange.4}",
             "virtual_one": "{palette.orange.4}",
             "virtuozzo": "{palette.orange.4}",
-            "yellow-1c": "{palette.orange.4}"
+            "yellow_1c": "{palette.orange.4}"
           }
         },
         "b2": {
@@ -5339,7 +5339,7 @@
             "default": "{palette.orange.7}",
             "green_also_choise_df": "{palette.orange.7}",
             "ingram_micro": "{palette.orange.7}",
-            "light-gray": "{palette.orange.7}",
+            "light_gray": "{palette.orange.7}",
             "light_blue_hp": "{palette.orange.7}",
             "orange_tsukaeru_helpox": "{palette.orange.7}",
             "pinky": "{palette.orange.7}",
@@ -5351,7 +5351,7 @@
             "telstra": "{palette.orange.7}",
             "virtual_one": "{palette.orange.7}",
             "virtuozzo": "{palette.orange.7}",
-            "yellow-1c": "{palette.orange.7}"
+            "yellow_1c": "{palette.orange.7}"
           }
         },
         "b3": {
@@ -5369,7 +5369,7 @@
             "default": "{palette.orange.9}",
             "green_also_choise_df": "{palette.orange.9}",
             "ingram_micro": "{palette.orange.9}",
-            "light-gray": "{palette.orange.9}",
+            "light_gray": "{palette.orange.9}",
             "light_blue_hp": "{palette.orange.9}",
             "orange_tsukaeru_helpox": "{palette.orange.9}",
             "pinky": "{palette.orange.9}",
@@ -5381,7 +5381,7 @@
             "telstra": "{palette.orange.9}",
             "virtual_one": "{palette.orange.9}",
             "virtuozzo": "{palette.orange.9}",
-            "yellow-1c": "{palette.orange.9}"
+            "yellow_1c": "{palette.orange.9}"
           }
         }
       },
@@ -5401,7 +5401,7 @@
             "default": "{palette.teal.4}",
             "green_also_choise_df": "{palette.teal.4}",
             "ingram_micro": "{palette.teal.4}",
-            "light-gray": "{palette.teal.4}",
+            "light_gray": "{palette.teal.4}",
             "light_blue_hp": "{palette.teal.4}",
             "orange_tsukaeru_helpox": "{palette.teal.4}",
             "pinky": "{palette.teal.4}",
@@ -5413,7 +5413,7 @@
             "telstra": "{palette.teal.4}",
             "virtual_one": "{palette.teal.4}",
             "virtuozzo": "{palette.teal.4}",
-            "yellow-1c": "{palette.teal.4}"
+            "yellow_1c": "{palette.teal.4}"
           }
         },
         "a2": {
@@ -5431,7 +5431,7 @@
             "default": "{palette.teal.5}",
             "green_also_choise_df": "{palette.teal.5}",
             "ingram_micro": "{palette.teal.5}",
-            "light-gray": "{palette.teal.5}",
+            "light_gray": "{palette.teal.5}",
             "light_blue_hp": "{palette.teal.5}",
             "orange_tsukaeru_helpox": "{palette.teal.5}",
             "pinky": "{palette.teal.5}",
@@ -5443,7 +5443,7 @@
             "telstra": "{palette.teal.5}",
             "virtual_one": "{palette.teal.5}",
             "virtuozzo": "{palette.teal.5}",
-            "yellow-1c": "{palette.teal.5}"
+            "yellow_1c": "{palette.teal.5}"
           }
         },
         "a3": {
@@ -5461,7 +5461,7 @@
             "default": "{palette.teal.7}",
             "green_also_choise_df": "{palette.teal.7}",
             "ingram_micro": "{palette.teal.7}",
-            "light-gray": "{palette.teal.7}",
+            "light_gray": "{palette.teal.7}",
             "light_blue_hp": "{palette.teal.7}",
             "orange_tsukaeru_helpox": "{palette.teal.7}",
             "pinky": "{palette.teal.7}",
@@ -5473,7 +5473,7 @@
             "telstra": "{palette.teal.7}",
             "virtual_one": "{palette.teal.7}",
             "virtuozzo": "{palette.teal.7}",
-            "yellow-1c": "{palette.teal.7}"
+            "yellow_1c": "{palette.teal.7}"
           }
         },
         "b1": {
@@ -5491,7 +5491,7 @@
             "default": "{palette.violet.4}",
             "green_also_choise_df": "{palette.violet.4}",
             "ingram_micro": "{palette.violet.4}",
-            "light-gray": "{palette.violet.4}",
+            "light_gray": "{palette.violet.4}",
             "light_blue_hp": "{palette.violet.4}",
             "orange_tsukaeru_helpox": "{palette.violet.4}",
             "pinky": "{palette.violet.4}",
@@ -5503,7 +5503,7 @@
             "telstra": "{palette.violet.4}",
             "virtual_one": "{palette.violet.4}",
             "virtuozzo": "{palette.violet.4}",
-            "yellow-1c": "{palette.violet.4}"
+            "yellow_1c": "{palette.violet.4}"
           }
         },
         "b2": {
@@ -5521,7 +5521,7 @@
             "default": "{palette.violet.7}",
             "green_also_choise_df": "{palette.violet.7}",
             "ingram_micro": "{palette.violet.7}",
-            "light-gray": "{palette.violet.7}",
+            "light_gray": "{palette.violet.7}",
             "light_blue_hp": "{palette.violet.7}",
             "orange_tsukaeru_helpox": "{palette.violet.7}",
             "pinky": "{palette.violet.7}",
@@ -5533,7 +5533,7 @@
             "telstra": "{palette.violet.7}",
             "virtual_one": "{palette.violet.7}",
             "virtuozzo": "{palette.violet.7}",
-            "yellow-1c": "{palette.violet.7}"
+            "yellow_1c": "{palette.violet.7}"
           }
         },
         "b3": {
@@ -5551,7 +5551,7 @@
             "default": "{palette.violet.9}",
             "green_also_choise_df": "{palette.violet.9}",
             "ingram_micro": "{palette.violet.9}",
-            "light-gray": "{palette.violet.9}",
+            "light_gray": "{palette.violet.9}",
             "light_blue_hp": "{palette.violet.9}",
             "orange_tsukaeru_helpox": "{palette.violet.9}",
             "pinky": "{palette.violet.9}",
@@ -5563,7 +5563,7 @@
             "telstra": "{palette.violet.9}",
             "virtual_one": "{palette.violet.9}",
             "virtuozzo": "{palette.violet.9}",
-            "yellow-1c": "{palette.violet.9}"
+            "yellow_1c": "{palette.violet.9}"
           }
         }
       }
@@ -5585,7 +5585,7 @@
             "default": "{colors.background.statusStrong.critical}",
             "green_also_choise_df": "{colors.background.statusStrong.critical}",
             "ingram_micro": "{colors.background.statusStrong.critical}",
-            "light-gray": "{colors.background.statusStrong.critical}",
+            "light_gray": "{colors.background.statusStrong.critical}",
             "light_blue_hp": "{colors.background.statusStrong.critical}",
             "orange_tsukaeru_helpox": "{colors.background.statusStrong.critical}",
             "pinky": "{colors.background.statusStrong.critical}",
@@ -5597,7 +5597,7 @@
             "telstra": "{colors.background.statusStrong.critical}",
             "virtual_one": "{colors.background.statusStrong.critical}",
             "virtuozzo": "{colors.background.statusStrong.critical}",
-            "yellow-1c": "{colors.background.statusStrong.critical}"
+            "yellow_1c": "{colors.background.statusStrong.critical}"
           }
         },
         "danger": {
@@ -5615,7 +5615,7 @@
             "default": "{colors.background.statusStrong.danger}",
             "green_also_choise_df": "{colors.background.statusStrong.danger}",
             "ingram_micro": "{colors.background.statusStrong.danger}",
-            "light-gray": "{colors.background.statusStrong.danger}",
+            "light_gray": "{colors.background.statusStrong.danger}",
             "light_blue_hp": "{colors.background.statusStrong.danger}",
             "orange_tsukaeru_helpox": "{colors.background.statusStrong.danger}",
             "pinky": "{colors.background.statusStrong.danger}",
@@ -5627,7 +5627,7 @@
             "telstra": "{colors.background.statusStrong.danger}",
             "virtual_one": "{colors.background.statusStrong.danger}",
             "virtuozzo": "{colors.background.statusStrong.danger}",
-            "yellow-1c": "{colors.background.statusStrong.danger}"
+            "yellow_1c": "{colors.background.statusStrong.danger}"
           }
         },
         "info": {
@@ -5645,7 +5645,7 @@
             "default": "{colors.background.statusStrong.info}",
             "green_also_choise_df": "{colors.background.statusStrong.info}",
             "ingram_micro": "{colors.background.statusStrong.info}",
-            "light-gray": "{colors.background.statusStrong.info}",
+            "light_gray": "{colors.background.statusStrong.info}",
             "light_blue_hp": "{colors.background.statusStrong.info}",
             "orange_tsukaeru_helpox": "{colors.background.statusStrong.info}",
             "pinky": "{colors.background.statusStrong.info}",
@@ -5657,7 +5657,7 @@
             "telstra": "{colors.background.statusStrong.info}",
             "virtual_one": "{colors.background.statusStrong.info}",
             "virtuozzo": "{colors.background.statusStrong.info}",
-            "yellow-1c": "{colors.background.statusStrong.info}"
+            "yellow_1c": "{colors.background.statusStrong.info}"
           }
         },
         "neutral": {
@@ -5675,7 +5675,7 @@
             "default": "{colors.background.statusStrong.neutral}",
             "green_also_choise_df": "{colors.background.statusStrong.neutral}",
             "ingram_micro": "{colors.background.statusStrong.neutral}",
-            "light-gray": "{colors.background.statusStrong.neutral}",
+            "light_gray": "{colors.background.statusStrong.neutral}",
             "light_blue_hp": "{colors.background.statusStrong.neutral}",
             "orange_tsukaeru_helpox": "{colors.background.statusStrong.neutral}",
             "pinky": "{colors.background.statusStrong.neutral}",
@@ -5687,7 +5687,7 @@
             "telstra": "{colors.background.statusStrong.neutral}",
             "virtual_one": "{colors.background.statusStrong.neutral}",
             "virtuozzo": "{colors.background.statusStrong.neutral}",
-            "yellow-1c": "{colors.background.statusStrong.neutral}"
+            "yellow_1c": "{colors.background.statusStrong.neutral}"
           }
         },
         "success": {
@@ -5705,7 +5705,7 @@
             "default": "{colors.background.statusStrong.success}",
             "green_also_choise_df": "{colors.background.statusStrong.success}",
             "ingram_micro": "{colors.background.statusStrong.success}",
-            "light-gray": "{colors.background.statusStrong.success}",
+            "light_gray": "{colors.background.statusStrong.success}",
             "light_blue_hp": "{colors.background.statusStrong.success}",
             "orange_tsukaeru_helpox": "{colors.background.statusStrong.success}",
             "pinky": "{colors.background.statusStrong.success}",
@@ -5717,7 +5717,7 @@
             "telstra": "{colors.background.statusStrong.success}",
             "virtual_one": "{colors.background.statusStrong.success}",
             "virtuozzo": "{colors.background.statusStrong.success}",
-            "yellow-1c": "{colors.background.statusStrong.success}"
+            "yellow_1c": "{colors.background.statusStrong.success}"
           }
         },
         "warning": {
@@ -5735,7 +5735,7 @@
             "default": "{colors.background.statusStrong.warning}",
             "green_also_choise_df": "{colors.background.statusStrong.warning}",
             "ingram_micro": "{colors.background.statusStrong.warning}",
-            "light-gray": "{colors.background.statusStrong.warning}",
+            "light_gray": "{colors.background.statusStrong.warning}",
             "light_blue_hp": "{colors.background.statusStrong.warning}",
             "orange_tsukaeru_helpox": "{colors.background.statusStrong.warning}",
             "pinky": "{colors.background.statusStrong.warning}",
@@ -5747,7 +5747,7 @@
             "telstra": "{colors.background.statusStrong.warning}",
             "virtual_one": "{colors.background.statusStrong.warning}",
             "virtuozzo": "{colors.background.statusStrong.warning}",
-            "yellow-1c": "{colors.background.statusStrong.warning}"
+            "yellow_1c": "{colors.background.statusStrong.warning}"
           }
         }
       }
@@ -5769,7 +5769,7 @@
             "default": "{palette.electricblue.2}",
             "green_also_choise_df": "{palette.electricblue.2}",
             "ingram_micro": "{palette.electricblue.2}",
-            "light-gray": "{palette.electricblue.2}",
+            "light_gray": "{palette.electricblue.2}",
             "light_blue_hp": "{palette.electricblue.2}",
             "orange_tsukaeru_helpox": "{palette.electricblue.2}",
             "pinky": "{palette.electricblue.2}",
@@ -5781,7 +5781,7 @@
             "telstra": "{palette.electricblue.2}",
             "virtual_one": "{palette.electricblue.2}",
             "virtuozzo": "{palette.electricblue.2}",
-            "yellow-1c": "{palette.electricblue.2}"
+            "yellow_1c": "{palette.electricblue.2}"
           }
         },
         "2": {
@@ -5799,7 +5799,7 @@
             "default": "{palette.electricblue.3}",
             "green_also_choise_df": "{palette.electricblue.4}",
             "ingram_micro": "{palette.electricblue.4}",
-            "light-gray": "{palette.electricblue.4}",
+            "light_gray": "{palette.electricblue.4}",
             "light_blue_hp": "{palette.electricblue.4}",
             "orange_tsukaeru_helpox": "{palette.electricblue.4}",
             "pinky": "{palette.electricblue.4}",
@@ -5811,7 +5811,7 @@
             "telstra": "{palette.electricblue.4}",
             "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
-            "yellow-1c": "{palette.electricblue.4}"
+            "yellow_1c": "{palette.electricblue.4}"
           }
         },
         "3": {
@@ -5829,7 +5829,7 @@
             "default": "{palette.electricblue.5}",
             "green_also_choise_df": "{palette.electricblue.5}",
             "ingram_micro": "{palette.electricblue.5}",
-            "light-gray": "{palette.electricblue.5}",
+            "light_gray": "{palette.electricblue.5}",
             "light_blue_hp": "{palette.electricblue.5}",
             "orange_tsukaeru_helpox": "{palette.electricblue.5}",
             "pinky": "{palette.electricblue.5}",
@@ -5841,7 +5841,7 @@
             "telstra": "{palette.electricblue.5}",
             "virtual_one": "{palette.electricblue.5}",
             "virtuozzo": "{palette.electricblue.5}",
-            "yellow-1c": "{palette.electricblue.5}"
+            "yellow_1c": "{palette.electricblue.5}"
           }
         },
         "4": {
@@ -5859,7 +5859,7 @@
             "default": "{palette.electricblue.6}",
             "green_also_choise_df": "{palette.electricblue.6}",
             "ingram_micro": "{palette.electricblue.6}",
-            "light-gray": "{palette.electricblue.6}",
+            "light_gray": "{palette.electricblue.6}",
             "light_blue_hp": "{palette.electricblue.6}",
             "orange_tsukaeru_helpox": "{palette.electricblue.6}",
             "pinky": "{palette.electricblue.6}",
@@ -5871,7 +5871,7 @@
             "telstra": "{palette.electricblue.6}",
             "virtual_one": "{palette.electricblue.6}",
             "virtuozzo": "{palette.electricblue.6}",
-            "yellow-1c": "{palette.electricblue.6}"
+            "yellow_1c": "{palette.electricblue.6}"
           }
         },
         "5": {
@@ -5889,7 +5889,7 @@
             "default": "{palette.electricblue.7}",
             "green_also_choise_df": "{palette.electricblue.7}",
             "ingram_micro": "{palette.electricblue.7}",
-            "light-gray": "{palette.electricblue.7}",
+            "light_gray": "{palette.electricblue.7}",
             "light_blue_hp": "{palette.electricblue.7}",
             "orange_tsukaeru_helpox": "{palette.electricblue.7}",
             "pinky": "{palette.electricblue.7}",
@@ -5901,7 +5901,7 @@
             "telstra": "{palette.electricblue.7}",
             "virtual_one": "{palette.electricblue.7}",
             "virtuozzo": "{palette.electricblue.7}",
-            "yellow-1c": "{palette.electricblue.7}"
+            "yellow_1c": "{palette.electricblue.7}"
           }
         },
         "6": {
@@ -5919,7 +5919,7 @@
             "default": "{palette.electricblue.9}",
             "green_also_choise_df": "{palette.electricblue.9}",
             "ingram_micro": "{palette.electricblue.9}",
-            "light-gray": "{palette.electricblue.9}",
+            "light_gray": "{palette.electricblue.9}",
             "light_blue_hp": "{palette.electricblue.9}",
             "orange_tsukaeru_helpox": "{palette.electricblue.9}",
             "pinky": "{palette.electricblue.9}",
@@ -5931,7 +5931,7 @@
             "telstra": "{palette.electricblue.9}",
             "virtual_one": "{palette.electricblue.9}",
             "virtuozzo": "{palette.electricblue.9}",
-            "yellow-1c": "{palette.electricblue.9}"
+            "yellow_1c": "{palette.electricblue.9}"
           }
         },
         "7": {
@@ -5949,7 +5949,7 @@
             "default": "{palette.electricblue.11}",
             "green_also_choise_df": "{palette.electricblue.11}",
             "ingram_micro": "{palette.electricblue.11}",
-            "light-gray": "{palette.electricblue.11}",
+            "light_gray": "{palette.electricblue.11}",
             "light_blue_hp": "{palette.electricblue.11}",
             "orange_tsukaeru_helpox": "{palette.electricblue.11}",
             "pinky": "{palette.electricblue.11}",
@@ -5961,7 +5961,7 @@
             "telstra": "{palette.electricblue.11}",
             "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
-            "yellow-1c": "{palette.electricblue.11}"
+            "yellow_1c": "{palette.electricblue.11}"
           }
         },
         "8": {
@@ -5979,7 +5979,7 @@
             "default": "{palette.electricblue.12}",
             "green_also_choise_df": "{palette.electricblue.12}",
             "ingram_micro": "{palette.electricblue.12}",
-            "light-gray": "{palette.electricblue.12}",
+            "light_gray": "{palette.electricblue.12}",
             "light_blue_hp": "{palette.electricblue.12}",
             "orange_tsukaeru_helpox": "{palette.electricblue.12}",
             "pinky": "{palette.electricblue.12}",
@@ -5991,7 +5991,7 @@
             "telstra": "{palette.electricblue.12}",
             "virtual_one": "{palette.electricblue.12}",
             "virtuozzo": "{palette.electricblue.12}",
-            "yellow-1c": "{palette.electricblue.12}"
+            "yellow_1c": "{palette.electricblue.12}"
           }
         }
       },
@@ -6011,7 +6011,7 @@
             "default": "{palette.orange.2}",
             "green_also_choise_df": "{palette.orange.2}",
             "ingram_micro": "{palette.orange.2}",
-            "light-gray": "{palette.orange.2}",
+            "light_gray": "{palette.orange.2}",
             "light_blue_hp": "{palette.orange.2}",
             "orange_tsukaeru_helpox": "{palette.orange.2}",
             "pinky": "{palette.orange.2}",
@@ -6023,7 +6023,7 @@
             "telstra": "{palette.orange.2}",
             "virtual_one": "{palette.orange.2}",
             "virtuozzo": "{palette.orange.2}",
-            "yellow-1c": "{palette.orange.2}"
+            "yellow_1c": "{palette.orange.2}"
           }
         },
         "2": {
@@ -6041,7 +6041,7 @@
             "default": "{palette.orange.4}",
             "green_also_choise_df": "{palette.orange.4}",
             "ingram_micro": "{palette.orange.4}",
-            "light-gray": "{palette.orange.4}",
+            "light_gray": "{palette.orange.4}",
             "light_blue_hp": "{palette.orange.4}",
             "orange_tsukaeru_helpox": "{palette.orange.4}",
             "pinky": "{palette.orange.4}",
@@ -6053,7 +6053,7 @@
             "telstra": "{palette.orange.4}",
             "virtual_one": "{palette.orange.4}",
             "virtuozzo": "{palette.orange.4}",
-            "yellow-1c": "{palette.orange.4}"
+            "yellow_1c": "{palette.orange.4}"
           }
         },
         "3": {
@@ -6071,7 +6071,7 @@
             "default": "{palette.orange.5}",
             "green_also_choise_df": "{palette.orange.5}",
             "ingram_micro": "{palette.orange.5}",
-            "light-gray": "{palette.orange.5}",
+            "light_gray": "{palette.orange.5}",
             "light_blue_hp": "{palette.orange.5}",
             "orange_tsukaeru_helpox": "{palette.orange.5}",
             "pinky": "{palette.orange.5}",
@@ -6083,7 +6083,7 @@
             "telstra": "{palette.orange.5}",
             "virtual_one": "{palette.orange.5}",
             "virtuozzo": "{palette.orange.5}",
-            "yellow-1c": "{palette.orange.5}"
+            "yellow_1c": "{palette.orange.5}"
           }
         },
         "4": {
@@ -6101,7 +6101,7 @@
             "default": "{palette.orange.6}",
             "green_also_choise_df": "{palette.orange.6}",
             "ingram_micro": "{palette.orange.6}",
-            "light-gray": "{palette.orange.6}",
+            "light_gray": "{palette.orange.6}",
             "light_blue_hp": "{palette.orange.6}",
             "orange_tsukaeru_helpox": "{palette.orange.6}",
             "pinky": "{palette.orange.6}",
@@ -6113,7 +6113,7 @@
             "telstra": "{palette.orange.6}",
             "virtual_one": "{palette.orange.6}",
             "virtuozzo": "{palette.orange.6}",
-            "yellow-1c": "{palette.orange.6}"
+            "yellow_1c": "{palette.orange.6}"
           }
         },
         "5": {
@@ -6131,7 +6131,7 @@
             "default": "{palette.orange.7}",
             "green_also_choise_df": "{palette.orange.7}",
             "ingram_micro": "{palette.orange.7}",
-            "light-gray": "{palette.orange.7}",
+            "light_gray": "{palette.orange.7}",
             "light_blue_hp": "{palette.orange.7}",
             "orange_tsukaeru_helpox": "{palette.orange.7}",
             "pinky": "{palette.orange.7}",
@@ -6143,7 +6143,7 @@
             "telstra": "{palette.orange.7}",
             "virtual_one": "{palette.orange.7}",
             "virtuozzo": "{palette.orange.7}",
-            "yellow-1c": "{palette.orange.7}"
+            "yellow_1c": "{palette.orange.7}"
           }
         },
         "6": {
@@ -6161,7 +6161,7 @@
             "default": "{palette.orange.9}",
             "green_also_choise_df": "{palette.orange.9}",
             "ingram_micro": "{palette.orange.9}",
-            "light-gray": "{palette.orange.9}",
+            "light_gray": "{palette.orange.9}",
             "light_blue_hp": "{palette.orange.9}",
             "orange_tsukaeru_helpox": "{palette.orange.9}",
             "pinky": "{palette.orange.9}",
@@ -6173,7 +6173,7 @@
             "telstra": "{palette.orange.9}",
             "virtual_one": "{palette.orange.9}",
             "virtuozzo": "{palette.orange.9}",
-            "yellow-1c": "{palette.orange.9}"
+            "yellow_1c": "{palette.orange.9}"
           }
         },
         "7": {
@@ -6191,7 +6191,7 @@
             "default": "{palette.orange.11}",
             "green_also_choise_df": "{palette.orange.11}",
             "ingram_micro": "{palette.orange.11}",
-            "light-gray": "{palette.orange.11}",
+            "light_gray": "{palette.orange.11}",
             "light_blue_hp": "{palette.orange.11}",
             "orange_tsukaeru_helpox": "{palette.orange.11}",
             "pinky": "{palette.orange.11}",
@@ -6203,7 +6203,7 @@
             "telstra": "{palette.orange.11}",
             "virtual_one": "{palette.orange.11}",
             "virtuozzo": "{palette.orange.11}",
-            "yellow-1c": "{palette.orange.11}"
+            "yellow_1c": "{palette.orange.11}"
           }
         },
         "8": {
@@ -6221,7 +6221,7 @@
             "default": "{palette.orange.12}",
             "green_also_choise_df": "{palette.orange.12}",
             "ingram_micro": "{palette.orange.12}",
-            "light-gray": "{palette.orange.12}",
+            "light_gray": "{palette.orange.12}",
             "light_blue_hp": "{palette.orange.12}",
             "orange_tsukaeru_helpox": "{palette.orange.12}",
             "pinky": "{palette.orange.12}",
@@ -6233,7 +6233,7 @@
             "telstra": "{palette.orange.12}",
             "virtual_one": "{palette.orange.12}",
             "virtuozzo": "{palette.orange.12}",
-            "yellow-1c": "{palette.orange.12}"
+            "yellow_1c": "{palette.orange.12}"
           }
         }
       },
@@ -6253,7 +6253,7 @@
             "default": "{palette.teal.2}",
             "green_also_choise_df": "{palette.teal.2}",
             "ingram_micro": "{palette.teal.2}",
-            "light-gray": "{palette.teal.2}",
+            "light_gray": "{palette.teal.2}",
             "light_blue_hp": "{palette.teal.2}",
             "orange_tsukaeru_helpox": "{palette.teal.2}",
             "pinky": "{palette.teal.2}",
@@ -6265,7 +6265,7 @@
             "telstra": "{palette.teal.2}",
             "virtual_one": "{palette.teal.2}",
             "virtuozzo": "{palette.teal.2}",
-            "yellow-1c": "{palette.teal.2}"
+            "yellow_1c": "{palette.teal.2}"
           }
         },
         "2": {
@@ -6283,7 +6283,7 @@
             "default": "{palette.teal.4}",
             "green_also_choise_df": "{palette.teal.4}",
             "ingram_micro": "{palette.teal.4}",
-            "light-gray": "{palette.teal.4}",
+            "light_gray": "{palette.teal.4}",
             "light_blue_hp": "{palette.teal.4}",
             "orange_tsukaeru_helpox": "{palette.teal.4}",
             "pinky": "{palette.teal.4}",
@@ -6295,7 +6295,7 @@
             "telstra": "{palette.teal.4}",
             "virtual_one": "{palette.teal.4}",
             "virtuozzo": "{palette.teal.4}",
-            "yellow-1c": "{palette.teal.4}"
+            "yellow_1c": "{palette.teal.4}"
           }
         },
         "3": {
@@ -6313,7 +6313,7 @@
             "default": "{palette.teal.5}",
             "green_also_choise_df": "{palette.teal.5}",
             "ingram_micro": "{palette.teal.5}",
-            "light-gray": "{palette.teal.5}",
+            "light_gray": "{palette.teal.5}",
             "light_blue_hp": "{palette.teal.5}",
             "orange_tsukaeru_helpox": "{palette.teal.5}",
             "pinky": "{palette.teal.5}",
@@ -6325,7 +6325,7 @@
             "telstra": "{palette.teal.5}",
             "virtual_one": "{palette.teal.5}",
             "virtuozzo": "{palette.teal.5}",
-            "yellow-1c": "{palette.teal.5}"
+            "yellow_1c": "{palette.teal.5}"
           }
         },
         "4": {
@@ -6343,7 +6343,7 @@
             "default": "{palette.teal.6}",
             "green_also_choise_df": "{palette.teal.6}",
             "ingram_micro": "{palette.teal.6}",
-            "light-gray": "{palette.teal.6}",
+            "light_gray": "{palette.teal.6}",
             "light_blue_hp": "{palette.teal.6}",
             "orange_tsukaeru_helpox": "{palette.teal.6}",
             "pinky": "{palette.teal.6}",
@@ -6355,7 +6355,7 @@
             "telstra": "{palette.teal.6}",
             "virtual_one": "{palette.teal.6}",
             "virtuozzo": "{palette.teal.6}",
-            "yellow-1c": "{palette.teal.6}"
+            "yellow_1c": "{palette.teal.6}"
           }
         },
         "5": {
@@ -6373,7 +6373,7 @@
             "default": "{palette.teal.7}",
             "green_also_choise_df": "{palette.teal.7}",
             "ingram_micro": "{palette.teal.7}",
-            "light-gray": "{palette.teal.7}",
+            "light_gray": "{palette.teal.7}",
             "light_blue_hp": "{palette.teal.7}",
             "orange_tsukaeru_helpox": "{palette.teal.7}",
             "pinky": "{palette.teal.7}",
@@ -6385,7 +6385,7 @@
             "telstra": "{palette.teal.7}",
             "virtual_one": "{palette.teal.7}",
             "virtuozzo": "{palette.teal.7}",
-            "yellow-1c": "{palette.teal.7}"
+            "yellow_1c": "{palette.teal.7}"
           }
         },
         "6": {
@@ -6403,7 +6403,7 @@
             "default": "{palette.teal.9}",
             "green_also_choise_df": "{palette.teal.9}",
             "ingram_micro": "{palette.teal.9}",
-            "light-gray": "{palette.teal.9}",
+            "light_gray": "{palette.teal.9}",
             "light_blue_hp": "{palette.teal.9}",
             "orange_tsukaeru_helpox": "{palette.teal.9}",
             "pinky": "{palette.teal.9}",
@@ -6415,7 +6415,7 @@
             "telstra": "{palette.teal.9}",
             "virtual_one": "{palette.teal.9}",
             "virtuozzo": "{palette.teal.9}",
-            "yellow-1c": "{palette.teal.9}"
+            "yellow_1c": "{palette.teal.9}"
           }
         },
         "7": {
@@ -6433,7 +6433,7 @@
             "default": "{palette.teal.11}",
             "green_also_choise_df": "{palette.teal.11}",
             "ingram_micro": "{palette.teal.11}",
-            "light-gray": "{palette.teal.11}",
+            "light_gray": "{palette.teal.11}",
             "light_blue_hp": "{palette.teal.11}",
             "orange_tsukaeru_helpox": "{palette.teal.11}",
             "pinky": "{palette.teal.11}",
@@ -6445,7 +6445,7 @@
             "telstra": "{palette.teal.11}",
             "virtual_one": "{palette.teal.11}",
             "virtuozzo": "{palette.teal.11}",
-            "yellow-1c": "{palette.teal.11}"
+            "yellow_1c": "{palette.teal.11}"
           }
         },
         "8": {
@@ -6463,7 +6463,7 @@
             "default": "{palette.teal.12}",
             "green_also_choise_df": "{palette.teal.12}",
             "ingram_micro": "{palette.teal.12}",
-            "light-gray": "{palette.teal.12}",
+            "light_gray": "{palette.teal.12}",
             "light_blue_hp": "{palette.teal.12}",
             "orange_tsukaeru_helpox": "{palette.teal.12}",
             "pinky": "{palette.teal.12}",
@@ -6475,7 +6475,7 @@
             "telstra": "{palette.teal.12}",
             "virtual_one": "{palette.teal.12}",
             "virtuozzo": "{palette.teal.12}",
-            "yellow-1c": "{palette.teal.12}"
+            "yellow_1c": "{palette.teal.12}"
           }
         }
       },
@@ -6495,7 +6495,7 @@
             "default": "{palette.violet.2}",
             "green_also_choise_df": "{palette.violet.2}",
             "ingram_micro": "{palette.violet.2}",
-            "light-gray": "{palette.violet.2}",
+            "light_gray": "{palette.violet.2}",
             "light_blue_hp": "{palette.violet.2}",
             "orange_tsukaeru_helpox": "{palette.violet.2}",
             "pinky": "{palette.violet.2}",
@@ -6507,7 +6507,7 @@
             "telstra": "{palette.violet.2}",
             "virtual_one": "{palette.violet.2}",
             "virtuozzo": "{palette.violet.2}",
-            "yellow-1c": "{palette.violet.2}"
+            "yellow_1c": "{palette.violet.2}"
           }
         },
         "2": {
@@ -6525,7 +6525,7 @@
             "default": "{palette.violet.4}",
             "green_also_choise_df": "{palette.violet.4}",
             "ingram_micro": "{palette.violet.4}",
-            "light-gray": "{palette.violet.4}",
+            "light_gray": "{palette.violet.4}",
             "light_blue_hp": "{palette.violet.4}",
             "orange_tsukaeru_helpox": "{palette.violet.4}",
             "pinky": "{palette.violet.4}",
@@ -6537,7 +6537,7 @@
             "telstra": "{palette.violet.4}",
             "virtual_one": "{palette.violet.4}",
             "virtuozzo": "{palette.violet.4}",
-            "yellow-1c": "{palette.violet.4}"
+            "yellow_1c": "{palette.violet.4}"
           }
         },
         "3": {
@@ -6555,7 +6555,7 @@
             "default": "{palette.violet.5}",
             "green_also_choise_df": "{palette.violet.5}",
             "ingram_micro": "{palette.violet.5}",
-            "light-gray": "{palette.violet.5}",
+            "light_gray": "{palette.violet.5}",
             "light_blue_hp": "{palette.violet.5}",
             "orange_tsukaeru_helpox": "{palette.violet.5}",
             "pinky": "{palette.violet.5}",
@@ -6567,7 +6567,7 @@
             "telstra": "{palette.violet.5}",
             "virtual_one": "{palette.violet.5}",
             "virtuozzo": "{palette.violet.5}",
-            "yellow-1c": "{palette.violet.5}"
+            "yellow_1c": "{palette.violet.5}"
           }
         },
         "4": {
@@ -6585,7 +6585,7 @@
             "default": "{palette.violet.6}",
             "green_also_choise_df": "{palette.violet.6}",
             "ingram_micro": "{palette.violet.6}",
-            "light-gray": "{palette.violet.6}",
+            "light_gray": "{palette.violet.6}",
             "light_blue_hp": "{palette.violet.6}",
             "orange_tsukaeru_helpox": "{palette.violet.6}",
             "pinky": "{palette.violet.6}",
@@ -6597,7 +6597,7 @@
             "telstra": "{palette.violet.6}",
             "virtual_one": "{palette.violet.6}",
             "virtuozzo": "{palette.violet.6}",
-            "yellow-1c": "{palette.violet.6}"
+            "yellow_1c": "{palette.violet.6}"
           }
         },
         "5": {
@@ -6615,7 +6615,7 @@
             "default": "{palette.violet.7}",
             "green_also_choise_df": "{palette.violet.7}",
             "ingram_micro": "{palette.violet.7}",
-            "light-gray": "{palette.violet.7}",
+            "light_gray": "{palette.violet.7}",
             "light_blue_hp": "{palette.violet.7}",
             "orange_tsukaeru_helpox": "{palette.violet.7}",
             "pinky": "{palette.violet.7}",
@@ -6627,7 +6627,7 @@
             "telstra": "{palette.violet.7}",
             "virtual_one": "{palette.violet.7}",
             "virtuozzo": "{palette.violet.7}",
-            "yellow-1c": "{palette.violet.7}"
+            "yellow_1c": "{palette.violet.7}"
           }
         },
         "6": {
@@ -6645,7 +6645,7 @@
             "default": "{palette.violet.9}",
             "green_also_choise_df": "{palette.violet.9}",
             "ingram_micro": "{palette.violet.9}",
-            "light-gray": "{palette.violet.9}",
+            "light_gray": "{palette.violet.9}",
             "light_blue_hp": "{palette.violet.9}",
             "orange_tsukaeru_helpox": "{palette.violet.9}",
             "pinky": "{palette.violet.9}",
@@ -6657,7 +6657,7 @@
             "telstra": "{palette.violet.9}",
             "virtual_one": "{palette.violet.9}",
             "virtuozzo": "{palette.violet.9}",
-            "yellow-1c": "{palette.violet.9}"
+            "yellow_1c": "{palette.violet.9}"
           }
         },
         "7": {
@@ -6675,7 +6675,7 @@
             "default": "{palette.violet.11}",
             "green_also_choise_df": "{palette.violet.11}",
             "ingram_micro": "{palette.violet.11}",
-            "light-gray": "{palette.violet.11}",
+            "light_gray": "{palette.violet.11}",
             "light_blue_hp": "{palette.violet.11}",
             "orange_tsukaeru_helpox": "{palette.violet.11}",
             "pinky": "{palette.violet.11}",
@@ -6687,7 +6687,7 @@
             "telstra": "{palette.violet.11}",
             "virtual_one": "{palette.violet.11}",
             "virtuozzo": "{palette.violet.11}",
-            "yellow-1c": "{palette.violet.11}"
+            "yellow_1c": "{palette.violet.11}"
           }
         },
         "8": {
@@ -6705,7 +6705,7 @@
             "default": "{palette.violet.12}",
             "green_also_choise_df": "{palette.violet.12}",
             "ingram_micro": "{palette.violet.12}",
-            "light-gray": "{palette.violet.12}",
+            "light_gray": "{palette.violet.12}",
             "light_blue_hp": "{palette.violet.12}",
             "orange_tsukaeru_helpox": "{palette.violet.12}",
             "pinky": "{palette.violet.12}",
@@ -6717,7 +6717,7 @@
             "telstra": "{palette.violet.12}",
             "virtual_one": "{palette.violet.12}",
             "virtuozzo": "{palette.violet.12}",
-            "yellow-1c": "{palette.violet.12}"
+            "yellow_1c": "{palette.violet.12}"
           }
         }
       }
@@ -6862,7 +6862,7 @@
               "position": 1
             }
           ],
-          "light-gray": [
+          "light_gray": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7054,7 +7054,7 @@
               "position": 1
             }
           ],
-          "yellow-1c": [
+          "yellow_1c": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7208,7 +7208,7 @@
               "position": 1
             }
           ],
-          "light-gray": [
+          "light_gray": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7400,7 +7400,7 @@
               "position": 1
             }
           ],
-          "yellow-1c": [
+          "yellow_1c": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7554,7 +7554,7 @@
               "position": 1
             }
           ],
-          "light-gray": [
+          "light_gray": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7746,7 +7746,7 @@
               "position": 1
             }
           ],
-          "yellow-1c": [
+          "yellow_1c": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7900,7 +7900,7 @@
               "position": 1
             }
           ],
-          "light-gray": [
+          "light_gray": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -8092,7 +8092,7 @@
               "position": 1
             }
           ],
-          "yellow-1c": [
+          "yellow_1c": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -8173,7 +8173,7 @@
           "offsetY": "{shadows.lg.positionY}",
           "spread": "{shadows.lg.spread}"
         },
-        "light-gray": {
+        "light_gray": {
           "blur": "{shadows.lg.blur}",
           "color": "{shadows.lg.color}",
           "offsetX": "{shadows.lg.positionX}",
@@ -8257,7 +8257,7 @@
           "offsetY": "{shadows.lg.positionY}",
           "spread": "{shadows.lg.spread}"
         },
-        "yellow-1c": {
+        "yellow_1c": {
           "blur": "{shadows.lg.blur}",
           "color": "{shadows.lg.color}",
           "offsetX": "{shadows.lg.positionX}",
@@ -8325,7 +8325,7 @@
           "offsetY": "{shadows.md.positionY}",
           "spread": "{shadows.md.spread}"
         },
-        "light-gray": {
+        "light_gray": {
           "blur": "{shadows.md.blur}",
           "color": "{shadows.md.color}",
           "offsetX": "{shadows.md.positionX}",
@@ -8409,7 +8409,7 @@
           "offsetY": "{shadows.md.positionY}",
           "spread": "{shadows.md.spread}"
         },
-        "yellow-1c": {
+        "yellow_1c": {
           "blur": "{shadows.md.blur}",
           "color": "{shadows.md.color}",
           "offsetX": "{shadows.md.positionX}",
@@ -8477,7 +8477,7 @@
           "offsetY": "{shadows.sm.positionY}",
           "spread": "{shadows.sm.spread}"
         },
-        "light-gray": {
+        "light_gray": {
           "blur": "{shadows.sm.blur}",
           "color": "{shadows.sm.color}",
           "offsetX": "{shadows.sm.positionX}",
@@ -8561,7 +8561,7 @@
           "offsetY": "{shadows.sm.positionY}",
           "spread": "{shadows.sm.spread}"
         },
-        "yellow-1c": {
+        "yellow_1c": {
           "blur": "{shadows.sm.blur}",
           "color": "{shadows.sm.color}",
           "offsetX": "{shadows.sm.positionX}",

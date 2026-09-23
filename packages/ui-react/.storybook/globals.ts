@@ -17,10 +17,10 @@
  */
 
 import bundleDeepSky from '@acronis-platform/tokens-pd/bundles/deep_sky_itkontoret.css?raw';
-import bundleLightGray from '@acronis-platform/tokens-pd/bundles/light-gray.css?raw';
+import bundleLightGray from '@acronis-platform/tokens-pd/bundles/light_gray.css?raw';
 import bundleTelstra from '@acronis-platform/tokens-pd/bundles/telstra.css?raw';
 import bundleVirtuozzo from '@acronis-platform/tokens-pd/bundles/virtuozzo.css?raw';
-import bundleYellow1c from '@acronis-platform/tokens-pd/bundles/yellow-1c.css?raw';
+import bundleYellow1c from '@acronis-platform/tokens-pd/bundles/yellow_1c.css?raw';
 import bundleBlueYellowUssSignal from '@acronis-platform/tokens-pd/bundles/blue_yellow_uss_signal.css?raw';
 import bundleBrown from '@acronis-platform/tokens-pd/bundles/brown.css?raw';
 import bundleDarkGray from '@acronis-platform/tokens-pd/bundles/dark_gray.css?raw';
@@ -40,10 +40,10 @@ import bundleVirtualOne from '@acronis-platform/tokens-pd/bundles/virtual_one.cs
 export type Brand =
   | 'default'
   | 'deep_sky_itkontoret'
-  | 'light-gray'
+  | 'light_gray'
   | 'telstra'
   | 'virtuozzo'
-  | 'yellow-1c'
+  | 'yellow_1c'
   | 'blue_yellow_uss_signal'
   | 'brown'
   | 'dark_gray'
@@ -66,10 +66,10 @@ export type Locale = 'en' | 'de' | 'fr' | 'ja' | 'ar' | 'he';
 /** Every non-default brand's full bundle, keyed for `applyBrand`. */
 const BRAND_BUNDLES: Record<Exclude<Brand, 'default'>, string> = {
   deep_sky_itkontoret: bundleDeepSky,
-  'light-gray': bundleLightGray,
+  light_gray: bundleLightGray,
   telstra: bundleTelstra,
   virtuozzo: bundleVirtuozzo,
-  'yellow-1c': bundleYellow1c,
+  yellow_1c: bundleYellow1c,
   blue_yellow_uss_signal: bundleBlueYellowUssSignal,
   brown: bundleBrown,
   dark_gray: bundleDarkGray,
