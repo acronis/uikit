@@ -35,6 +35,7 @@ import bundlePurpleFusionMedia from '@acronis-platform/tokens-pd/bundles/purple_
 import bundleRedFireBrick from '@acronis-platform/tokens-pd/bundles/red_fire_brick.css?raw';
 import bundleRedHomePl from '@acronis-platform/tokens-pd/bundles/red_home_pl.css?raw';
 import bundleSand from '@acronis-platform/tokens-pd/bundles/sand.css?raw';
+import bundleVirtualOne from '@acronis-platform/tokens-pd/bundles/virtual_one.css?raw';
 
 export type Brand =
   | 'default'
@@ -56,7 +57,8 @@ export type Brand =
   | 'purple_fusion_media'
   | 'red_fire_brick'
   | 'red_home_pl'
-  | 'sand';
+  | 'sand'
+  | 'virtual_one';
 export type ColorMode = 'light' | 'dark';
 export type Direction = 'auto' | 'ltr' | 'rtl';
 export type Locale = 'en' | 'de' | 'fr' | 'ja' | 'ar' | 'he';
@@ -82,6 +84,7 @@ const BRAND_BUNDLES: Record<Exclude<Brand, 'default'>, string> = {
   red_fire_brick: bundleRedFireBrick,
   red_home_pl: bundleRedHomePl,
   sand: bundleSand,
+  virtual_one: bundleVirtualOne,
 };
 
 const BRAND_STYLE_ID = 'sb-brand-override';

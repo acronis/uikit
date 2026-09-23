@@ -45,6 +45,7 @@ const preview: Preview = {
           { value: 'red_fire_brick', title: 'Red (Fire Brick)' },
           { value: 'red_home_pl', title: 'Red (Home.pl)' },
           { value: 'sand', title: 'Sand' },
+          { value: 'virtual_one', title: 'Virtual One' },
         ],
         dynamicTitle: true,
       },

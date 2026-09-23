@@ -504,3 +504,4 @@ export const BrandPurpleFusionMedia: Story = makeBrandStory(
 export const BrandRedFireBrick: Story = makeBrandStory('red_fire_brick', 'Red (Fire Brick)');
 export const BrandRedHomePl: Story = makeBrandStory('red_home_pl', 'Red (Home.pl)');
 export const BrandSand: Story = makeBrandStory('sand', 'Sand');
+export const BrandVirtualOne: Story = makeBrandStory('virtual_one', 'Virtual One');

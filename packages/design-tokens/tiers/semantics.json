@@ -40,6 +40,7 @@
               "red_home_pl": "{palette.transparent.white.inverse.95}",
               "sand": "{palette.transparent.white.inverse.95}",
               "telstra": "{palette.transparent.white.inverse.95}",
+              "virtual_one": "{palette.transparent.white.inverse.95}",
               "virtuozzo": "{palette.transparent.white.inverse.95}",
               "yellow-1c": "{palette.transparent.white.inverse.95}"
             }
@@ -69,6 +70,7 @@
               "red_home_pl": "{palette.transparent.blue.inverse.95}",
               "sand": "{palette.transparent.blue.inverse.95}",
               "telstra": "{palette.transparent.blue.inverse.95}",
+              "virtual_one": "{palette.transparent.blue.inverse.95}",
               "virtuozzo": "{palette.transparent.blue.inverse.95}",
               "yellow-1c": "{palette.transparent.blue.inverse.95}"
             }
@@ -99,6 +101,7 @@
             "red_home_pl": "{palette.transparent.dark.fixed.90}",
             "sand": "{palette.transparent.dark.fixed.90}",
             "telstra": "{palette.transparent.dark.fixed.90}",
+            "virtual_one": "{palette.transparent.dark.fixed.90}",
             "virtuozzo": "{palette.transparent.dark.fixed.90}",
             "yellow-1c": "{palette.transparent.dark.fixed.90}"
           }
@@ -130,6 +133,7 @@
             "red_home_pl": "{branding.red_home_pl.SidebarPrimary.idle}",
             "sand": "{branding.sand.SidebarPrimary.idle}",
             "telstra": "{branding.telstra.SidebarPrimary.background.idle}",
+            "virtual_one": "{branding.virtual_one.SidebarPrimary.idle}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.idle}",
             "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.idle}"
           }
@@ -159,6 +163,7 @@
             "red_home_pl": "{branding.red_home_pl.SidebarPrimary.active}",
             "sand": "{branding.sand.SidebarPrimary.active}",
             "telstra": "{branding.telstra.SidebarPrimary.background.active}",
+            "virtual_one": "{branding.virtual_one.SidebarPrimary.active}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.active}",
             "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.active}"
           }
@@ -188,6 +193,7 @@
             "red_home_pl": "{branding.red_home_pl.SidebarPrimary.disabled}",
             "sand": "{branding.sand.SidebarPrimary.disabled}",
             "telstra": "{branding.telstra.SidebarPrimary.background.disabled}",
+            "virtual_one": "{branding.virtual_one.SidebarPrimary.disabled}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.disabled}",
             "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.disabled}"
           }
@@ -217,6 +223,7 @@
             "red_home_pl": "{branding.red_home_pl.SidebarPrimary.hover}",
             "sand": "{branding.sand.SidebarPrimary.hover}",
             "telstra": "{branding.telstra.SidebarPrimary.background.hover}",
+            "virtual_one": "{branding.virtual_one.SidebarPrimary.hover}",
             "virtuozzo": "{branding.virtuozzo.SidebarPrimary.hover}",
             "yellow-1c": "{branding.yellow_1c.SidebarPrimary.background.hover}"
           }
@@ -246,6 +253,7 @@
             "red_home_pl": "{branding.red_home_pl.ButtonPrimary.idle}",
             "sand": "{branding.sand.ButtonPrimary.idle}",
             "telstra": "{branding.telstra.ButtonPrimary.idle}",
+            "virtual_one": "{branding.virtual_one.ButtonPrimary.idle}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.idle}",
             "yellow-1c": "{branding.yellow_1c.ButtonPrimary.idle}"
           }
@@ -275,6 +283,7 @@
             "red_home_pl": "{branding.red_home_pl.ButtonPrimary.active}",
             "sand": "{branding.sand.ButtonPrimary.active}",
             "telstra": "{branding.telstra.ButtonPrimary.active}",
+            "virtual_one": "{branding.virtual_one.ButtonPrimary.active}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.active}",
             "yellow-1c": "{branding.yellow_1c.ButtonPrimary.active}"
           }
@@ -304,6 +313,7 @@
             "red_home_pl": "{branding.red_home_pl.ButtonPrimary.disabled}",
             "sand": "{branding.sand.ButtonPrimary.disabled}",
             "telstra": "{branding.telstra.ButtonPrimary.disabled}",
+            "virtual_one": "{branding.virtual_one.ButtonPrimary.disabled}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.disabled}",
             "yellow-1c": "{branding.yellow_1c.ButtonPrimary.disabled}"
           }
@@ -333,6 +343,7 @@
             "red_home_pl": "{branding.red_home_pl.ButtonPrimary.hover}",
             "sand": "{branding.sand.ButtonPrimary.hover}",
             "telstra": "{branding.telstra.ButtonPrimary.hover}",
+            "virtual_one": "{branding.virtual_one.ButtonPrimary.hover}",
             "virtuozzo": "{branding.virtuozzo.ButtonPrimary.hover}",
             "yellow-1c": "{branding.yellow_1c.ButtonPrimary.hover}"
           }
@@ -364,6 +375,7 @@
             "red_home_pl": "{palette.transparent.dark.inverse.100}",
             "sand": "{palette.transparent.dark.inverse.100}",
             "telstra": "{palette.transparent.dark.inverse.100}",
+            "virtual_one": "{palette.transparent.dark.inverse.100}",
             "virtuozzo": "{palette.transparent.dark.inverse.100}",
             "yellow-1c": "{palette.transparent.dark.inverse.100}"
           }
@@ -395,6 +407,7 @@
             "red_home_pl": "{palette.violet.1}",
             "sand": "{palette.violet.1}",
             "telstra": "{palette.violet.1}",
+            "virtual_one": "{palette.violet.1}",
             "virtuozzo": "{palette.violet.1}",
             "yellow-1c": "{palette.violet.1}"
           }
@@ -424,6 +437,7 @@
             "red_home_pl": "{palette.violet.2}",
             "sand": "{palette.violet.2}",
             "telstra": "{palette.violet.2}",
+            "virtual_one": "{palette.violet.2}",
             "virtuozzo": "{palette.violet.2}",
             "yellow-1c": "{palette.violet.2}"
           }
@@ -453,6 +467,7 @@
             "red_home_pl": "{palette.violet.3}",
             "sand": "{palette.violet.3}",
             "telstra": "{palette.violet.3}",
+            "virtual_one": "{palette.violet.3}",
             "virtuozzo": "{palette.violet.3}",
             "yellow-1c": "{palette.violet.3}"
           }
@@ -482,6 +497,7 @@
             "red_home_pl": "{palette.orange.1}",
             "sand": "{palette.orange.1}",
             "telstra": "{palette.orange.1}",
+            "virtual_one": "{palette.orange.1}",
             "virtuozzo": "{palette.orange.1}",
             "yellow-1c": "{palette.orange.1}"
           }
@@ -511,6 +527,7 @@
             "red_home_pl": "{palette.orange.2}",
             "sand": "{palette.orange.2}",
             "telstra": "{palette.orange.2}",
+            "virtual_one": "{palette.orange.2}",
             "virtuozzo": "{palette.orange.2}",
             "yellow-1c": "{palette.orange.2}"
           }
@@ -540,6 +557,7 @@
             "red_home_pl": "{palette.orange.3}",
             "sand": "{palette.orange.3}",
             "telstra": "{palette.orange.3}",
+            "virtual_one": "{palette.orange.3}",
             "virtuozzo": "{palette.orange.3}",
             "yellow-1c": "{palette.orange.3}"
           }
@@ -569,6 +587,7 @@
             "red_home_pl": "{palette.red.1}",
             "sand": "{palette.red.1}",
             "telstra": "{palette.red.1}",
+            "virtual_one": "{palette.red.1}",
             "virtuozzo": "{palette.red.1}",
             "yellow-1c": "{palette.red.1}"
           }
@@ -598,6 +617,7 @@
             "red_home_pl": "{palette.red.2}",
             "sand": "{palette.red.2}",
             "telstra": "{palette.red.2}",
+            "virtual_one": "{palette.red.2}",
             "virtuozzo": "{palette.red.2}",
             "yellow-1c": "{palette.red.2}"
           }
@@ -627,6 +647,7 @@
             "red_home_pl": "{palette.red.3}",
             "sand": "{palette.red.3}",
             "telstra": "{palette.red.3}",
+            "virtual_one": "{palette.red.3}",
             "virtuozzo": "{palette.red.3}",
             "yellow-1c": "{palette.red.3}"
           }
@@ -656,6 +677,7 @@
             "red_home_pl": "{palette.electricblue.1}",
             "sand": "{palette.electricblue.1}",
             "telstra": "{palette.electricblue.1}",
+            "virtual_one": "{palette.electricblue.1}",
             "virtuozzo": "{palette.electricblue.1}",
             "yellow-1c": "{palette.electricblue.1}"
           }
@@ -685,6 +707,7 @@
             "red_home_pl": "{palette.electricblue.2}",
             "sand": "{palette.electricblue.2}",
             "telstra": "{palette.electricblue.2}",
+            "virtual_one": "{palette.electricblue.2}",
             "virtuozzo": "{palette.electricblue.2}",
             "yellow-1c": "{palette.electricblue.2}"
           }
@@ -714,6 +737,7 @@
             "red_home_pl": "{palette.electricblue.3}",
             "sand": "{palette.electricblue.3}",
             "telstra": "{palette.electricblue.3}",
+            "virtual_one": "{palette.electricblue.3}",
             "virtuozzo": "{palette.electricblue.3}",
             "yellow-1c": "{palette.electricblue.3}"
           }
@@ -743,6 +767,7 @@
             "red_home_pl": "{palette.base}",
             "sand": "{palette.base}",
             "telstra": "{palette.base}",
+            "virtual_one": "{palette.base}",
             "virtuozzo": "{palette.base}",
             "yellow-1c": "{palette.base}"
           }
@@ -772,6 +797,7 @@
             "red_home_pl": "{palette.grayscale.1}",
             "sand": "{palette.grayscale.1}",
             "telstra": "{palette.grayscale.1}",
+            "virtual_one": "{palette.grayscale.1}",
             "virtuozzo": "{palette.grayscale.1}",
             "yellow-1c": "{palette.grayscale.1}"
           }
@@ -801,6 +827,7 @@
             "red_home_pl": "{palette.grayscale.2}",
             "sand": "{palette.grayscale.2}",
             "telstra": "{palette.grayscale.2}",
+            "virtual_one": "{palette.grayscale.2}",
             "virtuozzo": "{palette.grayscale.2}",
             "yellow-1c": "{palette.grayscale.2}"
           }
@@ -830,6 +857,7 @@
             "red_home_pl": "{palette.grayscale.3}",
             "sand": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
+            "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
             "yellow-1c": "{palette.grayscale.3}"
           }
@@ -859,6 +887,7 @@
             "red_home_pl": "{palette.green.6}",
             "sand": "{palette.green.6}",
             "telstra": "{palette.green.6}",
+            "virtual_one": "{palette.green.6}",
             "virtuozzo": "{palette.green.6}",
             "yellow-1c": "{palette.green.6}"
           }
@@ -888,6 +917,7 @@
             "red_home_pl": "{palette.green.1}",
             "sand": "{palette.green.1}",
             "telstra": "{palette.green.1}",
+            "virtual_one": "{palette.green.1}",
             "virtuozzo": "{palette.green.1}",
             "yellow-1c": "{palette.green.1}"
           }
@@ -917,6 +947,7 @@
             "red_home_pl": "{palette.green.2}",
             "sand": "{palette.green.2}",
             "telstra": "{palette.green.2}",
+            "virtual_one": "{palette.green.2}",
             "virtuozzo": "{palette.green.2}",
             "yellow-1c": "{palette.green.2}"
           }
@@ -946,6 +977,7 @@
             "red_home_pl": "{palette.green.3}",
             "sand": "{palette.green.3}",
             "telstra": "{palette.green.3}",
+            "virtual_one": "{palette.green.3}",
             "virtuozzo": "{palette.green.3}",
             "yellow-1c": "{palette.green.3}"
           }
@@ -975,6 +1007,7 @@
             "red_home_pl": "{palette.yellow.1}",
             "sand": "{palette.yellow.1}",
             "telstra": "{palette.yellow.1}",
+            "virtual_one": "{palette.yellow.1}",
             "virtuozzo": "{palette.yellow.1}",
             "yellow-1c": "{palette.yellow.1}"
           }
@@ -1004,6 +1037,7 @@
             "red_home_pl": "{palette.yellow.2}",
             "sand": "{palette.yellow.2}",
             "telstra": "{palette.yellow.2}",
+            "virtual_one": "{palette.yellow.2}",
             "virtuozzo": "{palette.yellow.2}",
             "yellow-1c": "{palette.yellow.2}"
           }
@@ -1033,6 +1067,7 @@
             "red_home_pl": "{palette.yellow.3}",
             "sand": "{palette.yellow.3}",
             "telstra": "{palette.yellow.3}",
+            "virtual_one": "{palette.yellow.3}",
             "virtuozzo": "{palette.yellow.3}",
             "yellow-1c": "{palette.yellow.3}"
           }
@@ -1064,6 +1099,7 @@
             "red_home_pl": "{palette.orange.7}",
             "sand": "{palette.orange.7}",
             "telstra": "{palette.orange.7}",
+            "virtual_one": "{palette.orange.7}",
             "virtuozzo": "{palette.orange.7}",
             "yellow-1c": "{palette.orange.7}"
           }
@@ -1093,6 +1129,7 @@
             "red_home_pl": "{palette.orange.8}",
             "sand": "{palette.orange.8}",
             "telstra": "{palette.orange.8}",
+            "virtual_one": "{palette.orange.8}",
             "virtuozzo": "{palette.orange.8}",
             "yellow-1c": "{palette.orange.8}"
           }
@@ -1122,6 +1159,7 @@
             "red_home_pl": "{palette.orange.9}",
             "sand": "{palette.orange.9}",
             "telstra": "{palette.orange.9}",
+            "virtual_one": "{palette.orange.9}",
             "virtuozzo": "{palette.orange.9}",
             "yellow-1c": "{palette.orange.9}"
           }
@@ -1151,6 +1189,7 @@
             "red_home_pl": "{palette.red.7}",
             "sand": "{palette.red.7}",
             "telstra": "{palette.red.7}",
+            "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
             "yellow-1c": "{palette.red.7}"
           }
@@ -1180,6 +1219,7 @@
             "red_home_pl": "{palette.red.9}",
             "sand": "{palette.red.9}",
             "telstra": "{palette.red.9}",
+            "virtual_one": "{palette.red.9}",
             "virtuozzo": "{palette.red.9}",
             "yellow-1c": "{palette.red.9}"
           }
@@ -1209,6 +1249,7 @@
             "red_home_pl": "{palette.red.10}",
             "sand": "{palette.red.10}",
             "telstra": "{palette.red.10}",
+            "virtual_one": "{palette.red.10}",
             "virtuozzo": "{palette.red.10}",
             "yellow-1c": "{palette.red.10}"
           }
@@ -1238,6 +1279,7 @@
             "red_home_pl": "{palette.blue.7}",
             "sand": "{palette.blue.7}",
             "telstra": "{palette.blue.7}",
+            "virtual_one": "{palette.blue.7}",
             "virtuozzo": "{palette.blue.7}",
             "yellow-1c": "{palette.blue.7}"
           }
@@ -1267,6 +1309,7 @@
             "red_home_pl": "{palette.blue.8}",
             "sand": "{palette.blue.8}",
             "telstra": "{palette.blue.8}",
+            "virtual_one": "{palette.blue.8}",
             "virtuozzo": "{palette.blue.8}",
             "yellow-1c": "{palette.blue.8}"
           }
@@ -1296,6 +1339,7 @@
             "red_home_pl": "{palette.blue.9}",
             "sand": "{palette.blue.9}",
             "telstra": "{palette.blue.9}",
+            "virtual_one": "{palette.blue.9}",
             "virtuozzo": "{palette.blue.9}",
             "yellow-1c": "{palette.blue.9}"
           }
@@ -1325,6 +1369,7 @@
             "red_home_pl": "{palette.grayscale.7}",
             "sand": "{palette.grayscale.7}",
             "telstra": "{palette.grayscale.7}",
+            "virtual_one": "{palette.grayscale.7}",
             "virtuozzo": "{palette.grayscale.7}",
             "yellow-1c": "{palette.grayscale.7}"
           }
@@ -1354,6 +1399,7 @@
             "red_home_pl": "{palette.grayscale.8}",
             "sand": "{palette.grayscale.8}",
             "telstra": "{palette.grayscale.8}",
+            "virtual_one": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
             "yellow-1c": "{palette.grayscale.8}"
           }
@@ -1383,6 +1429,7 @@
             "red_home_pl": "{palette.grayscale.9}",
             "sand": "{palette.grayscale.9}",
             "telstra": "{palette.grayscale.9}",
+            "virtual_one": "{palette.grayscale.9}",
             "virtuozzo": "{palette.grayscale.9}",
             "yellow-1c": "{palette.grayscale.9}"
           }
@@ -1412,6 +1459,7 @@
             "red_home_pl": "{palette.green.7}",
             "sand": "{palette.green.7}",
             "telstra": "{palette.green.7}",
+            "virtual_one": "{palette.green.7}",
             "virtuozzo": "{palette.green.7}",
             "yellow-1c": "{palette.green.7}"
           }
@@ -1441,6 +1489,7 @@
             "red_home_pl": "{palette.green.8}",
             "sand": "{palette.green.8}",
             "telstra": "{palette.green.8}",
+            "virtual_one": "{palette.green.8}",
             "virtuozzo": "{palette.green.8}",
             "yellow-1c": "{palette.green.8}"
           }
@@ -1470,6 +1519,7 @@
             "red_home_pl": "{palette.green.9}",
             "sand": "{palette.green.9}",
             "telstra": "{palette.green.9}",
+            "virtual_one": "{palette.green.9}",
             "virtuozzo": "{palette.green.9}",
             "yellow-1c": "{palette.green.9}"
           }
@@ -1499,6 +1549,7 @@
             "red_home_pl": "{palette.yellow.7}",
             "sand": "{palette.yellow.7}",
             "telstra": "{palette.yellow.7}",
+            "virtual_one": "{palette.yellow.7}",
             "virtuozzo": "{palette.yellow.7}",
             "yellow-1c": "{palette.yellow.7}"
           }
@@ -1528,6 +1579,7 @@
             "red_home_pl": "{palette.yellow.8}",
             "sand": "{palette.yellow.8}",
             "telstra": "{palette.yellow.8}",
+            "virtual_one": "{palette.yellow.8}",
             "virtuozzo": "{palette.yellow.8}",
             "yellow-1c": "{palette.yellow.8}"
           }
@@ -1557,6 +1609,7 @@
             "red_home_pl": "{palette.yellow.9}",
             "sand": "{palette.yellow.9}",
             "telstra": "{palette.yellow.9}",
+            "virtual_one": "{palette.yellow.9}",
             "virtuozzo": "{palette.yellow.9}",
             "yellow-1c": "{palette.yellow.9}"
           }
@@ -1588,6 +1641,7 @@
             "red_home_pl": "{palette.grayscale.2}",
             "sand": "{palette.grayscale.2}",
             "telstra": "{palette.grayscale.2}",
+            "virtual_one": "{palette.grayscale.2}",
             "virtuozzo": "{palette.grayscale.2}",
             "yellow-1c": "{palette.grayscale.2}"
           }
@@ -1617,6 +1671,7 @@
             "red_home_pl": "{palette.grayscale.1}",
             "sand": "{palette.grayscale.1}",
             "telstra": "{palette.grayscale.1}",
+            "virtual_one": "{palette.grayscale.1}",
             "virtuozzo": "{palette.grayscale.1}",
             "yellow-1c": "{palette.grayscale.1}"
           }
@@ -1646,6 +1701,7 @@
             "red_home_pl": "{palette.base}",
             "sand": "{palette.base}",
             "telstra": "{palette.base}",
+            "virtual_one": "{palette.base}",
             "virtuozzo": "{palette.base}",
             "yellow-1c": "{palette.base}"
           }
@@ -1675,6 +1731,7 @@
             "red_home_pl": "{palette.grayscale.0}",
             "sand": "{palette.grayscale.0}",
             "telstra": "{palette.grayscale.0}",
+            "virtual_one": "{palette.grayscale.0}",
             "virtuozzo": "{palette.grayscale.0}",
             "yellow-1c": "{palette.grayscale.0}"
           }
@@ -1705,6 +1762,7 @@
           "red_home_pl": "{palette.transparent.clear}",
           "sand": "{palette.transparent.clear}",
           "telstra": "{palette.transparent.clear}",
+          "virtual_one": "{palette.transparent.clear}",
           "virtuozzo": "{palette.transparent.clear}",
           "yellow-1c": "{palette.transparent.clear}"
         }
@@ -1737,6 +1795,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.10}",
             "sand": "{palette.transparent.white.fixed.10}",
             "telstra": "{palette.transparent.white.fixed.10}",
+            "virtual_one": "{palette.transparent.white.fixed.10}",
             "virtuozzo": "{palette.transparent.white.fixed.10}",
             "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
@@ -1766,6 +1825,7 @@
             "red_home_pl": "{palette.grayscale.0}",
             "sand": "{palette.grayscale.0}",
             "telstra": "{palette.grayscale.0}",
+            "virtual_one": "{palette.grayscale.0}",
             "virtuozzo": "{palette.grayscale.0}",
             "yellow-1c": "{palette.grayscale.0}"
           }
@@ -1795,6 +1855,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.10}",
             "sand": "{palette.transparent.white.fixed.10}",
             "telstra": "{palette.transparent.white.fixed.10}",
+            "virtual_one": "{palette.transparent.white.fixed.10}",
             "virtuozzo": "{palette.transparent.white.fixed.10}",
             "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
@@ -1826,6 +1887,7 @@
             "red_home_pl": "{palette.violet.4}",
             "sand": "{palette.violet.4}",
             "telstra": "{palette.violet.4}",
+            "virtual_one": "{palette.violet.4}",
             "virtuozzo": "{palette.violet.4}",
             "yellow-1c": "{palette.violet.4}"
           }
@@ -1856,6 +1918,7 @@
             "red_home_pl": "{gradients.ai.idle}",
             "sand": "{gradients.ai.idle}",
             "telstra": "{gradients.ai.idle}",
+            "virtual_one": "{gradients.ai.idle}",
             "virtuozzo": "{gradients.ai.idle}",
             "yellow-1c": "{gradients.ai.idle}"
           }
@@ -1885,6 +1948,7 @@
             "red_home_pl": "{palette.orange.4}",
             "sand": "{palette.orange.4}",
             "telstra": "{palette.orange.4}",
+            "virtual_one": "{palette.orange.4}",
             "virtuozzo": "{palette.orange.4}",
             "yellow-1c": "{palette.orange.4}"
           }
@@ -1914,6 +1978,7 @@
             "red_home_pl": "{palette.orange.8}",
             "sand": "{palette.orange.8}",
             "telstra": "{palette.orange.8}",
+            "virtual_one": "{palette.orange.8}",
             "virtuozzo": "{palette.orange.8}",
             "yellow-1c": "{palette.orange.8}"
           }
@@ -1943,6 +2008,7 @@
             "red_home_pl": "{palette.red.4}",
             "sand": "{palette.red.4}",
             "telstra": "{palette.red.4}",
+            "virtual_one": "{palette.red.4}",
             "virtuozzo": "{palette.red.4}",
             "yellow-1c": "{palette.red.4}"
           }
@@ -1972,6 +2038,7 @@
             "red_home_pl": "{palette.red.8}",
             "sand": "{palette.red.8}",
             "telstra": "{palette.red.8}",
+            "virtual_one": "{palette.red.8}",
             "virtuozzo": "{palette.red.8}",
             "yellow-1c": "{palette.red.8}"
           }
@@ -2001,6 +2068,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -2030,6 +2098,7 @@
             "red_home_pl": "{palette.electricblue.8}",
             "sand": "{palette.electricblue.8}",
             "telstra": "{palette.electricblue.8}",
+            "virtual_one": "{palette.electricblue.8}",
             "virtuozzo": "{palette.electricblue.8}",
             "yellow-1c": "{palette.electricblue.8}"
           }
@@ -2059,6 +2128,7 @@
             "red_home_pl": "{palette.grayscale.4}",
             "sand": "{palette.grayscale.4}",
             "telstra": "{palette.grayscale.4}",
+            "virtual_one": "{palette.grayscale.4}",
             "virtuozzo": "{palette.grayscale.4}",
             "yellow-1c": "{palette.grayscale.4}"
           }
@@ -2088,6 +2158,7 @@
             "red_home_pl": "{palette.grayscale.8}",
             "sand": "{palette.grayscale.8}",
             "telstra": "{palette.grayscale.8}",
+            "virtual_one": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
             "yellow-1c": "{palette.grayscale.8}"
           }
@@ -2117,6 +2188,7 @@
             "red_home_pl": "{palette.green.4}",
             "sand": "{palette.green.4}",
             "telstra": "{palette.green.4}",
+            "virtual_one": "{palette.green.4}",
             "virtuozzo": "{palette.green.4}",
             "yellow-1c": "{palette.green.4}"
           }
@@ -2146,6 +2218,7 @@
             "red_home_pl": "{palette.green.8}",
             "sand": "{palette.green.8}",
             "telstra": "{palette.green.8}",
+            "virtual_one": "{palette.green.8}",
             "virtuozzo": "{palette.green.8}",
             "yellow-1c": "{palette.green.8}"
           }
@@ -2175,6 +2248,7 @@
             "red_home_pl": "{palette.yellow.4}",
             "sand": "{palette.yellow.4}",
             "telstra": "{palette.yellow.4}",
+            "virtual_one": "{palette.yellow.4}",
             "virtuozzo": "{palette.yellow.4}",
             "yellow-1c": "{palette.yellow.4}"
           }
@@ -2204,6 +2278,7 @@
             "red_home_pl": "{palette.yellow.8}",
             "sand": "{palette.yellow.8}",
             "telstra": "{palette.yellow.8}",
+            "virtual_one": "{palette.yellow.8}",
             "virtuozzo": "{palette.yellow.8}",
             "yellow-1c": "{palette.yellow.8}"
           }
@@ -2235,6 +2310,7 @@
             "red_home_pl": "{palette.grayscale.3}",
             "sand": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
+            "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
             "yellow-1c": "{palette.grayscale.3}"
           }
@@ -2264,6 +2340,7 @@
             "red_home_pl": "{palette.grayscale.7}",
             "sand": "{palette.grayscale.7}",
             "telstra": "{palette.grayscale.7}",
+            "virtual_one": "{palette.grayscale.7}",
             "virtuozzo": "{palette.grayscale.7}",
             "yellow-1c": "{palette.grayscale.7}"
           }
@@ -2293,6 +2370,7 @@
             "red_home_pl": "{palette.red.7}",
             "sand": "{palette.red.7}",
             "telstra": "{palette.red.7}",
+            "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
             "yellow-1c": "{palette.red.7}"
           }
@@ -2322,6 +2400,7 @@
             "red_home_pl": "{palette.grayscale.3}",
             "sand": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
+            "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
             "yellow-1c": "{palette.grayscale.3}"
           }
@@ -2352,6 +2431,7 @@
           "red_home_pl": "{palette.transparent.clear}",
           "sand": "{palette.transparent.clear}",
           "telstra": "{palette.transparent.clear}",
+          "virtual_one": "{palette.transparent.clear}",
           "virtuozzo": "{palette.transparent.clear}",
           "yellow-1c": "{palette.transparent.clear}"
         }
@@ -2383,6 +2463,7 @@
           "red_home_pl": "{palette.blue.4}",
           "sand": "{palette.blue.4}",
           "telstra": "{palette.blue.4}",
+          "virtual_one": "{palette.blue.4}",
           "virtuozzo": "{palette.blue.4}",
           "yellow-1c": "{palette.blue.4}"
         }
@@ -2412,6 +2493,7 @@
           "red_home_pl": "{palette.red.4}",
           "sand": "{palette.red.4}",
           "telstra": "{palette.red.4}",
+          "virtual_one": "{palette.red.4}",
           "virtuozzo": "{palette.red.4}",
           "yellow-1c": "{palette.red.4}"
         }
@@ -2441,6 +2523,7 @@
           "red_home_pl": "{palette.blue.4}",
           "sand": "{palette.blue.4}",
           "telstra": "{palette.blue.4}",
+          "virtual_one": "{palette.blue.4}",
           "virtuozzo": "{palette.blue.4}",
           "yellow-1c": "{palette.blue.4}"
         }
@@ -2470,6 +2553,7 @@
           "red_home_pl": "{palette.blue.4}",
           "sand": "{palette.blue.4}",
           "telstra": "{palette.blue.4}",
+          "virtual_one": "{palette.blue.4}",
           "virtuozzo": "{palette.blue.4}",
           "yellow-1c": "{palette.blue.4}"
         }
@@ -2502,6 +2586,7 @@
             "red_home_pl": "{palette.grayscale.7}",
             "sand": "{palette.grayscale.7}",
             "telstra": "{palette.grayscale.7}",
+            "virtual_one": "{palette.grayscale.7}",
             "virtuozzo": "{palette.grayscale.7}",
             "yellow-1c": "{palette.grayscale.7}"
           }
@@ -2531,6 +2616,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -2562,6 +2648,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.10}",
             "sand": "{palette.transparent.white.fixed.10}",
             "telstra": "{palette.transparent.white.fixed.10}",
+            "virtual_one": "{palette.transparent.white.fixed.10}",
             "virtuozzo": "{palette.transparent.white.fixed.10}",
             "yellow-1c": "{palette.transparent.white.fixed.10}"
           }
@@ -2591,6 +2678,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -2620,6 +2708,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.60}",
             "sand": "{palette.transparent.white.fixed.60}",
             "telstra": "{palette.transparent.white.fixed.60}",
+            "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
             "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
@@ -2651,6 +2740,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -2682,6 +2772,7 @@
             "red_home_pl": "{palette.violet.11}",
             "sand": "{palette.violet.11}",
             "telstra": "{palette.violet.11}",
+            "virtual_one": "{palette.violet.11}",
             "virtuozzo": "{palette.violet.11}",
             "yellow-1c": "{palette.violet.11}"
           }
@@ -2711,6 +2802,7 @@
             "red_home_pl": "{palette.orange.11}",
             "sand": "{palette.orange.11}",
             "telstra": "{palette.orange.11}",
+            "virtual_one": "{palette.orange.11}",
             "virtuozzo": "{palette.orange.11}",
             "yellow-1c": "{palette.orange.11}"
           }
@@ -2740,6 +2832,7 @@
             "red_home_pl": "{palette.red.11}",
             "sand": "{palette.red.11}",
             "telstra": "{palette.red.11}",
+            "virtual_one": "{palette.red.11}",
             "virtuozzo": "{palette.red.11}",
             "yellow-1c": "{palette.red.11}"
           }
@@ -2769,6 +2862,7 @@
             "red_home_pl": "{palette.grayscale.3}",
             "sand": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
+            "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
             "yellow-1c": "{palette.grayscale.3}"
           }
@@ -2798,6 +2892,7 @@
             "red_home_pl": "{palette.electricblue.11}",
             "sand": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
+            "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
             "yellow-1c": "{palette.electricblue.11}"
           }
@@ -2827,6 +2922,7 @@
             "red_home_pl": "{palette.grayscale.11}",
             "sand": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
+            "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
             "yellow-1c": "{palette.grayscale.11}"
           }
@@ -2856,6 +2952,7 @@
             "red_home_pl": "{palette.electricblue.11}",
             "sand": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
+            "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
             "yellow-1c": "{palette.electricblue.11}"
           }
@@ -2885,6 +2982,7 @@
             "red_home_pl": "{palette.green.11}",
             "sand": "{palette.green.11}",
             "telstra": "{palette.green.11}",
+            "virtual_one": "{palette.green.11}",
             "virtuozzo": "{palette.green.11}",
             "yellow-1c": "{palette.green.11}"
           }
@@ -2914,6 +3012,7 @@
             "red_home_pl": "{palette.yellow.11}",
             "sand": "{palette.yellow.11}",
             "telstra": "{palette.yellow.11}",
+            "virtual_one": "{palette.yellow.11}",
             "virtuozzo": "{palette.yellow.11}",
             "yellow-1c": "{palette.yellow.11}"
           }
@@ -2945,6 +3044,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -2976,6 +3076,7 @@
             "red_home_pl": "{palette.blue.13}",
             "sand": "{palette.blue.13}",
             "telstra": "{palette.blue.13}",
+            "virtual_one": "{palette.blue.13}",
             "virtuozzo": "{palette.blue.13}",
             "yellow-1c": "{palette.blue.13}"
           }
@@ -3005,6 +3106,7 @@
             "red_home_pl": "{palette.red.7}",
             "sand": "{palette.red.7}",
             "telstra": "{palette.red.7}",
+            "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
             "yellow-1c": "{palette.red.7}"
           }
@@ -3034,6 +3136,7 @@
             "red_home_pl": "{palette.grayscale.5}",
             "sand": "{palette.grayscale.5}",
             "telstra": "{palette.grayscale.5}",
+            "virtual_one": "{palette.grayscale.5}",
             "virtuozzo": "{palette.grayscale.5}",
             "yellow-1c": "{palette.grayscale.5}"
           }
@@ -3063,6 +3166,7 @@
             "red_home_pl": "{palette.grayscale.4}",
             "sand": "{palette.grayscale.4}",
             "telstra": "{palette.grayscale.4}",
+            "virtual_one": "{palette.grayscale.4}",
             "virtuozzo": "{palette.grayscale.4}",
             "yellow-1c": "{palette.grayscale.4}"
           }
@@ -3092,6 +3196,7 @@
             "red_home_pl": "{palette.grayscale.10}",
             "sand": "{palette.grayscale.10}",
             "telstra": "{palette.grayscale.10}",
+            "virtual_one": "{palette.grayscale.10}",
             "virtuozzo": "{palette.grayscale.10}",
             "yellow-1c": "{palette.grayscale.10}"
           }
@@ -3121,6 +3226,7 @@
             "red_home_pl": "{palette.grayscale.10}",
             "sand": "{palette.grayscale.10}",
             "telstra": "{palette.grayscale.10}",
+            "virtual_one": "{palette.grayscale.10}",
             "virtuozzo": "{palette.grayscale.10}",
             "yellow-1c": "{palette.grayscale.10}"
           }
@@ -3154,6 +3260,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -3183,6 +3290,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -3212,6 +3320,7 @@
             "red_home_pl": "{palette.electricblue.7}",
             "sand": "{palette.electricblue.7}",
             "telstra": "{palette.electricblue.7}",
+            "virtual_one": "{palette.electricblue.7}",
             "virtuozzo": "{palette.electricblue.7}",
             "yellow-1c": "{palette.electricblue.7}"
           }
@@ -3241,6 +3350,7 @@
             "red_home_pl": "{palette.transparent.dark.inverse.100}",
             "sand": "{palette.transparent.dark.inverse.100}",
             "telstra": "{palette.transparent.dark.inverse.100}",
+            "virtual_one": "{palette.transparent.dark.inverse.100}",
             "virtuozzo": "{palette.transparent.dark.inverse.100}",
             "yellow-1c": "{palette.transparent.dark.inverse.100}"
           }
@@ -3270,6 +3380,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -3299,6 +3410,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -3328,6 +3440,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -3357,6 +3470,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -3386,6 +3500,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.60}",
             "sand": "{palette.transparent.white.fixed.60}",
             "telstra": "{palette.transparent.white.fixed.60}",
+            "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
             "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
@@ -3417,6 +3532,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.30}",
             "sand": "{palette.transparent.white.fixed.30}",
             "telstra": "{palette.transparent.white.fixed.30}",
+            "virtual_one": "{palette.transparent.white.fixed.30}",
             "virtuozzo": "{palette.transparent.white.fixed.30}",
             "yellow-1c": "{palette.transparent.white.fixed.30}"
           }
@@ -3446,6 +3562,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.30}",
             "sand": "{palette.transparent.white.fixed.30}",
             "telstra": "{palette.transparent.white.fixed.30}",
+            "virtual_one": "{palette.transparent.white.fixed.30}",
             "virtuozzo": "{palette.transparent.white.fixed.30}",
             "yellow-1c": "{palette.transparent.white.fixed.30}"
           }
@@ -3475,6 +3592,7 @@
             "red_home_pl": "{palette.blue.5}",
             "sand": "{palette.blue.5}",
             "telstra": "{palette.blue.5}",
+            "virtual_one": "{palette.blue.5}",
             "virtuozzo": "{palette.blue.5}",
             "yellow-1c": "{palette.blue.5}"
           }
@@ -3504,6 +3622,7 @@
             "red_home_pl": "{palette.blue.7}",
             "sand": "{palette.blue.7}",
             "telstra": "{palette.blue.7}",
+            "virtual_one": "{palette.blue.7}",
             "virtuozzo": "{palette.blue.7}",
             "yellow-1c": "{palette.blue.7}"
           }
@@ -3533,6 +3652,7 @@
             "red_home_pl": "{palette.blue.3}",
             "sand": "{palette.blue.3}",
             "telstra": "{palette.blue.3}",
+            "virtual_one": "{palette.blue.3}",
             "virtuozzo": "{palette.blue.3}",
             "yellow-1c": "{palette.blue.3}"
           }
@@ -3562,6 +3682,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -3591,6 +3712,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.60}",
             "sand": "{palette.transparent.white.fixed.60}",
             "telstra": "{palette.transparent.white.fixed.60}",
+            "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
             "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
@@ -3622,6 +3744,7 @@
             "red_home_pl": "{palette.transparent.white.inverse.100}",
             "sand": "{palette.transparent.white.inverse.100}",
             "telstra": "{palette.transparent.white.inverse.100}",
+            "virtual_one": "{palette.transparent.white.inverse.100}",
             "virtuozzo": "{palette.transparent.white.inverse.100}",
             "yellow-1c": "{palette.transparent.white.inverse.100}"
           }
@@ -3651,6 +3774,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.60}",
             "sand": "{palette.transparent.white.fixed.60}",
             "telstra": "{palette.transparent.white.fixed.60}",
+            "virtual_one": "{palette.transparent.white.fixed.60}",
             "virtuozzo": "{palette.transparent.white.fixed.60}",
             "yellow-1c": "{palette.transparent.white.fixed.60}"
           }
@@ -3682,6 +3806,7 @@
             "red_home_pl": "{palette.violet.11}",
             "sand": "{palette.violet.11}",
             "telstra": "{palette.violet.11}",
+            "virtual_one": "{palette.violet.11}",
             "virtuozzo": "{palette.violet.11}",
             "yellow-1c": "{palette.violet.11}"
           }
@@ -3711,6 +3836,7 @@
             "red_home_pl": "{palette.orange.11}",
             "sand": "{palette.orange.11}",
             "telstra": "{palette.orange.11}",
+            "virtual_one": "{palette.orange.11}",
             "virtuozzo": "{palette.orange.11}",
             "yellow-1c": "{palette.orange.11}"
           }
@@ -3740,6 +3866,7 @@
             "red_home_pl": "{palette.red.11}",
             "sand": "{palette.red.11}",
             "telstra": "{palette.red.11}",
+            "virtual_one": "{palette.red.11}",
             "virtuozzo": "{palette.red.11}",
             "yellow-1c": "{palette.red.11}"
           }
@@ -3769,6 +3896,7 @@
             "red_home_pl": "{palette.electricblue.11}",
             "sand": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
+            "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
             "yellow-1c": "{palette.electricblue.11}"
           }
@@ -3798,6 +3926,7 @@
             "red_home_pl": "{palette.electricblue.5}",
             "sand": "{palette.electricblue.5}",
             "telstra": "{palette.electricblue.5}",
+            "virtual_one": "{palette.electricblue.5}",
             "virtuozzo": "{palette.electricblue.5}",
             "yellow-1c": "{palette.electricblue.5}"
           }
@@ -3827,6 +3956,7 @@
             "red_home_pl": "{palette.electricblue.13}",
             "sand": "{palette.electricblue.13}",
             "telstra": "{palette.electricblue.13}",
+            "virtual_one": "{palette.electricblue.13}",
             "virtuozzo": "{palette.electricblue.13}",
             "yellow-1c": "{palette.electricblue.13}"
           }
@@ -3856,6 +3986,7 @@
             "red_home_pl": "{palette.electricblue.11}",
             "sand": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
+            "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
             "yellow-1c": "{palette.electricblue.11}"
           }
@@ -3885,6 +4016,7 @@
             "red_home_pl": "{palette.electricblue.14}",
             "sand": "{palette.electricblue.14}",
             "telstra": "{palette.electricblue.14}",
+            "virtual_one": "{palette.electricblue.14}",
             "virtuozzo": "{palette.electricblue.14}",
             "yellow-1c": "{palette.electricblue.14}"
           }
@@ -3914,6 +4046,7 @@
             "red_home_pl": "{palette.grayscale.11}",
             "sand": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
+            "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
             "yellow-1c": "{palette.grayscale.11}"
           }
@@ -3943,6 +4076,7 @@
             "red_home_pl": "{palette.grayscale.14}",
             "sand": "{palette.grayscale.14}",
             "telstra": "{palette.grayscale.14}",
+            "virtual_one": "{palette.grayscale.14}",
             "virtuozzo": "{palette.grayscale.14}",
             "yellow-1c": "{palette.grayscale.14}"
           }
@@ -3972,6 +4106,7 @@
             "red_home_pl": "{palette.grayscale.11}",
             "sand": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
+            "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
             "yellow-1c": "{palette.grayscale.11}"
           }
@@ -4001,6 +4136,7 @@
             "red_home_pl": "{palette.green.11}",
             "sand": "{palette.green.11}",
             "telstra": "{palette.green.11}",
+            "virtual_one": "{palette.green.11}",
             "virtuozzo": "{palette.green.11}",
             "yellow-1c": "{palette.green.11}"
           }
@@ -4030,6 +4166,7 @@
             "red_home_pl": "{palette.yellow.11}",
             "sand": "{palette.yellow.11}",
             "telstra": "{palette.yellow.11}",
+            "virtual_one": "{palette.yellow.11}",
             "virtuozzo": "{palette.yellow.11}",
             "yellow-1c": "{palette.yellow.11}"
           }
@@ -4061,6 +4198,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4090,6 +4228,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4119,6 +4258,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4148,6 +4288,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4177,6 +4318,7 @@
             "red_home_pl": "{palette.electricblue.11}",
             "sand": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
+            "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
             "yellow-1c": "{palette.electricblue.11}"
           }
@@ -4206,6 +4348,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4235,6 +4378,7 @@
             "red_home_pl": "{palette.grayscale.0}",
             "sand": "{palette.grayscale.0}",
             "telstra": "{palette.grayscale.0}",
+            "virtual_one": "{palette.grayscale.0}",
             "virtuozzo": "{palette.grayscale.0}",
             "yellow-1c": "{palette.grayscale.0}"
           }
@@ -4264,6 +4408,7 @@
             "red_home_pl": "{palette.grayscale.2}",
             "sand": "{palette.grayscale.2}",
             "telstra": "{palette.grayscale.2}",
+            "virtual_one": "{palette.grayscale.2}",
             "virtuozzo": "{palette.grayscale.2}",
             "yellow-1c": "{palette.grayscale.2}"
           }
@@ -4293,6 +4438,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4322,6 +4468,7 @@
             "red_home_pl": "{palette.transparent.white.fixed.100}",
             "sand": "{palette.transparent.white.fixed.100}",
             "telstra": "{palette.transparent.white.fixed.100}",
+            "virtual_one": "{palette.transparent.white.fixed.100}",
             "virtuozzo": "{palette.transparent.white.fixed.100}",
             "yellow-1c": "{palette.transparent.white.fixed.100}"
           }
@@ -4353,6 +4500,7 @@
             "red_home_pl": "{palette.red.7}",
             "sand": "{palette.red.7}",
             "telstra": "{palette.red.7}",
+            "virtual_one": "{palette.red.7}",
             "virtuozzo": "{palette.red.7}",
             "yellow-1c": "{palette.red.7}"
           }
@@ -4382,6 +4530,7 @@
             "red_home_pl": "{palette.grayscale.5}",
             "sand": "{palette.grayscale.5}",
             "telstra": "{palette.grayscale.5}",
+            "virtual_one": "{palette.grayscale.5}",
             "virtuozzo": "{palette.grayscale.5}",
             "yellow-1c": "{palette.grayscale.5}"
           }
@@ -4411,6 +4560,7 @@
             "red_home_pl": "{palette.grayscale.3}",
             "sand": "{palette.grayscale.3}",
             "telstra": "{palette.grayscale.3}",
+            "virtual_one": "{palette.grayscale.3}",
             "virtuozzo": "{palette.grayscale.3}",
             "yellow-1c": "{palette.grayscale.3}"
           }
@@ -4440,6 +4590,7 @@
             "red_home_pl": "{palette.grayscale.11}",
             "sand": "{palette.grayscale.11}",
             "telstra": "{palette.grayscale.11}",
+            "virtual_one": "{palette.grayscale.11}",
             "virtuozzo": "{palette.grayscale.11}",
             "yellow-1c": "{palette.grayscale.11}"
           }
@@ -4469,6 +4620,7 @@
             "red_home_pl": "{palette.grayscale.10}",
             "sand": "{palette.grayscale.10}",
             "telstra": "{palette.grayscale.10}",
+            "virtual_one": "{palette.grayscale.10}",
             "virtuozzo": "{palette.grayscale.10}",
             "yellow-1c": "{palette.grayscale.10}"
           }
@@ -4498,6 +4650,7 @@
             "red_home_pl": "{palette.grayscale.12}",
             "sand": "{palette.grayscale.12}",
             "telstra": "{palette.grayscale.12}",
+            "virtual_one": "{palette.grayscale.12}",
             "virtuozzo": "{palette.grayscale.12}",
             "yellow-1c": "{palette.grayscale.12}"
           }
@@ -4527,6 +4680,7 @@
             "red_home_pl": "{palette.grayscale.14}",
             "sand": "{palette.grayscale.14}",
             "telstra": "{palette.grayscale.14}",
+            "virtual_one": "{palette.grayscale.14}",
             "virtuozzo": "{palette.grayscale.14}",
             "yellow-1c": "{palette.grayscale.14}"
           }
@@ -4556,6 +4710,7 @@
             "red_home_pl": "{palette.grayscale.8}",
             "sand": "{palette.grayscale.8}",
             "telstra": "{palette.grayscale.8}",
+            "virtual_one": "{palette.grayscale.8}",
             "virtuozzo": "{palette.grayscale.8}",
             "yellow-1c": "{palette.grayscale.8}"
           }
@@ -4591,6 +4746,7 @@
           "red_home_pl": "{palette.blue.7}",
           "sand": "{palette.blue.7}",
           "telstra": "{palette.blue.7}",
+          "virtual_one": "{palette.blue.7}",
           "virtuozzo": "{palette.blue.7}",
           "yellow-1c": "{palette.blue.7}"
         }
@@ -4620,6 +4776,7 @@
           "red_home_pl": "{palette.orange.9}",
           "sand": "{palette.orange.9}",
           "telstra": "{palette.orange.9}",
+          "virtual_one": "{palette.orange.9}",
           "virtuozzo": "{palette.orange.9}",
           "yellow-1c": "{palette.orange.9}"
         }
@@ -4649,6 +4806,7 @@
           "red_home_pl": "{palette.teal.7}",
           "sand": "{palette.teal.7}",
           "telstra": "{palette.teal.7}",
+          "virtual_one": "{palette.teal.7}",
           "virtuozzo": "{palette.teal.7}",
           "yellow-1c": "{palette.teal.7}"
         }
@@ -4678,6 +4836,7 @@
           "red_home_pl": "{palette.violet.7}",
           "sand": "{palette.violet.7}",
           "telstra": "{palette.violet.7}",
+          "virtual_one": "{palette.violet.7}",
           "virtuozzo": "{palette.violet.7}",
           "yellow-1c": "{palette.violet.7}"
         }
@@ -4707,6 +4866,7 @@
           "red_home_pl": "{palette.yellow.10}",
           "sand": "{palette.yellow.10}",
           "telstra": "{palette.yellow.10}",
+          "virtual_one": "{palette.yellow.10}",
           "virtuozzo": "{palette.yellow.10}",
           "yellow-1c": "{palette.yellow.10}"
         }
@@ -4736,6 +4896,7 @@
           "red_home_pl": "{palette.red.7}",
           "sand": "{palette.red.7}",
           "telstra": "{palette.red.7}",
+          "virtual_one": "{palette.red.7}",
           "virtuozzo": "{palette.red.7}",
           "yellow-1c": "{palette.red.7}"
         }
@@ -4765,6 +4926,7 @@
           "red_home_pl": "{palette.green.8}",
           "sand": "{palette.green.8}",
           "telstra": "{palette.green.8}",
+          "virtual_one": "{palette.green.8}",
           "virtuozzo": "{palette.green.8}",
           "yellow-1c": "{palette.green.8}"
         }
@@ -4794,6 +4956,7 @@
           "red_home_pl": "{palette.electricblue.5}",
           "sand": "{palette.electricblue.5}",
           "telstra": "{palette.electricblue.5}",
+          "virtual_one": "{palette.electricblue.5}",
           "virtuozzo": "{palette.electricblue.5}",
           "yellow-1c": "{palette.electricblue.5}"
         }
@@ -4823,6 +4986,7 @@
           "red_home_pl": "{palette.yellow.7}",
           "sand": "{palette.yellow.7}",
           "telstra": "{palette.yellow.7}",
+          "virtual_one": "{palette.yellow.7}",
           "virtuozzo": "{palette.yellow.7}",
           "yellow-1c": "{palette.yellow.7}"
         }
@@ -4852,6 +5016,7 @@
           "red_home_pl": "{palette.violet.10}",
           "sand": "{palette.violet.10}",
           "telstra": "{palette.violet.10}",
+          "virtual_one": "{palette.violet.10}",
           "virtuozzo": "{palette.violet.10}",
           "yellow-1c": "{palette.violet.10}"
         }
@@ -4881,6 +5046,7 @@
           "red_home_pl": "{palette.teal.10}",
           "sand": "{palette.teal.10}",
           "telstra": "{palette.teal.10}",
+          "virtual_one": "{palette.teal.10}",
           "virtuozzo": "{palette.teal.10}",
           "yellow-1c": "{palette.teal.10}"
         }
@@ -4910,6 +5076,7 @@
           "red_home_pl": "{palette.red.10}",
           "sand": "{palette.red.10}",
           "telstra": "{palette.red.10}",
+          "virtual_one": "{palette.red.10}",
           "virtuozzo": "{palette.red.10}",
           "yellow-1c": "{palette.red.10}"
         }
@@ -4939,6 +5106,7 @@
           "red_home_pl": "{palette.blue.10}",
           "sand": "{palette.blue.10}",
           "telstra": "{palette.blue.10}",
+          "virtual_one": "{palette.blue.10}",
           "virtuozzo": "{palette.blue.10}",
           "yellow-1c": "{palette.blue.10}"
         }
@@ -4968,6 +5136,7 @@
           "red_home_pl": "{palette.yellow.12}",
           "sand": "{palette.yellow.12}",
           "telstra": "{palette.yellow.12}",
+          "virtual_one": "{palette.yellow.12}",
           "virtuozzo": "{palette.yellow.12}",
           "yellow-1c": "{palette.yellow.12}"
         }
@@ -4997,6 +5166,7 @@
           "red_home_pl": "{palette.green.11}",
           "sand": "{palette.green.11}",
           "telstra": "{palette.green.11}",
+          "virtual_one": "{palette.green.11}",
           "virtuozzo": "{palette.green.11}",
           "yellow-1c": "{palette.green.11}"
         }
@@ -5026,6 +5196,7 @@
           "red_home_pl": "{palette.electricblue.3}",
           "sand": "{palette.electricblue.3}",
           "telstra": "{palette.electricblue.3}",
+          "virtual_one": "{palette.electricblue.3}",
           "virtuozzo": "{palette.electricblue.3}",
           "yellow-1c": "{palette.electricblue.3}"
         }
@@ -5058,6 +5229,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -5087,6 +5259,7 @@
             "red_home_pl": "{palette.electricblue.5}",
             "sand": "{palette.electricblue.5}",
             "telstra": "{palette.electricblue.5}",
+            "virtual_one": "{palette.electricblue.5}",
             "virtuozzo": "{palette.electricblue.5}",
             "yellow-1c": "{palette.electricblue.5}"
           }
@@ -5116,6 +5289,7 @@
             "red_home_pl": "{palette.electricblue.7}",
             "sand": "{palette.electricblue.7}",
             "telstra": "{palette.electricblue.7}",
+            "virtual_one": "{palette.electricblue.7}",
             "virtuozzo": "{palette.electricblue.7}",
             "yellow-1c": "{palette.electricblue.7}"
           }
@@ -5145,6 +5319,7 @@
             "red_home_pl": "{palette.orange.4}",
             "sand": "{palette.orange.4}",
             "telstra": "{palette.orange.4}",
+            "virtual_one": "{palette.orange.4}",
             "virtuozzo": "{palette.orange.4}",
             "yellow-1c": "{palette.orange.4}"
           }
@@ -5174,6 +5349,7 @@
             "red_home_pl": "{palette.orange.7}",
             "sand": "{palette.orange.7}",
             "telstra": "{palette.orange.7}",
+            "virtual_one": "{palette.orange.7}",
             "virtuozzo": "{palette.orange.7}",
             "yellow-1c": "{palette.orange.7}"
           }
@@ -5203,6 +5379,7 @@
             "red_home_pl": "{palette.orange.9}",
             "sand": "{palette.orange.9}",
             "telstra": "{palette.orange.9}",
+            "virtual_one": "{palette.orange.9}",
             "virtuozzo": "{palette.orange.9}",
             "yellow-1c": "{palette.orange.9}"
           }
@@ -5234,6 +5411,7 @@
             "red_home_pl": "{palette.teal.4}",
             "sand": "{palette.teal.4}",
             "telstra": "{palette.teal.4}",
+            "virtual_one": "{palette.teal.4}",
             "virtuozzo": "{palette.teal.4}",
             "yellow-1c": "{palette.teal.4}"
           }
@@ -5263,6 +5441,7 @@
             "red_home_pl": "{palette.teal.5}",
             "sand": "{palette.teal.5}",
             "telstra": "{palette.teal.5}",
+            "virtual_one": "{palette.teal.5}",
             "virtuozzo": "{palette.teal.5}",
             "yellow-1c": "{palette.teal.5}"
           }
@@ -5292,6 +5471,7 @@
             "red_home_pl": "{palette.teal.7}",
             "sand": "{palette.teal.7}",
             "telstra": "{palette.teal.7}",
+            "virtual_one": "{palette.teal.7}",
             "virtuozzo": "{palette.teal.7}",
             "yellow-1c": "{palette.teal.7}"
           }
@@ -5321,6 +5501,7 @@
             "red_home_pl": "{palette.violet.4}",
             "sand": "{palette.violet.4}",
             "telstra": "{palette.violet.4}",
+            "virtual_one": "{palette.violet.4}",
             "virtuozzo": "{palette.violet.4}",
             "yellow-1c": "{palette.violet.4}"
           }
@@ -5350,6 +5531,7 @@
             "red_home_pl": "{palette.violet.7}",
             "sand": "{palette.violet.7}",
             "telstra": "{palette.violet.7}",
+            "virtual_one": "{palette.violet.7}",
             "virtuozzo": "{palette.violet.7}",
             "yellow-1c": "{palette.violet.7}"
           }
@@ -5379,6 +5561,7 @@
             "red_home_pl": "{palette.violet.9}",
             "sand": "{palette.violet.9}",
             "telstra": "{palette.violet.9}",
+            "virtual_one": "{palette.violet.9}",
             "virtuozzo": "{palette.violet.9}",
             "yellow-1c": "{palette.violet.9}"
           }
@@ -5412,6 +5595,7 @@
             "red_home_pl": "{colors.background.statusStrong.critical}",
             "sand": "{colors.background.statusStrong.critical}",
             "telstra": "{colors.background.statusStrong.critical}",
+            "virtual_one": "{colors.background.statusStrong.critical}",
             "virtuozzo": "{colors.background.statusStrong.critical}",
             "yellow-1c": "{colors.background.statusStrong.critical}"
           }
@@ -5441,6 +5625,7 @@
             "red_home_pl": "{colors.background.statusStrong.danger}",
             "sand": "{colors.background.statusStrong.danger}",
             "telstra": "{colors.background.statusStrong.danger}",
+            "virtual_one": "{colors.background.statusStrong.danger}",
             "virtuozzo": "{colors.background.statusStrong.danger}",
             "yellow-1c": "{colors.background.statusStrong.danger}"
           }
@@ -5470,6 +5655,7 @@
             "red_home_pl": "{colors.background.statusStrong.info}",
             "sand": "{colors.background.statusStrong.info}",
             "telstra": "{colors.background.statusStrong.info}",
+            "virtual_one": "{colors.background.statusStrong.info}",
             "virtuozzo": "{colors.background.statusStrong.info}",
             "yellow-1c": "{colors.background.statusStrong.info}"
           }
@@ -5499,6 +5685,7 @@
             "red_home_pl": "{colors.background.statusStrong.neutral}",
             "sand": "{colors.background.statusStrong.neutral}",
             "telstra": "{colors.background.statusStrong.neutral}",
+            "virtual_one": "{colors.background.statusStrong.neutral}",
             "virtuozzo": "{colors.background.statusStrong.neutral}",
             "yellow-1c": "{colors.background.statusStrong.neutral}"
           }
@@ -5528,6 +5715,7 @@
             "red_home_pl": "{colors.background.statusStrong.success}",
             "sand": "{colors.background.statusStrong.success}",
             "telstra": "{colors.background.statusStrong.success}",
+            "virtual_one": "{colors.background.statusStrong.success}",
             "virtuozzo": "{colors.background.statusStrong.success}",
             "yellow-1c": "{colors.background.statusStrong.success}"
           }
@@ -5557,6 +5745,7 @@
             "red_home_pl": "{colors.background.statusStrong.warning}",
             "sand": "{colors.background.statusStrong.warning}",
             "telstra": "{colors.background.statusStrong.warning}",
+            "virtual_one": "{colors.background.statusStrong.warning}",
             "virtuozzo": "{colors.background.statusStrong.warning}",
             "yellow-1c": "{colors.background.statusStrong.warning}"
           }
@@ -5590,6 +5779,7 @@
             "red_home_pl": "{palette.electricblue.2}",
             "sand": "{palette.electricblue.2}",
             "telstra": "{palette.electricblue.2}",
+            "virtual_one": "{palette.electricblue.2}",
             "virtuozzo": "{palette.electricblue.2}",
             "yellow-1c": "{palette.electricblue.2}"
           }
@@ -5619,6 +5809,7 @@
             "red_home_pl": "{palette.electricblue.4}",
             "sand": "{palette.electricblue.4}",
             "telstra": "{palette.electricblue.4}",
+            "virtual_one": "{palette.electricblue.4}",
             "virtuozzo": "{palette.electricblue.4}",
             "yellow-1c": "{palette.electricblue.4}"
           }
@@ -5648,6 +5839,7 @@
             "red_home_pl": "{palette.electricblue.5}",
             "sand": "{palette.electricblue.5}",
             "telstra": "{palette.electricblue.5}",
+            "virtual_one": "{palette.electricblue.5}",
             "virtuozzo": "{palette.electricblue.5}",
             "yellow-1c": "{palette.electricblue.5}"
           }
@@ -5677,6 +5869,7 @@
             "red_home_pl": "{palette.electricblue.6}",
             "sand": "{palette.electricblue.6}",
             "telstra": "{palette.electricblue.6}",
+            "virtual_one": "{palette.electricblue.6}",
             "virtuozzo": "{palette.electricblue.6}",
             "yellow-1c": "{palette.electricblue.6}"
           }
@@ -5706,6 +5899,7 @@
             "red_home_pl": "{palette.electricblue.7}",
             "sand": "{palette.electricblue.7}",
             "telstra": "{palette.electricblue.7}",
+            "virtual_one": "{palette.electricblue.7}",
             "virtuozzo": "{palette.electricblue.7}",
             "yellow-1c": "{palette.electricblue.7}"
           }
@@ -5735,6 +5929,7 @@
             "red_home_pl": "{palette.electricblue.9}",
             "sand": "{palette.electricblue.9}",
             "telstra": "{palette.electricblue.9}",
+            "virtual_one": "{palette.electricblue.9}",
             "virtuozzo": "{palette.electricblue.9}",
             "yellow-1c": "{palette.electricblue.9}"
           }
@@ -5764,6 +5959,7 @@
             "red_home_pl": "{palette.electricblue.11}",
             "sand": "{palette.electricblue.11}",
             "telstra": "{palette.electricblue.11}",
+            "virtual_one": "{palette.electricblue.11}",
             "virtuozzo": "{palette.electricblue.11}",
             "yellow-1c": "{palette.electricblue.11}"
           }
@@ -5793,6 +5989,7 @@
             "red_home_pl": "{palette.electricblue.12}",
             "sand": "{palette.electricblue.12}",
             "telstra": "{palette.electricblue.12}",
+            "virtual_one": "{palette.electricblue.12}",
             "virtuozzo": "{palette.electricblue.12}",
             "yellow-1c": "{palette.electricblue.12}"
           }
@@ -5824,6 +6021,7 @@
             "red_home_pl": "{palette.orange.2}",
             "sand": "{palette.orange.2}",
             "telstra": "{palette.orange.2}",
+            "virtual_one": "{palette.orange.2}",
             "virtuozzo": "{palette.orange.2}",
             "yellow-1c": "{palette.orange.2}"
           }
@@ -5853,6 +6051,7 @@
             "red_home_pl": "{palette.orange.4}",
             "sand": "{palette.orange.4}",
             "telstra": "{palette.orange.4}",
+            "virtual_one": "{palette.orange.4}",
             "virtuozzo": "{palette.orange.4}",
             "yellow-1c": "{palette.orange.4}"
           }
@@ -5882,6 +6081,7 @@
             "red_home_pl": "{palette.orange.5}",
             "sand": "{palette.orange.5}",
             "telstra": "{palette.orange.5}",
+            "virtual_one": "{palette.orange.5}",
             "virtuozzo": "{palette.orange.5}",
             "yellow-1c": "{palette.orange.5}"
           }
@@ -5911,6 +6111,7 @@
             "red_home_pl": "{palette.orange.6}",
             "sand": "{palette.orange.6}",
             "telstra": "{palette.orange.6}",
+            "virtual_one": "{palette.orange.6}",
             "virtuozzo": "{palette.orange.6}",
             "yellow-1c": "{palette.orange.6}"
           }
@@ -5940,6 +6141,7 @@
             "red_home_pl": "{palette.orange.7}",
             "sand": "{palette.orange.7}",
             "telstra": "{palette.orange.7}",
+            "virtual_one": "{palette.orange.7}",
             "virtuozzo": "{palette.orange.7}",
             "yellow-1c": "{palette.orange.7}"
           }
@@ -5969,6 +6171,7 @@
             "red_home_pl": "{palette.orange.9}",
             "sand": "{palette.orange.9}",
             "telstra": "{palette.orange.9}",
+            "virtual_one": "{palette.orange.9}",
             "virtuozzo": "{palette.orange.9}",
             "yellow-1c": "{palette.orange.9}"
           }
@@ -5998,6 +6201,7 @@
             "red_home_pl": "{palette.orange.11}",
             "sand": "{palette.orange.11}",
             "telstra": "{palette.orange.11}",
+            "virtual_one": "{palette.orange.11}",
             "virtuozzo": "{palette.orange.11}",
             "yellow-1c": "{palette.orange.11}"
           }
@@ -6027,6 +6231,7 @@
             "red_home_pl": "{palette.orange.12}",
             "sand": "{palette.orange.12}",
             "telstra": "{palette.orange.12}",
+            "virtual_one": "{palette.orange.12}",
             "virtuozzo": "{palette.orange.12}",
             "yellow-1c": "{palette.orange.12}"
           }
@@ -6058,6 +6263,7 @@
             "red_home_pl": "{palette.teal.2}",
             "sand": "{palette.teal.2}",
             "telstra": "{palette.teal.2}",
+            "virtual_one": "{palette.teal.2}",
             "virtuozzo": "{palette.teal.2}",
             "yellow-1c": "{palette.teal.2}"
           }
@@ -6087,6 +6293,7 @@
             "red_home_pl": "{palette.teal.4}",
             "sand": "{palette.teal.4}",
             "telstra": "{palette.teal.4}",
+            "virtual_one": "{palette.teal.4}",
             "virtuozzo": "{palette.teal.4}",
             "yellow-1c": "{palette.teal.4}"
           }
@@ -6116,6 +6323,7 @@
             "red_home_pl": "{palette.teal.5}",
             "sand": "{palette.teal.5}",
             "telstra": "{palette.teal.5}",
+            "virtual_one": "{palette.teal.5}",
             "virtuozzo": "{palette.teal.5}",
             "yellow-1c": "{palette.teal.5}"
           }
@@ -6145,6 +6353,7 @@
             "red_home_pl": "{palette.teal.6}",
             "sand": "{palette.teal.6}",
             "telstra": "{palette.teal.6}",
+            "virtual_one": "{palette.teal.6}",
             "virtuozzo": "{palette.teal.6}",
             "yellow-1c": "{palette.teal.6}"
           }
@@ -6174,6 +6383,7 @@
             "red_home_pl": "{palette.teal.7}",
             "sand": "{palette.teal.7}",
             "telstra": "{palette.teal.7}",
+            "virtual_one": "{palette.teal.7}",
             "virtuozzo": "{palette.teal.7}",
             "yellow-1c": "{palette.teal.7}"
           }
@@ -6203,6 +6413,7 @@
             "red_home_pl": "{palette.teal.9}",
             "sand": "{palette.teal.9}",
             "telstra": "{palette.teal.9}",
+            "virtual_one": "{palette.teal.9}",
             "virtuozzo": "{palette.teal.9}",
             "yellow-1c": "{palette.teal.9}"
           }
@@ -6232,6 +6443,7 @@
             "red_home_pl": "{palette.teal.11}",
             "sand": "{palette.teal.11}",
             "telstra": "{palette.teal.11}",
+            "virtual_one": "{palette.teal.11}",
             "virtuozzo": "{palette.teal.11}",
             "yellow-1c": "{palette.teal.11}"
           }
@@ -6261,6 +6473,7 @@
             "red_home_pl": "{palette.teal.12}",
             "sand": "{palette.teal.12}",
             "telstra": "{palette.teal.12}",
+            "virtual_one": "{palette.teal.12}",
             "virtuozzo": "{palette.teal.12}",
             "yellow-1c": "{palette.teal.12}"
           }
@@ -6292,6 +6505,7 @@
             "red_home_pl": "{palette.violet.2}",
             "sand": "{palette.violet.2}",
             "telstra": "{palette.violet.2}",
+            "virtual_one": "{palette.violet.2}",
             "virtuozzo": "{palette.violet.2}",
             "yellow-1c": "{palette.violet.2}"
           }
@@ -6321,6 +6535,7 @@
             "red_home_pl": "{palette.violet.4}",
             "sand": "{palette.violet.4}",
             "telstra": "{palette.violet.4}",
+            "virtual_one": "{palette.violet.4}",
             "virtuozzo": "{palette.violet.4}",
             "yellow-1c": "{palette.violet.4}"
           }
@@ -6350,6 +6565,7 @@
             "red_home_pl": "{palette.violet.5}",
             "sand": "{palette.violet.5}",
             "telstra": "{palette.violet.5}",
+            "virtual_one": "{palette.violet.5}",
             "virtuozzo": "{palette.violet.5}",
             "yellow-1c": "{palette.violet.5}"
           }
@@ -6379,6 +6595,7 @@
             "red_home_pl": "{palette.violet.6}",
             "sand": "{palette.violet.6}",
             "telstra": "{palette.violet.6}",
+            "virtual_one": "{palette.violet.6}",
             "virtuozzo": "{palette.violet.6}",
             "yellow-1c": "{palette.violet.6}"
           }
@@ -6408,6 +6625,7 @@
             "red_home_pl": "{palette.violet.7}",
             "sand": "{palette.violet.7}",
             "telstra": "{palette.violet.7}",
+            "virtual_one": "{palette.violet.7}",
             "virtuozzo": "{palette.violet.7}",
             "yellow-1c": "{palette.violet.7}"
           }
@@ -6437,6 +6655,7 @@
             "red_home_pl": "{palette.violet.9}",
             "sand": "{palette.violet.9}",
             "telstra": "{palette.violet.9}",
+            "virtual_one": "{palette.violet.9}",
             "virtuozzo": "{palette.violet.9}",
             "yellow-1c": "{palette.violet.9}"
           }
@@ -6466,6 +6685,7 @@
             "red_home_pl": "{palette.violet.11}",
             "sand": "{palette.violet.11}",
             "telstra": "{palette.violet.11}",
+            "virtual_one": "{palette.violet.11}",
             "virtuozzo": "{palette.violet.11}",
             "yellow-1c": "{palette.violet.11}"
           }
@@ -6495,6 +6715,7 @@
             "red_home_pl": "{palette.violet.12}",
             "sand": "{palette.violet.12}",
             "telstra": "{palette.violet.12}",
+            "virtual_one": "{palette.violet.12}",
             "virtuozzo": "{palette.violet.12}",
             "yellow-1c": "{palette.violet.12}"
           }
@@ -6786,6 +7007,22 @@
             }
           ],
           "telstra": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [234.11, 56.57, 38.82]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.09, 69.78, 27.25]
+              },
+              "position": 1
+            }
+          ],
+          "virtual_one": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7131,6 +7368,22 @@
               "position": 1
             }
           ],
+          "virtual_one": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [234.38, 100, 93.73]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.24, 100, 92.75]
+              },
+              "position": 1
+            }
+          ],
           "virtuozzo": [
             {
               "color": {
@@ -7446,6 +7699,22 @@
             }
           ],
           "telstra": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [233.75, 58.54, 48.24]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.22, 69.3, 42.16]
+              },
+              "position": 1
+            }
+          ],
+          "virtual_one": [
             {
               "color": {
                 "colorSpace": "hsl",
@@ -7791,6 +8060,22 @@
               "position": 1
             }
           ],
+          "virtual_one": [
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [233.93, 73.04, 54.9]
+              },
+              "position": 0.2
+            },
+            {
+              "color": {
+                "colorSpace": "hsl",
+                "components": [303.19, 97.18, 58.24]
+              },
+              "position": 1
+            }
+          ],
           "virtuozzo": [
             {
               "color": {
@@ -7958,6 +8243,13 @@
           "offsetY": "{shadows.lg.positionY}",
           "spread": "{shadows.lg.spread}"
         },
+        "virtual_one": {
+          "blur": "{shadows.lg.blur}",
+          "color": "{shadows.lg.color}",
+          "offsetX": "{shadows.lg.positionX}",
+          "offsetY": "{shadows.lg.positionY}",
+          "spread": "{shadows.lg.spread}"
+        },
         "virtuozzo": {
           "blur": "{shadows.lg.blur}",
           "color": "{shadows.lg.color}",
@@ -8103,6 +8395,13 @@
           "offsetY": "{shadows.md.positionY}",
           "spread": "{shadows.md.spread}"
         },
+        "virtual_one": {
+          "blur": "{shadows.md.blur}",
+          "color": "{shadows.md.color}",
+          "offsetX": "{shadows.md.positionX}",
+          "offsetY": "{shadows.md.positionY}",
+          "spread": "{shadows.md.spread}"
+        },
         "virtuozzo": {
           "blur": "{shadows.md.blur}",
           "color": "{shadows.md.color}",
@@ -8242,6 +8541,13 @@
           "spread": "{shadows.sm.spread}"
         },
         "telstra": {
+          "blur": "{shadows.sm.blur}",
+          "color": "{shadows.sm.color}",
+          "offsetX": "{shadows.sm.positionX}",
+          "offsetY": "{shadows.sm.positionY}",
+          "spread": "{shadows.sm.spread}"
+        },
+        "virtual_one": {
           "blur": "{shadows.sm.blur}",
           "color": "{shadows.sm.color}",
           "offsetX": "{shadows.sm.positionX}",
