@@ -13,9 +13,9 @@ published); do not edit them by hand — change the upstream tokens and rebuild.
 
 Brands: `default` plus `blue_yellow_uss_signal`, `brown`, `dark_gray`,
 `deep_purple`, `deep_sky_itkontoret`, `green_also_choise_df`, `ingram_micro`,
-`light-gray`, `light_blue_hp`, `orange_tsukaeru_helpox`, `pinky`, `purple`,
+`light_blue_hp`, `light_gray`, `orange_tsukaeru_helpox`, `pinky`, `purple`,
 `purple_fusion_media`, `red_fire_brick`, `red_home_pl`, `sand`, `telstra`,
-`virtuozzo`, `yellow-1c`.
+`virtual_one`, `virtuozzo`, `yellow_1c`.
 
 ## Layout
 

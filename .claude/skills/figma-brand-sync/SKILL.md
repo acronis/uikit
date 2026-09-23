@@ -185,6 +185,19 @@ pnpm --filter @acronis-platform/ui-react typecheck
 npx prettier --write packages/ui-react/.storybook/globals.ts packages/ui-react/.storybook/preview.ts
 ```
 
+## Phase 6.5 — Update consumer-facing brand lists
+
+Grep for the brand catalogue in docs that enumerate brands by name — currently:
+
+- `packages/tokens-pd/README.md` (ships with the npm package — it's in
+  `package.json`'s `"files"`)
+- `apps/docs/content/docs/packages/tokens-pd.mdx` (also update the brand
+  _count_ stated in prose, e.g. "19 brands")
+
+Update both for every brand added, renamed, or removed. Nothing in
+Phase 4's `validate` or Phase 7's smoke-test catches drift here — these are
+prose lists, not generated artifacts, so only a manual diff catches them.
+
 ## Phase 7 — Smoke-test
 
 ```bash
