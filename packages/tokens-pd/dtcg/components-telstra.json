@@ -11542,7 +11542,7 @@
               "com.figma.variableId": "VariableID:2463:56510"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onBrand.secondary}"
+            "$value": "{branding.telstra.SidebarPrimary.icon.idle}"
           },
           "size": {
             "$extensions": {
@@ -11567,7 +11567,7 @@
               "com.figma.variableId": "VariableID:2463:56511"
             },
             "$type": "color",
-            "$value": "{colors.text.onBrand.secondary}"
+            "$value": "{branding.telstra.SidebarPrimary.label.idle}"
           },
           "textStyle": {
             "$extensions": {
@@ -11605,7 +11605,7 @@
             "com.figma.variableId": "VariableID:2463:56481"
           },
           "$type": "color",
-          "$value": "{colors.border.onBrand.border}"
+          "$value": "{colors.border.onSurface.border}"
         },
         "borderWidth": {
           "$extensions": {
@@ -11657,7 +11657,7 @@
             "com.figma.variableId": "VariableID:2468:67776"
           },
           "$type": "color",
-          "$value": "{colors.border.onBrand.border}"
+          "$value": "{colors.border.onSurface.border}"
         },
         "borderWidth": {
           "$extensions": {

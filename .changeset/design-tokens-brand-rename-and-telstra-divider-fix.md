@@ -26,3 +26,14 @@ This renames the generated `tokens-pd` artifact paths accordingly:
 `dtcg/{semantics,components}-light_gray.json`, and equivalently for
 `yellow-1c` → `yellow_1c`. No token values changed for either brand — only
 the key.
+
+**Fix (non-breaking):** also included in this release — the telstra
+(magenta) brand's `SidebarPrimary` section divider and footer border both
+resolved to `{colors.border.onBrand.border}`, a translucent white value
+meant for a colored/brand background. telstra's sidebar background is
+white, so both dividers were effectively invisible. Both now resolve to
+`{colors.border.onSurface.border}` (opaque), matching the corrected Figma
+source. Also corrects two related `MenuItemExtras` leaves (external-link
+icon and shortcut text color) that the same Figma export changed from a
+shared `onBrand` token to telstra-specific `branding.telstra.SidebarPrimary`
+aliases. No other brand or token path is affected.

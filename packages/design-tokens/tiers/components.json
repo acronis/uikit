@@ -31409,7 +31409,7 @@
               "red_fire_brick": "{colors.glyph.onBrand.secondary}",
               "red_home_pl": "{colors.glyph.onBrand.secondary}",
               "sand": "{colors.glyph.onBrand.secondary}",
-              "telstra": "{colors.glyph.onBrand.secondary}",
+              "telstra": "{branding.telstra.SidebarPrimary.icon.idle}",
               "virtual_one": "{colors.glyph.onBrand.secondary}",
               "virtuozzo": "{colors.glyph.onBrand.secondary}",
               "yellow_1c": "{colors.glyph.onBrand.secondary}"
@@ -31475,7 +31475,7 @@
               "red_fire_brick": "{colors.text.onBrand.secondary}",
               "red_home_pl": "{colors.text.onBrand.secondary}",
               "sand": "{colors.text.onBrand.secondary}",
-              "telstra": "{colors.text.onBrand.secondary}",
+              "telstra": "{branding.telstra.SidebarPrimary.label.idle}",
               "virtual_one": "{colors.text.onBrand.secondary}",
               "virtuozzo": "{colors.text.onBrand.secondary}",
               "yellow_1c": "{colors.text.onBrand.secondary}"
@@ -31578,7 +31578,7 @@
             "red_fire_brick": "{colors.border.onBrand.border}",
             "red_home_pl": "{colors.border.onBrand.border}",
             "sand": "{colors.border.onBrand.border}",
-            "telstra": "{colors.border.onBrand.border}",
+            "telstra": "{colors.border.onSurface.border}",
             "virtual_one": "{colors.border.onBrand.border}",
             "virtuozzo": "{colors.border.onBrand.border}",
             "yellow_1c": "{colors.border.onBrand.border}"
@@ -31712,7 +31712,7 @@
             "red_fire_brick": "{colors.border.onBrand.border}",
             "red_home_pl": "{colors.border.onBrand.border}",
             "sand": "{colors.border.onBrand.border}",
-            "telstra": "{colors.border.onBrand.border}",
+            "telstra": "{colors.border.onSurface.border}",
             "virtual_one": "{colors.border.onBrand.border}",
             "virtuozzo": "{colors.border.onBrand.border}",
             "yellow_1c": "{colors.border.onBrand.border}"
