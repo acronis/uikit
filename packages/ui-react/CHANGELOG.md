@@ -1,5 +1,13 @@
 # @acronis-platform/ui-react
 
+## 5.4.5
+
+### Patch Changes
+
+- [#747](https://github.com/acronis/uikit/pull/747) [`a0a2e9f`](https://github.com/acronis/uikit/commit/a0a2e9f2bcafc006364c268e9663b355094ea649) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Show the full label in a tooltip when a list-style chart legend entry is truncated.
+
+- [#746](https://github.com/acronis/uikit/pull/746) [`7dafa9c`](https://github.com/acronis/uikit/commit/7dafa9c56b39792dccc572eb9678c83b977e6191) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Render the Dialog header close control with the shared ButtonIcon sizing and interaction treatment.
+
 ## 5.4.4
 
 ### Patch Changes
