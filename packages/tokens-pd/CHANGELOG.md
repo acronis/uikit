@@ -1,5 +1,89 @@
 # @acronis-platform/tokens-pd
 
+## 4.0.0
+
+### Major Changes
+
+- [#744](https://github.com/acronis/uikit/pull/744) [`04aefe7`](https://github.com/acronis/uikit/commit/04aefe7ae89c934d5fa2656654c6f18736b60231) Thanks [@madjorr](https://github.com/madjorr)! - **Breaking:** rename the `light-gray` and `yellow-1c` brand keys to
+  `light_gray` and `yellow_1c`.
+
+  Every other brand uses an underscore consistently in both its `branding.*`
+  primitive key and its `values.<brand>` key. `light-gray`/`yellow-1c` were the
+  only two exceptions: their `branding.*` primitive key was already
+  underscored, but their `values.<brand>` key stayed hyphenated (a data-entry
+  mistake). A brand-name mapping that assumes underscore for every brand fails
+  to resolve these two — this is a real bug, not just a naming
+  inconsistency.
+
+  Consumers must update any reference to these two brand ids:
+  - `light-gray` → `light_gray`
+  - `yellow-1c` → `yellow_1c`
+
+  This renames the generated `tokens-pd` artifact paths accordingly:
+  `css/light-gray.css` → `css/light_gray.css`, `css/<Component>/light-gray.css`
+  → `css/<Component>/light_gray.css`, `bundles/light-gray.css` →
+  `bundles/light_gray.css`, `dtcg/{semantics,components}-light-gray.json` →
+  `dtcg/{semantics,components}-light_gray.json`, and equivalently for
+  `yellow-1c` → `yellow_1c`. The rename itself changes no token value for
+  either brand — only the key. (This release's separate
+  `design-tokens-sidebar-white-brand-followup` changeset does change several
+  `light_gray`/`yellow_1c` `SidebarPrimary` values — an unrelated fix, not part
+  of this rename.)
+
+  **Fix (non-breaking):** also included in this release — the telstra
+  (magenta) brand's `SidebarPrimary` section divider and footer border both
+  resolved to `{colors.border.onBrand.border}`, a translucent white value
+  meant for a colored/brand background. telstra's sidebar background is
+  white, so both dividers were effectively invisible. Both now resolve to
+  `{colors.border.onSurface.border}` (opaque), matching the corrected Figma
+  source. Also corrects two related `MenuItemExtras` leaves (external-link
+  icon and shortcut text color) that the same Figma export changed from a
+  shared `onBrand` token to telstra-specific `branding.telstra.SidebarPrimary`
+  aliases. No other brand or token path is affected.
+
+### Minor Changes
+
+- [#744](https://github.com/acronis/uikit/pull/744) [`24233d9`](https://github.com/acronis/uikit/commit/24233d91bd538712d1eb412acce28a2edd6d62d1) Thanks [@madjorr](https://github.com/madjorr)! - Sync the `virtual_one` brand theme from Figma. `branding.virtual_one` already
+  existed as a primitive palette group but was never wired into
+  `values.virtual_one` across `semantics.json`/`components.json`, so
+  `tokens-pd` never generated `virtual_one.css` and the brand silently fell
+  back to `default`.
+
+  Populates `values.virtual_one` across every semantic and component token
+  (228 semantic + 1199 component leaves). This sync itself adds no token
+  paths and changes no existing brand's value — purely additive. (This
+  release's other two changesets do separately rename two brand keys and fix
+  several `SidebarPrimary` values for `telstra`/`light_gray`/`yellow_1c`,
+  unrelated to this sync.) This release adds the corresponding generated
+  `tokens-pd` artifacts (`css/virtual_one.css`, `css/<Component>/virtual_one.css`,
+  `bundles/virtual_one.css`, `dtcg/{semantics,components}-virtual_one.json`).
+
+### Patch Changes
+
+- [#744](https://github.com/acronis/uikit/pull/744) [`634e43c`](https://github.com/acronis/uikit/commit/634e43c2571ce1a80ba52cf0192dde31f4d08e3c) Thanks [@madjorr](https://github.com/madjorr)! - Fix `SidebarPrimary` leaves left invisible on white-background brands — a
+  follow-up to the telstra divider fix (see the brand-rename changeset).
+  - **telstra + light_gray `_global.logo.color`**: was
+    `{colors.glyph.onBrand.primary}`, an opaque white value assumed against a
+    colored/brand sidebar. Both brands' `SidebarPrimary` container is white, so
+    the logo was invisible in light mode. Now resolves to `{palette.blue.14}`
+    (navy in light mode, near-white in dark mode — matching every other
+    brand's dark-mode white-logo treatment).
+  - **light_gray `Section.container.borderColor` /
+    `_global.containerFooter.borderColor`**: same translucent-white-on-white
+    divider bug already fixed for telstra — now resolves to
+    `{colors.border.onSurface.border}` (opaque).
+  - **light_gray + yellow_1c `MenuItemExtras` external-link icon / shortcut
+    text**: moved from a shared `onBrand` token to brand-specific
+    `branding.<brand>.SidebarPrimary` aliases, matching the telstra fix.
+  - **light_gray + yellow_1c `MenuItem.unselected` icon/label active+hover**:
+    re-pointed from the `idle` alias to the `active` alias (a state mismatch
+    in the prior data).
+
+  No other brand or token path is affected.
+
+- Updated dependencies [[`04aefe7`](https://github.com/acronis/uikit/commit/04aefe7ae89c934d5fa2656654c6f18736b60231), [`634e43c`](https://github.com/acronis/uikit/commit/634e43c2571ce1a80ba52cf0192dde31f4d08e3c), [`24233d9`](https://github.com/acronis/uikit/commit/24233d91bd538712d1eb412acce28a2edd6d62d1)]:
+  - @acronis-platform/design-tokens@3.0.0
+
 ## 3.0.0
 
 ### Major Changes

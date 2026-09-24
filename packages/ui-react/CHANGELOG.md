@@ -1,5 +1,12 @@
 # @acronis-platform/ui-react
 
+## 5.4.4
+
+### Patch Changes
+
+- Updated dependencies [[`04aefe7`](https://github.com/acronis/uikit/commit/04aefe7ae89c934d5fa2656654c6f18736b60231), [`634e43c`](https://github.com/acronis/uikit/commit/634e43c2571ce1a80ba52cf0192dde31f4d08e3c), [`24233d9`](https://github.com/acronis/uikit/commit/24233d91bd538712d1eb412acce28a2edd6d62d1)]:
+  - @acronis-platform/tokens-pd@4.0.0
+
 ## 5.4.3
 
 ### Patch Changes
