@@ -23,6 +23,7 @@ import {
   resolveXAxisTitle,
   resolveYAxisTitle,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   toCssKey,
   type CartesianChartProps,
@@ -89,6 +90,11 @@ export interface ScatterChartProps
   /** Marker shape for every point. */
   shape?: ScatterMarkerShape;
   showLegend?: boolean;
+  /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
 }
 
 const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
@@ -110,6 +116,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -221,7 +228,11 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
                 content={tooltipContent ?? <ChartTooltipContent />}
               />
             )}
-            {showLegend && <ChartLegend content={<ChartLegendContent />} />}
+            {showLegend && (
+              <ChartLegend
+                content={<ChartLegendContent fontSize={legendFontSize} />}
+              />
+            )}
             {series.map((s) => (
               <Scatter
                 key={s.key}

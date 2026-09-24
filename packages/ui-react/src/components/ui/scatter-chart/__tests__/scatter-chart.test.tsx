@@ -197,6 +197,13 @@ describe('ScatterChart chrome and markers', () => {
     expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   it('renders dashed horizontal-only grid by default', () => {
     const { container } = renderChart();
     expect(

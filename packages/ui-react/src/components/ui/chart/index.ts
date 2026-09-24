@@ -14,6 +14,7 @@ export type {
   ChartContainerProps,
   ChartTooltipContentProps,
   ChartLegendContentProps,
+  ChartLegendFontSize,
   ChartTooltipContentType,
 } from './chart';
 export {

@@ -182,6 +182,13 @@ describe('LineChart', () => {
     expect(curvesOf(container)).toHaveLength(2);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   it('dashes every stroke under the dashed lineStyle', () => {
     const solid = renderChart();
     for (const curve of curvesOf(solid.container)) {

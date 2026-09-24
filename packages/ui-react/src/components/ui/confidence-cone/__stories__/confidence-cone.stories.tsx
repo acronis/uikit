@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   Area,
   CartesianGrid,
@@ -78,6 +81,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     strokeWidth: { control: { type: 'number', min: 1, max: 6 } },
     xAxisLabel: { control: 'text' },
     yAxisLabel: { control: 'text' },

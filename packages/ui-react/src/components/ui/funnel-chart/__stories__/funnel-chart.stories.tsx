@@ -11,7 +11,10 @@ import {
   funnelChartStageInset,
   funnelChartStagePath,
 } from '../funnel-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -104,6 +107,7 @@ const meta = {
     // Override the shared default-value label: FunnelChart's palette default is
     // `sequential-blue`, not the `categorical` every other chart uses.
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     palette: {
       ...paletteArgTypes.palette,
       table: {

@@ -305,6 +305,9 @@ the indicator used in tooltip rows. Tooltip rows also use the same dot.
 `ChartTooltipContent` and `ChartLegendContent` are passed to recharts' `Tooltip` /
 `Legend` via their `content` prop. They accept the display options
 `hideLabel`, `hideIndicator`, `hideIcon`, `nameKey`, and `labelKey` on top of
-recharts' content props.
+recharts' content props; the legend additionally takes `fontSize`
+(`'xs' | 'sm' | 'base' | 'lg' | 'xl'`, default `'xs'`), which sizes its labels
+and the `list` variant's values. The per-type chart components expose the same
+option as `legendFontSize`.
 `ChartTooltip` and `ChartLegend` are direct re-exports of recharts' `Tooltip` and
 `Legend`.

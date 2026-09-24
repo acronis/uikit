@@ -29,6 +29,7 @@ import {
   CHART_LABEL_FONT_SIZE,
   toCssKey,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartTooltipContentProps,
   type ChartAnimationProps,
@@ -297,6 +298,11 @@ export interface PieChartProps
   showTooltip?: boolean;
   showLegend?: boolean;
   /**
+   * Font size of the legend text (labels and values). Defaults to `'xs'` —
+   * the size the legend has always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
+  /**
    * Format each slice's value in the list legend. When omitted the raw value is
    * stringified with `String()`.
    */
@@ -407,6 +413,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       sliceSettings,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       legendValueFormatter,
       margin,
       tooltipContent,
@@ -619,6 +626,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
             payload={rightLegendPayload}
             config={resolvedConfigForLegend}
             nameKey={nameKey}
+            fontSize={legendFontSize}
             valueKey={dataKey}
             valueFormatter={legendValueFormatter}
             className="min-w-0 flex-1"

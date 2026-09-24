@@ -9,7 +9,10 @@ import {
 } from 'recharts';
 
 import { ComposedChart } from '../composed-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -84,6 +87,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     orientation: { control: 'inline-radio', options: ['vertical', 'horizontal'] },
     curve: { control: 'inline-radio', options: ['linear', 'monotone', 'step'] },
     barRadius: { control: { type: 'number', min: 0, max: 20 } },

@@ -13,7 +13,10 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { LineChart, createBandStrippedTooltip } from '../line-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -62,6 +65,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     curve: {
       control: 'select',
       options: [

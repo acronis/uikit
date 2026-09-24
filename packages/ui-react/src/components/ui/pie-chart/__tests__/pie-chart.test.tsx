@@ -129,6 +129,19 @@ describe('PieChart', () => {
     expect(container.textContent).toContain('Firefox');
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toBeInTheDocument();
+    const spans = Array.from(legend!.querySelectorAll('span'));
+    expect(spans.find((span) => span.textContent === 'Chrome')).toHaveClass(
+      'text-lg'
+    );
+    expect(spans.find((span) => span.textContent === '275')).toHaveClass(
+      'text-lg'
+    );
+  });
+
   it('draws no slices but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();

@@ -33,3 +33,17 @@ export const paletteArgTypes = {
     table: { category: 'Appearance', defaultValue: { summary: 'categorical' } },
   },
 };
+
+// A Storybook control for the `legendFontSize` prop, shared by every
+// legend-bearing chart's stories. Spread it into a chart meta's `argTypes`
+// alongside `paletteArgTypes`.
+export const legendFontSizeArgTypes = {
+  legendFontSize: {
+    name: 'legendFontSize',
+    description:
+      "Font size of the legend text. Defaults to 'xs' — the size the legend has always rendered at.",
+    control: { type: 'select' as const },
+    options: ['xs', 'sm', 'base', 'lg', 'xl'],
+    table: { category: 'Appearance', defaultValue: { summary: 'xs' } },
+  },
+};

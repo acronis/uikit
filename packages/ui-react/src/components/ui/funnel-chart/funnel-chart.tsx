@@ -22,6 +22,7 @@ import {
   toCssKey,
   type ChartAnimationProps,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type TickFormatter,
 } from '../chart';
@@ -678,6 +679,11 @@ export interface FunnelChartProps
    * carries no on-plot labels, so the legend is where the stages are named.
    */
   showLegend?: boolean;
+  /**
+   * Font size of the legend text (stage names and values). Defaults to `'xs'` —
+   * the size the legend has always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
   /** Format the value in each legend row — the stage's `dataKey` number. */
   legendValueFormatter?: (value: string | number) => string;
   /** Per-stage `color` / `hidden` overrides, keyed by the stage's `nameKey` value. */
@@ -732,6 +738,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       labelFormatter,
       percentFormatter,
       showLegend = true,
+      legendFontSize,
       legendValueFormatter,
       stageSettings,
       showActiveShape = false,
@@ -1002,6 +1009,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
             payload={legendPayload}
             config={resolvedConfigForLegend}
             nameKey={nameKey}
+            fontSize={legendFontSize}
             valueKey={dataKey}
             valueFormatter={legendValueFormatter}
             // Figma paints the funnel legend's value in the primary text token,

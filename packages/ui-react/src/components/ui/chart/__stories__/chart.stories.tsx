@@ -812,3 +812,45 @@ export const TruncatedListLegendTooltip: Story = {
     />
   ),
 };
+
+const LEGEND_FONT_SIZES = ['xs', 'sm', 'base', 'lg', 'xl'] as const;
+
+/**
+ * `legendFontSize` scales the legend text on the shared type scale (`xs` is
+ * the default — the size legends have always rendered at). Each row shows one
+ * size on both legend layouts: the wrapping chip row (LineChart) and the
+ * right-hand list with values (PieChart).
+ */
+export const LegendFontSizes: Story = {
+  name: 'Legend — font sizes',
+  parameters: { snapshot: { fullPage: true } },
+  args: { config: legendConfig, children: <span /> },
+  render: () => (
+    <div className="w-[760px] space-y-6">
+      {LEGEND_FONT_SIZES.map((size) => (
+        <div key={size} className="flex items-center gap-6">
+          <span className="w-10 shrink-0 text-sm text-muted-foreground">
+            {size}
+          </span>
+          <LineChart
+            config={legendConfig}
+            data={legendData}
+            dataKeys={['desktop', 'mobile']}
+            xKey="month"
+            showLegend
+            legendFontSize={size}
+            className="h-[160px] w-[320px]"
+          />
+          <PieChart
+            config={partConfig}
+            data={partData}
+            dataKey="value"
+            nameKey="name"
+            legendFontSize={size}
+            className="w-[300px]"
+          />
+        </div>
+      ))}
+    </div>
+  ),
+};

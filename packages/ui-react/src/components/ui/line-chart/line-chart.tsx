@@ -40,6 +40,7 @@ import {
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -328,6 +329,11 @@ export interface LineChartProps
    */
   projectionStart?: string | number;
   showLegend?: boolean;
+  /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
 }
@@ -359,6 +365,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -540,6 +547,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       (props: LegendContentProps) => (
         <ChartLegendContent
           verticalAlign={props.verticalAlign}
+          fontSize={legendFontSize}
           payload={
             dropProjectionPayload(
               dropBandSeries(props.payload)
@@ -548,7 +556,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         />
       )
     ) : (
-      <ChartLegendContent />
+      <ChartLegendContent fontSize={legendFontSize} />
     );
     // Bands are computed over the full (projection-augmented) rows; when
     // projection is active the band <Area> is clipped to the actual zone.

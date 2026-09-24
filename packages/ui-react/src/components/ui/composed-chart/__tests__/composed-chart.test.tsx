@@ -196,6 +196,13 @@ describe('ComposedChart', () => {
     expect(barsOf(container)).toHaveLength(3);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   it('rounds the bar tops unless barRadius squares them', () => {
     const rounded = renderChart();
     expect(barsOf(rounded.container)[0].getAttribute('d')).toMatch(/[aA]/);

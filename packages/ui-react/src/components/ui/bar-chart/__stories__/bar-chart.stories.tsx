@@ -7,7 +7,10 @@ import {
   type BarChartItem,
   type BarChartVerticalProps,
 } from '../bar-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -55,6 +58,7 @@ const meta = {
   argTypes: {
     // Override the shared default so the Controls panel shows `status`.
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     palette: {
       ...paletteArgTypes.palette,
       table: {

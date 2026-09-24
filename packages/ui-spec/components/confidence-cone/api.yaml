@@ -130,6 +130,12 @@ contract:
       required: false
       default: 'true'
       description: Render the legend (the band series is filtered out of it).
+    - name: legendFontSize
+      type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'"
+      required: false
+      default: "'xs'"
+      description: >-
+        Font size of the legend text.
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false

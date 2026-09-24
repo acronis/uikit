@@ -180,7 +180,10 @@ A `tooltipContent` of your own takes precedence over the preset.
 
 ## Legend and margin
 
-`legendPosition` moves the legend to the top edge, and `margin` sets the plot-area
+The legend is a right-hand list — one row per slice with its value — laid out
+beside the plot rather than inside it. `legendFontSize` sizes its labels and
+values (`'xs' | 'sm' | 'base' | 'lg' | 'xl'`, default `'xs'`),
+`legendValueFormatter` formats the values. `margin` sets the plot-area
 inset (in px) — useful when outside labels or leader lines run close to the
 chart's bounds:
 
@@ -190,7 +193,7 @@ chart's bounds:
   data={data}
   dataKey="value"
   nameKey="browser"
-  legendPosition="top"
+  legendFontSize="sm"
   margin={{ top: 16, right: 24, bottom: 16, left: 24 }}
 />
 ```

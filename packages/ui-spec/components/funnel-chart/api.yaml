@@ -132,6 +132,12 @@ contract:
         stage, a sibling of the plot rather than a renderer legend. On by default,
         because it is where the design's funnel names its stages. With it off the
         row centres its lone plot.
+    - name: legendFontSize
+      type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'"
+      required: false
+      default: "'xs'"
+      description: >-
+        Font size of the legend text (stage names and values).
     - name: legendValueFormatter
       type: '(value: string | number) => string'
       required: false

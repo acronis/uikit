@@ -11,7 +11,10 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { AreaChart } from '../area-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -58,6 +61,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     layout: { control: 'inline-radio', options: ['single', 'stacked'] },
     fill: { control: 'inline-radio', options: ['solid', 'gradient'] },
     curve: {
