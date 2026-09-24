@@ -11449,7 +11449,7 @@
                 "com.figma.variableId": "VariableID:2463:56495"
               },
               "$type": "color",
-              "$value": "{branding.yellow_1c.SidebarPrimary.icon.idle}"
+              "$value": "{branding.yellow_1c.SidebarPrimary.icon.active}"
             },
             "hover": {
               "$extensions": {
@@ -11461,7 +11461,7 @@
                 "com.figma.variableId": "VariableID:2463:56494"
               },
               "$type": "color",
-              "$value": "{branding.yellow_1c.SidebarPrimary.icon.idle}"
+              "$value": "{branding.yellow_1c.SidebarPrimary.icon.active}"
             },
             "idle": {
               "$extensions": {
@@ -11488,7 +11488,7 @@
                 "com.figma.variableId": "VariableID:2463:56498"
               },
               "$type": "color",
-              "$value": "{branding.yellow_1c.SidebarPrimary.label.idle}"
+              "$value": "{branding.yellow_1c.SidebarPrimary.label.active}"
             },
             "hover": {
               "$extensions": {
@@ -11499,7 +11499,7 @@
                 "com.figma.variableId": "VariableID:2463:56497"
               },
               "$type": "color",
-              "$value": "{branding.yellow_1c.SidebarPrimary.label.idle}"
+              "$value": "{branding.yellow_1c.SidebarPrimary.label.active}"
             },
             "idle": {
               "$extensions": {
@@ -11542,7 +11542,7 @@
               "com.figma.variableId": "VariableID:2463:56510"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onBrand.secondary}"
+            "$value": "{branding.yellow_1c.SidebarPrimary.icon.idle}"
           },
           "size": {
             "$extensions": {
@@ -11567,7 +11567,7 @@
               "com.figma.variableId": "VariableID:2463:56511"
             },
             "$type": "color",
-            "$value": "{colors.text.onBrand.secondary}"
+            "$value": "{branding.yellow_1c.SidebarPrimary.label.idle}"
           },
           "textStyle": {
             "$extensions": {

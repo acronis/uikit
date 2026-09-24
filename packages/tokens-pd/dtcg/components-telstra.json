@@ -11701,7 +11701,7 @@
             "com.figma.variableId": "VariableID:2463:56470"
           },
           "$type": "color",
-          "$value": "{colors.glyph.onBrand.primary}"
+          "$value": "{palette.blue.14}"
         }
       },
       "sectionList": {

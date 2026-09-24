@@ -11449,7 +11449,7 @@
                 "com.figma.variableId": "VariableID:2463:56495"
               },
               "$type": "color",
-              "$value": "{branding.light_gray.SidebarPrimary.icon.idle}"
+              "$value": "{branding.light_gray.SidebarPrimary.icon.active}"
             },
             "hover": {
               "$extensions": {
@@ -11461,7 +11461,7 @@
                 "com.figma.variableId": "VariableID:2463:56494"
               },
               "$type": "color",
-              "$value": "{branding.light_gray.SidebarPrimary.icon.idle}"
+              "$value": "{branding.light_gray.SidebarPrimary.icon.active}"
             },
             "idle": {
               "$extensions": {
@@ -11488,7 +11488,7 @@
                 "com.figma.variableId": "VariableID:2463:56498"
               },
               "$type": "color",
-              "$value": "{branding.light_gray.SidebarPrimary.label.idle}"
+              "$value": "{branding.light_gray.SidebarPrimary.label.active}"
             },
             "hover": {
               "$extensions": {
@@ -11499,7 +11499,7 @@
                 "com.figma.variableId": "VariableID:2463:56497"
               },
               "$type": "color",
-              "$value": "{branding.light_gray.SidebarPrimary.label.idle}"
+              "$value": "{branding.light_gray.SidebarPrimary.label.active}"
             },
             "idle": {
               "$extensions": {
@@ -11542,7 +11542,7 @@
               "com.figma.variableId": "VariableID:2463:56510"
             },
             "$type": "color",
-            "$value": "{colors.glyph.onBrand.secondary}"
+            "$value": "{branding.light_gray.SidebarPrimary.icon.idle}"
           },
           "size": {
             "$extensions": {
@@ -11567,7 +11567,7 @@
               "com.figma.variableId": "VariableID:2463:56511"
             },
             "$type": "color",
-            "$value": "{colors.text.onBrand.secondary}"
+            "$value": "{branding.light_gray.SidebarPrimary.label.idle}"
           },
           "textStyle": {
             "$extensions": {
@@ -11605,7 +11605,7 @@
             "com.figma.variableId": "VariableID:2463:56481"
           },
           "$type": "color",
-          "$value": "{colors.border.onBrand.border}"
+          "$value": "{colors.border.onSurface.border}"
         },
         "borderWidth": {
           "$extensions": {
@@ -11657,7 +11657,7 @@
             "com.figma.variableId": "VariableID:2468:67776"
           },
           "$type": "color",
-          "$value": "{colors.border.onBrand.border}"
+          "$value": "{colors.border.onSurface.border}"
         },
         "borderWidth": {
           "$extensions": {
@@ -11701,7 +11701,7 @@
             "com.figma.variableId": "VariableID:2463:56470"
           },
           "$type": "color",
-          "$value": "{colors.glyph.onBrand.primary}"
+          "$value": "{palette.blue.14}"
         }
       },
       "sectionList": {
