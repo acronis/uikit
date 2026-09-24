@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { usePortalContainer } from '@/lib/portal-container';
 
 import { Button } from '../button';
+import { ButtonIcon } from '../button-icon';
 import { DialogFooterDefault } from '../dialog-footer-default';
 import { InputText } from '../input-text';
 import { Loading } from '../loading';
@@ -233,13 +234,11 @@ const DialogCloseButton = React.forwardRef<
 >(({ className, closeLabel = 'Close', ...props }, ref) => (
   <DialogPrimitive.Close
     ref={ref}
-    className={cn(
-      'cursor-pointer rounded p-1 text-[var(--ui-button-icon-global-icon-color-idle)] transition-colors hover:bg-[var(--ui-button-icon-global-container-color-hover)] hover:text-[var(--ui-button-icon-global-icon-color-hover)] active:bg-[var(--ui-button-icon-global-container-color-active)] active:text-[var(--ui-button-icon-global-icon-color-active)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ui-focus-primary)] disabled:pointer-events-none disabled:cursor-default disabled:text-[var(--ui-button-icon-global-icon-color-disabled)]',
-      className
-    )}
+    render={<ButtonIcon variant="ghost" />}
+    className={className}
     {...props}
   >
-    <TimesIcon size={24} />
+    <TimesIcon />
     <span className="sr-only">{closeLabel}</span>
   </DialogPrimitive.Close>
 ));

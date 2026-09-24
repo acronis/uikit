@@ -47,11 +47,15 @@ describe('DialogRoot', () => {
     expect(screen.getByText('Footer')).toBeInTheDocument();
   });
 
-  it('renders the close button as an accessible "Close" button on the button-icon token', () => {
+  it('renders the close button as an accessible 32px ButtonIcon with a token-sized glyph', () => {
     render(<OpenDialog />);
     const close = screen.getByRole('button', { name: 'Close' });
     expect(close).toBeInTheDocument();
-    expect(close).toHaveClass('text-[var(--ui-button-icon-global-icon-color-idle)]');
+    expect(close).toHaveClass(
+      'size-[var(--ui-button-icon-global-container-height)]',
+      'text-[var(--ui-button-icon-global-icon-color-idle)]',
+      '[&_svg]:size-[var(--ui-button-icon-global-icon-size)]'
+    );
   });
 
   it('lets closeLabel override the close button accessible name', () => {
