@@ -68,7 +68,10 @@ const meta = {
       control: false,
       description:
         'Replace the rendered `<nav>` with another element or component (Base UI composition). Accepts a React element or a render function.',
-      table: { type: { summary: 'useRender.RenderProp' }, category: 'Composition' },
+      table: {
+        type: { summary: 'useRender.RenderProp' },
+        category: 'Composition',
+      },
     },
     'aria-label': {
       control: 'text',
@@ -197,7 +200,11 @@ export const FullDemo: Story = {
             <SidebarPrimaryContent>
               <SidebarPrimarySection>
                 <SidebarPrimaryMenu>
-                  <SidebarPrimaryMenuItem href="#" icon={<ChartPieIcon />} selected>
+                  <SidebarPrimaryMenuItem
+                    href="#"
+                    icon={<ChartPieIcon />}
+                    selected
+                  >
                     Intelligence
                   </SidebarPrimaryMenuItem>
                   <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />}>
@@ -213,7 +220,10 @@ export const FullDemo: Story = {
                     href="#"
                     icon={<HeadsetIcon />}
                     extras={
-                      <SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘D" />
+                      <SidebarPrimaryMenuItemExtras
+                        variant="shortcut"
+                        shortcut="⌘D"
+                      />
                     }
                   >
                     Service desk and support tickets
@@ -256,7 +266,9 @@ export const FullDemo: Story = {
                   <SidebarPrimaryMenuItem
                     href="#"
                     icon={<ChartGrowthIcon />}
-                    extras={<SidebarPrimaryMenuItemExtras variant="externalLink" />}
+                    extras={
+                      <SidebarPrimaryMenuItemExtras variant="externalLink" />
+                    }
                   >
                     Partner portal
                   </SidebarPrimaryMenuItem>
@@ -290,7 +302,10 @@ export const FullDemo: Story = {
                 <SidebarPrimaryCollapseTrigger
                   icon={<ChevronsLeftIcon />}
                   extras={
-                    <SidebarPrimaryMenuItemExtras variant="shortcut" shortcut="⌘H" />
+                    <SidebarPrimaryMenuItemExtras
+                      variant="shortcut"
+                      shortcut="⌘H"
+                    />
                   }
                 >
                   Collapse menu
@@ -383,7 +398,11 @@ function TallBrandedLogoOverrideDemo({
           <SidebarPrimaryContent>
             <SidebarPrimarySection>
               <SidebarPrimaryMenu>
-                <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />} selected>
+                <SidebarPrimaryMenuItem
+                  href="#"
+                  icon={<MonitorIcon />}
+                  selected
+                >
                   Assets
                 </SidebarPrimaryMenuItem>
                 <SidebarPrimaryMenuItem href="#" icon={<BriefcaseIcon />}>
@@ -437,7 +456,11 @@ function BrandDemo() {
           <SidebarPrimaryContent>
             <SidebarPrimarySection>
               <SidebarPrimaryMenu>
-                <SidebarPrimaryMenuItem href="#" icon={<ChartPieIcon />} selected>
+                <SidebarPrimaryMenuItem
+                  href="#"
+                  icon={<ChartPieIcon />}
+                  selected
+                >
                   Intelligence
                 </SidebarPrimaryMenuItem>
                 <SidebarPrimaryMenuItem href="#" icon={<MonitorIcon />}>
@@ -462,7 +485,10 @@ function BrandDemo() {
   );
 }
 
-function makeBrandStory(brand: Exclude<Brand, 'default'>, title: string): Story {
+function makeBrandStory(
+  brand: Exclude<Brand, 'default'>,
+  title: string
+): Story {
   return {
     name: `Brand - ${title}`,
     globals: { brand },
@@ -474,23 +500,32 @@ export const BrandDeepSkyItkontoret: Story = makeBrandStory(
   'deep_sky_itkontoret',
   'Deep Sky (ITkontoret)'
 );
-export const BrandLightGray: Story = makeBrandStory('light-gray', 'Light Gray');
+export const BrandLightGray: Story = makeBrandStory('light_gray', 'Light Gray');
 export const BrandTelstra: Story = makeBrandStory('telstra', 'Telstra');
 export const BrandVirtuozzo: Story = makeBrandStory('virtuozzo', 'Virtuozzo');
-export const BrandYellow1c: Story = makeBrandStory('yellow-1c', 'Yellow (1C)');
+export const BrandYellow1c: Story = makeBrandStory('yellow_1c', 'Yellow (1C)');
 export const BrandBlueYellowUssSignal: Story = makeBrandStory(
   'blue_yellow_uss_signal',
   'Blue & Yellow (USS Signal)'
 );
 export const BrandBrown: Story = makeBrandStory('brown', 'Brown');
 export const BrandDarkGray: Story = makeBrandStory('dark_gray', 'Dark Gray');
-export const BrandDeepPurple: Story = makeBrandStory('deep_purple', 'Deep Purple');
+export const BrandDeepPurple: Story = makeBrandStory(
+  'deep_purple',
+  'Deep Purple'
+);
 export const BrandGreenAlsoChoiseDf: Story = makeBrandStory(
   'green_also_choise_df',
   'Green (ALSO/Choice DF)'
 );
-export const BrandIngramMicro: Story = makeBrandStory('ingram_micro', 'Ingram Micro');
-export const BrandLightBlueHp: Story = makeBrandStory('light_blue_hp', 'Light Blue (HP)');
+export const BrandIngramMicro: Story = makeBrandStory(
+  'ingram_micro',
+  'Ingram Micro'
+);
+export const BrandLightBlueHp: Story = makeBrandStory(
+  'light_blue_hp',
+  'Light Blue (HP)'
+);
 export const BrandOrangeTsukaeruHelpox: Story = makeBrandStory(
   'orange_tsukaeru_helpox',
   'Orange (Tsukaeru/Helpox)'
@@ -501,6 +536,16 @@ export const BrandPurpleFusionMedia: Story = makeBrandStory(
   'purple_fusion_media',
   'Purple (Fusion Media)'
 );
-export const BrandRedFireBrick: Story = makeBrandStory('red_fire_brick', 'Red (Fire Brick)');
-export const BrandRedHomePl: Story = makeBrandStory('red_home_pl', 'Red (Home.pl)');
+export const BrandRedFireBrick: Story = makeBrandStory(
+  'red_fire_brick',
+  'Red (Fire Brick)'
+);
+export const BrandRedHomePl: Story = makeBrandStory(
+  'red_home_pl',
+  'Red (Home.pl)'
+);
 export const BrandSand: Story = makeBrandStory('sand', 'Sand');
+export const BrandVirtualOne: Story = makeBrandStory(
+  'virtual_one',
+  'Virtual One'
+);

@@ -3,6 +3,10 @@
 
 :root, :host {
   --ui-sidebar-primary-global-container-color: light-dark(rgb(255 255 255), rgb(12 12 14));
+  --ui-sidebar-primary-global-container-footer-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
+  --ui-sidebar-primary-global-logo-color: light-dark(rgb(0 21 51), rgb(244 245 245));
+  --ui-sidebar-primary-menu-item-extras-global-external-icon-color: light-dark(rgb(163 26 117), rgb(255 255 255 / 0.6));
+  --ui-sidebar-primary-menu-item-extras-global-shortcut-color: light-dark(rgb(163 26 117), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-selected-container-color-active: light-dark(rgb(163 26 117), rgb(81 157 246));
   --ui-sidebar-primary-menu-item-selected-container-color-hover: light-dark(rgb(163 26 117), rgb(81 157 246));
   --ui-sidebar-primary-menu-item-selected-container-color-idle: light-dark(rgb(163 26 117), rgb(81 157 246));
@@ -15,4 +19,5 @@
   --ui-sidebar-primary-menu-item-unselected-label-color-active: light-dark(rgb(163 26 117), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-unselected-label-color-hover: light-dark(rgb(163 26 117), rgb(255 255 255 / 0.6));
   --ui-sidebar-primary-menu-item-unselected-label-color-idle: light-dark(rgb(163 26 117), rgb(255 255 255 / 0.6));
+  --ui-sidebar-primary-section-container-border-color: light-dark(rgb(215 217 219), rgb(61 63 67));
 }
