@@ -24,8 +24,11 @@ This renames the generated `tokens-pd` artifact paths accordingly:
 → `css/<Component>/light_gray.css`, `bundles/light-gray.css` →
 `bundles/light_gray.css`, `dtcg/{semantics,components}-light-gray.json` →
 `dtcg/{semantics,components}-light_gray.json`, and equivalently for
-`yellow-1c` → `yellow_1c`. No token values changed for either brand — only
-the key.
+`yellow-1c` → `yellow_1c`. The rename itself changes no token value for
+either brand — only the key. (This release's separate
+`design-tokens-sidebar-white-brand-followup` changeset does change several
+`light_gray`/`yellow_1c` `SidebarPrimary` values — an unrelated fix, not part
+of this rename.)
 
 **Fix (non-breaking):** also included in this release — the telstra
 (magenta) brand's `SidebarPrimary` section divider and footer border both
