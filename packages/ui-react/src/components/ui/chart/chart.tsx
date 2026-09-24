@@ -12,6 +12,7 @@ import type { Props as LegendProps } from 'recharts/types/component/Legend';
 import { TooltipContentProps } from 'recharts/types/component/Tooltip';
 
 import { cn } from '@/lib/utils';
+import { TruncateText } from '../truncate-text';
 import {
   CHART_DEFAULT_PALETTE,
   CHART_DIVERGING_TOKENS,
@@ -634,6 +635,7 @@ function ChartLegendListEntry({
         ? valueFormatter(raw as string | number)
         : String(raw)
       : undefined;
+  const label = itemConfig?.label ?? item.value;
 
   return (
     <div className="flex w-full items-start gap-2 overflow-hidden">
@@ -646,9 +648,13 @@ function ChartLegendListEntry({
             style={{ backgroundColor: item.color }}
           />
         )}
-        <span className="min-w-0 flex-1 truncate text-xs text-foreground">
-          {itemConfig?.label ?? item.value}
-        </span>
+        {typeof label === 'string' || typeof label === 'number' ? (
+          <TruncateText className="min-w-0 flex-1 text-xs text-foreground">
+            {String(label)}
+          </TruncateText>
+        ) : (
+          <span className="min-w-0 flex-1 truncate text-xs text-foreground">{label}</span>
+        )}
       </div>
       {displayValue != null && (
         <span

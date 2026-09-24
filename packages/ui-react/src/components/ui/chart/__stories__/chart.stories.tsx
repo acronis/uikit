@@ -784,3 +784,31 @@ export const Legend: Story = {
     />
   ),
 };
+
+const truncatedLegendData = [
+  { name: 'genai-visits', value: 30 },
+  { name: 'other-visits', value: 70 },
+];
+
+const truncatedLegendConfig = {
+  'genai-visits': { label: 'GenAI visits - 30 days' },
+  'other-visits': { label: 'Other visits' },
+} satisfies ChartConfig;
+
+/**
+ * Hover the truncated “GenAI visits - 30 days” label to reveal its complete
+ * value. Labels that fit stay plain text with no tooltip.
+ */
+export const TruncatedListLegendTooltip: Story = {
+  name: 'Legend — truncated label tooltip',
+  args: { config: truncatedLegendConfig, children: <span /> },
+  render: () => (
+    <PieChart
+      config={truncatedLegendConfig}
+      data={truncatedLegendData}
+      dataKey="value"
+      nameKey="name"
+      className="w-[280px]"
+    />
+  ),
+};

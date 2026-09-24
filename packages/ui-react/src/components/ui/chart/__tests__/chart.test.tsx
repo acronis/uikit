@@ -1,5 +1,6 @@
 import { BarChart } from 'recharts';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
@@ -207,6 +208,45 @@ describe('Chart', () => {
     expect(value).toHaveTextContent('125');
     expect(value).toHaveClass('text-[var(--ui-text-on-surface-primary)]');
     expect(value).not.toHaveClass('text-[var(--ui-text-on-surface-link-idle)]');
+  });
+
+  it('does not add a tooltip to a list legend label that fits', async () => {
+    const label = 'GenAI visits';
+    const user = userEvent.setup();
+
+    render(
+      <ChartLegendContent
+        variant="list"
+        config={{ visits: { label } }}
+        payload={[{ value: 'visits', dataKey: 'visits', color: 'rgb(23 99 207)' }]}
+      />
+    );
+
+    await user.hover(screen.getByText(label));
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
+  });
+
+  it('reveals a full list legend label in a tooltip when it is truncated', async () => {
+    const scrollWidth = vi.spyOn(HTMLElement.prototype, 'scrollWidth', 'get').mockReturnValue(240);
+    const clientWidth = vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockReturnValue(100);
+    const label = 'GenAI visits - 30 days';
+    const user = userEvent.setup();
+
+    try {
+      render(
+        <ChartLegendContent
+          variant="list"
+          config={{ visits: { label } }}
+          payload={[{ value: 'visits', dataKey: 'visits', color: 'rgb(23 99 207)' }]}
+        />
+      );
+
+      await user.hover(screen.getByText(label));
+      await waitFor(() => expect(screen.getAllByText(label)).toHaveLength(2));
+    } finally {
+      scrollWidth.mockRestore();
+      clientWidth.mockRestore();
+    }
   });
 
   it('renders outside a ChartContainer when handed the config', () => {
