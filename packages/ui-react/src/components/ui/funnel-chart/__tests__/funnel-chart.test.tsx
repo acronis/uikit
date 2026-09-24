@@ -922,6 +922,22 @@ describe('FunnelChart legend', () => {
     ]);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({
+      showLegend: true,
+      legendFontSize: 'lg',
+    });
+    const spans = Array.from(
+      legend(container)?.querySelectorAll('span') ?? []
+    );
+    expect(spans.find((span) => span.textContent === 'Visits')).toHaveClass(
+      'text-lg'
+    );
+    expect(spans.find((span) => span.textContent === '5000')).toHaveClass(
+      'text-lg'
+    );
+  });
+
   // The legend sits outside `ChartContainer`, so it cannot use the
   // `--color-<name>` custom properties `ChartStyle` scopes to `[data-chart=…]` —
   // those resolve to nothing out here and the marker would paint transparent.

@@ -3,7 +3,10 @@ import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { Treemap } from '../treemap';
 import { type ChartConfig } from '../../chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import { ButtonIcon } from '../../button-icon';
 import { ChartWidget } from '../../chart-widget';
 
@@ -95,6 +98,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     aspectRatio: { control: { type: 'number', min: 0.5, max: 4, step: 0.1 } },
     showLabels: { control: 'boolean' },
     labelAlign: {

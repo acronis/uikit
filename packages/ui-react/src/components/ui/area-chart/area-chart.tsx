@@ -39,6 +39,7 @@ import {
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -177,6 +178,11 @@ export interface AreaChartProps
    */
   projectionStart?: string | number;
   showLegend?: boolean;
+  /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
   /** Position of the value labels when `showLabels` is on. Defaults to `top`. */
   labelPosition?: CartesianLabelPosition;
 }
@@ -311,6 +317,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -477,6 +484,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       ? (lp: LegendContentProps) => (
           <ChartLegendContent
             verticalAlign={lp.verticalAlign}
+            fontSize={legendFontSize}
             payload={
               dropProjectionPayload(
                 lp.payload
@@ -484,7 +492,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
             }
           />
         )
-      : <ChartLegendContent />;
+      : <ChartLegendContent fontSize={legendFontSize} />;
 
     // recharts renders SVG <defs> once per chart; the gradient/clip ids must be
     // unique across chart instances on the page. useId gives a stable per-instance

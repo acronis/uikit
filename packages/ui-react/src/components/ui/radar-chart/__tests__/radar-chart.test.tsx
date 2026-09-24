@@ -778,6 +778,13 @@ describe('RadarChart geometry and legend', () => {
     expect(withoutLegend.container.firstElementChild).toHaveClass('h-[187px]');
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   // The Figma band holds the 78px web and its 4px tick ring, but not the 30px
   // ring `showLabels` needs — at 187 the top and bottom category labels ran off
   // the box. The box grows with the ring rather than the ring shrinking to it.

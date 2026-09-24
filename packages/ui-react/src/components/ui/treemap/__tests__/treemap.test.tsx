@@ -301,6 +301,16 @@ describe('Treemap legend', () => {
     ]);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({
+      showLegend: true,
+      legendFontSize: 'lg',
+    });
+    const legend = legendRow(container)?.lastElementChild;
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   it('colors each entry with its leaf color', () => {
     const { container } = renderChart({ showLegend: true });
     const swatch = legendRow(container)?.querySelector<HTMLElement>(

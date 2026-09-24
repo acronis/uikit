@@ -195,6 +195,13 @@ describe('ConfidenceCone', () => {
     expect(lineCurvesOf(container)).toHaveLength(1);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   it('draws no marks but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();

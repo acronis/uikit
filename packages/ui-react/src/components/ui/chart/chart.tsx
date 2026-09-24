@@ -241,12 +241,34 @@ export type ChartTooltipContentProps = Partial<
   color?: string;
 };
 
+/**
+ * The legend text-size scale. `xs` is the size the legend has always rendered
+ * at; the rest of the steps follow Tailwind's `text-*` scale.
+ */
+export type ChartLegendFontSize = 'xs' | 'sm' | 'base' | 'lg' | 'xl';
+
+// A static lookup rather than a `text-${size}` template: Tailwind only emits a
+// utility it can read verbatim in the source.
+const legendFontSizeClass: Record<ChartLegendFontSize, string> = {
+  xs: 'text-xs',
+  sm: 'text-sm',
+  base: 'text-base',
+  lg: 'text-lg',
+  xl: 'text-xl',
+};
+
 export type ChartLegendContentProps = {
   className?: string;
   hideIcon?: boolean;
   verticalAlign?: LegendProps['verticalAlign'];
   payload?: LegendPayload[];
   nameKey?: string;
+  /**
+   * Font size of the legend text — labels, and the right-hand values of the
+   * `list` variant. Defaults to `'xs'`, the size the legend has always
+   * rendered at.
+   */
+  fontSize?: ChartLegendFontSize;
   /**
    * The series config the entries take their labels and icons from. Defaults to
    * the enclosing `ChartContainer`'s — pass it only to render the legend *outside*
@@ -616,12 +638,14 @@ const ChartLegend = RechartsPrimitive.Legend;
 function ChartLegendListEntry({
   item,
   itemConfig,
+  fontSize,
   valueKey,
   valueFormatter,
   valueClassName,
 }: {
   item: LegendPayload;
   itemConfig: ChartItemConfig;
+  fontSize: ChartLegendFontSize;
   valueKey?: string;
   valueFormatter?: (value: string | number) => string;
   valueClassName?: string;
@@ -649,17 +673,30 @@ function ChartLegendListEntry({
           />
         )}
         {typeof label === 'string' || typeof label === 'number' ? (
-          <TruncateText className="min-w-0 flex-1 text-xs text-foreground">
+          <TruncateText
+            className={cn(
+              'min-w-0 flex-1 text-foreground',
+              legendFontSizeClass[fontSize]
+            )}
+          >
             {String(label)}
           </TruncateText>
         ) : (
-          <span className="min-w-0 flex-1 truncate text-xs text-foreground">{label}</span>
+          <span
+            className={cn(
+              'min-w-0 flex-1 truncate text-foreground',
+              legendFontSizeClass[fontSize]
+            )}
+          >
+            {label}
+          </span>
         )}
       </div>
       {displayValue != null && (
         <span
           className={cn(
-            'shrink-0 text-xs font-semibold text-[var(--ui-text-on-surface-link-idle)]',
+            'shrink-0 font-semibold text-[var(--ui-text-on-surface-link-idle)]',
+            legendFontSizeClass[fontSize],
             valueClassName
           )}
         >
@@ -718,6 +755,7 @@ function ChartLegendContent({
   nameKey,
   config: configFromProps,
   variant = 'default',
+  fontSize = 'xs',
   valueKey,
   valueFormatter,
   valueClassName,
@@ -750,6 +788,7 @@ function ChartLegendContent({
               key={item.value}
               item={item}
               itemConfig={getPayloadConfigFromPayload(config, item, key)}
+              fontSize={fontSize}
               valueKey={valueKey}
               valueFormatter={valueFormatter}
               valueClassName={valueClassName}
@@ -771,6 +810,11 @@ function ChartLegendContent({
         // its exact layout.
         'flex flex-wrap items-center justify-center gap-x-6 gap-y-2',
         verticalAlign === 'top' ? 'pb-3' : 'pt-3',
+        // Stated on the wrapper even at the default ('xs'): default-variant
+        // entries take their size by inheritance, and a legend rendered outside
+        // a `ChartContainer` (see `Treemap`) has no container `text-xs` to fall
+        // back on.
+        legendFontSizeClass[fontSize],
         className
       )}
     >

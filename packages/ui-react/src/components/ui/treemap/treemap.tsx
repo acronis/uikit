@@ -15,6 +15,7 @@ import {
   resolveAnimation,
   toCssKey,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartAnimationProps,
   type TickFormatter,
@@ -304,6 +305,11 @@ export interface TreemapProps
   /** Which edge the legend sits on. */
   legendPos?: 'top' | 'bottom';
   /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
+  /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
    * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
    * to customize formatting, per-cell rows, or extra fields without composing
@@ -330,6 +336,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
       showTooltip = true,
       showLegend = false,
       legendPos = 'bottom',
+      legendFontSize,
       tooltipContent,
       animate,
       animationDuration,
@@ -461,7 +468,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
     // properties its swatches resolve against under its own `data-chart` id.
     const legendChartId = `chart-${React.useId().replace(/:/g, '')}`;
     const legendRow = showLegend ? (
-      <div data-chart={legendChartId} className="text-xs">
+      <div data-chart={legendChartId}>
         <ChartStyle
           id={legendChartId}
           config={resolveChartColors(config, palette)}
@@ -471,6 +478,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
           payload={legendPayload}
           verticalAlign={legendPos}
           nameKey={nameKey}
+          fontSize={legendFontSize}
         />
       </div>
     ) : null;

@@ -1,5 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   Cell,
   PolarAngleAxis,
@@ -70,6 +73,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     innerRadius: { control: { type: 'number', min: 0, max: 60 } },
     outerRadius: { control: { type: 'number', min: 0, max: 60 } },
     startAngle: { control: { type: 'number', min: -360, max: 360 } },

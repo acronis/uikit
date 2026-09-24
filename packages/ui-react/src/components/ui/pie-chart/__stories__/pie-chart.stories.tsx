@@ -3,7 +3,10 @@ import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
 import { ChartPieIcon, EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { PieChart, pieChartValuePercentTooltip } from '../pie-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -54,6 +57,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     shape: { control: 'inline-radio', options: ['pie', 'donut'] },
     centerLabel: {
       control: 'object',

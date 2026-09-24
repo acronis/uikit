@@ -103,6 +103,12 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
+    - name: legendFontSize
+      type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'"
+      required: false
+      default: "'xs'"
+      description: >-
+        Font size of the legend text (labels and values).
     - name: legendValueFormatter
       type: '(value: string | number) => string'
       required: false

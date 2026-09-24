@@ -39,6 +39,7 @@ import {
   toLabelFormatter,
   toCssKey,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartLegendContentProps,
   type CartesianChartProps,
@@ -301,6 +302,11 @@ export interface ComposedChartProps
   /** Which edge the legend sits on. Defaults to `bottom`. */
   legendPosition?: 'top' | 'bottom';
   /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
+  /**
    * Position of the value labels when `showLabels` is on. Defaults to each
    * series' growing end — `top` (or `right` when horizontal), and the centre of
    * a stacked segment, which has no free space at its end.
@@ -350,6 +356,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       tooltipCursor = true,
       showLegend = true,
       legendPosition = 'bottom',
+      legendFontSize,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -717,6 +724,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
         ? (legendProps) => (
             <ChartLegendContent
               verticalAlign={legendPosition}
+              fontSize={legendFontSize}
               payload={
                 legendProps.payload?.filter(
                   (item) => !hiddenLegendKeys.has(String(item.dataKey))
@@ -724,7 +732,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               }
             />
           )
-        : <ChartLegendContent verticalAlign={legendPosition} />;
+        : <ChartLegendContent verticalAlign={legendPosition} fontSize={legendFontSize} />;
 
     const renderSeries = (s: ComposedSeries, index: number) => {
       const color = s.color ?? `var(--color-${toCssKey(s.key)})`;

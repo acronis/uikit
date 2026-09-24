@@ -178,6 +178,13 @@ describe('AreaChart', () => {
     expect(curvesOf(container)).toHaveLength(2);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   // A solid fill paints straight from the series color; a gradient fill routes
   // it through a `<linearGradient>` def instead.
   it('fills from the color directly by default and from a gradient def when asked', () => {

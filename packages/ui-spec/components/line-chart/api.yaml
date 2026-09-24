@@ -145,6 +145,12 @@ contract:
       required: false
       default: 'true'
       description: Render the legend.
+    - name: legendFontSize
+      type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'"
+      required: false
+      default: "'xs'"
+      description: >-
+        Font size of the legend text.
     - name: tooltipContent
       type: 'ReactElement | ((props) => ReactNode)'
       required: false

@@ -23,6 +23,7 @@ import {
   resolveLabelFillClass,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartAnimationProps,
   type ChartDataLabelProps,
@@ -332,6 +333,14 @@ export interface RadarChartProps
   showTooltip?: boolean;
   showLegend?: boolean;
   /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. A larger size grows the legend band the plot is centred
+   * above (the band is sized for `xs`; see `radarPlotBox`), so pair it with a
+   * taller `className` height if the legend crowds the web. See
+   * `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
+  /**
    * Replace the default tooltip. Pass a configured `ChartTooltipContent`
    * (imported from this library) — e.g. with a `formatter` / `labelFormatter` —
    * to customize formatting, per-series rows, or extra fields without composing
@@ -517,6 +526,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       margin,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       tooltipContent,
       animate,
       animationDuration,
@@ -655,7 +665,12 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
             {showLegend && (
               <ChartLegend
                 verticalAlign="bottom"
-                content={<ChartLegendContent verticalAlign="bottom" />}
+                content={
+                  <ChartLegendContent
+                    verticalAlign="bottom"
+                    fontSize={legendFontSize}
+                  />
+                }
               />
             )}
             {dataKeys.map((key) =>

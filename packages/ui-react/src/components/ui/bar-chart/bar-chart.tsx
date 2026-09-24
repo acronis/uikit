@@ -44,6 +44,7 @@ import {
   toLabelFormatter,
   toReferenceLineList,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartStatusTone,
   type ChartReferenceLine,
@@ -244,11 +245,16 @@ export function NormalizedTooltipContent({
  */
 export function NormalizedLegendContent({
   dataKeys,
+  fontSize,
   ...props
-}: Partial<LegendRenderProps> & { dataKeys: string[] }) {
+}: Partial<LegendRenderProps> & {
+  dataKeys: string[];
+  fontSize?: ChartLegendFontSize;
+}) {
   return (
     <ChartLegendContent
       verticalAlign={props.verticalAlign}
+      fontSize={fontSize}
       payload={
         withSeriesColor(
           dropHeadroomSeries(props.payload, dataKeys)
@@ -673,6 +679,11 @@ export interface BarChartVerticalProps
   };
   showLegend?: boolean;
   /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
+  /**
    * Position of the value labels when `showLabels` is on. Defaults to the bar's
    * growing end (`top`), or the segment centre when the layout is stacked.
    */
@@ -962,6 +973,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -1183,7 +1195,9 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
     const tooltipElement = (
       <NormalizedTooltipContent content={tooltipContent} dataKeys={dataKeys} />
     );
-    const legendElement = <NormalizedLegendContent dataKeys={dataKeys} />;
+    const legendElement = (
+      <NormalizedLegendContent dataKeys={dataKeys} fontSize={legendFontSize} />
+    );
 
     // The long chart children are lifted into these renderers so the returned
     // tree reads as a flat list. They are plain functions, not components:

@@ -182,6 +182,54 @@ describe('Chart', () => {
     expect(dots[0]?.parentElement?.parentElement).toHaveClass('justify-center');
   });
 
+  it('sizes the legend at xs by default and follows fontSize when given', () => {
+    const payload = [
+      { value: 'Desktop', dataKey: 'desktop', color: 'rgb(23 99 207)' },
+    ];
+    const { container: unsized } = render(
+      <ChartContainer config={config} id="fs-default">
+        <ChartLegendContent payload={payload} />
+      </ChartContainer>
+    );
+    // The wrapper states its size even at the default: a legend rendered
+    // outside the container (see Treemap) has no container text-xs to
+    // inherit, so it can't rely on the ancestor.
+    expect(unsized.querySelector('[data-slot="chart-legend"]')).toHaveClass(
+      'text-xs'
+    );
+
+    const { container: sized } = render(
+      <ChartContainer config={config} id="fs-sized">
+        <ChartLegendContent payload={payload} fontSize="lg" />
+      </ChartContainer>
+    );
+    const legend = sized.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
+  it('sizes a list legend\'s labels and values with fontSize', () => {
+    render(
+      <ChartLegendContent
+        variant="list"
+        fontSize="lg"
+        valueKey="value"
+        config={config}
+        payload={[
+          {
+            value: 'Desktop',
+            dataKey: 'desktop',
+            color: 'rgb(23 99 207)',
+            payload: { value: 125 },
+          },
+        ]}
+      />
+    );
+    expect(screen.getByText('Desktop')).toHaveClass('text-lg');
+    expect(screen.getByText('125')).toHaveClass('text-lg');
+    expect(screen.getByText('125')).not.toHaveClass('text-xs');
+  });
+
   // A chart type whose renderer can't lay a legend out inside the plot (Treemap)
   // renders the shared legend beside it, outside the container — so the config has
   // to be passable as a prop rather than only through the container's context.

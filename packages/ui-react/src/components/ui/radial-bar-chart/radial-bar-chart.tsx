@@ -25,6 +25,7 @@ import {
   CHART_DEFAULT_PALETTE,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartAnimationProps,
   type ChartDataLabelProps,
@@ -601,6 +602,11 @@ export interface RadialBarChartProps
   showTooltip?: boolean;
   showLegend?: boolean;
   /**
+   * Font size of the legend text (labels and values). Defaults to `'xs'` —
+   * the size the legend has always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
+  /**
    * Format each arc's value in the list legend. In single-metric mode each arc
    * row gets its formatted value next to its label; in multi-metric mode values
    * are per-row (not per-series) so this is ignored.
@@ -661,6 +667,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       centerLabel,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       legendValueFormatter,
       tooltipContent,
       animate,
@@ -909,6 +916,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
             payload={rightLegendPayload}
             config={resolvedConfigForLegend}
             nameKey={isMultiMetric ? undefined : nameKey}
+            fontSize={legendFontSize}
             valueKey={isMultiMetric ? undefined : dataKey}
             valueFormatter={isMultiMetric ? undefined : legendValueFormatter}
             className="min-w-0 flex-1"

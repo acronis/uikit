@@ -189,6 +189,13 @@ describe('BarChart', () => {
     expect(barsOf(container)).toHaveLength(6);
   });
 
+  it('sizes the legend text with legendFontSize', () => {
+    const { container } = renderChart({ legendFontSize: 'lg' });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+    expect(legend).toHaveClass('text-lg');
+    expect(legend).not.toHaveClass('text-xs');
+  });
+
   it('applies barRadius=8 by default (arc commands in path)', () => {
     const { container } = renderChart();
     expect(barsOf(container)[0].getAttribute('d')).toMatch(/[aA]/);

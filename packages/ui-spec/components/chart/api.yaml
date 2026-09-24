@@ -47,6 +47,13 @@ contract:
       required: false
       default: 'false'
       description: Hide the per-series icon in the legend (use the color swatch).
+    - name: fontSize
+      type: "'xs' | 'sm' | 'base' | 'lg' | 'xl'"
+      required: false
+      default: "'xs'"
+      description: >-
+        Font size of the legend text — labels, and the right-hand values of the
+        list variant.
     - name: nameKey
       type: string
       required: false

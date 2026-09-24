@@ -43,6 +43,15 @@ Scenario: Legend
 ```
 
 ```gherkin
+Scenario: Legend font size
+  Given no fontSize prop
+  Then the legend text renders at 'xs' (the historical size)
+  When fontSize is set to one of 'xs' | 'sm' | 'base' | 'lg' | 'xl'
+  Then the legend text renders at that step of the type scale
+  And the 'list' variant sizes both its labels and its right-hand values
+```
+
+```gherkin
 Scenario: Default palette
   Given a ChartContainer with no explicit palette prop
   Then the categorical palette is used

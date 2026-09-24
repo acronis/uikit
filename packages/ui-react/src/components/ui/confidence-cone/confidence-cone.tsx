@@ -27,6 +27,7 @@ import {
   resolveYAxisTitle,
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
+  type ChartLegendFontSize,
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -291,6 +292,11 @@ export interface ConfidenceConeBaseProps
    */
   showForecastRegion?: boolean;
   showLegend?: boolean;
+  /**
+   * Font size of the legend text. Defaults to `'xs'` — the size the legend has
+   * always rendered at. See `ChartLegendFontSize`.
+   */
+  legendFontSize?: ChartLegendFontSize;
 }
 
 /**
@@ -332,6 +338,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       showGrid = true,
       showTooltip = true,
       showLegend = true,
+      legendFontSize,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -560,6 +567,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
         content={(lp) => (
           <ChartLegendContent
             verticalAlign={lp.verticalAlign}
+            fontSize={legendFontSize}
             payload={
               keepMetricSeries(
                 lp.payload,

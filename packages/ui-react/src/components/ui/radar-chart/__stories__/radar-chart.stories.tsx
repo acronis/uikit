@@ -10,7 +10,10 @@ import {
 import { RadarChart } from '../radar-chart';
 import { ButtonIcon } from '../../button-icon';
 import { ChartWidget } from '../../chart-widget';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -71,6 +74,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     gridType: { control: 'inline-radio', options: ['polygon', 'circle'] },
     fillOpacity: { control: { type: 'number', min: 0, max: 1, step: 0.1 } },
     strokeWidth: { control: { type: 'number', min: 0, max: 6 } },

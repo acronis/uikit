@@ -12,7 +12,10 @@ import {
 } from 'recharts';
 
 import { ScatterChart } from '../scatter-chart';
-import { paletteArgTypes } from '../../chart/__stories__/palette-control';
+import {
+  legendFontSizeArgTypes,
+  paletteArgTypes,
+} from '../../chart/__stories__/palette-control';
 import {
   ChartContainer,
   ChartTooltip,
@@ -77,6 +80,7 @@ const meta = {
   },
   argTypes: {
     ...paletteArgTypes,
+    ...legendFontSizeArgTypes,
     palette: {
       ...paletteArgTypes.palette,
       table: { category: 'Appearance', defaultValue: { summary: 'diverging-teal-violet' } },

@@ -66,7 +66,8 @@ Turn it into a bubble chart by mapping a third numeric field to point size with
 ```
 
 Change the marker with `shape`, and toggle the chrome with `showGrid` /
-`showTooltip` / `showLegend`:
+`showTooltip` / `showLegend`. `legendFontSize` sizes the legend text (`'xs'`
+by default):
 
 ```tsx
 <ScatterChart config={config} series={series} xKey="hours" yKey="score" shape="triangle" showLegend={false} />
