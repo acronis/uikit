@@ -681,6 +681,27 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
 
 export const CoreCapabilitiesWithGroupedHeaders: Story = {
   render: () => <CoreCapabilitiesWithGroupedHeadersDemo />,
+  // Same infinite-load race as `CoreCapabilities` above — the sentinel row
+  // fires on mount (six rows don't fill the pane), so without this the
+  // screenshot lands on whichever 600ms load cycle happens to be in flight.
+  // `play` drives it to its terminal state before `animationDelay` lets the
+  // final render paint.
+  parameters: { snapshot: { animationDelay: 600 } },
+  play: async ({ canvasElement }) => {
+    if (!navigator.webdriver) return;
+    const canvas = within(canvasElement);
+    const pane = await canvas.findByTestId('infinite-scroll-pane-grouped');
+    await waitFor(
+      () => {
+        pane.scrollTop = pane.scrollHeight;
+        canvas.getByText(
+          `${TOTAL_WORKLOADS} of ${TOTAL_WORKLOADS} items loaded`
+        );
+      },
+      { timeout: 15000 }
+    );
+    pane.scrollTop = 0;
+  },
 };
 
 /* ---- Compact grouped-header view (no scroll required) ---- */
