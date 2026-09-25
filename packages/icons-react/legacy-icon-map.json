@@ -767,10 +767,10 @@
       }
     },
     "AreaChartIcon": {
-      "asset": "ChartTrend",
+      "asset": "ChartArea",
       "source": "area-chart--32",
       "variants": {
-        "stroke-mono": "ChartTrendIcon",
+        "stroke-mono": "ChartAreaIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -5407,10 +5407,10 @@
       }
     },
     "LastRangeIcon": {
-      "asset": "ChevronLast",
+      "asset": "ChevronFirst",
       "source": "last-range--16",
       "variants": {
-        "stroke-mono": "ChevronLastIcon",
+        "stroke-mono": "ChevronFirstIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -6587,10 +6587,10 @@
       }
     },
     "NextRangeIcon": {
-      "asset": "ChevronFirst",
+      "asset": "ChevronLast",
       "source": "next-range--16",
       "variants": {
-        "stroke-mono": "ChevronFirstIcon",
+        "stroke-mono": "ChevronLastIcon",
         "solid-mono": null,
         "stroke-multi": null,
         "solid-multi": null
@@ -11039,18 +11039,18 @@
       "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
     },
     "MultipleIcon": {
-      "asset": "CirclesMulti",
+      "asset": "ShapesMulti",
       "source": "multiple--16",
       "multi": {
-        "stroke-multi": "CirclesMultiIcon"
+        "stroke-multi": "ShapesMultiIcon"
       },
       "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
     },
     "MultipleMixIcon": {
-      "asset": "CirclesMulti",
+      "asset": "ShapesMulti",
       "source": "multiple-mix--32",
       "multi": {
-        "stroke-multi": "CirclesMultiIcon"
+        "stroke-multi": "ShapesMultiIcon"
       },
       "note": "colored glyph — no monochrome equivalent; keep multicolor or pick a mono base + a color className. Do not silently flatten status color."
     },

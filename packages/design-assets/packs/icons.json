@@ -9462,7 +9462,7 @@
           "metadata": {
             "category": ["Multicolor"],
             "tags": ["alert", "status", "notification", "multiple"],
-            "legacyNames": ["multiple-mix--32", "multiple--16", "CirclesMulti"]
+            "legacyNames": ["multiple-mix--32", "multiple--16"]
           }
         },
         "TriangleWarningYellow": {
