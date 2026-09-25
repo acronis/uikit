@@ -1,7 +1,9 @@
 ---
 title: Styling Utilities
-description: Framework-agnostic spacing utility classes and viewport breakpoints shipped alongside the design tokens.
+description: Framework-agnostic spacing, sizing, layout utility classes and viewport breakpoints shipped alongside the design tokens.
 ---
+
+import { Callout } from 'fumadocs-ui/components/callout';
 
 **Styling utilities** are small, generated CSS building blocks that sit next to
 the token system — usable whether or not a consumer extends the Tailwind
@@ -10,9 +12,41 @@ preset.
 - [Spacing](/styling-utilities/spacing) — `.ui-p-*`/`.ui-m-*`/`.ui-gap-*`
   padding, margin, and gap classes generated from the design system's spacing
   scale.
+- [Sizing](/styling-utilities/sizing) — `.ui-w-*`/`.ui-h-*` (+ min/max)
+  width and height classes generated from the same spacing scale, plus the
+  fraction scale and the named `.ui-max-w-*` scale (`xs`…`7xl`).
+- [Position](/styling-utilities/position) — `.ui-static`/`.ui-relative`/
+  `.ui-absolute`/`.ui-fixed`/`.ui-sticky` position-type classes plus
+  `.ui-top-*`/`.ui-right-*`/`.ui-bottom-*`/`.ui-left-*`/`.ui-start-*`/
+  `.ui-end-*`/`.ui-inset-*` offset classes generated from the same spacing
+  scale.
+- [Layout](/styling-utilities/layout) — static `.ui-*` flex, grid, alignment,
+  and text-flow (wrapping/overflow) classes mirroring Tailwind's own bounded
+  utility groups, plus list-style, cursor, resize, child spacing
+  (`ui-space-y-*`/`ui-divide-y`), and border-width.
+- [Colors](/styling-utilities/colors) — `.ui-text-*`/`.ui-bg-*`/
+  `.ui-border-*` semantic color classes, one per existing
+  `--ui-text-*`/`--ui-background-*`/`--ui-border-*` custom property, plus
+  `ui-hover:`/`ui-disabled:`/`ui-focus-visible:`/`ui-last:` state-variant
+  forms of every one of them.
 - [Breakpoints](/styling-utilities/breakpoints) — the viewport breakpoint scale,
   as Tailwind `@theme` values, `--ui-breakpoint-*` CSS variables, and JS
   constants.
 
-For color, typography, and component tokens, see
-[Token reference](/token-reference) and [Typography](/typography).
+For every `--ui-*` token (including the ones the Colors page above wraps)
+and typography, see [Token reference](/token-reference) and
+[Typography](/typography).
+
+<Callout type="warn">
+  **The tailwind-merge trap.** `@acronis-platform/ui-react` components merge a
+  `className` you pass with their own default classes via `cn()`
+  (`clsx` + `tailwind-merge`), which **deduplicates conflicting utilities in
+  your favor** — including a utility your className didn't intend to
+  override. Passing a dead or unrelated class alongside a real one can
+  silently remove a component's own working style: e.g. `<TabsContent
+  className="mt-6" />` drops the component's built-in `mt-2` (both are
+  `margin-top` utilities, so `tailwind-merge` keeps only the last one) and
+  renders with zero margin instead of stacking on top of it. When overriding
+  a component's own spacing/sizing, check what the component already applies
+  before assuming your class only adds to it.
+</Callout>
