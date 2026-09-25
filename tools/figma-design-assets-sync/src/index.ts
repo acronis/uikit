@@ -80,6 +80,22 @@ async function main(): Promise<void> {
     console.log(chalk.green('  ✓ No orphaned binaries'));
   }
 
+  // JSON.stringify(..., null, 2) always expands arrays one item per line;
+  // the committed style (Prettier, via lint-staged) collapses short arrays
+  // onto one line. Re-formatting here — instead of leaving it to the commit
+  // hook — keeps the diff-gate's review limited to the real content change,
+  // not a whole-file reformat every sync.
+  console.log(chalk.bold('\n\n══ Format ══════════════════════════════════'));
+  const prettierResult = spawnSync(`pnpm exec prettier --write "${manifestPath}"`, {
+    stdio: 'inherit',
+    shell: true,
+  });
+  if (prettierResult.status !== 0) {
+    console.error(chalk.red.bold('\n✗ Formatting failed'));
+    abortRevert(gateActive);
+    process.exit(1);
+  }
+
   console.log(chalk.bold('\n\n══ Validations ═════════════════════════════'));
 
   console.log('\n▸ Schema validation (ajv)...');
