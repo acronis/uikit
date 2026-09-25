@@ -7,18 +7,29 @@ import type { SyncConfig } from './config';
 import type { DownloadedIcon } from './download-svgs';
 import { parseDescription } from './helpers';
 
+interface AssetsGroup {
+  $type?: string;
+  $values?: Record<string, unknown>;
+  $description?: string;
+  assets: Record<string, unknown>;
+}
+
 interface PackManifest {
   $schema: string;
   name: string;
   version: string;
   $type: string;
   values: Record<string, unknown>;
-  assets: Record<string, unknown>;
+  assets?: Record<string, unknown>;
+  assetsGroups?: Record<string, AssetsGroup>;
 }
 
 /**
- * Reads the existing pack manifest, regenerates the assets section from the
- * downloaded icons, and writes the result back to disk.
+ * Reads the existing pack manifest, regenerates one group's `assets` map from
+ * the downloaded icons, and writes the result back to disk. Every other key —
+ * the manifest root, every other group, and this group's own `$values` /
+ * `$type` / `$description` — is preserved untouched (see
+ * context/manifest-pack.md — "Asset groups").
  */
 export async function generateManifest(
   config: SyncConfig,
@@ -31,6 +42,14 @@ export async function generateManifest(
     existing = JSON.parse(await fs.readFile(manifestPath, 'utf8')) as PackManifest;
   } catch {
     throw new Error(`Cannot read existing manifest at ${manifestPath}`);
+  }
+
+  const existingGroup = existing.assetsGroups?.[config.groupName];
+  if (!existingGroup) {
+    throw new Error(
+      `Manifest ${manifestPath} has no assetsGroups.${config.groupName} — `
+      + `add the group (or its $values patch) by hand before syncing it from Figma.`,
+    );
   }
 
   const assets: Record<string, unknown> = {};
@@ -54,10 +73,18 @@ export async function generateManifest(
     sortedAssets[key] = assets[key];
   }
 
-  const manifest: PackManifest = { ...existing, assets: sortedAssets };
+  const manifest: PackManifest = {
+    ...existing,
+    assetsGroups: {
+      ...existing.assetsGroups,
+      [config.groupName]: { ...existingGroup, assets: sortedAssets },
+    },
+  };
   await fs.writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 
   console.log(
-    chalk.green(`  Manifest written → ${manifestPath} (${Object.keys(sortedAssets).length} assets)`),
+    chalk.green(
+      `  Manifest written → ${manifestPath} (assetsGroups.${config.groupName}: ${Object.keys(sortedAssets).length} assets)`,
+    ),
   );
 }
