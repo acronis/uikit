@@ -1,5 +1,26 @@
 # @acronis-platform/icons-react
 
+## 2.0.0
+
+### Major Changes
+
+- [#751](https://github.com/acronis/uikit/pull/751) [`3556c9f`](https://github.com/acronis/uikit/commit/3556c9fdff37c2c502d1b6e94c2a342d2660b9c4) Thanks [@ivangarbev](https://github.com/ivangarbev)! - Regenerate against the resynced `icons` pack (`@acronis-platform/design-assets` 3.0.0).
+
+  Breaking: `CirclesMultiIcon` (`stroke-multi`) is removed — the underlying
+  `CirclesMulti` asset was renamed to `ShapesMulti` upstream. Replace it with
+  the new `ShapesMultiIcon` export; the glyph is the same.
+
+  New exports: `ChartAreaIcon`, `ChartBarRadialIcon`, `ChartDonutIcon`,
+  `ChartLineIcon`, `ChartRadarIcon`, `ChartScatterIcon`, `ComplianceNis2Icon`,
+  `ComplianceNistIcon`, `RectangleStatIcon`, `RectangleTreemapIcon`.
+
+  `ChevronFirstIcon`/`ChevronLastIcon` change visually — their arrow directions
+  were swapped upstream, correcting a prior mislabeling. No id changes.
+
+  The `./legacy-map` export also updates to track these changes: `AreaChartIcon`,
+  `LastRangeIcon`, `NextRangeIcon`, `MultipleIcon`, and `MultipleMixIcon` now
+  point at the renamed/corrected underlying assets.
+
 ## 1.0.1
 
 ### Patch Changes
