@@ -11,7 +11,8 @@ interface AssetEntry {
 }
 
 interface PackManifest {
-  assets: Record<string, AssetEntry>;
+  assets?: Record<string, AssetEntry>;
+  assetsGroups?: Record<string, { assets: Record<string, AssetEntry> }>;
 }
 
 export interface DuplicateEntry {
@@ -26,6 +27,22 @@ export interface ManifestValidationResult {
   duplicates: DuplicateEntry[];
 }
 
+/**
+ * Flattens a manifest's assets across the flat `assets` map (if present) and
+ * every `assetsGroups.*.assets` map into one id -> AssetEntry map. `packs/
+ * icons.json` today only has `assetsGroups`; other packs (e.g.
+ * `illustrations.json`) may only have a flat `assets` — both are covered.
+ * legacyNames uniqueness is scoped to the whole pack file, matching "unique
+ * within a Pack" (context/manifest-pack.md).
+ */
+function flattenAssets(manifest: PackManifest): Record<string, AssetEntry> {
+  const flattened: Record<string, AssetEntry> = { ...manifest.assets };
+  for (const group of Object.values(manifest.assetsGroups ?? {})) {
+    Object.assign(flattened, group.assets);
+  }
+  return flattened;
+}
+
 export async function validateManifest(manifestPath: string): Promise<ManifestValidationResult> {
   let manifest: PackManifest;
   try {
@@ -34,10 +51,12 @@ export async function validateManifest(manifestPath: string): Promise<ManifestVa
     throw new Error(`Cannot read manifest at ${manifestPath}`);
   }
 
+  const assets = flattenAssets(manifest);
+
   const seen = new Map<string, string>();
   const duplicates: DuplicateEntry[] = [];
 
-  for (const [key, asset] of Object.entries(manifest.assets)) {
+  for (const [key, asset] of Object.entries(assets)) {
     for (const name of asset.metadata?.legacyNames ?? []) {
       if (seen.has(name)) {
         duplicates.push({ legacyName: name, icons: [seen.get(name)!, key] });
@@ -49,7 +68,7 @@ export async function validateManifest(manifestPath: string): Promise<ManifestVa
 
   return {
     manifestPath,
-    assetCount: Object.keys(manifest.assets).length,
+    assetCount: Object.keys(assets).length,
     legacyCount: seen.size,
     duplicates,
   };
@@ -77,7 +96,7 @@ function printValidationResult(result: ManifestValidationResult): void {
 
 const __filename = fileURLToPath(import.meta.url);
 if (process.argv[1] === __filename) {
-  const manifestPath = process.argv[2] ?? 'packs/icons-stroke-mono.json';
+  const manifestPath = process.argv[2] ?? 'packs/icons.json';
   console.log(chalk.bold(`\nValidating legacyNames in ${manifestPath}\n`));
   validateManifest(manifestPath)
     .then((result) => {

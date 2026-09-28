@@ -1,7 +1,7 @@
 {
   "$schema": "../schemas/pack.schema.json",
   "name": "icons",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "$type": "vector",
   "values": {
     "16": {
@@ -261,6 +261,32 @@
             "category": ["Solid"],
             "tags": ["logo", "compliance standards", "brand"],
             "legacyNames": ["hipaa--16", "hipaa--24"]
+          }
+        },
+        "ComplianceNis2": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ComplianceNis2.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Solid"],
+            "tags": ["logo", "compliance standards", "brand"],
+            "legacyNames": []
+          }
+        },
+        "ComplianceNist": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ComplianceNist.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Solid"],
+            "tags": ["logo", "compliance standards", "brand"],
+            "legacyNames": []
           }
         },
         "CompliancePci": {
@@ -1182,8 +1208,12 @@
     },
     "stroke-mono": {
       "$values": {
-        "24": { "$rules": ["current-color"] },
-        "16": { "$rules": ["current-color", "scale-16", "stroke-1-6"] }
+        "16": {
+          "$rules": ["current-color", "scale-16", "stroke-1-6"]
+        },
+        "24": {
+          "$rules": ["current-color"]
+        }
       },
       "assets": {
         "AppWindow": {
@@ -1908,7 +1938,7 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Shapes"],
-            "tags": ["options", "filter"],
+            "tags": ["options", "filter", "funnel"],
             "legacyNames": []
           }
         },
@@ -2562,6 +2592,26 @@
             "legacyNames": ["devices-camera--24"]
           }
         },
+        "ChartArea": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ChartArea.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget"
+            ],
+            "legacyNames": ["area-chart--32"]
+          }
+        },
         "ChartBarHorizontal": {
           "values": {
             "24": {
@@ -2572,6 +2622,26 @@
           "metadata": {
             "category": ["Shapes"],
             "tags": ["statistics", "stats", "analytics", "diagram", "graph"],
+            "legacyNames": []
+          }
+        },
+        "ChartBarRadial": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ChartBarRadial.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget"
+            ],
             "legacyNames": []
           }
         },
@@ -2596,6 +2666,26 @@
             "legacyNames": ["empty-widget--32"]
           }
         },
+        "ChartDonut": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ChartDonut.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget"
+            ],
+            "legacyNames": []
+          }
+        },
         "ChartGrowth": {
           "values": {
             "24": {
@@ -2616,6 +2706,26 @@
               "graph"
             ],
             "legacyNames": ["growth--16", "project-profit--32"]
+          }
+        },
+        "ChartLine": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ChartLine.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget"
+            ],
+            "legacyNames": []
           }
         },
         "ChartPie": {
@@ -2651,6 +2761,46 @@
             ]
           }
         },
+        "ChartRadar": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ChartRadar.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget"
+            ],
+            "legacyNames": []
+          }
+        },
+        "ChartScatter": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ChartScatter.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget"
+            ],
+            "legacyNames": []
+          }
+        },
         "ChartTrend": {
           "values": {
             "24": {
@@ -2670,11 +2820,7 @@
               "diagram",
               "graph"
             ],
-            "legacyNames": [
-              "psa-free-features--16",
-              "psa-free-features--24",
-              "area-chart--32"
-            ]
+            "legacyNames": ["psa-free-features--16", "psa-free-features--24"]
           }
         },
         "Check": {
@@ -2750,8 +2896,8 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Arrows"],
-            "tags": ["next range"],
-            "legacyNames": ["next-range--16", "next-range-o--16"]
+            "tags": ["last range"],
+            "legacyNames": ["last-range--16", "last-range-o--16"]
           }
         },
         "ChevronLast": {
@@ -2763,8 +2909,8 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Arrows"],
-            "tags": ["last range"],
-            "legacyNames": ["last-range--16", "last-range-o--16"]
+            "tags": ["next range"],
+            "legacyNames": ["next-range--16", "next-range-o--16"]
           }
         },
         "ChevronLeft": {
@@ -2849,7 +2995,7 @@
           "platforms": ["PD"],
           "metadata": {
             "category": ["Arrows"],
-            "tags": ["expand"],
+            "tags": ["expand", "continue"],
             "legacyNames": ["expand-menu--16", "chevron-double-right--16"]
           }
         },
@@ -7287,6 +7433,49 @@
             ]
           }
         },
+        "RectangleStat": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/RectangleStat.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "stats",
+              "widget",
+              "number",
+              "metric",
+              "kpi",
+              "card"
+            ],
+            "legacyNames": []
+          }
+        },
+        "RectangleTreemap": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/RectangleTreemap.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Shapes"],
+            "tags": [
+              "statistics",
+              "analytics",
+              "diagram",
+              "graph",
+              "stats",
+              "widget",
+              "chart"
+            ],
+            "legacyNames": []
+          }
+        },
         "RectangleWifi": {
           "values": {
             "24": {
@@ -9141,19 +9330,6 @@
             ]
           }
         },
-        "CirclesMulti": {
-          "values": {
-            "24": {
-              "$file": "./packs/icons/CirclesMulti.svg"
-            }
-          },
-          "platforms": ["PD"],
-          "metadata": {
-            "category": ["Multicolor"],
-            "tags": ["alert", "status", "notification", "multiple"],
-            "legacyNames": ["multiple-mix--32", "multiple--16"]
-          }
-        },
         "DiamondWarningRed": {
           "values": {
             "24": {
@@ -9274,6 +9450,19 @@
               "dot-warning--16",
               "dot-chart-yellow--16"
             ]
+          }
+        },
+        "ShapesMulti": {
+          "values": {
+            "24": {
+              "$file": "./packs/icons/ShapesMulti.svg"
+            }
+          },
+          "platforms": ["PD"],
+          "metadata": {
+            "category": ["Multicolor"],
+            "tags": ["alert", "status", "notification", "multiple"],
+            "legacyNames": ["multiple-mix--32", "multiple--16"]
           }
         },
         "TriangleWarningYellow": {
