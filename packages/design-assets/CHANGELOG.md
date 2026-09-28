@@ -1,5 +1,30 @@
 # @acronis-platform/design-assets
 
+## 2.0.0
+
+### Major Changes
+
+- [#751](https://github.com/acronis/uikit/pull/751) [`9cc0199`](https://github.com/acronis/uikit/commit/9cc0199c9033cb033fe02af97c73edbf9bd71ad4) Thanks [@ivangarbev](https://github.com/ivangarbev)! - Sync the `icons` pack from Figma (pack version `2.0.0` → `3.0.0`).
+
+  Breaking: renamed `CirclesMulti` → `ShapesMulti` in `assetsGroups.stroke-multi`
+  (same category/tags, same glyph) — update any reference from
+  `icons.stroke-multi.CirclesMulti` to `icons.stroke-multi.ShapesMulti`.
+  Downstream, `@acronis-platform/icons-react` generates `CirclesMultiIcon` from
+  this exact asset (see its `legacy-icon-map.json`), so that export becomes
+  `ShapesMultiIcon` next time `icons-react` regenerates from this pack.
+
+  Adds 10 new icons: `ChartArea`, `ChartBarRadial`, `ChartDonut`, `ChartLine`,
+  `ChartRadar`, `ChartScatter`, `ComplianceNis2`, `ComplianceNist`, `RectangleStat`,
+  `RectangleTreemap`.
+
+  Re-exports a handful of existing icons with upstream Figma changes:
+  - `ChevronFirst`/`ChevronLast` — an actual geometry fix: the two icons' arrow
+    directions were swapped, correcting a prior mislabeling. Visual result
+    changes for both; ids are unchanged.
+  - `MicrosoftAzure`, `Minus`, `Plus`, `ShapesMulti` — sub-pixel path
+    re-parameterization only (coordinate precision / anchor shifts under 1px),
+    visually equivalent at rendered sizes; ids are unchanged.
+
 ## 1.0.0
 
 ### Major Changes

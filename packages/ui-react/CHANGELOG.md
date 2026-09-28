@@ -1,5 +1,13 @@
 # @acronis-platform/ui-react
 
+## 5.5.1
+
+### Patch Changes
+
+- Updated dependencies [[`9cc0199`](https://github.com/acronis/uikit/commit/9cc0199c9033cb033fe02af97c73edbf9bd71ad4), [`3556c9f`](https://github.com/acronis/uikit/commit/3556c9fdff37c2c502d1b6e94c2a342d2660b9c4)]:
+  - @acronis-platform/design-assets@2.0.0
+  - @acronis-platform/icons-react@2.0.0
+
 ## 5.5.0
 
 ### Minor Changes
