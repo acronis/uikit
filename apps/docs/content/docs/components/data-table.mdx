@@ -389,6 +389,37 @@ as `bulkSelectionActive` — it then keeps its 48px column but renders no trigge
 and no hover tint. See the
 [data table bulk actions](/docs/components/data-table-bulk-actions) pattern.
 
+`renderRowActions` populates a row's overflow-actions menu — the ellipsis
+trigger in the trailing action column — with whatever items you return. Each row
+gets its own call. When `renderRowActions` is omitted the trigger is not rendered
+but the 48px column is still reserved. The trigger is suppressed while any row is
+selected (bulk mode), matching `TableActionsCell`'s own behavior.
+
+```tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  renderRowActions={(row) => (
+    <>
+      <DropdownMenuItem>Edit</DropdownMenuItem>
+      <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
+    </>
+  )}
+  rowActionsLabel="Row actions"   {/* accessible name for the ellipsis trigger — override to localize */}
+/>
+```
+
+`hideActionColumn` removes the trailing column entirely — the settings cog and
+every row's ellipsis trigger both disappear. Use it when you need a purely
+informational table with no visibility or action controls:
+
+```tsx
+<DataTable columns={columns} data={rows} hideActionColumn />
+```
+
+A no-op when an external `table` is passed — the column is never added in that
+path anyway.
+
 ### Sticky (pinned) and wrapping columns
 
 `ColumnDef.meta` is augmented by ui-react with two flags. `pin` drives TanStack's
@@ -639,10 +670,28 @@ Set on a `ColumnDef`, not on `DataTable` (ui-react augments TanStack's
 | `DataTableExpandTrigger` | `row` (required), plus any `button` attribute; forwards a ref.                                                                                                              |
 
 When `DataTable` owns the table, localize the built-in visibility popup with
+`columnSettingsLabel` (the accessible name of the cog trigger itself),
 `columnSearchPlaceholder`, `showAllColumnsLabel`, and `noColumnsFoundLabel`.
 The popup searches the resolved column labels, groups matching `meta.category`
 values, and scrolls internally when the list exceeds the available viewport
 height.
+
+`headerHints` controls the tooltip that appears when a header cell is hovered or
+focused. The default lines are `"Sort column / Click"`, `"Reorder column / Drag"`,
+and `"Resize column / Drag border"` — each shown only when the column actually
+supports that capability. Pass any subset to localize just the strings you need:
+
+```tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  headerHints={{
+    sort: { label: 'Ordina colonna', action: 'Clic' },
+    reorder: { label: 'Riordina colonna', action: 'Trascina' },
+    resize: { label: 'Ridimensiona colonna', action: 'Trascina il bordo' },
+  }}
+/>
+```
 
 ### useTableUrlState
 
