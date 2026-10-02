@@ -1,7 +1,7 @@
 import { BarChart } from 'recharts';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import {
   ChartContainer,
@@ -22,6 +22,21 @@ const config = {
   desktop: { label: 'Desktop' },
   mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
+
+function mockLegendScrollGeometry(clientHeight: number, scrollHeight: number) {
+  vi.spyOn(HTMLElement.prototype, 'clientHeight', 'get').mockImplementation(
+    function (this: HTMLElement) {
+      return this.dataset.slot === 'chart-legend' ? clientHeight : 0;
+    }
+  );
+  vi.spyOn(HTMLElement.prototype, 'scrollHeight', 'get').mockImplementation(
+    function (this: HTMLElement) {
+      return this.dataset.slot === 'chart-legend' ? scrollHeight : 0;
+    }
+  );
+}
+
+afterEach(() => vi.restoreAllMocks());
 
 // The fields recharts always puts on a tooltip row; the content reads
 // `payload.fill` for the marker color.
@@ -231,6 +246,7 @@ describe('Chart', () => {
   });
 
   it('scrolls a long list legend within its default height cap', () => {
+    mockLegendScrollGeometry(128, 160);
     const payload = Array.from({ length: 20 }, (_, index) => {
       const key = `service-${index + 1}`;
       return {
@@ -252,13 +268,14 @@ describe('Chart', () => {
     const legend = container.querySelector('[data-slot="chart-legend"]');
 
     expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
-    expect(legend).toHaveAttribute('role', 'region');
+    expect(legend).toHaveAttribute('role', 'group');
     expect(legend).toHaveAttribute('aria-label', 'Chart legend');
     expect(legend).toHaveAttribute('tabindex', '0');
     expect(legend?.children).toHaveLength(20);
   });
 
   it('wraps and scrolls many default legend entries within its height cap', () => {
+    mockLegendScrollGeometry(76, 120);
     const payload = Array.from({ length: 20 }, (_, index) => {
       const key = `service-${index + 1}`;
       return {
@@ -281,10 +298,31 @@ describe('Chart', () => {
 
     expect(legend).toHaveClass('flex-wrap');
     expect(legend).toHaveClass('max-h-[76px]', 'overflow-y-auto');
-    expect(legend).toHaveAttribute('role', 'region');
+    expect(legend).toHaveAttribute('role', 'group');
     expect(legend).toHaveAttribute('aria-label', 'Services legend');
     expect(legend).toHaveAttribute('tabindex', '0');
     expect(legend?.children).toHaveLength(20);
+  });
+
+  it('does not add a tab stop when a legend fits inside its cap', () => {
+    mockLegendScrollGeometry(76, 76);
+    const { container } = render(
+      <ChartLegendContent
+        config={{ desktop: { label: 'Desktop' } }}
+        payload={[
+          {
+            value: 'desktop',
+            dataKey: 'desktop',
+            color: 'var(--ui-dataviz-categorical-1)',
+          },
+        ]}
+      />
+    );
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+
+    expect(legend).toHaveAttribute('role', 'group');
+    expect(legend).toHaveAttribute('aria-label', 'Chart legend');
+    expect(legend).not.toHaveAttribute('tabindex');
   });
 
   it.each([

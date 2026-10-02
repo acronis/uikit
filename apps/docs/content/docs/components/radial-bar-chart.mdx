@@ -75,6 +75,10 @@ with `legendFontSize` (`'xs'` by default) and its values format with
 concentric grid behind the arcs, and `cx` / `cy` / `barSize` / `barGap` /
 `barCategoryGap` / `margin` place and size the ring itself.
 
+The list legend scrolls after eight complete rows. It adds a keyboard tab stop
+only while it overflows; set `legendAriaLabel` to localize or distinguish its
+accessible name (default `'Chart legend'`).
+
 ## Gauges
 
 A gauge needs a **scale**. Without `valueDomain`, every arc is drawn relative to

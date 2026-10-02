@@ -136,7 +136,6 @@ export const Donut: Story = {
 // The list legend scrolls after eight complete rows (128px at xs); the plot
 // itself stays 120px tall.
 export const ManyLegendRows: Story = {
-  tags: ['legend-scroll-regression'],
   args: {
     data: manyLegendData,
     config: manyLegendConfig,
@@ -148,7 +147,6 @@ export const ManyLegendRows: Story = {
 // a metric readout above the donut + legend. Rendered with a fixed composition
 // so it shows real consumer usage rather than the meta args playground.
 export const WidgetExample: Story = {
-  tags: ['legend-scroll-regression'],
   render: () => (
     <div className="w-[480px]">
       <ChartWidget

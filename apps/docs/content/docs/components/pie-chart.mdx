@@ -187,6 +187,10 @@ values (`'xs' | 'sm' | 'base' | 'lg' | 'xl'`, default `'xs'`),
 inset (in px) — useful when outside labels or leader lines run close to the
 chart's bounds:
 
+The list legend scrolls after eight complete rows. It adds a keyboard tab stop
+only while it overflows; set `legendAriaLabel` to localize or distinguish its
+accessible name (default `'Chart legend'`).
+
 ```tsx
 <PieChart
   config={config}

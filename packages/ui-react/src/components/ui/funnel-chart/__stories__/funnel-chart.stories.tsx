@@ -174,7 +174,6 @@ export const Default: Story = {};
 // The list legend scrolls after eight complete rows (128px at xs); the funnel
 // plot itself stays 120px tall.
 export const ManyLegendRows: Story = {
-  tags: ['legend-scroll-regression'],
   args: {
     data: manyLegendData,
     config: manyLegendConfig,

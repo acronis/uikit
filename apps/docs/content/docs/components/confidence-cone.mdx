@@ -26,6 +26,10 @@ the actual series' label — and the forecast key's color is re-pointed at the
 actual series' color, so `config` can't paint the metric in two hues. The
 legend's text scales with `legendFontSize` (`'xs'` by default).
 
+The normal legend scrolls after three complete wrapped rows. It adds a keyboard
+tab stop only while it overflows; set `legendAriaLabel` to localize or distinguish
+its accessible name (default `'Chart legend'`).
+
 Metric colors come from the `palette` prop, not from `config` — see
 [Palettes](/components/chart#palettes). Each `config` entry maps a key to a
 `label` and an optional `tone` that re-points it within the palette, resolved
