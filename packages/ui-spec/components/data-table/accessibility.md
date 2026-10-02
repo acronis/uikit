@@ -53,6 +53,13 @@
   carries `role="status"`/`aria-live="polite"` with an `sr-only` "Loading more
   rows…" text, so a screen-reader user is told a fetch is in flight without
   having to notice the animated placeholder.
+- **Skeleton rows** (`skeleton`) are not focusable (no `tabIndex`, outside the
+  roving tabindex) and carry no live region: DataTable does not announce the
+  initial load, so conveying it (e.g. a `role="status"` message elsewhere on
+  the page) stays the consumer's job. Content returned by `renderSkeletonCell`
+  must be decorative: no text or interactive elements, and `aria-hidden` on
+  anything a screen reader could read. This includes static placeholder rows
+  under an empty-state overlay, where the overlay carries the readable content.
 
 ## Known limitations
 

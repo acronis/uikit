@@ -71,7 +71,9 @@ from it too (see **Server-driven usage** below).
   expansion — a row rendered via `renderRow` must implement any expanded
   content itself). `renderEmptyState` swaps in a custom "no data" row,
   receiving `hasFilters` so the caller can distinguish "no data at all" from
-  "no matches".
+  "no matches". `renderSkeletonCell` swaps only the content of each `skeleton`
+  placeholder cell (DataTable keeps the row and cell), e.g. for static
+  placeholder rows under an empty-state overlay.
 
 ## Advanced columns
 

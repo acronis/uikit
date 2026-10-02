@@ -28,6 +28,49 @@ Scenario: Custom empty state
 ```
 
 ```gherkin
+Scenario: Skeleton rows
+  Given skeleton is set
+  Then skeletonRows placeholder rows (default 5) render instead of the data rows
+  And each visible leaf column gets one cell per row holding the default
+      Skeleton bar (my-1 h-4 w-full, so the row stays 40px)
+  And the rows show no hover tint and are not focusable
+  And each cell honors its column's meta.overflow mode
+  And no infinite-scroll sentinel or loading-more row renders
+```
+
+```gherkin
+Scenario: Custom skeleton cell content
+  Given skeleton is set and renderSkeletonCell is provided
+  Then renderSkeletonCell is called once per visible leaf column in each skeleton
+      row, with { column, rowIndex } (rowIndex is 0-based)
+  And columns hidden via columnVisibility are skipped
+  And it is also called for the kit-rendered __actions column and a consumer-declared
+      select column, so the caller branches on column.id
+  And its return value replaces only the cell content — DataTable keeps the row
+      (no hover tint, not focusable) and the cell (padding, borders, meta.overflow)
+  When it returns null or undefined for a column
+  Then that cell renders empty — the default Skeleton bar is not used as a fallback
+  # Return the exported Skeleton to keep the default for a column. Content should
+  # stay ~24px tall so the row stays 40px. Pinning/width styles are not applied
+  # to skeleton cells.
+```
+
+```gherkin
+Scenario: renderSkeletonCell without skeleton
+  Given renderSkeletonCell is provided and skeleton is not set
+  Then renderSkeletonCell is never called and the data rows render as usual
+```
+
+```gherkin
+Scenario: Loading-more row is unaffected by renderSkeletonCell
+  Given paginationMode="infinite", isLoadingMore is true, and renderSkeletonCell is provided
+  And skeleton is not set (the loading-more row never renders while skeleton is set)
+  Then the trailing loading-more row renders its own single spanning Skeleton
+      (role="status", aria-live="polite", sr-only label)
+  And renderSkeletonCell is not called for it
+```
+
+```gherkin
 Scenario: Render from an external table instance
   Given a `table` instance built by the caller with useReactTable
   When it is passed to DataTable's `table` prop
