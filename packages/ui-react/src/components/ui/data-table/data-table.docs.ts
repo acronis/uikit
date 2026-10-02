@@ -92,6 +92,27 @@ export interface DataTableProps {
   /** Passthrough for the `rowSelection` state; pairs with `rowSelection`. */
   onRowSelectionChange?: (updater: unknown) => void;
   /**
+   * Called on a single pointer click on a data row. Not called when the click
+   * lands on an interactive descendant (button, link, input, label,
+   * checkbox/switch/menuitem role, contenteditable, or a Tab stop), originates
+   * from a portaled element opened from the row (e.g. the row-actions menu), or
+   * ends a text-drag selection. Rows get a `cursor-pointer` while set. Composes
+   * with `highlightCurrentRow` (both run; `highlightCurrentRow` runs first).
+   * Silently ignored when `renderRow` is set.
+   */
+  onRowClick?: (row: unknown, event: unknown) => void;
+  /**
+   * Called when a data row is activated — Enter while the row itself has focus
+   * (`details.via: 'keyboard'`; key repeat ignored; Enter from a control inside
+   * the row does not count) or a double-click on the row (`details.via:
+   * 'pointer'`; same interactive-descendant and portal guards as `onRowClick`,
+   * but no text-selection guard). Double-click also dispatches two prior
+   * single-click events; avoid wiring navigation to `onRowClick` alongside this.
+   * Space never activates a row — it is reserved for row selection when
+   * `rowSelection` is in use. Silently ignored when `renderRow` is set.
+   */
+  onRowActivate?: (row: unknown, details: { via: 'keyboard' | 'pointer'; event: unknown }) => void;
+  /**
    * Opt out of client-side sorting — pass already-sorted `data` and drive
    * sorting via `sorting`/`onSortingChange` (e.g. mapped to a server query by
    * the caller).

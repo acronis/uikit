@@ -57,6 +57,130 @@ Scenario: Custom row rendering
 ```
 
 ```gherkin
+Scenario: Keyboard row navigation
+  Given a DataTable with data rows
+  Then exactly one data row is a Tab stop (roving tabindex)
+  When the row itself has focus and the user presses Arrow Down / Arrow Up
+  Then focus moves to the next / previous row and that row becomes the Tab stop
+  When the row itself has focus, onRowActivate is set, and the user presses Enter
+  Then the row is activated (see "Activate a row with Enter" below)
+  # Keys pressed while a control inside a cell has focus are left to that control.
+```
+
+**Row click and activation.** `onRowClick` and `onRowActivate` are independent of each other and of
+`highlightCurrentRow`. Both apply only to DataTable's own row rendering.
+
+```gherkin
+Scenario: Click a row
+  Given onRowClick is set
+  Then every data row shows a pointer cursor
+  When the user clicks a data row once
+  Then onRowClick is called with that row and the native click event
+```
+
+```gherkin
+Scenario: Click on an interactive control inside a cell
+  Given onRowClick is set
+  And a cell renders a button, link, input, select, textarea, label,
+      contenteditable element, an element with role button/checkbox/switch/menuitem/link,
+      or any other Tab stop
+  When the user clicks that control
+  Then onRowClick is not called
+```
+
+```gherkin
+Scenario: Click inside a portaled element opened from the row
+  Given onRowClick is set and renderRowActions is provided
+  When the user opens the row-actions menu and clicks one of its items
+  Then onRowClick is not called
+  # React events bubble through portals, so the click reaches the row even though
+  # the menu's DOM node is outside it. DataTable ignores any click whose target
+  # is not inside the row's DOM.
+```
+
+```gherkin
+Scenario: Click that ends a text selection
+  Given onRowClick is set
+  When the user drags across cell text to select it and releases the pointer
+  Then onRowClick is not called while the selection is non-empty
+```
+
+```gherkin
+Scenario: Activate a row with Enter
+  Given onRowActivate is set
+  And the row itself has focus
+  When the user presses Enter
+  Then onRowActivate is called with that row and { via: 'keyboard', event }
+  And the key's default action is prevented
+```
+
+```gherkin
+Scenario: Enter from a control inside a cell
+  Given onRowActivate is set
+  And focus is on a control inside a cell (a button, checkbox, input, …)
+  When the user presses Enter
+  Then onRowActivate is not called — the control handles the key itself
+```
+
+```gherkin
+Scenario: Held Enter
+  Given onRowActivate is set and the row itself has focus
+  When the user holds Enter down so the key repeats
+  Then onRowActivate is called only for the first keydown — repeats are ignored
+```
+
+```gherkin
+Scenario: Activate a row with a double-click
+  Given onRowActivate is set
+  When the user double-clicks a data row outside any interactive control
+  Then onRowActivate is called with that row and { via: 'pointer', event }
+  And the text-selection guard does not apply — the browser selects the word
+      under the pointer on the second press, so a selection is always present
+  But a double-click on an interactive control or a portaled element is ignored,
+      as for onRowClick
+```
+
+```gherkin
+Scenario: Double-click with onRowClick also set
+  Given both onRowClick and onRowActivate are set
+  When the user double-clicks a data row
+  Then the browser dispatches two click events before the dblclick
+  And the first click calls onRowClick
+  And the second click normally does not, because the browser selected the word
+      under the pointer and the text-selection guard skips it
+  And then onRowActivate is called with { via: 'pointer' }
+  # Don't wire navigation to onRowClick alongside onRowActivate: the first click
+  # navigates before the double-click arrives.
+```
+
+```gherkin
+Scenario: Space does not activate a row
+  Given onRowActivate is set and the row itself has focus
+  When the user presses Space
+  Then onRowActivate is not called
+  # Space is reserved for row selection when rowSelection is in use.
+```
+
+```gherkin
+Scenario: Row callbacks with renderRow
+  Given renderRow is provided
+  And onRowClick and/or onRowActivate are set
+  When the user clicks, double-clicks, or presses Enter on a row
+  Then neither callback is called — the caller's renderRow owns that row's
+      markup and handlers
+```
+
+```gherkin
+Scenario: Row click with highlightCurrentRow
+  Given highlightCurrentRow and onRowClick are both set
+  When the user clicks a data row
+  Then the row becomes the current (highlighted) row first
+  And then onRowClick is called
+  And a click on an interactive control inside a cell still highlights the row
+      but does not call onRowClick
+```
+
+```gherkin
 Scenario: Infinite scroll
   Given paginationMode="infinite" and hasNextPage is true
   And at least one row is already rendered

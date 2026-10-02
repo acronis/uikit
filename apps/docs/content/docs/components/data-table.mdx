@@ -161,6 +161,58 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 <DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
 ```
 
+`highlightCurrentRow` is visual only: a click marks the row as current and calls
+nothing. To run your own code when a row is clicked or activated, use
+`onRowClick` / `onRowActivate` (below). They work with or without
+`highlightCurrentRow`.
+
+### Clickable rows
+
+Two optional callbacks make a whole row interactive:
+
+- **`onRowClick(row, event)`** is called on a single click on a data row, with the
+  TanStack `Row` and the native mouse event. Rows show a pointer cursor while
+  it's set. It isn't called when the click lands on an interactive control inside
+  a cell (a button, link, input, checkbox, menu item, or any other Tab stop), comes
+  from a portaled element opened from the row (such as the row-actions menu), or
+  ends a drag-to-select of cell text. With `highlightCurrentRow` also set, the
+  row is highlighted first and then `onRowClick` runs.
+- **`onRowActivate(row, { via, event })`** is called when a row is _activated_:
+  <kbd>Enter</kbd> while the row itself has focus (`via: 'keyboard'`, key repeat
+  ignored) or a double-click on the row (`via: 'pointer'`). Enter pressed on a
+  control inside a cell doesn't count, and a double-click on an interactive
+  control or a portaled element is ignored, the same as for `onRowClick`.
+  <kbd>Space</kbd> never activates a row, because it's reserved for row
+  selection when `rowSelection` is in use.
+
+```tsx
+<DataTable
+  columns={columns}
+  data={devices}
+  getRowId={(device) => device.id}
+  highlightCurrentRow
+  onRowClick={(row) => setSelectedDevice(row.original)} // e.g. open a detail panel
+/>
+
+<DataTable
+  columns={columns}
+  data={devices}
+  onRowActivate={(row, { via }) => {
+    console.log(`Opened ${row.original.name} via ${via}`); // 'keyboard' | 'pointer'
+    router.push(`/devices/${row.original.id}`);
+  }}
+/>
+```
+
+Use one of the two for a given action. The browser sends a click before every
+double-click, so the first click of a double-click also calls `onRowClick`. If
+`onRowClick` navigates away, `onRowActivate` never gets the double-click.
+
+Both callbacks are ignored when `renderRow` is set, because your row then owns
+its own markup and handlers. Screen readers don't announce a row as actionable,
+so if assistive-technology users need to find the row's primary action, also
+offer it as a link or button inside a cell.
+
 ### Sorting
 
 Sorting is client-side by default. For a non-alphabetic order, give the column a
@@ -569,7 +621,9 @@ const PolicyRowView = memo(
 ```
 
 A `renderRow` row never gets an expanded-content row appended — read
-`row.getIsExpanded()` and render it yourself if you need both.
+`row.getIsExpanded()` and render it yourself if you need both. `onRowClick` and
+`onRowActivate` are ignored for a `renderRow` row too, so attach your own
+handlers to the `TableRow` you render.
 
 If you only need to change the empty-state text, `emptyLabel` overrides the
 default "No results." copy without a render prop. `renderEmptyState` replaces
@@ -698,6 +752,12 @@ The heavier behaviors stay out of `DataTable` (to keep it lean) — compose the
   select is labelled "Rows per page".
 - Selection checkboxes need your own `aria-label` ("Select row" / "Select all")
   — they have no visible label in the cell.
+- Exactly one data row is a Tab stop (roving tabindex). <kbd>↑</kbd>/<kbd>↓</kbd>
+  move focus between rows, and with `onRowActivate` set, <kbd>Enter</kbd> on the
+  focused row activates it. <kbd>Space</kbd> stays reserved for row selection.
+  Keys and clicks on controls inside a cell are left to those controls. The row
+  isn't announced as actionable, so also offer the primary row action as an
+  in-cell link or button (see [Clickable rows](#clickable-rows)).
 - The infinite-scroll loading row announces itself politely, so a fetch in
   flight isn't conveyed by the animated placeholder alone.
 

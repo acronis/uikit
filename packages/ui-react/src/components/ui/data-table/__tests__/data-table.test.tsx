@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -1814,6 +1815,299 @@ describe('DataTable keyboard-focusable rows', () => {
       await user.keyboard('{ArrowDown}');
       expect(rowsEls[1]).toHaveFocus();
     });
+  });
+});
+
+describe('DataTable onRowClick and onRowActivate', () => {
+  const columnsWithButton: ColumnDef<Row>[] = [
+    { accessorKey: 'email', header: 'Email' },
+    {
+      id: 'open',
+      header: 'Open',
+      cell: ({ row }) => <button type="button">Open {row.original.id}</button>,
+    },
+  ];
+
+  const bodyRow = (text: string) => screen.getByText(text).closest('tr')!;
+
+  it('onRowClick fires on row click with the clicked row', async () => {
+    const onRowClick = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        onRowClick={onRowClick}
+      />
+    );
+    await userEvent.click(screen.getByText('user2@example.com'));
+    expect(onRowClick).toHaveBeenCalledTimes(1);
+    const [row, event] = onRowClick.mock.calls[0];
+    expect(row.original.id).toBe('r2');
+    expect(event.type).toBe('click');
+  });
+
+  it('gives rows a pointer cursor only when onRowClick is set', () => {
+    const { rerender } = render(
+      <DataTable columns={columns} data={data.slice(0, 1)} />
+    );
+    const classes = () => bodyRow('user1@example.com').className.split(/\s+/);
+    expect(classes()).not.toContain('cursor-pointer');
+    rerender(
+      <DataTable columns={columns} data={data.slice(0, 1)} onRowClick={vi.fn()} />
+    );
+    expect(classes()).toContain('cursor-pointer');
+  });
+
+  it('onRowClick fires on the row only when the target is not an interactive descendant', async () => {
+    const onRowClick = vi.fn();
+    render(
+      <DataTable
+        columns={columnsWithButton}
+        data={data.slice(0, 2)}
+        onRowClick={onRowClick}
+        hideActionColumn
+      />
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Open r1' }));
+    expect(onRowClick).not.toHaveBeenCalled();
+
+    await userEvent.click(screen.getByText('user1@example.com'));
+    expect(onRowClick).toHaveBeenCalledTimes(1);
+    expect(onRowClick.mock.calls[0][0].original.id).toBe('r1');
+  });
+
+  it('onRowClick does not fire on the row actions trigger', async () => {
+    const onRowClick = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        onRowClick={onRowClick}
+        renderRowActions={() => <span>Edit</span>}
+      />
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Row actions' }));
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+
+  it('onRowClick does not fire when the click originates from a portaled element', async () => {
+    // A React portal renders its children outside the <tr> in the DOM, but the
+    // synthetic event still bubbles through the React tree to the row's onClick.
+    // The portal guard (!row.contains(target)) must catch this case.
+    const onRowClick = vi.fn();
+    // Render a portal button as a cell — it's in the React tree (inside the row)
+    // but its DOM node lands in document.body, outside the <tr>.
+    const PortalCell = () =>
+      createPortal(
+        <button data-testid="portal-btn">Portal action</button>,
+        document.body
+      );
+    const columnsWithPortal: ColumnDef<Row>[] = [
+      ...columns,
+      { id: 'portal-col', cell: () => <PortalCell />, header: 'Portal' },
+    ];
+    render(
+      <DataTable
+        columns={columnsWithPortal}
+        data={data.slice(0, 1)}
+        onRowClick={onRowClick}
+      />
+    );
+    await userEvent.click(screen.getByTestId('portal-btn'));
+    expect(onRowClick).not.toHaveBeenCalled();
+  });
+
+  it('onRowClick does not fire while text is selected', () => {
+    const onRowClick = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        onRowClick={onRowClick}
+      />
+    );
+    const getSelection = vi
+      .spyOn(window, 'getSelection')
+      .mockReturnValue({ toString: () => 'user1' } as Selection);
+    try {
+      fireEvent.click(screen.getByText('user1@example.com'));
+      expect(onRowClick).not.toHaveBeenCalled();
+    } finally {
+      getSelection.mockRestore();
+    }
+    fireEvent.click(screen.getByText('user1@example.com'));
+    expect(onRowClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('onRowActivate fires on Enter on the focused row (via keyboard)', async () => {
+    const user = userEvent.setup();
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        onRowActivate={onRowActivate}
+      />
+    );
+    const rowEl = bodyRow('user2@example.com');
+    rowEl.focus();
+    await user.keyboard('{Enter}');
+    expect(onRowActivate).toHaveBeenCalledTimes(1);
+    const [row, details] = onRowActivate.mock.calls[0];
+    expect(row.original.id).toBe('r2');
+    expect(details.via).toBe('keyboard');
+    expect(details.event.type).toBe('keydown');
+    expect(details.event.key).toBe('Enter');
+  });
+
+  it('onRowActivate ignores a repeated (held) Enter', () => {
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        onRowActivate={onRowActivate}
+      />
+    );
+    fireEvent.keyDown(bodyRow('user1@example.com'), {
+      key: 'Enter',
+      repeat: true,
+    });
+    expect(onRowActivate).not.toHaveBeenCalled();
+  });
+
+  it('onRowActivate fires on double-click (via pointer)', async () => {
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        onRowActivate={onRowActivate}
+      />
+    );
+    // dblClick selects the word under the pointer (as browsers do), so this
+    // also covers activation not being blocked by the text-selection guard.
+    await userEvent.dblClick(screen.getByText('user3@example.com'));
+    expect(onRowActivate).toHaveBeenCalledTimes(1);
+    const [row, details] = onRowActivate.mock.calls[0];
+    expect(row.original.id).toBe('r3');
+    expect(details.via).toBe('pointer');
+    expect(details.event.type).toBe('dblclick');
+  });
+
+  it('onRowActivate does not fire on double-click of an interactive descendant', async () => {
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columnsWithButton}
+        data={data.slice(0, 1)}
+        onRowActivate={onRowActivate}
+        hideActionColumn
+      />
+    );
+    await userEvent.dblClick(screen.getByRole('button', { name: 'Open r1' }));
+    expect(onRowActivate).not.toHaveBeenCalled();
+  });
+
+  it('onRowActivate does not fire on Enter from an interactive descendant', () => {
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columnsWithButton}
+        data={data.slice(0, 1)}
+        onRowActivate={onRowActivate}
+        hideActionColumn
+      />
+    );
+    fireEvent.keyDown(screen.getByRole('button', { name: 'Open r1' }), {
+      key: 'Enter',
+    });
+    expect(onRowActivate).not.toHaveBeenCalled();
+  });
+
+  it('Space does not fire onRowActivate when rowSelection is enabled', async () => {
+    const user = userEvent.setup();
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        rowSelection={{}}
+        onRowActivate={onRowActivate}
+      />
+    );
+    bodyRow('user1@example.com').focus();
+    await user.keyboard(' ');
+    expect(onRowActivate).not.toHaveBeenCalled();
+  });
+
+  it('both callbacks fire alongside highlightCurrentRow', async () => {
+    const user = userEvent.setup();
+    const onRowClick = vi.fn();
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        highlightCurrentRow
+        onRowClick={onRowClick}
+        onRowActivate={onRowActivate}
+      />
+    );
+    const rowEl = bodyRow('user2@example.com');
+    await user.click(rowEl);
+    expect(onRowClick).toHaveBeenCalledTimes(1);
+    expect(rowEl.className.split(/\s+/)).toContain(
+      'bg-[var(--ui-table-data-row-color-active)]'
+    );
+
+    rowEl.focus();
+    await user.keyboard('{Enter}');
+    expect(onRowActivate).toHaveBeenCalledTimes(1);
+    expect(onRowActivate.mock.calls[0][1].via).toBe('keyboard');
+  });
+
+  it('keeps Arrow and Tab navigation working', async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <DataTable
+          columns={columns}
+          data={data.slice(0, 3)}
+          onRowClick={vi.fn()}
+          onRowActivate={vi.fn()}
+          hideActionColumn
+        />
+        <button>After</button>
+      </div>
+    );
+    const rowsEls = screen.getAllByRole('row').slice(1);
+    rowsEls[0].focus();
+    await user.keyboard('{ArrowDown}');
+    expect(rowsEls[1]).toHaveFocus();
+    await user.tab();
+    expect(screen.getByRole('button', { name: 'After' })).toHaveFocus();
+  });
+
+  it('ignores both callbacks when renderRow is set', async () => {
+    const onRowClick = vi.fn();
+    const onRowActivate = vi.fn();
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        onRowClick={onRowClick}
+        onRowActivate={onRowActivate}
+        renderRow={(row) => (
+          <tr key={row.id}>
+            <td>{row.original.email}</td>
+          </tr>
+        )}
+      />
+    );
+    await userEvent.dblClick(screen.getByText('user1@example.com'));
+    expect(onRowClick).not.toHaveBeenCalled();
+    expect(onRowActivate).not.toHaveBeenCalled();
   });
 });
 

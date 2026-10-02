@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { action } from 'storybook/actions';
 import { waitFor, within } from 'storybook/test';
 import {
   type ColumnDef,
@@ -820,4 +821,46 @@ export const ColumnOverflow: Story = {
       </div>
     </TooltipProvider>
   ),
+};
+
+// New story (CI-43741): its light/dark VR baselines don't exist yet and must be
+// generated in Docker — no existing story's baseline changes, since a row only
+// gets `cursor-pointer` when `onRowClick` is passed.
+function ClickableRowsDemo() {
+  const [lastEvent, setLastEvent] = useState('No row interaction yet.');
+  return (
+    <div className="space-y-3">
+      <DataTable
+        columns={columns}
+        data={payments}
+        getRowId={(row) => row.id}
+        onRowClick={(row, event) => {
+          action('onRowClick')(row.original, event);
+          setLastEvent(`Clicked ${row.original.email}`);
+        }}
+        onRowActivate={(row, details) => {
+          action('onRowActivate')(row.original, details);
+          setLastEvent(`Activated ${row.original.email} via ${details.via}`);
+        }}
+        renderRowActions={(row) => (
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Edit {row.original.email}</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
+      />
+      <p className="text-sm text-muted-foreground" aria-live="polite">
+        {lastEvent}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * `onRowClick` fires on a single click; `onRowActivate` on Enter (focused row)
+ * or double-click. Clicks on the selection checkbox and the row-actions
+ * trigger don't reach either callback.
+ */
+export const ClickableRows: Story = {
+  render: () => <ClickableRowsDemo />,
 };

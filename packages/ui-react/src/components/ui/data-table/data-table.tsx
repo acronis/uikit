@@ -3,6 +3,7 @@ import {
   type DragEvent,
   Fragment,
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   useEffect,
   useMemo,
@@ -251,6 +252,48 @@ const DEFAULT_HEADER_HINTS: DataTableHeaderHints = {
   resize: { label: 'Resize column', action: 'Drag border' },
 };
 
+// Controls inside a cell own their own click — a row click/activate handler
+// must not also fire for them (e.g. a row-actions trigger, a selection
+// checkbox, a link). Mirrors what's natively/ARIA interactive or a Tab stop.
+const ROW_INTERACTIVE_DESCENDANT_SELECTOR = [
+  'a[href]',
+  'button',
+  'input',
+  'select',
+  'textarea',
+  'label',
+  '[contenteditable]:not([contenteditable="false"])',
+  '[role="button"]',
+  '[role="checkbox"]',
+  '[role="switch"]',
+  '[role="menuitem"]',
+  '[role="link"]',
+  '[tabindex]:not([tabindex="-1"])',
+].join(', ');
+
+function isFromInteractiveDescendant(
+  event: MouseEvent<HTMLTableRowElement>,
+  { checkSelection = true }: { checkSelection?: boolean } = {}
+): boolean {
+  const row = event.currentTarget;
+  const target = event.target as Node;
+  // React synthetic events bubble through portals, so a click inside a menu
+  // or popover opened from a cell reaches the row although its DOM node
+  // isn't inside it.
+  if (!row.contains(target)) return true;
+  const element = target instanceof Element ? target : target.parentElement;
+  const interactive = element?.closest(ROW_INTERACTIVE_DESCENDANT_SELECTOR);
+  // The row itself is a roving Tab stop (`tabIndex={0}`) — only its
+  // descendants count, and a match above the row is irrelevant.
+  if (interactive && interactive !== row && row.contains(interactive)) {
+    return true;
+  }
+  // A drag-to-select of cell text ends in a click; don't treat it as one.
+  // Skipped for double-click: the browser itself selects the word under the
+  // pointer on the second press, so a selection is always present by then.
+  return checkSelection && !!window.getSelection()?.toString();
+}
+
 // `columns`/`data` build DataTable's own table instance; `table` renders an
 // externally-built one instead. At least one of the two forms is required —
 // omitting both would otherwise silently render an empty table — but `table`
@@ -308,6 +351,43 @@ interface DataTableOwnProps<TData> {
   bordered?: boolean;
   /** Highlight the row the user last clicked (the "current" row). */
   highlightCurrentRow?: boolean;
+  /**
+   * Called on a single pointer click on a data row. Not called when the click
+   * lands on an interactive control inside a cell (button, link, input,
+   * checkbox, menu item, …), comes from a portaled element opened from the
+   * row, or ends a text selection. The row gets a pointer cursor while this
+   * is set. Composes with `highlightCurrentRow` (both run). Silently ignored
+   * when `renderRow` is set — the caller owns that row's markup and handlers.
+   */
+  onRowClick?: (
+    row: Row<TData>,
+    event: MouseEvent<HTMLTableRowElement>
+  ) => void;
+  /**
+   * Called when a data row is activated: Enter while the row itself is
+   * focused (`via: 'keyboard'`; key repeat is ignored) or a double-click on
+   * it (`via: 'pointer'`). The same interactive-descendant and portal guards
+   * as `onRowClick` apply (Enter only counts when the row itself has focus);
+   * the text-selection guard does not, since a double-click selects the word
+   * under the pointer by itself. Silently ignored when `renderRow` is set.
+   *
+   * A double-click dispatches two single clicks first. The first normally
+   * fires `onRowClick`; the second usually does not (browsers select a word
+   * on the second press, and the text-selection guard suppresses it). Don't
+   * wire navigation to `onRowClick` alongside this prop.
+   *
+   * Space does not activate a row: it's reserved for row selection when
+   * `rowSelection` is in use.
+   */
+  onRowActivate?: (
+    row: Row<TData>,
+    details: {
+      via: 'keyboard' | 'pointer';
+      event:
+        | KeyboardEvent<HTMLTableRowElement>
+        | MouseEvent<HTMLTableRowElement>;
+    }
+  ) => void;
   /** Render placeholder skeleton rows instead of data (loading state). */
   skeleton?: boolean;
   /** Number of skeleton rows to render when `skeleton` is set. */
@@ -482,6 +562,8 @@ export function DataTable<TData, TValue = unknown>({
   striped = false,
   bordered = false,
   highlightCurrentRow = false,
+  onRowClick,
+  onRowActivate,
   skeleton = false,
   skeletonRows = 5,
   enableColumnResizing = false,
@@ -829,12 +911,19 @@ export function DataTable<TData, TValue = unknown>({
 
   const handleRowKeyDown = (
     event: KeyboardEvent<HTMLTableRowElement>,
+    row: Row<TData>,
     rowIndex: number
   ) => {
     // Keydown bubbles, so arrow keys from an interactive control inside a cell
     // (number spinner, textarea caret, native select) would otherwise be
     // hijacked to move row focus. Only roam when the row itself is focused.
+    // The same guard keeps Enter on a cell's button from activating the row.
     if (event.target !== event.currentTarget) return;
+    if (event.key === 'Enter' && onRowActivate && !event.repeat) {
+      event.preventDefault();
+      onRowActivate(row, { via: 'keyboard', event });
+      return;
+    }
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
     const nextIndex =
       event.key === 'ArrowDown'
@@ -1143,16 +1232,39 @@ export function DataTable<TData, TValue = unknown>({
                     }}
                     tabIndex={rowIndex === activeRowIndex ? 0 : -1}
                     onFocus={() => handleRowFocus(rowIndex)}
-                    onKeyDown={(event) => handleRowKeyDown(event, rowIndex)}
+                    onKeyDown={(event) =>
+                      handleRowKeyDown(event, row, rowIndex)
+                    }
                     selected={isSelected}
                     onClick={
-                      highlightCurrentRow
-                        ? () => setCurrentRowId(row.id)
+                      highlightCurrentRow || onRowClick
+                        ? (event) => {
+                            if (highlightCurrentRow) setCurrentRowId(row.id);
+                            if (
+                              onRowClick &&
+                              !isFromInteractiveDescendant(event)
+                            ) {
+                              onRowClick(row, event);
+                            }
+                          }
+                        : undefined
+                    }
+                    onDoubleClick={
+                      onRowActivate
+                        ? (event) => {
+                            if (
+                              !isFromInteractiveDescendant(event, {
+                                checkSelection: false,
+                              })
+                            ) {
+                              onRowActivate(row, { via: 'pointer', event });
+                            }
+                          }
                         : undefined
                     }
                     className={cn(
                       'group',
-                      highlightCurrentRow && 'cursor-pointer',
+                      (highlightCurrentRow || !!onRowClick) && 'cursor-pointer',
                       striped &&
                         rowIndex % 2 === 1 &&
                         !isSelected &&
