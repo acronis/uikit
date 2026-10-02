@@ -257,8 +257,28 @@ const legendFontSizeClass: Record<ChartLegendFontSize, string> = {
   xl: 'text-xl',
 };
 
+// Fit whole rows at every supported font size: three wrapped rows plus the
+// normal legend's vertical padding/gaps, and eight rows in list mode.
+const defaultLegendMaxHeightClass: Record<ChartLegendFontSize, string> = {
+  xs: 'max-h-[76px]',
+  sm: 'max-h-[88px]',
+  base: 'max-h-[100px]',
+  lg: 'max-h-[112px]',
+  xl: 'max-h-[112px]',
+};
+
+const listLegendMaxHeightClass: Record<ChartLegendFontSize, string> = {
+  xs: 'max-h-[128px]',
+  sm: 'max-h-[160px]',
+  base: 'max-h-[192px]',
+  lg: 'max-h-[224px]',
+  xl: 'max-h-[224px]',
+};
+
 export type ChartLegendContentProps = {
   className?: string;
+  /** Accessible name for the keyboard-scrollable legend region. */
+  ariaLabel?: string;
   hideIcon?: boolean;
   verticalAlign?: LegendProps['verticalAlign'];
   payload?: LegendPayload[];
@@ -277,10 +297,10 @@ export type ChartLegendContentProps = {
    */
   config?: ChartConfig;
   /**
-   * `default` — the current horizontal wrap layout (one row of chips).
-   * `list` — a vertical list where each entry is `[dot] [label flex-1] [value]`,
-   * matching the Figma donut/radial widget legend. Use alongside a manually-built
-   * `payload` passed from outside the chart's recharts composition.
+   * `default` — horizontal wrapped chips; scrolls after three rows (76px at
+   * `xs`). `list` — vertical `[dot] [label flex-1] [value]` rows; scrolls after
+   * eight rows (128px at `xs`). Both caps scale with `fontSize`; `className` can
+   * override the cap.
    */
   variant?: 'default' | 'list';
   /**
@@ -301,6 +321,15 @@ export type ChartLegendContentProps = {
    */
   valueClassName?: string;
 };
+
+/** Accessible-name prop shared by chart components that render a legend. */
+export interface ChartLegendAriaLabelProps {
+  /**
+   * Accessible name for this chart's legend. Defaults to `Chart legend`; give
+   * each chart a distinct name when several legends appear on the same page.
+   */
+  legendAriaLabel?: string;
+}
 
 const ChartContext = React.createContext<ChartContextProps | null>(null);
 
@@ -632,8 +661,7 @@ const ChartLegend = RechartsPrimitive.Legend;
  * One entry in the `variant="list"` legend: `[dot] [label flex-1] [value]`.
  *
  * The dot is always a circle, regardless of the series' recharts type — the
- * list layout is only used for polar charts (donut, radial) where the fill
- * marker matches the slice/arc color.
+ * list layout is used by part-to-whole charts where each entry has a fill color.
  */
 function ChartLegendListEntry({
   item,
@@ -662,7 +690,7 @@ function ChartLegendListEntry({
   const label = itemConfig?.label ?? item.value;
 
   return (
-    <div className="flex w-full items-start gap-2 overflow-hidden">
+    <div className="flex w-full shrink-0 items-start gap-2 overflow-hidden">
       <div className="flex min-w-0 flex-1 items-center gap-2">
         {itemConfig?.icon ? (
           <itemConfig.icon />
@@ -749,6 +777,7 @@ function ChartLegendEntry({
 
 function ChartLegendContent({
   className,
+  ariaLabel = 'Chart legend',
   hideIcon = false,
   payload,
   verticalAlign = 'bottom',
@@ -780,7 +809,17 @@ function ChartLegendContent({
 
   if (variant === 'list') {
     return (
-      <div data-slot="chart-legend" className={cn('flex flex-col', className)}>
+      <div
+        data-slot="chart-legend"
+        role="region"
+        aria-label={ariaLabel}
+        tabIndex={0}
+        className={cn(
+          'flex flex-col overflow-y-auto focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+          listLegendMaxHeightClass[fontSize],
+          className
+        )}
+      >
         {payload.map((item) => {
           const key = `${nameKey || item.dataKey || 'value'}`;
           return (
@@ -802,14 +841,18 @@ function ChartLegendContent({
   return (
     <div
       data-slot="chart-legend"
+      role="region"
+      aria-label={ariaLabel}
+      tabIndex={0}
       className={cn(
         // Wraps rather than overflowing: a legend with many entries (a treemap's
         // one-per-tile, a pie's one-per-slice) is wider than the chart on a narrow
         // surface, and a row that can't wrap paints past the chart's edge. The
         // column gap is unchanged, so a legend that already fits on one row keeps
         // its exact layout.
-        'flex flex-wrap items-center justify-center gap-x-6 gap-y-2',
+        'flex flex-wrap items-center justify-center gap-x-6 gap-y-2 overflow-y-auto focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
         verticalAlign === 'top' ? 'pb-3' : 'pt-3',
+        defaultLegendMaxHeightClass[fontSize],
         // Stated on the wrapper even at the default ('xs'): default-variant
         // entries take their size by inheritance, and a legend rendered outside
         // a `ChartContainer` (see `Treemap`) has no container `text-xs` to fall

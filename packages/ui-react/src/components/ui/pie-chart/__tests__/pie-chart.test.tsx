@@ -129,6 +129,13 @@ describe('PieChart', () => {
     expect(container.textContent).toContain('Firefox');
   });
 
+  it('keeps the list legend scroll cap when the plot is expanded', () => {
+    const { container } = renderChart({ showLabels: true, labelLine: true });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+
+    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+  });
+
   it('sizes the legend text with legendFontSize', () => {
     const { container } = renderChart({ legendFontSize: 'lg' });
     const legend = container.querySelector('[data-slot="chart-legend"]');
@@ -140,6 +147,13 @@ describe('PieChart', () => {
     expect(spans.find((span) => span.textContent === '275')).toHaveClass(
       'text-lg'
     );
+  });
+
+  it('lets consumers name the legend region', () => {
+    const { container } = renderChart({ legendAriaLabel: 'Navegadores' });
+    expect(
+      container.querySelector('[data-slot="chart-legend"]')
+    ).toHaveAttribute('aria-label', 'Navegadores');
   });
 
   it('draws no slices but still mounts on empty data', () => {
@@ -306,7 +320,12 @@ describe('pieChartLabelText', () => {
   // percent formats degrade instead of printing it.
   it('drops the percent when there is nothing to divide by', () => {
     expect(
-      pieChartLabelText({ name: 'Chrome', value: 0, total: 0, format: 'percent' })
+      pieChartLabelText({
+        name: 'Chrome',
+        value: 0,
+        total: 0,
+        format: 'percent',
+      })
     ).toBe('');
     expect(
       pieChartLabelText({
@@ -320,7 +339,12 @@ describe('pieChartLabelText', () => {
 
   it('passes a non-numeric value through as text', () => {
     expect(
-      pieChartLabelText({ name: 'Chrome', value: 'n/a', total: 662, format: 'value' })
+      pieChartLabelText({
+        name: 'Chrome',
+        value: 'n/a',
+        total: 662,
+        format: 'value',
+      })
     ).toBe('n/a');
   });
 
@@ -375,7 +399,7 @@ describe('pieChartValuePercentRow', () => {
     return render(<>{row(value, name, item, 0, [])}</>);
   }
 
-  it("reads a slice as its value and its share of the total", () => {
+  it('reads a slice as its value and its share of the total', () => {
     const { container } = renderRow(275, 'Chrome');
     expect(container.textContent).toContain('275 (41.5%)');
   });
@@ -433,11 +457,24 @@ describe('PieChart geometry, slices and chrome', () => {
   it('widens a hairline slice to the minAngle floor', () => {
     const lopsided = [...data.slice(0, 2), { browser: 'Firefox', value: 1 }];
 
-    const unfloored = renderChart({ data: lopsided, paddingAngle: 0, startAngle: 0, endAngle: 360, shape: 'pie' });
+    const unfloored = renderChart({
+      data: lopsided,
+      paddingAngle: 0,
+      startAngle: 0,
+      endAngle: 360,
+      shape: 'pie',
+    });
     expect(sweepOf(slicesOf(unfloored.container)[2])).toBeLessThan(1);
     unfloored.unmount();
 
-    const floored = renderChart({ data: lopsided, minAngle: 30, paddingAngle: 0, startAngle: 0, endAngle: 360, shape: 'pie' });
+    const floored = renderChart({
+      data: lopsided,
+      minAngle: 30,
+      paddingAngle: 0,
+      startAngle: 0,
+      endAngle: 360,
+      shape: 'pie',
+    });
     expect(sweepOf(slicesOf(floored.container)[2])).toBeGreaterThanOrEqual(30);
   });
 
@@ -475,11 +512,7 @@ describe('PieChart geometry, slices and chrome', () => {
     });
     expect(
       slicesOf(container).map((slice) => slice.getAttribute('fill'))
-    ).toEqual([
-      'rgb(0 0 0)',
-      'var(--color-Safari)',
-      'var(--color-Firefox)',
-    ]);
+    ).toEqual(['rgb(0 0 0)', 'var(--color-Safari)', 'var(--color-Firefox)']);
   });
 
   it('applies the chart-wide label format and the per-slice overrides', () => {

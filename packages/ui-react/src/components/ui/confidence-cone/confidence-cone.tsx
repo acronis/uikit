@@ -28,6 +28,7 @@ import {
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -212,7 +213,8 @@ export interface ConfidenceConeBaseProps
   extends
     Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -339,6 +341,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -568,6 +571,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           <ChartLegendContent
             verticalAlign={lp.verticalAlign}
             fontSize={legendFontSize}
+            ariaLabel={legendAriaLabel}
             payload={
               keepMetricSeries(
                 lp.payload,

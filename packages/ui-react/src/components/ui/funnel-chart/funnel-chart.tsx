@@ -23,6 +23,7 @@ import {
   type ChartAnimationProps,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type TickFormatter,
 } from '../chart';
@@ -603,7 +604,8 @@ export interface FunnelChartProps
   extends
     Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof funnelChartVariants>,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette the stages are painted from — the only source of a
    * stage's colour, bar a per-stage `stageSettings.color`. Defaults to
@@ -739,6 +741,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
       percentFormatter,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       legendValueFormatter,
       stageSettings,
       showActiveShape = false,
@@ -1010,6 +1013,7 @@ const FunnelChart = React.forwardRef<HTMLDivElement, FunnelChartProps>(
             config={resolvedConfigForLegend}
             nameKey={nameKey}
             fontSize={legendFontSize}
+            ariaLabel={legendAriaLabel}
             valueKey={dataKey}
             valueFormatter={legendValueFormatter}
             // Figma paints the funnel legend's value in the primary text token,

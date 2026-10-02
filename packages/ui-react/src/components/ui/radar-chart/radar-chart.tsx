@@ -24,6 +24,7 @@ import {
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartAnimationProps,
   type ChartDataLabelProps,
@@ -164,7 +165,8 @@ export interface RadarChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof radarChartVariants>,
     ChartAnimationProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -527,6 +529,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       tooltipContent,
       animate,
       animationDuration,
@@ -669,6 +672,7 @@ const RadarChart = React.forwardRef<HTMLDivElement, RadarChartProps>(
                   <ChartLegendContent
                     verticalAlign="bottom"
                     fontSize={legendFontSize}
+                    ariaLabel={legendAriaLabel}
                   />
                 }
               />

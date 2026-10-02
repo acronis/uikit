@@ -41,6 +41,7 @@ import {
   toReferenceLineList,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -259,7 +260,8 @@ export interface LineChartProps
     CartesianChartProps,
     ChartAnimationProps,
     ChartBrushProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -366,6 +368,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -548,6 +551,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         <ChartLegendContent
           verticalAlign={props.verticalAlign}
           fontSize={legendFontSize}
+          ariaLabel={legendAriaLabel}
           payload={
             dropProjectionPayload(
               dropBandSeries(props.payload)
@@ -556,7 +560,10 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
         />
       )
     ) : (
-      <ChartLegendContent fontSize={legendFontSize} />
+      <ChartLegendContent
+        fontSize={legendFontSize}
+        ariaLabel={legendAriaLabel}
+      />
     );
     // Bands are computed over the full (projection-augmented) rows; when
     // projection is active the band <Area> is clipped to the actual zone.

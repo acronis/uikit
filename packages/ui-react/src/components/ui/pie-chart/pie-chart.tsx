@@ -30,6 +30,7 @@ import {
   toCssKey,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartTooltipContentProps,
   type ChartAnimationProps,
@@ -235,7 +236,8 @@ export interface PieChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     VariantProps<typeof pieChartVariants>,
     ChartAnimationProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -414,6 +416,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       legendValueFormatter,
       margin,
       tooltipContent,
@@ -627,6 +630,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
             config={resolvedConfigForLegend}
             nameKey={nameKey}
             fontSize={legendFontSize}
+            ariaLabel={legendAriaLabel}
             valueKey={dataKey}
             valueFormatter={legendValueFormatter}
             className="min-w-0 flex-1"

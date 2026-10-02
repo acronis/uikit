@@ -51,6 +51,18 @@ const config = {
   },
 } satisfies ChartConfig;
 
+const manyLegendData = Array.from({ length: 20 }, (_, index) => ({
+  stage: `stage-${String(index + 1).padStart(2, '0')}`,
+  value: 100 - index,
+}));
+
+const manyLegendConfig = Object.fromEntries(
+  manyLegendData.map(({ stage }, index) => [
+    stage,
+    { label: `Stage ${String(index + 1).padStart(2, '0')}` },
+  ])
+) satisfies ChartConfig;
+
 // The widget mockup's own copy — a long first label, so the legend's truncation
 // and its two-column alignment are both visible.
 //
@@ -158,6 +170,17 @@ type Story = StoryObj<typeof meta>;
 // No props beyond the data: four stages off the sequential blue ramp, no on-plot
 // text, and the stage list beside the funnel. This is what the design draws.
 export const Default: Story = {};
+
+// The list legend scrolls after eight complete rows (128px at xs); the funnel
+// plot itself stays 120px tall.
+export const ManyLegendRows: Story = {
+  tags: ['legend-scroll-regression'],
+  args: {
+    data: manyLegendData,
+    config: manyLegendConfig,
+    className: 'w-[360px]',
+  },
+};
 
 // The design's `ChartFunnel` in full: the card, its header and ⋯ menu, and the
 // metric row all belong to `ChartWidget` — FunnelChart is only the plot and its

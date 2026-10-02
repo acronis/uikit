@@ -45,6 +45,7 @@ import {
   toReferenceLineList,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartStatusTone,
   type ChartReferenceLine,
@@ -246,15 +247,18 @@ export function NormalizedTooltipContent({
 export function NormalizedLegendContent({
   dataKeys,
   fontSize,
+  legendAriaLabel,
   ...props
 }: Partial<LegendRenderProps> & {
   dataKeys: string[];
   fontSize?: ChartLegendFontSize;
+  legendAriaLabel?: string;
 }) {
   return (
     <ChartLegendContent
       verticalAlign={props.verticalAlign}
       fontSize={fontSize}
+      ariaLabel={legendAriaLabel}
       payload={
         withSeriesColor(
           dropHeadroomSeries(props.payload, dataKeys)
@@ -609,7 +613,8 @@ export interface BarChartVerticalProps
     CartesianChartProps,
     ChartAnimationProps,
     ChartBrushProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /** Selects the recharts bar chart. Omit it — this is the default. */
   orientation?: 'vertical';
   /**
@@ -974,6 +979,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -1196,7 +1202,11 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
       <NormalizedTooltipContent content={tooltipContent} dataKeys={dataKeys} />
     );
     const legendElement = (
-      <NormalizedLegendContent dataKeys={dataKeys} fontSize={legendFontSize} />
+      <NormalizedLegendContent
+        dataKeys={dataKeys}
+        fontSize={legendFontSize}
+        legendAriaLabel={legendAriaLabel}
+      />
     );
 
     // The long chart children are lifted into these renderers so the returned

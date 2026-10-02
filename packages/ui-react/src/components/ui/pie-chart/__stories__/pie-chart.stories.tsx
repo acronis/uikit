@@ -1,6 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
-import { ChartPieIcon, EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
+import {
+  ChartPieIcon,
+  EllipsisIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { PieChart, pieChartValuePercentTooltip } from '../pie-chart';
 import {
@@ -38,6 +41,18 @@ const config = {
   },
   Edge: { label: 'Edge' },
 } satisfies ChartConfig;
+
+const manyLegendData = Array.from({ length: 20 }, (_, index) => ({
+  browser: `browser-${String(index + 1).padStart(2, '0')}`,
+  value: 100 - index,
+}));
+
+const manyLegendConfig = Object.fromEntries(
+  manyLegendData.map(({ browser }, index) => [
+    browser,
+    { label: `Browser ${String(index + 1).padStart(2, '0')}` },
+  ])
+) satisfies ChartConfig;
 
 const meta = {
   title: 'Widgets/PieChart',
@@ -118,10 +133,22 @@ export const Donut: Story = {
   args: { shape: 'donut' },
 };
 
+// The list legend scrolls after eight complete rows (128px at xs); the plot
+// itself stays 120px tall.
+export const ManyLegendRows: Story = {
+  tags: ['legend-scroll-regression'],
+  args: {
+    data: manyLegendData,
+    config: manyLegendConfig,
+    className: 'w-[360px]',
+  },
+};
+
 // Replication of the Figma design mockup: the chart widget inside a card with
 // a metric readout above the donut + legend. Rendered with a fixed composition
 // so it shows real consumer usage rather than the meta args playground.
 export const WidgetExample: Story = {
+  tags: ['legend-scroll-regression'],
   render: () => (
     <div className="w-[480px]">
       <ChartWidget
@@ -395,4 +422,3 @@ export const TooltipValuePercentOpen: Story = {
     </ChartContainer>
   ),
 };
-
