@@ -48,7 +48,7 @@ import { TableViewOptions } from '../table-view-options';
 
 // Kitchen-sink demo for the TanStack-free `Table` primitives: `useTableUrlState`
 // (pagination + sorting + per-column filters, all bookmarked to the URL),
-// `TableViewOptions` (show/hide columns), a `wrap`-enabled column, and
+// `TableViewOptions` (show/hide columns), an `overflow="wrap"` column, and
 // `FilterSearchFilters` + `FilterSearchAppliedFilters` composed as the filter UI
 // — wired to the hook's `columnFilters` by converting between its `{id,value}[]`
 // array and `FilterSearchFilters`'s `Record<string,unknown>`, the same shape
@@ -415,7 +415,9 @@ function FullDemo() {
                 Severity
               </TableHead>
             )}
-            {!hidden.description && <TableHead wrap>Description</TableHead>}
+            {!hidden.description && (
+              <TableHead overflow="wrap">Description</TableHead>
+            )}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -435,7 +437,7 @@ function FullDemo() {
                   </TableCell>
                 )}
                 {!hidden.description && (
-                  <TableCell wrap className="max-w-[280px]">
+                  <TableCell overflow="wrap" className="max-w-[280px]">
                     {row.description}
                   </TableCell>
                 )}
@@ -548,7 +550,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Combines `useTableUrlState` (pagination + sorting + per-column filters), `TableViewOptions`, a `wrap` column, and `FilterSearchFilters` + `FilterSearchAppliedFilters`. All state is bookmarked to the URL. To load a non-default state, append `tbl_page=2&tbl_sort=name:desc&tbl_filter=type:Server` to the preview URL — it filters to Servers, sorts by name descending, and opens page 2.',
+          'Combines `useTableUrlState` (pagination + sorting + per-column filters), `TableViewOptions`, an `overflow="wrap"` column, and `FilterSearchFilters` + `FilterSearchAppliedFilters`. All state is bookmarked to the URL. To load a non-default state, append `tbl_page=2&tbl_sort=name:desc&tbl_filter=type:Server` to the preview URL — it filters to Servers, sorts by name descending, and opens page 2.',
       },
     },
   },

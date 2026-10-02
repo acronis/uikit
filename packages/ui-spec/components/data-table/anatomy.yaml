@@ -250,11 +250,18 @@ states:
     kind: prop
     prop: meta.pin
     affects: [row, column-header]
-  - id: wrapping
-    trigger: a column's meta.wrap is set
+  - id: overflow-wrap
+    trigger: "a column's meta.overflow is 'wrap'"
     kind: prop
-    prop: meta.wrap
+    prop: meta.overflow
     affects: [row, column-header]
+    exclusive_with: [overflow-hidden]
+  - id: overflow-hidden
+    trigger: "a column's meta.overflow is 'hidden'"
+    kind: prop
+    prop: meta.overflow
+    affects: [row, column-header]
+    exclusive_with: [overflow-wrap]
   - id: external-table
     trigger: >-
       table is provided — DataTable renders from a caller-built TanStack

@@ -229,13 +229,20 @@ contract:
         Set on a `ColumnDef.meta` (not a DataTable prop) — pins the column to a
         table edge. DataTable drives TanStack's native column-pinning and renders
         the column as `position: sticky` cells with an opaque row background.
-    - name: meta.wrap
-      type: boolean
+    - name: meta.overflow
+      type: "'wrap' | 'hidden'"
       required: false
       description: >-
-        Set on a `ColumnDef.meta` (not a DataTable prop) — allows a column's
-        header and cell content to wrap onto multiple lines and drop the fixed
-        row height, mirroring the `Table` primitives' `wrap` prop.
+        Set on a `ColumnDef.meta` (not a DataTable prop) — the overflow mode for
+        a column's header and all its cells, forwarded to `TableHead` and
+        `TableCell` as their `overflow` prop. `'wrap'` lets content wrap onto
+        multiple lines (`whitespace-normal`). `'hidden'` clips content at the
+        column's CSS width (`max-w-0 overflow-hidden whitespace-nowrap`), so the
+        column needs a width source — `size` on the column definition, or
+        column resizing; without one, `max-w-0` collapses the column. Unset —
+        browser default (wrapping). Ellipsis and tooltip are the inner
+        component's responsibility (e.g. a `block truncate` span inside a
+        `Tooltip` in the column's `cell`).
     - name: meta.label
       type: string
       required: false

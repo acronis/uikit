@@ -254,10 +254,29 @@ Scenario: Sticky (pinned) columns
 ```
 
 ```gherkin
-Scenario: Wrapping columns
-  Given a column with meta.wrap = true
-  Then that column's header and cells use whitespace-normal and wrap onto multiple lines
+Scenario: Wrapping column
+  Given a column with meta.overflow = 'wrap'
+  Then that column's header and cells receive overflow="wrap" and use whitespace-normal
+  And their content wraps onto multiple lines
   And the row grows to fit the content
+```
+
+```gherkin
+Scenario: Clipped column
+  Given a column with meta.overflow = 'hidden'
+  And the column has a CSS width (size on the column definition, or column resizing)
+  Then that column's header and cells receive overflow="hidden"
+  And they apply max-w-0 overflow-hidden whitespace-nowrap
+  And content is clipped at the column's CSS width
+  And ellipsis and tooltip are the inner component's responsibility (the column's cell render)
+  # Without a width source, max-w-0 collapses the column — size is required.
+```
+
+```gherkin
+Scenario: Default column (meta.overflow unset)
+  Given a column with no meta.overflow
+  Then its header and cells receive no overflow class
+  And the browser default (wrapping) applies
 ```
 
 ```gherkin

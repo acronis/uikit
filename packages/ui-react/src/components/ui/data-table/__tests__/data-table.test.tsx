@@ -329,7 +329,7 @@ describe('DataTable getRowId', () => {
     expect(screen.getByText('r2: off')).toBeInTheDocument();
   });
 
-  it('without it, a row\'s state stays with its array slot instead of following the data', async () => {
+  it("without it, a row's state stays with its array slot instead of following the data", async () => {
     const [r1, r2, r3] = data.slice(0, 3);
     const { rerender } = render(
       <DataTable columns={rowIdColumns} data={[r1, r2, r3]} hideActionColumn />
@@ -1241,37 +1241,94 @@ describe('DataTable action column', () => {
   });
 });
 
-describe('DataTable wrapping (meta.wrap) columns', () => {
-  it('wraps a column flagged meta.wrap', () => {
-    const wrapped: ColumnDef<Row>[] = [
-      { accessorKey: 'email', header: 'Email' },
-      {
-        accessorKey: 'amount',
-        header: 'Amount',
-        meta: { wrap: true },
-        cell: ({ row }) => <span>{row.original.amount}</span>,
-      },
-    ];
-    render(<DataTable columns={wrapped} data={data.slice(0, 1)} />);
+describe('DataTable column overflow (meta.overflow)', () => {
+  const overflowColumns: ColumnDef<Row>[] = [
+    { accessorKey: 'email', header: 'Email' },
+    {
+      accessorKey: 'amount',
+      header: 'Amount',
+      meta: { overflow: 'wrap' },
+      cell: ({ row }) => <span>{row.original.amount}</span>,
+    },
+    {
+      accessorKey: 'id',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Identifier" />
+      ),
+      meta: { overflow: 'hidden' },
+      size: 120,
+    },
+  ];
 
-    const wrapCell = screen.getByText('100').closest('td')!;
-    expect(wrapCell).toHaveClass('whitespace-normal');
-    const wrapHeader = screen.getByText('Amount').closest('th')!;
-    expect(wrapHeader).toHaveClass('whitespace-normal');
+  it('wraps the header and cells of a column with meta.overflow "wrap"', () => {
+    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
+    expect(screen.getByText('100').closest('td')).toHaveClass(
+      'whitespace-normal'
+    );
+    expect(screen.getByText('Amount').closest('th')).toHaveClass(
+      'whitespace-normal'
+    );
+  });
 
-    // The unflagged column neither wraps nor forces overflow-hidden/nowrap, and
-    // takes its height from padding + line-height (no `h-*`, which Gecko/WebKit
+  it('clips the header and cells of a column with meta.overflow "hidden"', () => {
+    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
+    const cell = screen.getByText('r1').closest('td');
+    expect(cell).toHaveClass('max-w-0', 'overflow-hidden', 'whitespace-nowrap');
+    expect(cell).not.toHaveClass('whitespace-normal');
+    const header = screen.getByText('Identifier').closest('th');
+    expect(header).toHaveClass(
+      'max-w-0',
+      'overflow-hidden',
+      'whitespace-nowrap'
+    );
+  });
+
+  it('adds no overflow classes to a column without meta.overflow', () => {
+    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
+    // Height comes from padding + line-height (no `h-*`, which Gecko/WebKit
     // inflate by the row border in border-collapse tables).
-    const plainCell = screen.getByText('user1@example.com').closest('td')!;
-    expect(plainCell).not.toHaveClass('whitespace-normal');
+    const plainCell = screen.getByText('user1@example.com').closest('td');
+    const plainHeader = screen.getByText('Email').closest('th');
+    for (const el of [plainCell, plainHeader]) {
+      expect(el).not.toHaveClass('whitespace-normal');
+      expect(el).not.toHaveClass('overflow-hidden');
+      expect(el).not.toHaveClass('max-w-0');
+      expect(el).not.toHaveClass('whitespace-nowrap');
+    }
     expect(plainCell).toHaveClass(
       'py-[var(--ui-table-global-cell-padding-y)]',
       'leading-6'
     );
-    expect(plainCell).not.toHaveClass(
-      'h-[var(--ui-table-global-cell-min-height)]'
-    );
     expect(plainCell).not.toHaveClass('truncate');
+  });
+
+  it('keeps the column-header sort button free of a fixed height and shrinkable', () => {
+    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
+    const button = screen.getByRole('button', { name: 'Sort by Identifier' });
+    expect(button).not.toHaveClass('h-8');
+    expect(button).toHaveClass('min-w-0', 'max-w-full');
+    expect(within(button).getByText('Identifier')).toHaveClass('min-w-0', 'overflow-hidden');
+  });
+
+  describe('accessibility', () => {
+    it('keeps the clipped column header named and keyboard-sortable', async () => {
+      const user = userEvent.setup();
+      render(<DataTable columns={overflowColumns} data={data.slice(0, 3)} />);
+      const header = screen.getByRole('columnheader', { name: /Identifier/ });
+      const button = within(header).getByRole('button', {
+        name: 'Sort by Identifier',
+      });
+      expect(button).toHaveAttribute('type', 'button');
+      button.focus();
+      expect(button).toHaveFocus();
+      expect(button.querySelector('svg')).toHaveClass(
+        'text-[var(--ui-table-header-sort-icon-color-inactive)]'
+      );
+      await user.keyboard('{Enter}');
+      expect(button.querySelector('svg')).toHaveClass(
+        'text-[var(--ui-table-header-sort-icon-color-active)]'
+      );
+    });
   });
 });
 
@@ -1531,11 +1588,7 @@ describe('DataTable presentational features', () => {
       },
     ];
     const { container } = render(
-      <DataTable
-        columns={grouped}
-        data={data.slice(0, 2)}
-        hideActionColumn
-      />
+      <DataTable columns={grouped} data={data.slice(0, 2)} hideActionColumn />
     );
     const headerRows = container.querySelectorAll('thead tr');
     expect(headerRows.length).toBeGreaterThan(1);
@@ -2138,9 +2191,10 @@ describe('DataTable grouped headers', () => {
     const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
     expect(groupHeader).not.toHaveAttribute('draggable');
     // The leaf headers are still draggable.
-    expect(
-      screen.getByRole('columnheader', { name: 'Email' })
-    ).toHaveAttribute('draggable', 'true');
+    expect(screen.getByRole('columnheader', { name: 'Email' })).toHaveAttribute(
+      'draggable',
+      'true'
+    );
   });
 
   it('group header cells have no resize handle even with enableColumnResizing', () => {

@@ -420,27 +420,17 @@ informational table with no visibility or action controls:
 A no-op when an external `table` is passed — the column is never added in that
 path anyway.
 
-### Sticky (pinned) and wrapping columns
+### Sticky (pinned) columns
 
-`ColumnDef.meta` is augmented by ui-react with two flags. `pin` drives TanStack's
-native column pinning and renders the column as `position: sticky` cells (with an
-opaque row background so scrolled cells don't show through); `wrap` switches a
-column's header and cells to `whitespace-normal` so they wrap onto multiple
-lines and the row grows to fit (otherwise row height comes from the cell's
-padding + line-height, 40px at default tokens), mirroring the `Table`
-primitives' `wrap` prop. DataTable does not force truncation on auto-layout
-cells; add a constrained cell renderer or an explicit `truncate` class when ellipsis is required.
-
-`--ui-table-global-cell-min-height` (40px) stays in the token tier as a
-reference value but no longer sets cell height. To change row density, override
-`--ui-table-global-cell-padding-y` instead: row height is
-`2 × padding-y + 1.5rem`, so compact (32px) is `4px`, default (40px) is `8px`,
-and relaxed (52px) is `14px`.
+`ColumnDef.meta` is augmented by ui-react (see [Column meta](#column-meta)).
+`meta.pin` drives TanStack's native column pinning and renders the column as
+`position: sticky` cells (with an opaque row background so scrolled cells don't
+show through):
 
 ```tsx
 const columns: ColumnDef<Device>[] = [
   { accessorKey: 'name', header: 'Name', meta: { pin: 'left' }, size: 150 },
-  { accessorKey: 'note', header: 'Note', meta: { wrap: true }, size: 280 },
+  { accessorKey: 'note', header: 'Note', size: 280 },
   {
     accessorKey: 'status',
     header: 'Status',
@@ -453,6 +443,72 @@ const columns: ColumnDef<Device>[] = [
 Removing a `meta.pin` un-pins the column on the next render. Pinning is driven
 only for `DataTable`'s own instance — with an external `table`, pin columns
 yourself via `column.pin()`.
+
+### Column overflow
+
+`meta.overflow` sets how a column treats content longer than its width. DataTable
+forwards it to the column's `TableHead` and every `TableCell` as their
+[`overflow` prop](/components/table#column-overflow):
+
+| `meta.overflow` | Result                                                                                                          |
+| --------------- | --------------------------------------------------------------------------------------------------------------- |
+| unset           | No overflow class — browser default, the content wraps.                                                         |
+| `'wrap'`        | `whitespace-normal` — the header and cells wrap onto multiple lines and the row grows to fit.                   |
+| `'hidden'`      | `max-w-0 overflow-hidden whitespace-nowrap` — the content stays on one line, clipped at the column's CSS width. |
+
+Row height is never fixed: a single-line row's height comes from the cell's
+padding + line-height (40px at default tokens).
+
+`'hidden'` has two rules:
+
+- **Set `size` on the column** (or enable column resizing). The clip is at the
+  column's CSS width; without a width source, `max-w-0` collapses the column.
+- **The ellipsis and tooltip are yours.** DataTable only clips. Render a
+  `block truncate` element in the column's `cell`, inside a `Tooltip` so the
+  full value stays reachable, and make the trigger focusable (`tabIndex={0}`)
+  for keyboard users. Wrap the table in a `TooltipProvider`.
+
+The header cell clips too: `DataTableColumnHeader`'s sort button and title
+shrink with the column (`min-w-0`), while the sort arrow keeps its size. Its
+`title` is a plain string with no ellipsis; for an ellipsized header label,
+render your own component from the column's `header` function.
+
+```tsx
+const columns: ColumnDef<Article>[] = [
+  {
+    accessorKey: 'summary',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Summary" />
+    ),
+    meta: { overflow: 'wrap' },
+    size: 280,
+  },
+  {
+    accessorKey: 'path',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="File path" />
+    ),
+    meta: { overflow: 'hidden' },
+    size: 200, // required: 'hidden' clips to this width
+    cell: ({ row }) => (
+      <Tooltip>
+        <TooltipTrigger
+          render={<span className="block truncate" tabIndex={0} />}
+        >
+          {row.original.path}
+        </TooltipTrigger>
+        <TooltipContent>{row.original.path}</TooltipContent>
+      </Tooltip>
+    ),
+  },
+];
+```
+
+`--ui-table-global-cell-min-height` (40px) stays in the token tier as a
+reference value but no longer sets cell height. To change row density, override
+`--ui-table-global-cell-padding-y` instead: row height is
+`2 × padding-y + 1.5rem`, so compact (32px) is `4px`, default (40px) is `8px`,
+and relaxed (52px) is `14px`.
 
 ### Row expansion
 
@@ -659,12 +715,12 @@ The heavier behaviors stay out of `DataTable` (to keep it lean) — compose the
 Set on a `ColumnDef`, not on `DataTable` (ui-react augments TanStack's
 `ColumnMeta`).
 
-| Key        | Type                | Purpose                                                                                    |
-| ---------- | ------------------- | ------------------------------------------------------------------------------------------ |
-| `pin`      | `'left' \| 'right'` | Pin the column to that edge (sticky on horizontal scroll).                                 |
-| `wrap`     | `boolean`           | Let the column's header + cells wrap onto multiple lines.                                  |
-| `label`    | `string`            | Label shown in the visibility dropdown; falls back to a string header, then the column id. |
-| `category` | `string`            | Group the column in a labelled visibility section with a per-category **Show all** action. |
+| Key        | Type                 | Purpose                                                                                                                                                                      |
+| ---------- | -------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `pin`      | `'left' \| 'right'`  | Pin the column to that edge (sticky on horizontal scroll).                                                                                                                   |
+| `overflow` | `'wrap' \| 'hidden'` | `'wrap'` wraps the header + cells onto multiple lines; `'hidden'` clips at the column's `size` (required). Unset — browser default. See [Column overflow](#column-overflow). |
+| `label`    | `string`             | Label shown in the visibility dropdown; falls back to a string header, then the column id.                                                                                   |
+| `category` | `string`             | Group the column in a labelled visibility section with a per-category **Show all** action.                                                                                   |
 
 ### Companion parts
 

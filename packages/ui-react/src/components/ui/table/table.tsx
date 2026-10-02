@@ -107,6 +107,8 @@ TableRow.displayName = 'TableRow';
 
 type SortDirection = 'asc' | 'desc' | false;
 
+export type TableOverflow = 'wrap' | 'hidden';
+
 export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   /** Render the column as sortable — adds a sort affordance and `aria-sort`. */
   sortable?: boolean;
@@ -115,10 +117,14 @@ export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElem
   /** Invoked when the user activates a sortable header (click / Enter / Space). */
   onSort?: () => void;
   /**
-   * Allow the header to wrap onto multiple lines (`whitespace-normal`) so the
-   * cell grows to fit its content.
+   * Column overflow mode.
+   * - `'wrap'` — `whitespace-normal`; the cell grows to fit its content.
+   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; the cell clips
+   *   to its CSS width (set via `size` on the column). Ellipsis and tooltip are
+   *   the inner component's responsibility.
+   * - Unset — browser default (wrapping).
    */
-  wrap?: boolean;
+  overflow?: TableOverflow;
 }
 
 function SortIcon({ direction }: { direction: SortDirection }) {
@@ -161,7 +167,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
       sortable,
       sortDirection = false,
       onSort,
-      wrap,
+      overflow,
       ...props
     },
     ref
@@ -182,7 +188,8 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         // No `h-*` here: in border-collapse tables Gecko/WebKit add the row
         // border on top of a cell's `height` (~49px vs 40px in Blink).
         // py + leading-6 already yields the 40px row cross-engine.
-        wrap && 'whitespace-normal',
+        overflow === 'wrap' && 'whitespace-normal',
+        overflow === 'hidden' && 'max-w-0 overflow-hidden whitespace-nowrap',
         // Per the design, a sortable header tints the whole cell on hover/press
         // and draws the focus ring on the cell, not on the inner control.
         sortable &&
@@ -195,10 +202,12 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         <button
           type="button"
           onClick={onSort}
-          className="flex w-full cursor-pointer items-center gap-[var(--ui-table-header-gap)] text-start outline-none"
+          className="flex min-w-0 w-full cursor-pointer items-center gap-[var(--ui-table-header-gap)] text-start outline-none"
         >
           {children}
-          <SortIcon direction={sortDirection} />
+          <span className="shrink-0 flex items-center">
+            <SortIcon direction={sortDirection} />
+          </span>
         </button>
       ) : (
         children
@@ -210,20 +219,24 @@ TableHead.displayName = 'TableHead';
 
 export interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /**
-   * Allow the cell to wrap onto multiple lines (`whitespace-normal`) so the row
-   * grows to fit its content.
+   * Column overflow mode.
+   * - `'wrap'` — `whitespace-normal`; the row grows to fit its content.
+   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; the cell clips
+   *   to its CSS width. Ellipsis and tooltip are the inner component's responsibility.
+   * - Unset — browser default (wrapping).
    */
-  wrap?: boolean;
+  overflow?: TableOverflow;
 }
 
 const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
-  ({ className, wrap, ...props }, ref) => (
+  ({ className, overflow, ...props }, ref) => (
     <td
       ref={ref}
       className={cn(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
         // See TableHead: height comes from py + leading-6, not `h-*`.
-        wrap && 'whitespace-normal',
+        overflow === 'wrap' && 'whitespace-normal',
+        overflow === 'hidden' && 'max-w-0 overflow-hidden whitespace-nowrap',
         className
       )}
       {...props}

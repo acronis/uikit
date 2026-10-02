@@ -54,6 +54,7 @@ import {
   TableHeader,
   TableRow,
   TableSettingsCell,
+  type TableOverflow,
 } from '../table';
 import {
   Tooltip,
@@ -100,10 +101,14 @@ declare module '@tanstack/react-table' {
     /** Pin the column to a table edge (sticky while the grid scrolls horizontally). */
     pin?: 'left' | 'right';
     /**
-     * Let the column's header + cells wrap onto multiple lines (drops the fixed
-     * row height); mirrors the `Table` primitives' `wrap` prop on TableHead/TableCell.
+     * Column overflow mode. Forwarded to `TableHead` and `TableCell`.
+     * - `'wrap'` — header + cells use `whitespace-normal`.
+     * - `'hidden'` — header + cells clip to the column's `size` CSS width
+     *   (`max-w-0 overflow-hidden whitespace-nowrap`). Ellipsis and tooltip are
+     *   the inner component's responsibility.
+     * - Unset — browser default (wrapping).
      */
-    wrap?: boolean;
+    overflow?: TableOverflow;
     /** Label shown for this column in the visibility dropdown. */
     label?: string;
     /** Optional visibility-dropdown category for this column. */
@@ -944,7 +949,7 @@ export function DataTable<TData, TValue = unknown>({
                   const headerCell = (
                     <TableHead
                       colSpan={header.colSpan}
-                      wrap={header.column.columnDef.meta?.wrap}
+                      overflow={header.column.columnDef.meta?.overflow}
                       style={getHeaderStyle(header, resizingEnabled)}
                       draggable={
                         (canReorder && !isAnyColumnResizing) || undefined
@@ -1205,7 +1210,7 @@ export function DataTable<TData, TValue = unknown>({
                       return (
                         <TableCell
                           key={cell.id}
-                          wrap={cell.column.columnDef.meta?.wrap}
+                          overflow={cell.column.columnDef.meta?.overflow}
                           style={getCellStyle(cell, resizingEnabled)}
                           className={cn(isPinned && rowBg)}
                         >
