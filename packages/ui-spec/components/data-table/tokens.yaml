@@ -13,8 +13,9 @@ tokens:
   - name: --ui-table-global-row-border-color
     affects: table
     description: >-
-      Wrapper border — matches the Table cell borders; also the column resize
-      handle bar when enableColumnResizing is set.
+      Column separator borders when the `bordered` prop is set (vertical
+      cell borders via the `bordered` variant). Also applied by the Table
+      primitives' per-row border-b.
   - name: --ui-table-data-row-color-idle
     affects: row
     description: >-

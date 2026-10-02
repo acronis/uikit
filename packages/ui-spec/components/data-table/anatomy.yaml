@@ -5,7 +5,7 @@ schematic: |
   bulk-actions-bar: [ Delete ] [ … ]        "N items selected:" [ Deselect ]
   toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]
   applied-filters: ( status: Success ✕ ) ( … )        (chip row, when filtering)
-  table: <div> rounded border wrapper
+  table: <div data-slot="data-table"> borderless wrapper
     column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
     header-hint:   hover/focus tooltip listing that column's gestures        ⚙
     resize-handle: drag handle at a resizable header's trailing edge (opt-in)
@@ -25,11 +25,12 @@ schematic: |
 root:
   element: div
   description: >-
-    The bordered table wrapper. Renders a TanStack table over the Table
-    primitives. Manages sorting / filtering / visibility / selection /
+    The table wrapper (data-slot="data-table"). Renders a TanStack table over
+    the Table primitives. Manages sorting / filtering / visibility / selection /
     pagination / expansion / column-sizing / pinning state internally
     (DataTable), or accepts a caller-built `table` instance for the companion
-    parts.
+    parts. No outer border or radius — row separators come from the Table
+    primitives' per-row border-b.
 
 parts:
   - id: table

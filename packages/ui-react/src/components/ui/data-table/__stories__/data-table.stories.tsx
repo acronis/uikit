@@ -130,6 +130,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+// CI-43740 (outer frame): the wrapper div no longer has `rounded-md border` —
+// every story's baseline will shift (the outer border and radius are gone).
+// No story should remain unchanged. Regenerate all baselines (light + dark) in
+// Docker once at the end of the DataTable plan.
+
 export const Default: Story = {
   render: () => (
     <DataTable

@@ -1532,7 +1532,7 @@ describe('DataTable presentational features', () => {
     const { container } = render(
       <DataTable columns={columns} data={data.slice(0, 2)} bordered />
     );
-    const wrapper = container.querySelector('div.rounded-md') as HTMLElement;
+    const wrapper = container.querySelector('[data-slot="data-table"]') as HTMLElement;
     expect(wrapper.className).toContain('[&_td:not(:last-child)]:border-e');
   });
 
