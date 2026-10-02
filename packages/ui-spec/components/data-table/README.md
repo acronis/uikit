@@ -82,9 +82,12 @@ from it too (see **Server-driven usage** below).
   `ColumnDef`. DataTable drives TanStack's native column-pinning and renders the
   column as `position: sticky` cells with an opaque row background. The built-in
   trailing settings/actions column is pinned right by default.
-- **Wrapping columns** — set `meta.wrap: true` on a `ColumnDef` to let that
-  column's header and cell content use whitespace-normal and wrap onto
-  multiple lines, mirroring the `Table` primitives' `wrap` prop.
+- **Column overflow** — set `meta.overflow: 'wrap'` on a `ColumnDef` to let
+  that column's header and cells wrap onto multiple lines, or
+  `meta.overflow: 'hidden'` to clip content at the column's CSS width (set
+  `size` on the column — without a width source the column collapses). Unset —
+  browser default (wrapping). Forwarded to the `Table` primitives' `overflow`
+  prop. Ellipsis and tooltip are the inner component's responsibility.
 - **Visibility labels and categories** — set `meta.label` for the text shown in
   the visibility dropdown and `meta.category` to group related columns under a
   labelled section with a Show all action. Labels fall back to a string header,

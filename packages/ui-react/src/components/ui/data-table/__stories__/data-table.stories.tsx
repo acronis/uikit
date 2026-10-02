@@ -19,6 +19,12 @@ import { Checkbox } from '../../checkbox';
 import { DropdownMenuGroup, DropdownMenuItem } from '../../dropdown-menu';
 import { Tag } from '../../tag';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../tooltip';
+import {
   DataTable,
   DataTableBulkActionsBar,
   DataTableColumnHeader,
@@ -734,5 +740,84 @@ export const GroupedHeadersCompact: Story = {
         )}
       />
     </div>
+  ),
+};
+
+/* ---- Column overflow modes (meta.overflow) ---- */
+
+type Article = {
+  id: string;
+  summary: string;
+  path: string;
+  owner: string;
+};
+
+const articles: Article[] = [
+  {
+    id: 'a1',
+    summary:
+      'Nightly backup of the finance file server completed with two skipped files that were locked by another process during the snapshot window.',
+    path: '/mnt/storage/finance/quarterly-reports/2026/q3/consolidated-ledger-final-v12.xlsx',
+    owner: 'Avery Johnson',
+  },
+  {
+    id: 'a2',
+    summary: 'Agent updated.',
+    path: '/var/log/agent/update.log',
+    owner: 'Jordan Lee',
+  },
+  {
+    id: 'a3',
+    summary:
+      'Vulnerability assessment found three critical patches pending on the build workstation; remediation is scheduled for the next maintenance window.',
+    path: '/opt/acronis/policies/vulnerability-assessment/workstations/build-pool-eu-west/report.json',
+    owner: 'Samantha Rivera-Castellanos',
+  },
+];
+
+const overflowColumns: ColumnDef<Article>[] = [
+  {
+    accessorKey: 'summary',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Summary (wrap)" />
+    ),
+    meta: { overflow: 'wrap' },
+    size: 280,
+  },
+  {
+    accessorKey: 'path',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="File path (hidden)" />
+    ),
+    meta: { overflow: 'hidden' },
+    size: 200,
+    // Ellipsis + tooltip are the consumer's job: the `<td>` only clips.
+    cell: ({ row }) => (
+      <Tooltip>
+        <TooltipTrigger
+          render={<span className="block truncate" tabIndex={0} />}
+        >
+          {row.original.path}
+        </TooltipTrigger>
+        <TooltipContent>{row.original.path}</TooltipContent>
+      </Tooltip>
+    ),
+  },
+  {
+    accessorKey: 'owner',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Owner (default)" />
+    ),
+  },
+];
+
+export const ColumnOverflow: Story = {
+  name: 'Column overflow modes',
+  render: () => (
+    <TooltipProvider>
+      <div className="max-w-3xl">
+        <DataTable columns={overflowColumns} data={articles} hideActionColumn />
+      </div>
+    </TooltipProvider>
   ),
 };

@@ -92,19 +92,46 @@ Scenario: Hover feedback
 ```
 
 ```gherkin
-Scenario: A wrapping cell grows the row
-  Given a TableCell (or TableHead) with wrap = true holding multi-line content
+Scenario: Wrapping column
+  Given a TableHead or TableCell with overflow = 'wrap' holding multi-line content
   When it renders
-  Then it uses whitespace-normal and the content wraps onto multiple lines
-  And the row grows to fit the content
+  Then the cell uses whitespace-normal and grows to fit its content
+  And the row height is not fixed
 ```
 
 ```gherkin
-Scenario: A default cell keeps the single-line row height
-  Given a TableCell (or TableHead) without wrap
+Scenario: Clipped column
+  Given a TableHead or TableCell with overflow = 'hidden'
+  And the column has a CSS width (size on the column, an explicit width, or column resizing)
+  When it renders
+  Then the cell applies max-w-0 overflow-hidden whitespace-nowrap
+  And content is clipped at the column's CSS width
+  And ellipsis and tooltip are the inner component's responsibility
+```
+
+```gherkin
+Scenario: Clipped column without a width source
+  Given a TableHead or TableCell with overflow = 'hidden'
+  And the column has no CSS width
+  When it renders
+  Then max-w-0 collapses the column
+  # A width source is a requirement of overflow = 'hidden', not optional
+```
+
+```gherkin
+Scenario: Default column (overflow unset)
+  Given a TableHead or TableCell with no overflow prop
+  When it renders
+  Then no overflow class is applied
+  And the browser default (wrapping) applies
+```
+
+```gherkin
+Scenario: No fixed row height
+  Given any TableHead or TableCell
   When it renders
   Then no height class is applied
-  And the row height comes from the cell's vertical padding plus line-height (40px at default tokens)
+  And a single-line row's height comes from the cell's vertical padding plus line-height (40px at default tokens)
 ```
 
 ## Pagination (TablePagination)
