@@ -661,6 +661,30 @@ describe('DataTable column resizing', () => {
       screen.getAllByRole('separator', { name: 'Resize column' })
     ).toHaveLength(columns.length);
   });
+
+  it('captures the pointer on the handle instead of flagging the document root', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnResizing
+      />
+    );
+    const handle = screen.getAllByRole('separator', {
+      name: 'Resize column',
+    })[0];
+    const setPointerCapture = vi.fn();
+    handle.setPointerCapture = setPointerCapture;
+
+    fireEvent.pointerDown(handle, { pointerId: 7 });
+    fireEvent.mouseDown(handle, { clientX: 100 });
+
+    expect(setPointerCapture).toHaveBeenCalledWith(7);
+    expect(document.documentElement).not.toHaveAttribute(
+      'data-ui-column-resizing'
+    );
+    fireEvent.mouseUp(document);
+  });
 });
 
 describe('DataTable column reordering', () => {
@@ -798,7 +822,7 @@ describe('DataTable column reordering', () => {
     const dataTransfer = { effectAllowed: '', dropEffect: '' };
     fireEvent.dragStart(email, { dataTransfer });
 
-    expect(email).toHaveClass('opacity-50');
+    expect(email).not.toHaveClass('opacity-50');
     // The capability tooltip stays disabled while a drag is in flight.
     await user.hover(email);
     expect(screen.queryByText('Reorder column:')).not.toBeInTheDocument();
@@ -809,6 +833,124 @@ describe('DataTable column reordering', () => {
     await user.unhover(email);
     await user.hover(email);
     expect(await screen.findByText('Reorder column:')).toBeInTheDocument();
+  });
+
+  it('marks the header under the pointer as the drop target during dragover', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const [email, amount] = screen.getAllByRole('columnheader');
+    const dataTransfer = { effectAllowed: '', dropEffect: '' };
+    fireEvent.dragStart(amount, { dataTransfer });
+    fireEvent.dragOver(email, { dataTransfer });
+
+    expect(email).toHaveAttribute('data-reorder-target');
+  });
+
+  it('clears every drop-target marker on dragend without a drop', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const [email, amount] = screen.getAllByRole('columnheader');
+    const dataTransfer = { effectAllowed: '', dropEffect: '' };
+    fireEvent.dragStart(amount, { dataTransfer });
+    fireEvent.dragOver(email, { dataTransfer });
+    fireEvent.dragOver(amount, { dataTransfer });
+    fireEvent.dragEnd(amount, { dataTransfer });
+
+    expect(document.querySelectorAll('[data-reorder-target]')).toHaveLength(0);
+  });
+
+  it('leaves no data-reorder-target on any table after dragend', () => {
+    const { container: first } = render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const { container: second } = render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const firstHead = first.querySelector('thead') as HTMLElement;
+    const secondHead = second.querySelector('thead') as HTMLElement;
+    const [email, amount] = within(firstHead).getAllByRole('columnheader');
+    const dataTransfer = { effectAllowed: '', dropEffect: '' };
+
+    fireEvent.dragStart(amount, { dataTransfer });
+    fireEvent.dragOver(email, { dataTransfer });
+    expect(email).toHaveAttribute('data-reorder-target');
+    fireEvent.dragEnd(amount, { dataTransfer });
+
+    // Shadow-root scoping of the sweep cannot be verified in jsdom; the
+    // `theadRef` approach is verified by code inspection and the comment in
+    // endColumnDrag.
+    expect(firstHead.querySelectorAll('[data-reorder-target]')).toHaveLength(0);
+    expect(secondHead.querySelectorAll('[data-reorder-target]')).toHaveLength(
+      0
+    );
+  });
+
+  it('does not mark a drop target for a drag that started elsewhere', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const [email] = screen.getAllByRole('columnheader');
+    fireEvent.dragOver(email, {
+      dataTransfer: { effectAllowed: '', dropEffect: '' },
+    });
+
+    expect(email).not.toHaveAttribute('data-reorder-target');
+  });
+
+  it('clears every drop-target marker on drop', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    const [email, amount] = screen.getAllByRole('columnheader');
+    dragHeaderOnto(amount, email);
+
+    expect(document.querySelectorAll('[data-reorder-target]')).toHaveLength(0);
+  });
+
+  it('shows a grab cursor on reorderable headers', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 2)}
+        enableColumnReordering
+        hideActionColumn
+      />
+    );
+    for (const header of screen.getAllByRole('columnheader')) {
+      expect(header).toHaveClass('cursor-grab', 'active:cursor-grabbing');
+    }
   });
 
   it('treats enableColumnReordering as a no-op when an external table is passed', () => {

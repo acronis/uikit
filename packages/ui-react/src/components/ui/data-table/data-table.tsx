@@ -540,6 +540,7 @@ export function DataTable<TData, TValue = unknown>({
   // end.
   const [focusedRowIndex, setFocusedRowIndex] = useState(0);
   const rowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
+  const theadRef = useRef<HTMLTableSectionElement>(null);
 
   const handleColumnSizingChange: OnChangeFn<ColumnSizingState> = (updater) => {
     setColumnSizing(updater);
@@ -676,21 +677,6 @@ export function DataTable<TData, TValue = unknown>({
   const isAnyColumnResizing = Boolean(
     table.getState().columnSizingInfo.isResizingColumn
   );
-  // The resize handle only shows its `ew-resize` cursor while the pointer is
-  // directly over its thin 4px hit area — once a drag starts, fast pointer
-  // movement leaves that area and the browser shows whatever cursor the
-  // element underneath declares (e.g. a sortable header's `cursor-pointer`).
-  // This attribute + the `html[data-ui-column-resizing] *` rule in
-  // styles/index.css force `ew-resize` everywhere for the duration of the
-  // drag — a plain `<body>` inline cursor loses to a descendant's own
-  // `cursor` declaration, so it isn't enough on its own.
-  useEffect(() => {
-    if (!isAnyColumnResizing) return;
-    document.documentElement.setAttribute('data-ui-column-resizing', '');
-    return () => {
-      document.documentElement.removeAttribute('data-ui-column-resizing');
-    };
-  }, [isAnyColumnResizing]);
   const sentinelRef = useIntersectionObserver<HTMLTableRowElement>({
     onIntersect: () => onLoadMore?.(),
     disabled: !isInfiniteScroll || !hasNextPage || isLoadingMore,
@@ -731,12 +717,33 @@ export function DataTable<TData, TValue = unknown>({
     setDraggedColumnId(columnId);
   };
 
+  // The drop-target marker is set imperatively on dragover, so it's swept
+  // imperatively too — on every exit path of a drag that started in this
+  // table (`dragend` and `drop`), the only drags it's ever set for — rather
+  // than derived from state. A missed `dragend` (e.g. the source cell
+  // unmounted mid-drag) would otherwise leave a stale marker that React state
+  // never knew about.
+  const endColumnDrag = () => {
+    setDraggedColumnId(undefined);
+    // Scoped to this table's own <thead>: `document.querySelectorAll` doesn't
+    // reach inside shadow roots.
+    theadRef.current
+      ?.querySelectorAll('[data-reorder-target]')
+      .forEach((element) => element.removeAttribute('data-reorder-target'));
+  };
+
   const handleColumnDragOver = (
     event: DragEvent<HTMLTableCellElement>,
     targetColumnId: string
   ) => {
     // Without this the browser rejects the drop and no `onDrop` ever fires.
     event.preventDefault();
+    // Only a drag that started in this table is ever swept (foreign drags never
+    // reach `endColumnDrag` — no local `dragend`, and `drop` bails early), so
+    // marking for a file/text/sibling-table drag would leave it stuck.
+    if (draggedColumnId) {
+      event.currentTarget.setAttribute('data-reorder-target', '');
+    }
     if (!event.dataTransfer) return;
     // Show "no drop" cursor when the source and target belong to different
     // header groups — cross-group reordering is not allowed (it interleaves
@@ -768,7 +775,7 @@ export function DataTable<TData, TValue = unknown>({
     const draggedParentId = table.getColumn(draggedColumnId)?.parent?.id;
     const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
     if (draggedParentId !== targetParentId) {
-      setDraggedColumnId(undefined);
+      endColumnDrag();
       return;
     }
     const current = table.getState().columnOrder;
@@ -776,7 +783,7 @@ export function DataTable<TData, TValue = unknown>({
       ? current
       : table.getAllLeafColumns().map((column) => column.id);
     table.setColumnOrder(reorderColumn(base, draggedColumnId, targetColumnId));
-    setDraggedColumnId(undefined);
+    endColumnDrag();
   };
 
   // Read each column's `meta.pin` and drive TanStack's native pinning state.
@@ -864,7 +871,7 @@ export function DataTable<TData, TValue = unknown>({
             a single open/close delay group (Provider renders no DOM, so the
             table markup is unaffected). */}
         <TooltipProvider>
-          <TableHeader>
+          <TableHeader ref={theadRef}>
             {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
               <TableRow
                 key={headerGroup.id}
@@ -961,7 +968,7 @@ export function DataTable<TData, TValue = unknown>({
                       }
                       onDragEnd={
                         canReorder
-                          ? () => setDraggedColumnId(undefined)
+                          ? endColumnDrag
                           : undefined
                       }
                       className={cn(
@@ -977,9 +984,6 @@ export function DataTable<TData, TValue = unknown>({
                         canReorder &&
                           !isAnyColumnResizing &&
                           'cursor-grab select-none active:cursor-grabbing',
-                        canReorder &&
-                          draggedColumnId === header.column.id &&
-                          'opacity-50',
                         isPinned && headerPinnedBg
                       )}
                     >
@@ -1008,6 +1012,17 @@ export function DataTable<TData, TValue = unknown>({
                           // cell's reorder drag instead of a resize when both
                           // features are enabled.
                           draggable={false}
+                          // Capturing the pointer keeps this handle the hit
+                          // target (and so its own resize cursor in effect) for
+                          // the whole drag, even once the pointer leaves the
+                          // 4px hit area. Unlike a document-level cursor
+                          // override, this works inside a Shadow DOM host.
+                          // Capture releases on pointerup/pointercancel.
+                          onPointerDown={(event) => {
+                            event.currentTarget.setPointerCapture(
+                              event.pointerId
+                            );
+                          }}
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}
                           onKeyDown={(event) =>
