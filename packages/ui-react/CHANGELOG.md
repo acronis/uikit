@@ -1,5 +1,14 @@
 # @acronis-platform/ui-react
 
+## 5.5.2
+
+### Patch Changes
+
+- [#754](https://github.com/acronis/uikit/pull/754) [`86a6be8`](https://github.com/acronis/uikit/commit/86a6be8cccf947f866a8dc164c9f878c7ef6d04f) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Keep normal chart legends to three wrapped rows and scroll overflow. Keep list
+  legends to eight complete rows before scrolling. Add `legendAriaLabel` to charts
+  with legends so consumers can localize or distinguish each legend group. A
+  legend joins the tab order only when its content actually overflows.
+
 ## 5.5.1
 
 ### Patch Changes
