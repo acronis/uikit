@@ -976,10 +976,8 @@ export function DataTable<TData, TValue = unknown>({
 
   return (
     <div
-      className={cn(
-        'rounded-md border border-[var(--ui-table-global-row-border-color)]',
-        borderedClass
-      )}
+      data-slot="data-table"
+      className={cn(borderedClass)}
     >
       <Table
         style={
