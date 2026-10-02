@@ -30,7 +30,9 @@ root:
     pagination / expansion / column-sizing / pinning state internally
     (DataTable), or accepts a caller-built `table` instance for the companion
     parts. No outer border or radius — row separators come from the Table
-    primitives' per-row border-b.
+    primitives' per-row border-b. Always `overflow-auto` — DataTable, not the
+    Table primitive, owns the scroll context. When `stickyHeader` is true, also
+    gains `h-full` to form the bounded scroll container.
 
 parts:
   - id: table
@@ -205,6 +207,11 @@ states:
     kind: prop
     prop: bordered
     affects: [table]
+  - id: sticky-header
+    trigger: stickyHeader is set
+    kind: prop
+    prop: stickyHeader
+    affects: [column-header, table]
   - id: current
     trigger: highlightCurrentRow is set and a row is clicked
     kind: prop

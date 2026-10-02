@@ -537,6 +537,14 @@ interface DataTableOwnProps<TData> {
    */
   isLoadingMore?: boolean;
   /**
+   * Stick the header row to the top of the scroll container so it stays
+   * visible while the user scrolls vertically through the table body.
+   * Requires DataTable to have a bounded height — wrap it in a fixed-height
+   * `flex flex-col` container (e.g. `<div className="h-96 flex flex-col">`);
+   * `max-h` alone does not work.
+   */
+  stickyHeader?: boolean;
+  /**
    * Hide the trailing sticky action column — the column-visibility cog in the
    * header and each row's overflow-actions ellipsis. Shown by default. A
    * no-op when an external `table` is passed (build the column into that
@@ -612,6 +620,7 @@ export function DataTable<TData, TValue = unknown>({
   resizeColumnLabel = 'Resize column',
   emptyLabel = 'No results.',
   isLoadingMore = false,
+  stickyHeader = false,
   hideActionColumn = false,
   renderRowActions,
   rowActionsLabel = 'Row actions',
@@ -977,7 +986,7 @@ export function DataTable<TData, TValue = unknown>({
   return (
     <div
       data-slot="data-table"
-      className={cn(borderedClass)}
+      className={cn('overflow-auto', stickyHeader && 'h-full', borderedClass)}
     >
       <Table
         style={
@@ -988,214 +997,220 @@ export function DataTable<TData, TValue = unknown>({
             a single open/close delay group (Provider renders no DOM, so the
             table markup is unaffected). */}
         <TooltipProvider>
-          <TableHeader ref={theadRef}>
-            {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
-              <TableRow
-                key={headerGroup.id}
-                className={cn(
-                  'hover:bg-transparent',
-                  groupIndex < headerGroups.length - 1 && 'border-b-0'
-                )}
-              >
-                {headerGroup.headers.map((header) => {
-                  const isPinned = header.column.getIsPinned();
-                  // Non-leaf header cells (group-label spans and TanStack's
-                  // structural placeholder cells) are purely presentational —
-                  // no sort/reorder/resize/tooltip.
-                  const isGroupHeader = header.subHeaders.length > 0;
-                  const canResize =
-                    !isGroupHeader &&
-                    resizingEnabled &&
-                    header.column.getCanResize() &&
-                    header.column.id !== 'select';
-                  // A pinned column is anchored to a table edge, so dragging it
-                  // out of that edge would contradict its own pinning.
-                  const canReorder =
-                    !isGroupHeader &&
-                    reorderingEnabled &&
-                    !header.isPlaceholder &&
-                    !isPinned;
-                  const canSort =
-                    !isGroupHeader &&
-                    !header.isPlaceholder &&
-                    header.column.getCanSort();
-                  // One tooltip line per capability the column actually has, in
-                  // the design's order; a column with none gets no tooltip.
-                  const hints = [
-                    canSort && resolvedHeaderHints.sort,
-                    canReorder && resolvedHeaderHints.reorder,
-                    canResize && resolvedHeaderHints.resize,
-                  ].filter((hint): hint is DataTableHeaderHint =>
-                    Boolean(hint)
-                  );
-                  if (header.column.id === '__actions') {
-                    if (groupIndex < headerGroups.length - 1) {
-                      // Group-header rows carry no cog, but the pinned cell
-                      // must still be present so the row scrolls horizontally
-                      // in sync with the leaf header row and the body.
+          <TableHeader
+            ref={theadRef}
+            className={
+              stickyHeader ? 'sticky top-0 z-10 bg-background' : undefined
+            }
+          >
+            {table
+              .getHeaderGroups()
+              .map((headerGroup, groupIndex, headerGroups) => (
+                <TableRow
+                  key={headerGroup.id}
+                  className={cn(
+                    'hover:bg-transparent',
+                    groupIndex < headerGroups.length - 1 && 'border-b-0'
+                  )}
+                >
+                  {headerGroup.headers.map((header) => {
+                    const isPinned = header.column.getIsPinned();
+                    // Non-leaf header cells (group-label spans and TanStack's
+                    // structural placeholder cells) are purely presentational —
+                    // no sort/reorder/resize/tooltip.
+                    const isGroupHeader = header.subHeaders.length > 0;
+                    const canResize =
+                      !isGroupHeader &&
+                      resizingEnabled &&
+                      header.column.getCanResize() &&
+                      header.column.id !== 'select';
+                    // A pinned column is anchored to a table edge, so dragging it
+                    // out of that edge would contradict its own pinning.
+                    const canReorder =
+                      !isGroupHeader &&
+                      reorderingEnabled &&
+                      !header.isPlaceholder &&
+                      !isPinned;
+                    const canSort =
+                      !isGroupHeader &&
+                      !header.isPlaceholder &&
+                      header.column.getCanSort();
+                    // One tooltip line per capability the column actually has, in
+                    // the design's order; a column with none gets no tooltip.
+                    const hints = [
+                      canSort && resolvedHeaderHints.sort,
+                      canReorder && resolvedHeaderHints.reorder,
+                      canResize && resolvedHeaderHints.resize,
+                    ].filter((hint): hint is DataTableHeaderHint =>
+                      Boolean(hint)
+                    );
+                    if (header.column.id === '__actions') {
+                      if (groupIndex < headerGroups.length - 1) {
+                        // Group-header rows carry no cog, but the pinned cell
+                        // must still be present so the row scrolls horizontally
+                        // in sync with the leaf header row and the body.
+                        return (
+                          <TableSettingsCell
+                            key={header.id}
+                            style={getHeaderStyle(header, resizingEnabled)}
+                            className={headerPinnedBg}
+                          />
+                        );
+                      }
                       return (
                         <TableSettingsCell
                           key={header.id}
                           style={getHeaderStyle(header, resizingEnabled)}
                           className={headerPinnedBg}
-                        />
+                        >
+                          <DataTableViewOptions
+                            table={table}
+                            iconOnly
+                            triggerAriaLabel={columnSettingsLabel}
+                            searchPlaceholder={columnSearchPlaceholder}
+                            showAllLabel={showAllColumnsLabel}
+                            noResultsLabel={noColumnsFoundLabel}
+                          />
+                        </TableSettingsCell>
                       );
                     }
-                    return (
-                      <TableSettingsCell
-                        key={header.id}
+                    const headerCell = (
+                      <TableHead
+                        colSpan={header.colSpan}
+                        overflow={header.column.columnDef.meta?.overflow}
                         style={getHeaderStyle(header, resizingEnabled)}
-                        className={headerPinnedBg}
+                        draggable={
+                          (canReorder && !isAnyColumnResizing) || undefined
+                        }
+                        onDragStart={
+                          canReorder
+                            ? (event) =>
+                                handleColumnDragStart(event, header.column.id)
+                            : undefined
+                        }
+                        onDragOver={
+                          canReorder
+                            ? (event) =>
+                                handleColumnDragOver(event, header.column.id)
+                            : undefined
+                        }
+                        onDrop={
+                          canReorder
+                            ? (event) =>
+                                handleColumnDrop(event, header.column.id)
+                            : undefined
+                        }
+                        onDragEnd={canReorder ? endColumnDrag : undefined}
+                        className={cn(
+                          canResize && 'relative',
+                          // Per the design, a sortable header tints the whole
+                          // cell on hover/press, not just the inner sort button.
+                          // Suppressed while any column is resizing, since the
+                          // pointer drags across neighboring `<th>`s and would
+                          // otherwise tint them via native `:hover`.
+                          canSort &&
+                            !isAnyColumnResizing &&
+                            'transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)]',
+                          canReorder &&
+                            !isAnyColumnResizing &&
+                            'cursor-grab select-none active:cursor-grabbing',
+                          isPinned && headerPinnedBg
+                        )}
                       >
-                        <DataTableViewOptions
-                          table={table}
-                          iconOnly
-                          triggerAriaLabel={columnSettingsLabel}
-                          searchPlaceholder={columnSearchPlaceholder}
-                          showAllLabel={showAllColumnsLabel}
-                          noResultsLabel={noColumnsFoundLabel}
-                        />
-                      </TableSettingsCell>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                        {canResize && (
+                          <div
+                            role="separator"
+                            aria-orientation="vertical"
+                            aria-label={resizeColumnLabel}
+                            aria-valuenow={header.column.getSize()}
+                            aria-valuemin={
+                              header.column.columnDef.minSize ??
+                              DEFAULT_MIN_COLUMN_SIZE
+                            }
+                            aria-valuemax={
+                              header.column.columnDef.maxSize ??
+                              DEFAULT_MAX_COLUMN_SIZE
+                            }
+                            tabIndex={0}
+                            // Keeps a press on the handle from starting the header
+                            // cell's reorder drag instead of a resize when both
+                            // features are enabled.
+                            draggable={false}
+                            // Capturing the pointer keeps this handle the hit
+                            // target (and so its own resize cursor in effect) for
+                            // the whole drag, even once the pointer leaves the
+                            // 4px hit area. Unlike a document-level cursor
+                            // override, this works inside a Shadow DOM host.
+                            // Capture releases on pointerup/pointercancel.
+                            onPointerDown={(event) => {
+                              event.currentTarget.setPointerCapture(
+                                event.pointerId
+                              );
+                              event.currentTarget
+                                .closest('th')
+                                ?.setAttribute('data-resizing', '');
+                            }}
+                            onPointerUp={(event) => {
+                              event.currentTarget
+                                .closest('th')
+                                ?.removeAttribute('data-resizing');
+                            }}
+                            onPointerCancel={(event) => {
+                              event.currentTarget
+                                .closest('th')
+                                ?.removeAttribute('data-resizing');
+                            }}
+                            onMouseDown={header.getResizeHandler()}
+                            onTouchStart={header.getResizeHandler()}
+                            onKeyDown={(event) =>
+                              handleResizeKeyDown(event, header)
+                            }
+                            className={cn(
+                              'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-[opacity,background-color] hover:bg-[var(--ui-resizable-border-color-hover)] hover:opacity-100 focus-visible:bg-[var(--ui-resizable-border-color-hover)] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)]',
+                              header.column.getIsResizing() &&
+                                'bg-[var(--ui-resizable-border-color-active)] opacity-100'
+                            )}
+                          />
+                        )}
+                      </TableHead>
                     );
-                  }
-                  const headerCell = (
-                    <TableHead
-                      colSpan={header.colSpan}
-                      overflow={header.column.columnDef.meta?.overflow}
-                      style={getHeaderStyle(header, resizingEnabled)}
-                      draggable={
-                        (canReorder && !isAnyColumnResizing) || undefined
-                      }
-                      onDragStart={
-                        canReorder
-                          ? (event) =>
-                              handleColumnDragStart(event, header.column.id)
-                          : undefined
-                      }
-                      onDragOver={
-                        canReorder
-                          ? (event) =>
-                              handleColumnDragOver(event, header.column.id)
-                          : undefined
-                      }
-                      onDrop={
-                        canReorder
-                          ? (event) => handleColumnDrop(event, header.column.id)
-                          : undefined
-                      }
-                      onDragEnd={
-                        canReorder
-                          ? endColumnDrag
-                          : undefined
-                      }
-                      className={cn(
-                        canResize && 'relative',
-                        // Per the design, a sortable header tints the whole
-                        // cell on hover/press, not just the inner sort button.
-                        // Suppressed while any column is resizing, since the
-                        // pointer drags across neighboring `<th>`s and would
-                        // otherwise tint them via native `:hover`.
-                        canSort &&
-                          !isAnyColumnResizing &&
-                          'transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)]',
-                        canReorder &&
-                          !isAnyColumnResizing &&
-                          'cursor-grab select-none active:cursor-grabbing',
-                        isPinned && headerPinnedBg
-                      )}
-                    >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                      {canResize && (
-                        <div
-                          role="separator"
-                          aria-orientation="vertical"
-                          aria-label={resizeColumnLabel}
-                          aria-valuenow={header.column.getSize()}
-                          aria-valuemin={
-                            header.column.columnDef.minSize ??
-                            DEFAULT_MIN_COLUMN_SIZE
-                          }
-                          aria-valuemax={
-                            header.column.columnDef.maxSize ??
-                            DEFAULT_MAX_COLUMN_SIZE
-                          }
-                          tabIndex={0}
-                          // Keeps a press on the handle from starting the header
-                          // cell's reorder drag instead of a resize when both
-                          // features are enabled.
-                          draggable={false}
-                          // Capturing the pointer keeps this handle the hit
-                          // target (and so its own resize cursor in effect) for
-                          // the whole drag, even once the pointer leaves the
-                          // 4px hit area. Unlike a document-level cursor
-                          // override, this works inside a Shadow DOM host.
-                          // Capture releases on pointerup/pointercancel.
-                          onPointerDown={(event) => {
-                            event.currentTarget.setPointerCapture(
-                              event.pointerId
-                            );
-                            event.currentTarget
-                              .closest('th')
-                              ?.setAttribute('data-resizing', '');
-                          }}
-                          onPointerUp={(event) => {
-                            event.currentTarget
-                              .closest('th')
-                              ?.removeAttribute('data-resizing');
-                          }}
-                          onPointerCancel={(event) => {
-                            event.currentTarget
-                              .closest('th')
-                              ?.removeAttribute('data-resizing');
-                          }}
-                          onMouseDown={header.getResizeHandler()}
-                          onTouchStart={header.getResizeHandler()}
-                          onKeyDown={(event) =>
-                            handleResizeKeyDown(event, header)
-                          }
-                          className={cn(
-                            'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-[opacity,background-color] hover:bg-[var(--ui-resizable-border-color-hover)] hover:opacity-100 focus-visible:bg-[var(--ui-resizable-border-color-hover)] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)]',
-                            header.column.getIsResizing() &&
-                              'bg-[var(--ui-resizable-border-color-active)] opacity-100'
-                          )}
-                        />
-                      )}
-                    </TableHead>
-                  );
-                  if (hints.length === 0) {
-                    return <Fragment key={header.id}>{headerCell}</Fragment>;
-                  }
-                  return (
-                    <Tooltip
-                      key={header.id}
-                      disabled={
-                        isAnyColumnResizing || draggedColumnId !== undefined
-                      }
-                    >
-                      {/* The whole header cell is the trigger (not just its sort
+                    if (hints.length === 0) {
+                      return <Fragment key={header.id}>{headerCell}</Fragment>;
+                    }
+                    return (
+                      <Tooltip
+                        key={header.id}
+                        disabled={
+                          isAnyColumnResizing || draggedColumnId !== undefined
+                        }
+                      >
+                        {/* The whole header cell is the trigger (not just its sort
                           button), so the hint covers the reorder/resize gestures
                           that live on the cell itself. Disabled mid-drag/resize
                           so the hint doesn't pop up over a neighboring cell
                           while the pointer passes through it. */}
-                      <TooltipTrigger render={headerCell} />
-                      <TooltipContent className="flex flex-col gap-1">
-                        {hints.map((hint) => (
-                          <span key={hint.label}>
-                            <span className="font-semibold">{hint.label}:</span>{' '}
-                            {hint.action}
-                          </span>
-                        ))}
-                      </TooltipContent>
-                    </Tooltip>
-                  );
-                })}
-              </TableRow>
-            ))}
+                        <TooltipTrigger render={headerCell} />
+                        <TooltipContent className="flex flex-col gap-1">
+                          {hints.map((hint) => (
+                            <span key={hint.label}>
+                              <span className="font-semibold">
+                                {hint.label}:
+                              </span>{' '}
+                              {hint.action}
+                            </span>
+                          ))}
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                  })}
+                </TableRow>
+              ))}
           </TableHeader>
         </TooltipProvider>
         <TableBody>

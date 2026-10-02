@@ -79,9 +79,21 @@ Scenario: The settings cell holds the column-settings trigger
 
 ```gherkin
 Scenario: Overflow scrolls horizontally
-  Given a table wider than its container
+  Given a standalone Table (used outside DataTable) wider than its container
+  And the consumer has wrapped it in an overflow-auto element
   When it renders
   Then the wrapping container scrolls horizontally, keeping the page intact
+  # Table renders the <table> directly and has no overflow-auto wrapper of its own.
+  # DataTable puts overflow-auto on its root div and is the preferred way to
+  # render wide tables. Consumers using Table directly must add overflow-auto
+  # on a wrapping element if they need horizontal scrolling.
+```
+
+```gherkin
+Scenario: Table creates no scroll container
+  Given a standalone Table with no overflow-auto ancestor
+  When it is wider than its container
+  Then the table overflows its container instead of scrolling inside it
 ```
 
 ```gherkin

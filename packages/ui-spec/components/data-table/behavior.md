@@ -418,6 +418,47 @@ Scenario: Sticky (pinned) columns
   When the grid scrolls horizontally
   Then the pinned columns stay fixed at their edges (position: sticky)
   And their cells keep an opaque row background so scrolled cells don't show through
+  # The pinned cells stick to DataTable's root div, the horizontal scroll
+  # container (see "DataTable owns the scroll container" below).
+```
+
+```gherkin
+Scenario: DataTable owns the scroll container
+  Given a DataTable rendering a wide table
+  Then the DataTable root div (data-slot="data-table") always has overflow-auto
+  And it scrolls horizontally within that container
+  And Table renders no overflow wrapper of its own — DataTable is the horizontal scroll context
+  # Vertical scrolling inside DataTable needs stickyHeader (h-full) plus a bounded
+  # height; then pinned columns and the sticky header both stick to this one container.
+```
+
+```gherkin
+Scenario: Sticky header requires a bounded height
+  Given stickyHeader is true
+  Then DataTable's root div gains h-full in addition to overflow-auto
+  And the header row (thead) gets sticky top-0 z-10 at the top of that container
+  And consumers must bound DataTable's height for the sticky header to work
+  When the consumer wraps DataTable in a fixed-height flex-col container
+    (e.g. <div className="h-96 flex flex-col">)
+  Then DataTable fills the wrapper (h-full) and overflow-auto creates the scroll context
+  And the header row stays visible while the user scrolls vertically through the body rows
+  # Without a bounded ancestor, h-full resolves to the content height, nothing
+  # scrolls inside DataTable, and the header has nothing to stick to.
+```
+
+```gherkin
+Scenario: Sticky header background
+  Given stickyHeader is true
+  Then the header row uses bg-background so it stays opaque while body rows scroll beneath it
+  And no CSS custom property controls it
+  And DataTable exposes no prop or className to change it
+```
+
+```gherkin
+Scenario: Sticky header off by default
+  Given stickyHeader is unset or false
+  Then the thead has no sticky classes and the root div has no h-full
+  And the root div still has overflow-auto
 ```
 
 ```gherkin

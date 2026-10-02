@@ -396,6 +396,19 @@ contract:
       description: >-
         Whether a load is in flight — suppresses further `onLoadMore` calls
         and renders a trailing loading row. `paginationMode="infinite"` only.
+    - name: stickyHeader
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Stick the header row to the top of DataTable's scroll container so it
+        remains visible while the user scrolls vertically. The DataTable root
+        is always an `overflow-auto` scroll container; when true it also gains
+        `h-full` and the `<thead>` gains `sticky top-0 z-10 bg-background`.
+        Requires DataTable's parent to have a bounded height (e.g. a
+        `h-96 flex flex-col` wrapper) — otherwise the root grows with its
+        content and never scrolls. `max-h` alone does not work: it gives the
+        root's `h-full` nothing to resolve against.
   events:
     - name: onColumnOrderChange
       payload: 'ColumnOrderState (TanStack OnChangeFn)'

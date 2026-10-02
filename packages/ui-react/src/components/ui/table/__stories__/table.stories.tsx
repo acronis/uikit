@@ -205,7 +205,10 @@ function RowSelectionStatesDemo() {
                 aria-label={`Select ${row.name}`}
                 checked={!!selected[row.id]}
                 onCheckedChange={(value) =>
-                  setSelected((previous) => ({ ...previous, [row.id]: !!value }))
+                  setSelected((previous) => ({
+                    ...previous,
+                    [row.id]: !!value,
+                  }))
                 }
               />
             </TableCell>
@@ -241,15 +244,12 @@ const SCROLL_ROWS: ScrollRow[] = Array.from({ length: TOTAL_ROWS }, (_, i) => ({
 }));
 
 // A fixed-height, vertically scrolling table body — the header and pagination
-// stay put while the rows scroll underneath. `Table` already renders its own
-// `overflow-auto` wrapper (for horizontal scroll); nesting a SECOND
-// `overflow-auto`/`overflow-y-auto` div around it would give `position: sticky`
-// two candidate scrolling ancestors, and it locks onto the nearest one — that
-// inner, Table-owned wrapper, which never itself scrolls (it's sized to fit its
-// content) — so the header wouldn't stick. Instead, size and scroll Table's OWN
-// wrapper directly via a child-selector utility (`[&>div]:...`), so there's
-// only one scrolling ancestor. `sticky top-0` goes on each header CELL, not the
-// `<tr>` — browsers don't reliably support `position: sticky` on table rows.
+// stay put while the rows scroll underneath. The consumer provides
+// `max-h-[220px] overflow-y-auto` directly on the bordered wrapper — Table no
+// longer has its own overflow wrapper, so this div is the only scrolling
+// ancestor and the header cells stick to it. `sticky top-0` goes on each header
+// CELL, not the `<tr>` — browsers don't reliably support `position: sticky` on
+// table rows.
 function ScrollableBodyDemo() {
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(PAGE_SIZE);
@@ -261,7 +261,7 @@ function ScrollableBodyDemo() {
 
   return (
     <div className="w-[420px] space-y-4">
-      <div className="rounded-md border border-(--ui-table-global-row-border-color) [&>div]:max-h-[220px] [&>div]:overflow-y-auto">
+      <div className="rounded-md border border-(--ui-table-global-row-border-color) max-h-[220px] overflow-y-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -372,13 +372,22 @@ export const TableHeaderCellStates: Story = {
     <Table className="w-[560px]">
       <TableHeader>
         <TableRow className="hover:bg-transparent">
-          <TableHead sortable className="bg-[var(--ui-table-header-cell-color-idle)]">
+          <TableHead
+            sortable
+            className="bg-[var(--ui-table-header-cell-color-idle)]"
+          >
             idle
           </TableHead>
-          <TableHead sortable className="bg-[var(--ui-table-header-cell-color-hover)]">
+          <TableHead
+            sortable
+            className="bg-[var(--ui-table-header-cell-color-hover)]"
+          >
             hover
           </TableHead>
-          <TableHead sortable className="bg-[var(--ui-table-header-cell-color-active)]">
+          <TableHead
+            sortable
+            className="bg-[var(--ui-table-header-cell-color-active)]"
+          >
             active
           </TableHead>
           <TableHead
@@ -422,11 +431,7 @@ export const TableDataCellStates: Story = {
  */
 export const TallHeaderContent: Story = {
   render: () => (
-    <div
-      style={
-        { '--ui-table-global-cell-padding-y': '4px' } as CSSProperties
-      }
-    >
+    <div style={{ '--ui-table-global-cell-padding-y': '4px' } as CSSProperties}>
       <Table className="w-120">
         <TableHeader>
           <TableRow>
@@ -548,7 +553,10 @@ export const TableHeaderRowVariants: Story = {
           [true, true],
         ] as const
       ).map(([hasCheckbox, hasSettings]) => (
-        <div key={`${hasCheckbox}-${hasSettings}`} className="flex flex-col gap-1">
+        <div
+          key={`${hasCheckbox}-${hasSettings}`}
+          className="flex flex-col gap-1"
+        >
           <span className={STATE_LABEL}>
             {`hasCheckbox=${hasCheckbox} hasSettings=${hasSettings}`}
           </span>
@@ -665,7 +673,10 @@ function CheckboxTable({ selected = [] }: { selected?: string[] }) {
           return (
             <TableRow key={row.name} selected={isSelected}>
               <TableSelectCell>
-                <Checkbox checked={isSelected} aria-label={`Select ${row.name}`} />
+                <Checkbox
+                  checked={isSelected}
+                  aria-label={`Select ${row.name}`}
+                />
               </TableSelectCell>
               <TableCell data-testid={`cell-${row.name}`}>{row.name}</TableCell>
               <TableCell>{row.status}</TableCell>
@@ -699,7 +710,9 @@ export const WithCheckboxIdleState: Story = {
  */
 export const WithCheckboxHoverOnRow: Story = {
   render: () => <CheckboxTable />,
-  parameters: { snapshot: { hoverSelector: '[data-testid="cell-db-primary"]' } },
+  parameters: {
+    snapshot: { hoverSelector: '[data-testid="cell-db-primary"]' },
+  },
 };
 
 /** Figma: "Table with Checkbox / Hover on Checkbox". */

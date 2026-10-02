@@ -3,7 +3,7 @@ component: Table
 
 schematic: |
   view-options:  [ ⚙ View ▾ ]   (show/hide columns dropdown, optional)
-  root: <table> (in a horizontally scrollable container)
+  root: <table> (no scroll wrapper — add overflow-auto on a parent)
   +-----------------------------------------------------------------+
   | header: <thead>                                                 |
   |   row: <tr>                                                     |
@@ -36,7 +36,8 @@ root:
   element: table
   role: table
   description: >-
-    The `<table>` (wrapped in a `overflow-auto` container for horizontal scroll).
+    The `<table>`, rendered directly with no scroll wrapper of its own. For
+    horizontal scroll, add `overflow-auto` on a parent (DataTable does this).
     Text color comes from `--ui-table-data-value-color-idle`.
 
 parts:

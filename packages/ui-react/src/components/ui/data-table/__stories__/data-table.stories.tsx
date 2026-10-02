@@ -9,23 +9,11 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-} from '@acronis-platform/icons-react/stroke-mono';
-
 import { cn } from '@/lib/utils';
 import { Button } from '../../button';
-import { ButtonIcon } from '../../button-icon';
 import { Checkbox } from '../../checkbox';
 import { DropdownMenuGroup, DropdownMenuItem } from '../../dropdown-menu';
 import { Tag } from '../../tag';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '../../tooltip';
 import {
   DataTable,
   DataTableBulkActionsBar,
@@ -395,16 +383,13 @@ function CoreCapabilitiesDemo() {
           Delete
         </Button>
       </DataTableBulkActionsBar>
-      {/* Fixed height + overflow-auto gives the sentinel row somewhere to
-          scroll within — the IntersectionObserver still measures against the
-          viewport, but the row only reaches it once this pane is scrolled. */}
-      <div
-        className="max-h-96 overflow-auto"
-        data-testid="infinite-scroll-pane"
-      >
+      {/* Fixed height + flex-col so DataTable's h-full fills this container and
+          its overflow-auto creates the scroll context for the infinite sentinel. */}
+      <div className="h-96 flex flex-col" data-testid="infinite-scroll-pane">
         <DataTable
           columns={workloadColumns}
           data={items}
+          stickyHeader
           enableColumnResizing
           enableColumnReordering
           rowSelection={rowSelection}
@@ -455,90 +440,6 @@ export const CoreCapabilities: Story = {
     );
     pane.scrollTop = 0;
   },
-};
-
-/* -------------------------------------------- Core capabilities + pagination */
-
-function CoreCapabilitiesWithPaginationDemo() {
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  // The full dataset lives with the caller — DataTable only ever sees the
-  // current page's slice, and pages are turned with plain prev/next buttons
-  // (DataTablePagination binds to an externally-built `table`, which would
-  // disable this demo's resizing/reordering — see the component's docs).
-  const [allWorkloads] = useState<Workload[]>(() =>
-    makeWorkloads(TOTAL_WORKLOADS)
-  );
-  const [pageIndex, setPageIndex] = useState(0);
-  const pageCount = Math.ceil(allWorkloads.length / WORKLOADS_PAGE_SIZE);
-  const pageItems = allWorkloads.slice(
-    pageIndex * WORKLOADS_PAGE_SIZE,
-    pageIndex * WORKLOADS_PAGE_SIZE + WORKLOADS_PAGE_SIZE
-  );
-
-  // A second, minimal `useReactTable` instance driving only the actions bar,
-  // scoped to the full dataset so the selection summary/count survives
-  // paging — DataTable itself only renders the current page's slice.
-  const selectionTable = useReactTable({
-    data: allWorkloads,
-    columns: workloadColumns,
-    state: { rowSelection },
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div className="max-w-3xl flex flex-col gap-4">
-      <DataTableBulkActionsBar
-        table={selectionTable}
-        loadedLabel={`${allWorkloads.length} items total`}
-      >
-        <Button variant="ghost" className="h-8">
-          Delete
-        </Button>
-      </DataTableBulkActionsBar>
-      <DataTable
-        columns={workloadColumns}
-        data={pageItems}
-        enableColumnResizing
-        enableColumnReordering
-        rowSelection={rowSelection}
-        onRowSelectionChange={setRowSelection}
-        renderRowActions={(row) => (
-          <DropdownMenuGroup>
-            <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuGroup>
-        )}
-      />
-      <div className="flex items-center justify-end gap-2">
-        <span className="text-sm font-medium">
-          Page {pageIndex + 1} of {pageCount}
-        </span>
-        <ButtonIcon
-          variant="secondary"
-          aria-label="Go to previous page"
-          onClick={() => setPageIndex((current) => Math.max(0, current - 1))}
-          disabled={pageIndex === 0}
-        >
-          <ChevronLeftIcon />
-        </ButtonIcon>
-        <ButtonIcon
-          variant="secondary"
-          aria-label="Go to next page"
-          onClick={() =>
-            setPageIndex((current) => Math.min(pageCount - 1, current + 1))
-          }
-          disabled={pageIndex >= pageCount - 1}
-        >
-          <ChevronRightIcon />
-        </ButtonIcon>
-      </div>
-    </div>
-  );
-}
-
-export const CoreCapabilitiesWithPagination: Story = {
-  render: () => <CoreCapabilitiesWithPaginationDemo />,
 };
 
 /* ----------------------------------------- Core capabilities + grouped headers */
@@ -707,12 +608,13 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
         </Button>
       </DataTableBulkActionsBar>
       <div
-        className="max-h-96 overflow-auto"
+        className="h-96 flex flex-col"
         data-testid="infinite-scroll-pane-grouped"
       >
         <DataTable
           columns={workloadGroupedColumns}
           data={items}
+          stickyHeader
           enableColumnResizing
           enableColumnReordering
           rowSelection={rowSelection}
@@ -756,106 +658,6 @@ export const CoreCapabilitiesWithGroupedHeaders: Story = {
     );
     pane.scrollTop = 0;
   },
-};
-
-/* ---- Compact grouped-header view (no scroll required) ---- */
-
-export const GroupedHeadersCompact: Story = {
-  render: () => (
-    <div className="max-w-3xl">
-      <DataTable
-        columns={workloadGroupedColumns}
-        data={makeWorkloads(5)}
-        enableColumnResizing
-        enableColumnReordering
-        renderRowActions={(row) => (
-          <DropdownMenuGroup>
-            <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
-          </DropdownMenuGroup>
-        )}
-      />
-    </div>
-  ),
-};
-
-/* ---- Column overflow modes (meta.overflow) ---- */
-
-type Article = {
-  id: string;
-  summary: string;
-  path: string;
-  owner: string;
-};
-
-const articles: Article[] = [
-  {
-    id: 'a1',
-    summary:
-      'Nightly backup of the finance file server completed with two skipped files that were locked by another process during the snapshot window.',
-    path: '/mnt/storage/finance/quarterly-reports/2026/q3/consolidated-ledger-final-v12.xlsx',
-    owner: 'Avery Johnson',
-  },
-  {
-    id: 'a2',
-    summary: 'Agent updated.',
-    path: '/var/log/agent/update.log',
-    owner: 'Jordan Lee',
-  },
-  {
-    id: 'a3',
-    summary:
-      'Vulnerability assessment found three critical patches pending on the build workstation; remediation is scheduled for the next maintenance window.',
-    path: '/opt/acronis/policies/vulnerability-assessment/workstations/build-pool-eu-west/report.json',
-    owner: 'Samantha Rivera-Castellanos',
-  },
-];
-
-const overflowColumns: ColumnDef<Article>[] = [
-  {
-    accessorKey: 'summary',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Summary (wrap)" />
-    ),
-    meta: { overflow: 'wrap' },
-    size: 280,
-  },
-  {
-    accessorKey: 'path',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="File path (hidden)" />
-    ),
-    meta: { overflow: 'hidden' },
-    size: 200,
-    // Ellipsis + tooltip are the consumer's job: the `<td>` only clips.
-    cell: ({ row }) => (
-      <Tooltip>
-        <TooltipTrigger
-          render={<span className="block truncate" tabIndex={0} />}
-        >
-          {row.original.path}
-        </TooltipTrigger>
-        <TooltipContent>{row.original.path}</TooltipContent>
-      </Tooltip>
-    ),
-  },
-  {
-    accessorKey: 'owner',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Owner (default)" />
-    ),
-  },
-];
-
-export const ColumnOverflow: Story = {
-  name: 'Column overflow modes',
-  render: () => (
-    <TooltipProvider>
-      <div className="max-w-3xl">
-        <DataTable columns={overflowColumns} data={articles} hideActionColumn />
-      </div>
-    </TooltipProvider>
-  ),
 };
 
 // New story (CI-43741): its light/dark VR baselines don't exist yet and must be
