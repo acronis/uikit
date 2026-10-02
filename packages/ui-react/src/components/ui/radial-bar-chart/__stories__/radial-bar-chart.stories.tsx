@@ -128,7 +128,6 @@ export const FullCircle: Story = {};
 
 // A long list stays inside the plot height and can be scrolled independently.
 export const ManyLegendRows: Story = {
-  tags: ['legend-scroll-regression'],
   args: {
     data: manyRowsData,
     config: manyRowsConfig,
@@ -141,7 +140,6 @@ export const ManyLegendRows: Story = {
 // a metric readout above the concentric arcs + legend. Rendered with a fixed
 // composition so it shows real consumer usage rather than the meta args playground.
 export const WidgetExample: Story = {
-  tags: ['legend-scroll-regression'],
   render: () => (
     <div className="w-[480px]">
       <ChartWidget

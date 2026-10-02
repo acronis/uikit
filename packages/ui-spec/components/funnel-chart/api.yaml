@@ -138,6 +138,13 @@ contract:
       default: "'xs'"
       description: >-
         Font size of the legend text (stage names and values).
+    - name: legendAriaLabel
+      type: string
+      required: false
+      default: "'Chart legend'"
+      description: >-
+        Accessible name for the chart's legend group. Give each chart a distinct
+        name when several legends appear on the same page.
     - name: legendValueFormatter
       type: '(value: string | number) => string'
       required: false

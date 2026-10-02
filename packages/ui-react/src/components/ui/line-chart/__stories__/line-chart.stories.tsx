@@ -229,7 +229,6 @@ export const WidgetExample: Story = {
 // legend scroll after three rows while the plot stays visible.
 export const ManyLegendEntriesWidget: Story = {
   name: 'Widget — many normal legend entries',
-  tags: ['legend-scroll-regression'],
   render: () => (
     <div className="h-[360px] w-[360px]">
       <ChartWidget

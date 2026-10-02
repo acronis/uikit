@@ -85,6 +85,10 @@ always rendered below the chart; `legendFontSize` sizes its text (`'xs'` by
 default) — a larger size grows the band the plot is centred above, so pair it
 with a taller chart height if needed.
 
+The normal legend scrolls after three complete wrapped rows. It adds a keyboard
+tab stop only while it overflows; set `legendAriaLabel` to localize or distinguish
+its accessible name (default `'Chart legend'`).
+
 ## The value scale
 
 A radar has no scale of its own by default: recharts stretches the web so the

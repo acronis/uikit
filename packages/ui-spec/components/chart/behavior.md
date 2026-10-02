@@ -52,6 +52,18 @@ Scenario: Legend font size
 ```
 
 ```gherkin
+Scenario: Scroll a long legend
+  Given a legend whose entries exceed its visible height cap
+  Then the default variant shows up to three complete wrapped rows
+  And the 'list' variant shows up to eight complete rows
+  And extra entries remain available through vertical scrolling
+  And the legend wrapper is a named group with the accessible name 'Chart legend' by default
+  And the wrapper enters the tab order only while its content overflows
+  When ariaLabel is set on ChartLegendContent
+  Then that value names the legend group
+```
+
+```gherkin
 Scenario: Default palette
   Given a ChartContainer with no explicit palette prop
   Then the categorical palette is used

@@ -136,6 +136,10 @@ narrow to name themselves. The legend is laid out as a row of the chart rather t
 over the tiles, and wraps onto further rows when the entries outgrow the width.
 `legendFontSize` sizes its text (`'xs'` by default):
 
+The normal legend scrolls after three complete wrapped rows. It adds a keyboard
+tab stop only while it overflows; set `legendAriaLabel` to localize or distinguish
+its accessible name (default `'Chart legend'`).
+
 ```tsx
 <Treemap
   config={config}

@@ -209,6 +209,10 @@ on-surface text token (`--ui-text-on-surface-primary`); the value is semibold.
 `legendFontSize` sizes both (`'xs'` by default), and `legendValueFormatter`
 formats the value:
 
+The list legend scrolls after eight complete rows. It adds a keyboard tab stop
+only while it overflows; set `legendAriaLabel` to localize or distinguish its
+accessible name (default `'Chart legend'`).
+
 ```tsx
 <FunnelChart
   config={config}

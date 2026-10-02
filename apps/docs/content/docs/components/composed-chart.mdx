@@ -86,6 +86,10 @@ Tune the shared knobs with `curve` (line/area interpolation), `barRadius`,
 text (`'xs'` by default), and `tooltipCursor={false}`
 drops the hover band behind the tooltip.
 
+The normal legend scrolls after three complete wrapped rows. It adds a keyboard
+tab stop only while it overflows; set `legendAriaLabel` to localize or distinguish
+its accessible name (default `'Chart legend'`).
+
 Add axis titles and a value-axis unit suffix with `xAxisLabel` / `yAxisLabel` /
 `yUnit` (the x-axis is categorical in the default orientation — see
 [Orientation](#orientation) for the horizontal case, where `xUnit` takes over).

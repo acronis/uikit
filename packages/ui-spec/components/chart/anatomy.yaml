@@ -46,7 +46,8 @@ parts:
       square swatch. Passed to recharts' Legend via its `content` prop
       (ChartLegend). Both the `default` and `list` variants emit
       `data-slot="chart-legend"` on their root `<div>`, which is a stable
-      selector for tests and host-side styling.
+      selector for tests and host-side styling. The root is a named `group`; it
+      enters the tab order only when its capped content overflows.
 
 states:
   - id: tooltip-active

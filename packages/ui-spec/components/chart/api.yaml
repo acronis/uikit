@@ -54,6 +54,13 @@ contract:
       description: >-
         Font size of the legend text — labels, and the right-hand values of the
         list variant.
+    - name: ariaLabel
+      type: string
+      required: false
+      default: "'Chart legend'"
+      description: >-
+        Accessible name for the legend group. The group is keyboard-focusable
+        only while its content overflows its height cap.
     - name: nameKey
       type: string
       required: false

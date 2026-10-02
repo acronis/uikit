@@ -277,7 +277,7 @@ const listLegendMaxHeightClass: Record<ChartLegendFontSize, string> = {
 
 export type ChartLegendContentProps = {
   className?: string;
-  /** Accessible name for the keyboard-scrollable legend region. */
+  /** Accessible name for the legend group. */
   ariaLabel?: string;
   hideIcon?: boolean;
   verticalAlign?: LegendProps['verticalAlign'];
@@ -796,6 +796,43 @@ function ChartLegendContent({
   // without a config, and failing loudly beats rendering an empty row.
   const contextConfig = React.useContext(ChartContext)?.config;
   const config = configFromProps ?? contextConfig;
+  const legendRef = React.useRef<HTMLDivElement>(null);
+  const [isScrollable, setIsScrollable] = React.useState(false);
+
+  React.useEffect(() => {
+    const element = legendRef.current;
+    if (!element) return;
+
+    const measureOverflow = () => {
+      const next = element.scrollHeight > element.clientHeight;
+      setIsScrollable((current) => (current === next ? current : next));
+    };
+
+    measureOverflow();
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? undefined
+        : new ResizeObserver(measureOverflow);
+    resizeObserver?.observe(element);
+
+    const mutationObserver =
+      typeof MutationObserver === 'undefined'
+        ? undefined
+        : new MutationObserver(measureOverflow);
+    mutationObserver?.observe(element, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+
+    window.addEventListener('resize', measureOverflow);
+    return () => {
+      resizeObserver?.disconnect();
+      mutationObserver?.disconnect();
+      window.removeEventListener('resize', measureOverflow);
+    };
+  }, [className, fontSize, payload?.length, variant]);
 
   if (!config) {
     throw new Error(
@@ -811,9 +848,10 @@ function ChartLegendContent({
     return (
       <div
         data-slot="chart-legend"
-        role="region"
+        ref={legendRef}
+        role="group"
         aria-label={ariaLabel}
-        tabIndex={0}
+        tabIndex={isScrollable ? 0 : undefined}
         className={cn(
           'flex flex-col overflow-y-auto focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
           listLegendMaxHeightClass[fontSize],
@@ -841,9 +879,10 @@ function ChartLegendContent({
   return (
     <div
       data-slot="chart-legend"
-      role="region"
+      ref={legendRef}
+      role="group"
       aria-label={ariaLabel}
-      tabIndex={0}
+      tabIndex={isScrollable ? 0 : undefined}
       className={cn(
         // Wraps rather than overflowing: a legend with many entries (a treemap's
         // one-per-tile, a pie's one-per-slice) is wider than the chart on a narrow

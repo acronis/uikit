@@ -307,7 +307,13 @@ the indicator used in tooltip rows. Tooltip rows also use the same dot.
 `hideLabel`, `hideIndicator`, `hideIcon`, `nameKey`, and `labelKey` on top of
 recharts' content props; the legend additionally takes `fontSize`
 (`'xs' | 'sm' | 'base' | 'lg' | 'xl'`, default `'xs'`), which sizes its labels
-and the `list` variant's values. The per-type chart components expose the same
-option as `legendFontSize`.
+and the `list` variant's values, and `ariaLabel` (default `'Chart legend'`) to
+name its group. The per-type chart components expose these as `legendFontSize`
+and `legendAriaLabel`.
+
+The normal legend scrolls after three complete wrapped rows; the `list` variant
+scrolls after eight complete rows. The legend becomes a keyboard tab stop only
+while it actually overflows. Use a distinct `legendAriaLabel` for each chart when
+several legends need different names.
 `ChartTooltip` and `ChartLegend` are direct re-exports of recharts' `Tooltip` and
 `Legend`.
