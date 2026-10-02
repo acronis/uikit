@@ -95,8 +95,16 @@ Scenario: Hover feedback
 Scenario: A wrapping cell grows the row
   Given a TableCell (or TableHead) with wrap = true holding multi-line content
   When it renders
-  Then it uses whitespace-normal and drops the fixed row height
+  Then it uses whitespace-normal and the content wraps onto multiple lines
   And the row grows to fit the content
+```
+
+```gherkin
+Scenario: A default cell keeps the single-line row height
+  Given a TableCell (or TableHead) without wrap
+  When it renders
+  Then no height class is applied
+  And the row height comes from the cell's vertical padding plus line-height (40px at default tokens)
 ```
 
 ## Pagination (TablePagination)

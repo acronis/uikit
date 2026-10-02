@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import {
@@ -8,6 +9,7 @@ import {
 
 import { useSortState } from '@/hooks';
 
+import { Button } from '../../button';
 import { ButtonIcon } from '../../button-icon';
 import { Checkbox } from '../../checkbox';
 import {
@@ -409,6 +411,43 @@ export const TableDataCellStates: Story = {
         </TableRow>
       </TableBody>
     </Table>
+  ),
+};
+
+/**
+ * Header cells take their height from padding + line-height, not a fixed
+ * `height` (which Gecko/WebKit inflate by the row border in border-collapse
+ * tables). With `--ui-table-global-cell-padding-y` tightened to 4px, a 32px
+ * button keeps the row at 40px and a 48px block grows it to 56px — no clipping.
+ */
+export const TallHeaderContent: Story = {
+  render: () => (
+    <div
+      style={
+        { '--ui-table-global-cell-padding-y': '4px' } as CSSProperties
+      }
+    >
+      <Table className="w-120">
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Button variant="secondary">Button</Button>
+            </TableHead>
+            <TableHead>
+              <div className="flex h-12 items-center rounded-sm border border-border px-2">
+                Tall content
+              </div>
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell>value</TableCell>
+            <TableCell>value</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
   ),
 };
 

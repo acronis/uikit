@@ -424,11 +424,18 @@ path anyway.
 
 `ColumnDef.meta` is augmented by ui-react with two flags. `pin` drives TanStack's
 native column pinning and renders the column as `position: sticky` cells (with an
-opaque row background so scrolled cells don't show through); `wrap` lets a
-column's header and cells drop the fixed row height and wrap onto multiple
-lines, mirroring the `Table` primitives' `wrap` prop. DataTable does not force
-truncation on auto-layout cells; add a constrained cell renderer or an explicit
-`truncate` class when ellipsis is required.
+opaque row background so scrolled cells don't show through); `wrap` switches a
+column's header and cells to `whitespace-normal` so they wrap onto multiple
+lines and the row grows to fit (otherwise row height comes from the cell's
+padding + line-height, 40px at default tokens), mirroring the `Table`
+primitives' `wrap` prop. DataTable does not force truncation on auto-layout
+cells; add a constrained cell renderer or an explicit `truncate` class when ellipsis is required.
+
+`--ui-table-global-cell-min-height` (40px) stays in the token tier as a
+reference value but no longer sets cell height. To change row density, override
+`--ui-table-global-cell-padding-y` instead: row height is
+`2 × padding-y + 1.5rem`, so compact (32px) is `4px`, default (40px) is `8px`,
+and relaxed (52px) is `14px`.
 
 ```tsx
 const columns: ColumnDef<Device>[] = [

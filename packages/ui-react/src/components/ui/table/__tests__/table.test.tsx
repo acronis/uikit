@@ -130,7 +130,9 @@ describe('Table', () => {
     );
   });
 
-  it('keeps the fixed row height without constraining default cell content', () => {
+  it('sizes the row from padding + line-height, not a fixed cell height', () => {
+    // A `height` on border-collapse cells is inflated by the row border in
+    // Gecko/WebKit, so the 40px row must come from py + leading-6 alone.
     render(
       <Table>
         <TableBody>
@@ -141,8 +143,38 @@ describe('Table', () => {
       </Table>
     );
     const cell = screen.getByTestId('cell');
-    expect(cell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(cell).toHaveClass(
+      'py-[var(--ui-table-global-cell-padding-y)]',
+      'leading-6'
+    );
+    expect(cell).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(cell).not.toHaveClass(
+      'min-h-[var(--ui-table-global-cell-min-height)]'
+    );
     expect(cell).not.toHaveClass('truncate');
+  });
+
+  it('sizes a header from padding + line-height, not a fixed cell height', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+    const header = screen.getByRole('columnheader', { name: 'Name' });
+    expect(header).toHaveClass(
+      'py-[var(--ui-table-global-cell-padding-y)]',
+      'leading-6'
+    );
+    expect(header).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
+    );
+    expect(header).not.toHaveClass(
+      'min-h-[var(--ui-table-global-cell-min-height)]'
+    );
   });
 
   it('transitions its background so hover fades in sync with the row', () => {
@@ -162,7 +194,7 @@ describe('Table', () => {
     expect(screen.getByTestId('cell')).toHaveClass('transition-colors');
   });
 
-  it('drops the fixed height and wraps when a cell sets wrap', () => {
+  it('wraps when a cell sets wrap', () => {
     render(
       <Table>
         <TableBody>
@@ -331,6 +363,31 @@ describe('Table structural cells', () => {
     expect(screen.getByTestId('select-cell').tagName).toBe('TD');
     expect(screen.getByLabelText('Select all')).toBeInTheDocument();
     expect(screen.getByLabelText('Select row')).toBeInTheDocument();
+  });
+
+  it('sets no fixed height on the structural cells so rows stay 40px cross-engine', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableSelectCell header data-testid="select-head" />
+            <TableSettingsCell data-testid="settings" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableSelectCell data-testid="select-cell" />
+            <TableActionsCell data-testid="actions" />
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    for (const id of ['select-head', 'settings', 'select-cell', 'actions']) {
+      expect(screen.getByTestId(id)).not.toHaveClass(
+        'h-[var(--ui-table-global-cell-min-height)]'
+      );
+    }
   });
 
   it('pads the selection cell only at the inline start so it stays RTL-safe', () => {

@@ -72,9 +72,6 @@ tokens:
       Hover background mirrored onto a pinned (sticky) cell via the row's
       `group`, since the row's own `hover:` can't reach a cell that needs its
       own opaque background.
-  - name: --ui-table-global-cell-min-height
-    affects: row
-    description: Single-line row height — dropped by a column with meta.wrap set.
   - name: --ui-table-header-gap
     affects: column-header
     description: Gap between the header title and its sort-direction arrow.

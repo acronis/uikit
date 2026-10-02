@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 // 4536-699 / TableSettings 3698-497 / TableActions 4536-414 / TableCheckbox
 // 3698-746). A `--ui-table-*` token tier already exists, so these parts theme
 // directly from it (imported in styles/index.css):
-//   • cell     -> --ui-table-global-cell-{padding-x,padding-y,min-height}
+//   • cell     -> --ui-table-global-cell-{padding-x,padding-y}
 //   • row      -> --ui-table-global-row-{border-color,border-width,border-style},
 //                 --ui-table-data-row-color-{idle,hover,active}  (active = selected)
 //   • head     -> --ui-table-header-{label-color,gap}, --ui-table-header-cell-color-{idle,hover,active}
@@ -115,8 +115,8 @@ export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElem
   /** Invoked when the user activates a sortable header (click / Enter / Space). */
   onSort?: () => void;
   /**
-   * Allow the header to wrap onto multiple lines (`whitespace-normal`) and drop
-   * the fixed row height so the cell grows to fit its content.
+   * Allow the header to wrap onto multiple lines (`whitespace-normal`) so the
+   * cell grows to fit its content.
    */
   wrap?: boolean;
 }
@@ -179,9 +179,10 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
       }
       className={cn(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] data-[resizing]:bg-[var(--ui-table-header-cell-color-active)] [&:has([role=checkbox])]:pe-0',
-        wrap
-          ? 'whitespace-normal'
-          : 'h-[var(--ui-table-global-cell-min-height)]',
+        // No `h-*` here: in border-collapse tables Gecko/WebKit add the row
+        // border on top of a cell's `height` (~49px vs 40px in Blink).
+        // py + leading-6 already yields the 40px row cross-engine.
+        wrap && 'whitespace-normal',
         // Per the design, a sortable header tints the whole cell on hover/press
         // and draws the focus ring on the cell, not on the inner control.
         sortable &&
@@ -209,8 +210,8 @@ TableHead.displayName = 'TableHead';
 
 export interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /**
-   * Allow the cell to wrap onto multiple lines (`whitespace-normal`) and drop
-   * the fixed row height so the row grows to fit its content.
+   * Allow the cell to wrap onto multiple lines (`whitespace-normal`) so the row
+   * grows to fit its content.
    */
   wrap?: boolean;
 }
@@ -221,9 +222,8 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
       ref={ref}
       className={cn(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
-        wrap
-          ? 'whitespace-normal'
-          : 'h-[var(--ui-table-global-cell-min-height)]',
+        // See TableHead: height comes from py + leading-6, not `h-*`.
+        wrap && 'whitespace-normal',
         className
       )}
       {...props}
@@ -255,7 +255,8 @@ const TableSelectCell = React.forwardRef<
     <Comp
       ref={ref}
       className={cn(
-        'w-8 h-[var(--ui-table-global-cell-min-height)] ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle transition-colors',
+        'w-8 ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle transition-colors',
+        // See TableHead: no `h-*` (Gecko/WebKit inflate it by the row border).
         header
           ? 'bg-[var(--ui-table-header-cell-color-idle)]'
           : 'bg-[var(--ui-table-data-cell-color-idle)]',
@@ -291,7 +292,8 @@ const TableActionsCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'w-12 h-[var(--ui-table-global-cell-min-height)] px-[var(--ui-table-global-cell-padding-x)] text-end align-middle bg-[var(--ui-table-data-cell-color-idle)]',
+      'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle bg-[var(--ui-table-data-cell-color-idle)]',
+      // See TableHead: no `h-*`; the row height comes from its data cells.
       !bulkSelectionActive &&
         'rounded-sm transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
       className
@@ -317,7 +319,8 @@ const TableSettingsCell = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      'w-12 h-[var(--ui-table-global-cell-min-height)] px-[var(--ui-table-global-cell-padding-x)] text-end align-middle rounded-sm transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+      // See TableHead: no `h-*`; the row height comes from its header cells.
+      'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle rounded-sm transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
       className
     )}
     {...props}

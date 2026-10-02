@@ -25,7 +25,7 @@ schematic: |
                       the whole cell tints on hover/press and owns the focus ring
      row     -> idle/hover/active (selected) via --ui-table-data-row-color-*;
                 divider via --ui-table-global-row-border-{color,width,style}
-     cell    -> --ui-table-global-cell-{padding-x,padding-y,min-height},
+     cell    -> --ui-table-global-cell-{padding-x,padding-y},
                 idle/hover/active via --ui-table-data-cell-color-*; wrap grows height
      select-cell   -> 32px leading column (padding-start only), holds a Checkbox
      actions-cell  -> 48px trailing column, end-aligned overflow trigger
@@ -59,14 +59,16 @@ parts:
   - id: head
     description: >-
       A column header cell (`<th>`). When `sortable`, it renders a focusable sort
-      button with a sort icon and sets `aria-sort`. `wrap` lets the label wrap onto
-      multiple lines and drops the fixed row height (otherwise `h-10`).
+      button with a sort icon and sets `aria-sort`. No height class is applied:
+      the row height comes from `py` + `leading-6` (40px at default tokens).
+      `wrap` switches it to `whitespace-normal` so the label can wrap onto
+      multiple lines and the row grows to fit.
     element: th
   - id: cell
     description: >-
-      A data cell (`<td>`) — padding/border from the cell tokens. Uses the fixed
-      row height (`h-10`) by default without forcing overflow-hidden or nowrap;
-      `wrap` switches it to `whitespace-normal` and lets the row grow to fit
+      A data cell (`<td>`) — padding/border from the cell tokens. No height class
+      is applied: the row height comes from `py` + `leading-6` (40px at default
+      tokens), without forcing overflow-hidden or nowrap; `wrap` switches it to `whitespace-normal` and lets the row grow to fit
       multi-line content.
     element: td
   - id: select-cell
