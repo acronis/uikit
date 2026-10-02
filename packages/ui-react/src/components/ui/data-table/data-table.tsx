@@ -44,6 +44,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../dropdown-menu';
+import { Skeleton } from '../skeleton';
 import {
   Table,
   TableActionsCell,
@@ -865,7 +866,13 @@ export function DataTable<TData, TValue = unknown>({
         <TooltipProvider>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
-              <TableRow key={headerGroup.id} className="hover:bg-transparent">
+              <TableRow
+                key={headerGroup.id}
+                className={cn(
+                  'hover:bg-transparent',
+                  groupIndex < headerGroups.length - 1 && 'border-b-0'
+                )}
+              >
                 {headerGroup.headers.map((header) => {
                   const isPinned = header.column.getIsPinned();
                   // Non-leaf header cells (group-label spans and TanStack's
@@ -1055,7 +1062,7 @@ export function DataTable<TData, TValue = unknown>({
               >
                 {table.getVisibleLeafColumns().map((column) => (
                   <TableCell key={column.id}>
-                    <div className="h-4 w-full animate-pulse rounded bg-[var(--ui-background-surface-secondary)]" />
+                    <Skeleton className="h-4 w-full" />
                   </TableCell>
                 ))}
               </TableRow>
@@ -1232,13 +1239,13 @@ export function DataTable<TData, TValue = unknown>({
             isLoadingMore && (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={table.getVisibleLeafColumns().length}>
-                  <div
+                  <Skeleton
+                    className="h-4 w-full"
                     role="status"
                     aria-live="polite"
-                    className="h-4 w-full animate-pulse rounded bg-[var(--ui-background-surface-secondary)]"
                   >
                     <span className="sr-only">Loading more rows…</span>
-                  </div>
+                  </Skeleton>
                 </TableCell>
               </TableRow>
             )}

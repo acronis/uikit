@@ -137,6 +137,18 @@ export const Default: Story = {
   ),
 };
 
+export const LoadingSkeleton: Story = {
+  render: () => (
+    <DataTable
+      columns={columns}
+      data={payments}
+      skeleton
+      skeletonRows={5}
+      hideActionColumn
+    />
+  ),
+};
+
 /* ------------------------------- Header capability hints + sticky actions */
 
 type Workload = {
