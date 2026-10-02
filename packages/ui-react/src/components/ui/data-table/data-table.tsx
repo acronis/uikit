@@ -1022,6 +1022,19 @@ export function DataTable<TData, TValue = unknown>({
                             event.currentTarget.setPointerCapture(
                               event.pointerId
                             );
+                            event.currentTarget
+                              .closest('th')
+                              ?.setAttribute('data-resizing', '');
+                          }}
+                          onPointerUp={(event) => {
+                            event.currentTarget
+                              .closest('th')
+                              ?.removeAttribute('data-resizing');
+                          }}
+                          onPointerCancel={(event) => {
+                            event.currentTarget
+                              .closest('th')
+                              ?.removeAttribute('data-resizing');
                           }}
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}

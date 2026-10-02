@@ -178,7 +178,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] data-[resizing]:bg-[var(--ui-table-header-cell-color-active)] [&:has([role=checkbox])]:pe-0',
         wrap
           ? 'whitespace-normal'
           : 'h-[var(--ui-table-global-cell-min-height)]',

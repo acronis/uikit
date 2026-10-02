@@ -1295,6 +1295,50 @@ describe('DataTable resize-handle focus treatment', () => {
   });
 });
 
+describe('DataTable resize active header state', () => {
+  it('sets data-resizing on the parent <th> while the pointer is captured', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        enableColumnResizing
+      />
+    );
+
+    const handle = screen.getAllByRole('separator', {
+      name: 'Resize column',
+    })[0];
+    const th = handle.closest('th')!;
+
+    fireEvent.pointerDown(handle, { pointerId: 1 });
+    expect(th).toHaveAttribute('data-resizing');
+
+    fireEvent.pointerUp(handle, { pointerId: 1 });
+    expect(th).not.toHaveAttribute('data-resizing');
+  });
+
+  it('removes data-resizing on pointercancel', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        enableColumnResizing
+      />
+    );
+
+    const handle = screen.getAllByRole('separator', {
+      name: 'Resize column',
+    })[0];
+    const th = handle.closest('th')!;
+
+    fireEvent.pointerDown(handle, { pointerId: 1 });
+    expect(th).toHaveAttribute('data-resizing');
+
+    fireEvent.pointerCancel(handle, { pointerId: 1 });
+    expect(th).not.toHaveAttribute('data-resizing');
+  });
+});
+
 describe('DataTableExpandTrigger', () => {
   it('lets its accessible labels be localized', async () => {
     const expandable: ColumnDef<Row>[] = [

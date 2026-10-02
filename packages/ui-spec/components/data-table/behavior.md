@@ -169,6 +169,7 @@ Scenario: Resize a column
   When the user drags the handle at a header's trailing edge
   Then that column's width changes live (columnResizeMode: "onChange")
   And onColumnSizingChange fires so a consumer can persist the widths
+  And the column header shows its active background until pointer release
 ```
 
 ```gherkin
