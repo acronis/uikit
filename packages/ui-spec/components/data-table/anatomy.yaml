@@ -293,6 +293,11 @@ states:
     kind: prop
     prop: renderEmptyState
     affects: [empty-state]
+  - id: custom-skeleton-cell
+    trigger: skeleton is set and renderSkeletonCell is provided
+    kind: prop
+    prop: renderSkeletonCell
+    affects: [row]
 
 internal_state:
   - id: row-selection

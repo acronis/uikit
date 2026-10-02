@@ -14,6 +14,7 @@ import {
   ChevronRightIcon,
 } from '@acronis-platform/icons-react/stroke-mono';
 
+import { cn } from '@/lib/utils';
 import { Button } from '../../button';
 import { ButtonIcon } from '../../button-icon';
 import { Checkbox } from '../../checkbox';
@@ -152,6 +153,35 @@ export const LoadingSkeleton: Story = {
       skeleton
       skeletonRows={5}
       hideActionColumn
+    />
+  ),
+};
+
+// New story: its light/dark VR baselines don't exist yet and will be generated
+// in Docker at the end of the DataTable plan — no existing story's baseline
+// changes, since unset `renderSkeletonCell` keeps the default Skeleton bars.
+export const CustomSkeletonCells: Story = {
+  name: 'Custom skeleton cells',
+  render: () => (
+    <DataTable
+      columns={columns}
+      data={payments}
+      skeleton
+      skeletonRows={5}
+      renderSkeletonCell={({ column }) => {
+        if (column.id === '__actions') return null;
+        return (
+          <div
+            aria-hidden="true"
+            className={cn(
+              'rounded-[4px] bg-[var(--ui-background-surface-active)]',
+              column.id === 'select'
+                ? 'my-1 size-4'
+                : cn('my-0.5 h-5', column.id === 'status' ? 'w-16' : 'w-full')
+            )}
+          />
+        );
+      }}
     />
   ),
 };

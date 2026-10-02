@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Profiler, type ReactElement, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   type ColumnDef,
@@ -1577,6 +1577,192 @@ describe('DataTable presentational features', () => {
       .forEach((el) => expect(el).toHaveClass('my-1', 'h-4'));
   });
 
+  describe('renderSkeletonCell', () => {
+    const selectColumns: ColumnDef<Row>[] = [
+      {
+        id: 'select',
+        header: () => <Checkbox aria-label="Select all" />,
+        cell: () => <Checkbox aria-label="Select row" />,
+        enableSorting: false,
+        enableHiding: false,
+      },
+      ...columns,
+    ];
+
+    const collectCalls = (spy: ReturnType<typeof vi.fn>) =>
+      spy.mock.calls.map(([ctx]) => {
+        const { column, rowIndex } = ctx as {
+          column: { id: string };
+          rowIndex: number;
+        };
+        return `${column.id}:${rowIndex}`;
+      });
+
+    // DataTable commits more than once on mount (the `meta.pin` sync effect
+    // calls `column.pin()`, which updates state). A Profiler counts those
+    // commits independently of the spy, so the spy's total can be pinned
+    // exactly: one call per (row, column) pair per commit, in row-major order.
+    const renderCountingCommits = (ui: ReactElement) => {
+      let commits = 0;
+      render(
+        <Profiler id="data-table" onRender={() => (commits += 1)}>
+          {ui}
+        </Profiler>
+      );
+      return () => commits;
+    };
+
+    const expectOneCallPerCellPerCommit = (
+      spy: ReturnType<typeof vi.fn>,
+      expected: string[],
+      commits: number
+    ) => {
+      const calls = collectCalls(spy);
+      expect(commits).toBeGreaterThan(0);
+      expect(calls).toHaveLength(expected.length * commits);
+      for (let i = 0; i < commits; i++) {
+        expect(
+          calls.slice(i * expected.length, (i + 1) * expected.length)
+        ).toEqual(expected);
+      }
+    };
+
+    it('replaces the default Skeleton with the custom content in every skeleton cell', () => {
+      const { container } = render(
+        <DataTable
+          columns={columns}
+          data={data}
+          skeleton
+          skeletonRows={3}
+          hideActionColumn
+          renderSkeletonCell={() => (
+            <div data-testid="custom-skel" aria-hidden="true" />
+          )}
+        />
+      );
+      const cells = container.querySelectorAll('tbody td');
+      expect(cells).toHaveLength(6);
+      cells.forEach((td) =>
+        expect(
+          td.querySelector('[data-testid="custom-skel"]')
+        ).toBeInTheDocument()
+      );
+      expect(screen.getAllByTestId('custom-skel')).toHaveLength(6);
+      expect(
+        container.querySelectorAll('tbody [data-slot="skeleton"]')
+      ).toHaveLength(0);
+      expect(container.querySelectorAll('.animate-pulse')).toHaveLength(0);
+    });
+
+    it('is called once per visible leaf column per skeleton row, with a 0-based rowIndex', () => {
+      const spy = vi.fn(() => null);
+      const getCommits = renderCountingCommits(
+        <DataTable
+          columns={selectColumns}
+          data={data}
+          skeleton
+          skeletonRows={2}
+          renderSkeletonCell={spy}
+        />
+      );
+      const ids = ['select', 'email', 'amount', '__actions'];
+      const expected = [0, 1].flatMap((r) => ids.map((id) => `${id}:${r}`));
+      expectOneCallPerCellPerCommit(spy, expected, getCommits());
+    });
+
+    it('skips the __actions column when hideActionColumn is set', () => {
+      const spy = vi.fn(() => null);
+      const getCommits = renderCountingCommits(
+        <DataTable
+          columns={columns}
+          data={data}
+          skeleton
+          skeletonRows={2}
+          hideActionColumn
+          renderSkeletonCell={spy}
+        />
+      );
+      expectOneCallPerCellPerCommit(
+        spy,
+        ['email:0', 'amount:0', 'email:1', 'amount:1'],
+        getCommits()
+      );
+    });
+
+    it('is never called for a hidden column', () => {
+      const spy = vi.fn(() => null);
+      const getCommits = renderCountingCommits(
+        <DataTable
+          columns={columns}
+          data={data}
+          skeleton
+          skeletonRows={2}
+          hideActionColumn
+          columnVisibility={{ amount: false }}
+          renderSkeletonCell={spy}
+        />
+      );
+      expectOneCallPerCellPerCommit(spy, ['email:0', 'email:1'], getCommits());
+      expect(collectCalls(spy).some((c) => c.startsWith('amount:'))).toBe(
+        false
+      );
+    });
+
+    it('is not called when skeleton is not set, and data renders', () => {
+      const spy = vi.fn(() => null);
+      render(
+        <DataTable
+          columns={columns}
+          data={data.slice(0, 2)}
+          renderSkeletonCell={spy}
+        />
+      );
+      expect(spy).not.toHaveBeenCalled();
+      expect(screen.getByText('user1@example.com')).toBeInTheDocument();
+    });
+
+    it('leaves the cell empty when it returns null (no Skeleton fallback)', () => {
+      const { container } = render(
+        <DataTable
+          columns={columns}
+          data={data}
+          skeleton
+          skeletonRows={1}
+          hideActionColumn
+          renderSkeletonCell={() => null}
+        />
+      );
+      const cells = container.querySelectorAll('tbody td');
+      expect(cells).toHaveLength(2);
+      cells.forEach((td) => expect(td).toBeEmptyDOMElement());
+      expect(
+        container.querySelectorAll('tbody [data-slot="skeleton"]')
+      ).toHaveLength(0);
+    });
+
+    it("keeps the column's meta.overflow mode on its skeleton cell", () => {
+      const overflowColumns: ColumnDef<Row>[] = [
+        { accessorKey: 'email', header: 'Email', meta: { overflow: 'hidden' } },
+        { accessorKey: 'amount', header: 'Amount' },
+      ];
+      const { container } = render(
+        <DataTable
+          columns={overflowColumns}
+          data={data}
+          skeleton
+          skeletonRows={1}
+          hideActionColumn
+          renderSkeletonCell={() => <div aria-hidden="true" />}
+        />
+      );
+      const [emailCell, amountCell] = Array.from(
+        container.querySelectorAll('tbody td')
+      );
+      expect(emailCell).toHaveClass('max-w-0', 'overflow-hidden');
+      expect(amountCell).not.toHaveClass('max-w-0');
+    });
+  });
+
   it('drops the bottom border on every header row but the last when headers are grouped', () => {
     const grouped: ColumnDef<Row>[] = [
       {
@@ -1708,6 +1894,35 @@ describe('DataTable keyboard-focusable rows', () => {
     rowsEls.forEach((row) => {
       expect(row).not.toHaveAttribute('tabIndex');
     });
+  });
+
+  it('does not make custom skeleton rows focusable or announce their content', () => {
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data}
+        skeleton
+        skeletonRows={3}
+        renderSkeletonCell={() => (
+          <span aria-hidden="true">
+            <span role="img">Loading placeholder</span>
+          </span>
+        )}
+      />
+    );
+    const rowsEls = screen.getAllByRole('row').slice(1);
+    expect(rowsEls).toHaveLength(3);
+    rowsEls.forEach((row) => {
+      expect(row).not.toHaveAttribute('tabIndex');
+    });
+    const tbody = container.querySelector('tbody')!;
+    expect(tbody.querySelectorAll('[role="status"], [aria-live]')).toHaveLength(
+      0
+    );
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(
+      within(tbody).queryByRole('img', { name: 'Loading placeholder' })
+    ).not.toBeInTheDocument();
   });
 
   it('does not make the empty-state row focusable', () => {

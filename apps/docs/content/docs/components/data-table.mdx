@@ -144,7 +144,11 @@ now lands on that index, instead of following the row it actually belonged to.
 Pass `getRowId` whenever rows carry their own stable identifier:
 
 ```tsx
-<DataTable columns={columns} data={payments} getRowId={(payment) => payment.id} />
+<DataTable
+  columns={columns}
+  data={payments}
+  getRowId={(payment) => payment.id}
+/>
 ```
 
 A no-op when an external `table` is passed — set `getRowId` directly on that
@@ -165,6 +169,73 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 nothing. To run your own code when a row is clicked or activated, use
 `onRowClick` / `onRowActivate` (below). They work with or without
 `highlightCurrentRow`.
+
+### Skeleton rows
+
+While `skeleton` is set, `DataTable` renders `skeletonRows` placeholder rows
+(default 5) in place of `data`. By default each cell holds a pulsing
+`<Skeleton className="my-1 h-4 w-full" />` bar.
+
+`renderSkeletonCell` replaces that bar. It is called with `{ column, rowIndex }`
+once per visible leaf column (columns hidden via `columnVisibility` are skipped)
+in each skeleton row. `rowIndex` is 0-based. Without `skeleton` it is never called.
+Only the cell _content_ is yours: `DataTable` still renders the row (no hover
+tint, not focusable) and the `TableCell` (padding, borders, and the column's
+`meta.overflow` mode).
+
+- **Branch on `column.id`.** The callback also runs for the trailing
+  `__actions` column whenever DataTable renders it (not with `hideActionColumn`
+  or an external `table`) and for a `select`
+  column if you declared one. DataTable doesn't inject `select`. It only gives
+  it a special width.
+- **`null` / `undefined` leaves the cell empty.** There is no fallback. To keep
+  the default bar for some columns, return the exported `Skeleton` with the
+  same classes.
+- **Keep the content about 24px tall** so the row stays 40px. Cells have no
+  fixed height, which is why the default bar is `h-4` with `my-1` around it.
+- **Decorative only.** Don't render text or interactive elements. Put
+  `aria-hidden` on anything a screen reader could read.
+- **Announcing the load is your job.** The kit adds no live region.
+
+Pinned (`meta.pin`) and width styles are not applied to skeleton cells. The
+infinite-scroll loading-more row (`isLoadingMore`) is a separate row and
+`renderSkeletonCell` doesn't change it.
+
+The prop also works for an **empty view**: static, non-pulsing placeholder rows
+under an empty-state overlay. Render them with `skeleton` and plain `<div>` bars
+(not `Skeleton`, which pulses), and position an
+[`EmptyOverlay`](/components/empty-overlay) over the table:
+
+```tsx
+<div className="relative">
+  <DataTable
+    columns={columns}
+    data={[]}
+    skeleton
+    renderSkeletonCell={({ column }) => {
+      if (column.id === '__actions') return null;
+      return (
+        <div
+          aria-hidden="true"
+          className={cn(
+            'rounded-[4px] bg-[var(--ui-background-surface-active)]',
+            column.id === 'select' ? 'my-1 size-4' : 'my-0.5 h-5 w-full'
+          )}
+        />
+      );
+    }}
+  />
+  <EmptyOverlay
+    className="absolute inset-0"
+    title={t('noThreats')}
+    description={t('noThreatsDescription')}
+  />
+</div>
+```
+
+Both shapes come to the 24px guideline: the bars are `my-0.5 h-5`
+(2px + 20px + 2px), and the `select` placeholder is a 16px square,
+`my-1 size-4` (4px + 16px + 4px).
 
 ### Clickable rows
 
@@ -391,26 +462,30 @@ render as empty `<th>` elements — they carry no visible content.
 const columns: ColumnDef<Workload>[] = [
   {
     id: 'workload',
-    header: 'Workload',         // group label — spans the two leaf columns below
+    header: 'Workload', // group label — spans the two leaf columns below
     columns: [
       {
         accessorKey: 'name',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Name" />
+        ),
         size: 180,
       },
       {
         accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
         size: 130,
       },
     ],
   },
   {
     id: 'system',
-    header: 'System',           // second group
+    header: 'System', // second group
     columns: [
-      { accessorKey: 'os',    header: 'OS',         size: 190 },
-      { accessorKey: 'ip',    header: 'IP address', size: 140 },
+      { accessorKey: 'os', header: 'OS', size: 190 },
+      { accessorKey: 'ip', header: 'IP address', size: 140 },
     ],
   },
 ];
@@ -499,7 +574,8 @@ yourself via `column.pin()`.
 ### Column overflow
 
 `meta.overflow` sets how a column treats content longer than its width. DataTable
-forwards it to the column's `TableHead` and every `TableCell` as their
+forwards it to the column's `TableHead` and every `TableCell`, skeleton
+placeholder cells included, as their
 [`overflow` prop](/components/table#column-overflow):
 
 | `meta.overflow` | Result                                                                                                          |
@@ -640,6 +716,10 @@ the whole row and receives `hasFilters`, so you can tell "no data at all" from
 />
 ```
 
+For an empty view that keeps the table's shape (placeholder rows under an
+overlay), use `skeleton` with `renderSkeletonCell` instead. See
+[Skeleton rows](#skeleton-rows).
+
 ### Infinite scroll
 
 `paginationMode="infinite"` drops the paginated row model — `data` is the full
@@ -760,6 +840,9 @@ The heavier behaviors stay out of `DataTable` (to keep it lean) — compose the
   in-cell link or button (see [Clickable rows](#clickable-rows)).
 - The infinite-scroll loading row announces itself politely, so a fetch in
   flight isn't conveyed by the animated placeholder alone.
+- Skeleton rows (`skeleton`) are not focusable and get no live region. Announce
+  the initial load yourself. Keep `renderSkeletonCell` content decorative: no
+  text or interactive elements, and `aria-hidden` on anything readable.
 
 ## API Reference
 

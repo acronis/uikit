@@ -393,6 +393,30 @@ interface DataTableOwnProps<TData> {
   /** Number of skeleton rows to render when `skeleton` is set. */
   skeletonRows?: number;
   /**
+   * Custom content for each skeleton placeholder cell. Called once per visible
+   * leaf column in each of the `skeletonRows` rows, only while `skeleton` is
+   * set; `rowIndex` is 0-based. Replaces only the cell content — DataTable
+   * keeps the `<TableRow>` (no hover tint, not focusable) and `<TableCell>`
+   * (padding, borders, the column's `meta.overflow` mode).
+   *
+   * Unset renders the default `<Skeleton className="my-1 h-4 w-full" />`.
+   * Returning `null`/`undefined` leaves the cell empty — there is no fallback,
+   * so return the exported `Skeleton` to keep the default for a column. Also
+   * called for the kit-injected `__actions` column (absent with
+   * `hideActionColumn` or an external `table`) and for a consumer `select`
+   * column — branch on `column.id`.
+   *
+   * Keep the content ~24px tall so the row stays 40px. Decorative only: no
+   * text or interactive elements, and `aria-hidden` on anything readable — the
+   * kit adds no live region. Also suits an empty view (static placeholder rows
+   * under an empty-state overlay). Does not affect the infinite-scroll
+   * loading-more row.
+   */
+  renderSkeletonCell?: (context: {
+    column: Column<TData, unknown>;
+    rowIndex: number;
+  }) => ReactNode;
+  /**
    * Opt in to interactive column resizing. Renders a drag handle at the trailing
    * edge of each resizable header cell (TanStack's native `columnResizing`).
    */
@@ -566,6 +590,7 @@ export function DataTable<TData, TValue = unknown>({
   onRowActivate,
   skeleton = false,
   skeletonRows = 5,
+  renderSkeletonCell,
   enableColumnResizing = false,
   onColumnSizingChange,
   enableColumnReordering = false,
@@ -1183,10 +1208,17 @@ export function DataTable<TData, TValue = unknown>({
                 className="hover:bg-transparent"
               >
                 {table.getVisibleLeafColumns().map((column) => (
-                  <TableCell key={column.id}>
-                    {/* my-1 fills the 24px line box so the row stays 40px —
-                        cells have no fixed height, a bare h-4 block gives 32px. */}
-                    <Skeleton className="my-1 h-4 w-full" />
+                  <TableCell
+                    key={column.id}
+                    overflow={column.columnDef.meta?.overflow}
+                  >
+                    {renderSkeletonCell ? (
+                      renderSkeletonCell({ column, rowIndex })
+                    ) : (
+                      /* my-1 fills the 24px line box so the row stays 40px —
+                         cells have no fixed height, a bare h-4 block gives 32px. */
+                      <Skeleton className="my-1 h-4 w-full" />
+                    )}
                   </TableCell>
                 ))}
               </TableRow>

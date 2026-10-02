@@ -50,6 +50,17 @@ export interface DataTableProps {
   /** Number of skeleton rows to render when `skeleton` is set (default 5). */
   skeletonRows?: number;
   /**
+   * Custom content for each skeleton cell, called per visible leaf column in
+   * each skeleton row (`rowIndex` is 0-based). Replaces the cell content only;
+   * the row and cell chrome are kept. Unset renders the default `Skeleton` bar;
+   * returning `null` leaves the cell empty. Decorative only — mark it
+   * `aria-hidden`.
+   */
+  renderSkeletonCell?: (context: {
+    column: unknown;
+    rowIndex: number;
+  }) => ReactNode;
+  /**
    * Opt in to interactive column resizing — renders a drag handle at the
    * trailing edge of each resizable header (TanStack's native `columnResizing`).
    */

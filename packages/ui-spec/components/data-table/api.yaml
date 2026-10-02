@@ -114,6 +114,22 @@ contract:
       required: false
       default: '5'
       description: Number of skeleton rows when skeleton is set.
+    - name: renderSkeletonCell
+      type: '(context: { column: Column; rowIndex: number }) => ReactNode'
+      required: false
+      description: >-
+        Custom content for each skeleton placeholder cell — called once per
+        visible leaf column in each of the `skeletonRows` rows, only while
+        `skeleton` is set (`rowIndex` is 0-based). Replaces the cell content
+        only: DataTable keeps the row (no hover tint, not focusable) and the
+        cell (padding, borders, the column's `meta.overflow` mode). Unset
+        renders the default Skeleton bar; returning null leaves the cell empty
+        (no fallback). Also called for the `__actions` column (absent with
+        `hideActionColumn` or an external `table`) and a consumer `select`
+        column — branch on `column.id`. Content should stay ~24px tall so the
+        row stays 40px, and be decorative only (no text or interactive
+        elements, `aria-hidden`); no live region is added. Does not affect the
+        infinite-scroll loading-more row.
     - name: enableColumnResizing
       type: boolean
       required: false
