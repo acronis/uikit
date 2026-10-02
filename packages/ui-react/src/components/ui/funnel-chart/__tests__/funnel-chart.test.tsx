@@ -938,6 +938,17 @@ describe('FunnelChart legend', () => {
     );
   });
 
+  it('lets consumers name the legend region', () => {
+    const { container } = renderChart({
+      showLegend: true,
+      legendAriaLabel: 'Etapas del embudo',
+    });
+    expect(legend(container)).toHaveAttribute(
+      'aria-label',
+      'Etapas del embudo'
+    );
+  });
+
   // The legend sits outside `ChartContainer`, so it cannot use the
   // `--color-<name>` custom properties `ChartStyle` scopes to `[data-chart=…]` —
   // those resolve to nothing out here and the marker would paint transparent.
@@ -976,6 +987,7 @@ describe('FunnelChart legend', () => {
   it('renders a two-column list with config labels and primary text values', () => {
     const { container } = renderChart({ showLegend: true });
     const legendElement = legend(container);
+    expect(legendElement).toHaveClass('max-h-[128px]', 'overflow-y-auto');
     expect(legendElement).toHaveTextContent('Visits5000');
     expect(legendElement).toHaveTextContent('Purchases620');
     expect(
@@ -1174,8 +1186,13 @@ describe('FunnelChart layout', () => {
   // 0px for the funnel itself (label margins consume the entire fixed width).
   // The plot-frame must grow to fill the available width in that case.
   it('switches the plot-frame to flex-1 when labels sit beside the funnel', () => {
-    const { container } = renderChart({ showLabels: true, labelPosition: 'right' });
-    const plotFrame = container.querySelector('[data-slot="chart"]')?.parentElement;
+    const { container } = renderChart({
+      showLabels: true,
+      labelPosition: 'right',
+    });
+    const plotFrame = container.querySelector(
+      '[data-slot="chart"]'
+    )?.parentElement;
     expect(plotFrame?.className).toContain('flex-1');
     expect(plotFrame?.className).toContain('h-[120px]');
     expect(plotFrame?.className).not.toContain('size-[120px]');

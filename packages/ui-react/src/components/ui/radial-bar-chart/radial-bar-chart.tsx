@@ -26,6 +26,7 @@ import {
   CHART_LABEL_FONT_SIZE,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartAnimationProps,
   type ChartDataLabelProps,
@@ -493,7 +494,8 @@ export interface RadialBarChartProps
   extends
     Omit<React.ComponentProps<'div'>, 'children'>,
     ChartAnimationProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -668,6 +670,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       legendValueFormatter,
       tooltipContent,
       animate,
@@ -917,6 +920,7 @@ const RadialBarChart = React.forwardRef<HTMLDivElement, RadialBarChartProps>(
             config={resolvedConfigForLegend}
             nameKey={isMultiMetric ? undefined : nameKey}
             fontSize={legendFontSize}
+            ariaLabel={legendAriaLabel}
             valueKey={isMultiMetric ? undefined : dataKey}
             valueFormatter={isMultiMetric ? undefined : legendValueFormatter}
             className="min-w-0 flex-1"

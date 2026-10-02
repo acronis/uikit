@@ -189,6 +189,13 @@ describe('LineChart', () => {
     expect(legend).not.toHaveClass('text-xs');
   });
 
+  it('lets consumers name the legend region', () => {
+    const { container } = renderChart({ legendAriaLabel: 'Ingresos' });
+    expect(
+      container.querySelector('[data-slot="chart-legend"]')
+    ).toHaveAttribute('aria-label', 'Ingresos');
+  });
+
   it('dashes every stroke under the dashed lineStyle', () => {
     const solid = renderChart();
     for (const curve of curvesOf(solid.container)) {
@@ -346,7 +353,6 @@ describe('LineChart', () => {
       wrapper!.getAttributeNames().filter((name) => /brush/i.test(name))
     ).toEqual([]);
   });
-
 });
 
 // recharts needs a laid-out container, which happy-dom does not provide, so the
@@ -409,7 +415,10 @@ describe('LineChart curves, dots and per-series overrides', () => {
   ] as const;
 
   function curvePaths(props: Partial<React.ComponentProps<typeof LineChart>>) {
-    const { container, unmount } = renderChart({ dataKeys: ['desktop'], ...props });
+    const { container, unmount } = renderChart({
+      dataKeys: ['desktop'],
+      ...props,
+    });
     const paths = [...container.querySelectorAll('.recharts-line-curve')].map(
       (path) => path.getAttribute('d')
     );
@@ -510,7 +519,10 @@ describe('LineChart curves, dots and per-series overrides', () => {
   it('keeps a comparison series dot-less even when its settings ask for dots', () => {
     const { container } = renderChart({
       comparisonKeys: ['mobile'],
-      lineSettings: { desktop: { showDots: false }, mobile: { showDots: true } },
+      lineSettings: {
+        desktop: { showDots: false },
+        mobile: { showDots: true },
+      },
     });
     expect(container.querySelectorAll('.recharts-line-dot')).toHaveLength(0);
   });

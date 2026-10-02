@@ -24,6 +24,7 @@ import {
   resolveYAxisTitle,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   toCssKey,
   type CartesianChartProps,
@@ -62,7 +63,8 @@ export interface ScatterSeries {
 export interface ScatterChartProps
   extends Omit<React.ComponentProps<'div'>, 'children'>,
     CartesianChartProps,
-    ChartAnimationProps {
+    ChartAnimationProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -117,6 +119,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -230,7 +233,12 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
             )}
             {showLegend && (
               <ChartLegend
-                content={<ChartLegendContent fontSize={legendFontSize} />}
+                content={
+                  <ChartLegendContent
+                    fontSize={legendFontSize}
+                    ariaLabel={legendAriaLabel}
+                  />
+                }
               />
             )}
             {series.map((s) => (

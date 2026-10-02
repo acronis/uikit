@@ -21,6 +21,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  CHART_CATEGORICAL_TOKENS,
   createTickFormatter,
   formatCompactNumber,
   type ChartConfig,
@@ -161,6 +162,31 @@ const widgetConfig = {
   mobile: { label: 'Mobile' },
 } satisfies ChartConfig;
 
+const manyLegendKeys = Array.from(
+  { length: 24 },
+  (_, index) => `region-${String(index + 1).padStart(2, '0')}`
+);
+const manyLegendConfig = Object.fromEntries(
+  manyLegendKeys.map((key, index) => [
+    key,
+    {
+      label: `Region ${String(index + 1).padStart(2, '0')}`,
+      color: CHART_CATEGORICAL_TOKENS[index % CHART_CATEGORICAL_TOKENS.length],
+    },
+  ])
+) satisfies ChartConfig;
+const manyLegendData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map(
+  (month, monthIndex) => ({
+    month,
+    ...Object.fromEntries(
+      manyLegendKeys.map((key, seriesIndex) => [
+        key,
+        (seriesIndex + 1) * 10 + monthIndex * (seriesIndex + 2),
+      ])
+    ),
+  })
+);
+
 // The design's `ChartLine` in full: the card, its header and ⋯ menu, and the
 // metric row all belong to `ChartWidget` — LineChart is only the plot and its
 // legend, and fills the widget body responsively.
@@ -191,6 +217,36 @@ export const WidgetExample: Story = {
           config={widgetConfig}
           data={widgetData}
           dataKeys={['desktop', 'mobile']}
+          xKey="month"
+          className="size-full"
+        />
+      </ChartWidget>
+    </div>
+  ),
+};
+
+// A dashboard-sized widget with enough series to make the default wrapped
+// legend scroll after three rows while the plot stays visible.
+export const ManyLegendEntriesWidget: Story = {
+  name: 'Widget — many normal legend entries',
+  tags: ['legend-scroll-regression'],
+  render: () => (
+    <div className="h-[360px] w-[360px]">
+      <ChartWidget
+        header={{ title: 'Sessions by region' }}
+        metric={
+          <Metric
+            icon={<SquareDashedIcon />}
+            value="24"
+            unit="Regions"
+            caption={<Tag variant="neutral">Last 6 months</Tag>}
+          />
+        }
+      >
+        <LineChart
+          config={manyLegendConfig}
+          data={manyLegendData}
+          dataKeys={manyLegendKeys}
           xKey="month"
           className="size-full"
         />

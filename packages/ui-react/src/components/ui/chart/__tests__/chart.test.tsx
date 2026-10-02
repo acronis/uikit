@@ -230,6 +230,121 @@ describe('Chart', () => {
     expect(screen.getByText('125')).not.toHaveClass('text-xs');
   });
 
+  it('scrolls a long list legend within its default height cap', () => {
+    const payload = Array.from({ length: 20 }, (_, index) => {
+      const key = `service-${index + 1}`;
+      return {
+        value: key,
+        dataKey: key,
+        color: 'var(--ui-dataviz-categorical-1)',
+      };
+    });
+    const longConfig = Object.fromEntries(
+      payload.map(({ dataKey }) => [dataKey, { label: dataKey }])
+    ) satisfies ChartConfig;
+    const { container } = render(
+      <ChartLegendContent
+        variant="list"
+        config={longConfig}
+        payload={payload}
+      />
+    );
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+
+    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+    expect(legend).toHaveAttribute('role', 'region');
+    expect(legend).toHaveAttribute('aria-label', 'Chart legend');
+    expect(legend).toHaveAttribute('tabindex', '0');
+    expect(legend?.children).toHaveLength(20);
+  });
+
+  it('wraps and scrolls many default legend entries within its height cap', () => {
+    const payload = Array.from({ length: 20 }, (_, index) => {
+      const key = `service-${index + 1}`;
+      return {
+        value: key,
+        dataKey: key,
+        color: 'var(--ui-dataviz-categorical-1)',
+      };
+    });
+    const longConfig = Object.fromEntries(
+      payload.map(({ dataKey }) => [dataKey, { label: dataKey }])
+    ) satisfies ChartConfig;
+    const { container } = render(
+      <ChartLegendContent
+        ariaLabel="Services legend"
+        config={longConfig}
+        payload={payload}
+      />
+    );
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+
+    expect(legend).toHaveClass('flex-wrap');
+    expect(legend).toHaveClass('max-h-[76px]', 'overflow-y-auto');
+    expect(legend).toHaveAttribute('role', 'region');
+    expect(legend).toHaveAttribute('aria-label', 'Services legend');
+    expect(legend).toHaveAttribute('tabindex', '0');
+    expect(legend?.children).toHaveLength(20);
+  });
+
+  it.each([
+    { fontSize: 'sm' as const, maxHeight: 'max-h-[88px]' },
+    { fontSize: 'lg' as const, maxHeight: 'max-h-[112px]' },
+  ])(
+    'keeps three complete default legend rows at font size $fontSize',
+    ({ fontSize, maxHeight }) => {
+      const payload = Array.from({ length: 8 }, (_, index) => ({
+        value: `service-${index + 1}`,
+        dataKey: `service-${index + 1}`,
+        color: 'var(--ui-dataviz-categorical-1)',
+      }));
+      const longConfig = Object.fromEntries(
+        payload.map(({ dataKey }) => [dataKey, { label: dataKey }])
+      ) satisfies ChartConfig;
+      const { container } = render(
+        <ChartLegendContent
+          fontSize={fontSize}
+          config={longConfig}
+          payload={payload}
+        />
+      );
+      const legend = container.querySelector('[data-slot="chart-legend"]');
+
+      expect(legend).toHaveClass(maxHeight, 'overflow-y-auto');
+    }
+  );
+
+  it.each([
+    { fontSize: 'sm' as const, maxHeight: 'max-h-[160px]' },
+    { fontSize: 'lg' as const, maxHeight: 'max-h-[224px]' },
+  ])(
+    'keeps eight complete list legend rows at font size $fontSize',
+    ({ fontSize, maxHeight }) => {
+      const payload = Array.from({ length: 10 }, (_, index) => {
+        const key = `service-${index + 1}`;
+        return {
+          value: key,
+          dataKey: key,
+          color: 'var(--ui-dataviz-categorical-1)',
+        };
+      });
+      const longConfig = Object.fromEntries(
+        payload.map(({ dataKey }) => [dataKey, { label: dataKey }])
+      ) satisfies ChartConfig;
+      const { container } = render(
+        <ChartLegendContent
+          variant="list"
+          fontSize={fontSize}
+          config={longConfig}
+          payload={payload}
+        />
+      );
+      const legend = container.querySelector('[data-slot="chart-legend"]');
+
+      expect(legend).toHaveClass(maxHeight, 'overflow-y-auto');
+    }
+  );
+
   // A chart type whose renderer can't lay a legend out inside the plot (Treemap)
   // renders the shared legend beside it, outside the container — so the config has
   // to be passable as a prop rather than only through the container's context.

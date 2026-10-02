@@ -16,6 +16,7 @@ import {
   toCssKey,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartAnimationProps,
   type TickFormatter,
@@ -238,7 +239,10 @@ export function TreemapCell({
 }
 
 export interface TreemapProps
-  extends Omit<React.ComponentProps<'div'>, 'children'>, ChartAnimationProps {
+  extends
+    Omit<React.ComponentProps<'div'>, 'children'>,
+    ChartAnimationProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -337,6 +341,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
       showLegend = false,
       legendPos = 'bottom',
       legendFontSize,
+      legendAriaLabel,
       tooltipContent,
       animate,
       animationDuration,
@@ -479,6 +484,7 @@ const Treemap = React.forwardRef<HTMLDivElement, TreemapProps>(
           verticalAlign={legendPos}
           nameKey={nameKey}
           fontSize={legendFontSize}
+          ariaLabel={legendAriaLabel}
         />
       </div>
     ) : null;

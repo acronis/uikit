@@ -40,6 +40,7 @@ import {
   toReferenceLineList,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartLegendContentProps,
   type ChartTooltipContentProps,
@@ -119,7 +120,8 @@ export interface AreaChartProps
     CartesianChartProps,
     ChartAnimationProps,
     ChartBrushProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -318,6 +320,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
       showTooltip = true,
       showLegend = true,
       legendFontSize,
+      legendAriaLabel,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -485,6 +488,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
           <ChartLegendContent
             verticalAlign={lp.verticalAlign}
             fontSize={legendFontSize}
+            ariaLabel={legendAriaLabel}
             payload={
               dropProjectionPayload(
                 lp.payload
@@ -492,7 +496,10 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
             }
           />
         )
-      : <ChartLegendContent fontSize={legendFontSize} />;
+      : <ChartLegendContent
+          fontSize={legendFontSize}
+          ariaLabel={legendAriaLabel}
+        />;
 
     // recharts renders SVG <defs> once per chart; the gradient/clip ids must be
     // unique across chart instances on the page. useId gives a stable per-instance

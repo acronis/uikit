@@ -40,6 +40,7 @@ import {
   toCssKey,
   type ChartConfig,
   type ChartLegendFontSize,
+  type ChartLegendAriaLabelProps,
   type ChartPalette,
   type ChartLegendContentProps,
   type CartesianChartProps,
@@ -232,7 +233,8 @@ export interface ComposedChartProps
     SecondaryYAxisProps,
     ChartAnimationProps,
     ChartBrushProps,
-    ChartDataLabelProps {
+    ChartDataLabelProps,
+    ChartLegendAriaLabelProps {
   /**
    * The dataviz palette this chart's series are painted from. Series that
    * state no `color` of their own take a stop of it. See `ChartPalette`.
@@ -357,6 +359,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
       showLegend = true,
       legendPosition = 'bottom',
       legendFontSize,
+      legendAriaLabel,
       showXAxis = true,
       showYAxis = true,
       xTickFormatter,
@@ -725,6 +728,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             <ChartLegendContent
               verticalAlign={legendPosition}
               fontSize={legendFontSize}
+              ariaLabel={legendAriaLabel}
               payload={
                 legendProps.payload?.filter(
                   (item) => !hiddenLegendKeys.has(String(item.dataKey))
@@ -732,7 +736,13 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
               }
             />
           )
-        : <ChartLegendContent verticalAlign={legendPosition} fontSize={legendFontSize} />;
+        : (
+            <ChartLegendContent
+              verticalAlign={legendPosition}
+              fontSize={legendFontSize}
+              ariaLabel={legendAriaLabel}
+            />
+          );
 
     const renderSeries = (s: ComposedSeries, index: number) => {
       const color = s.color ?? `var(--color-${toCssKey(s.key)})`;

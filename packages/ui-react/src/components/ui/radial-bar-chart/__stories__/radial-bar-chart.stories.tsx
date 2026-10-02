@@ -51,6 +51,15 @@ const config = {
   Edge: { label: 'Edge' },
 } satisfies ChartConfig;
 
+const manyRowsData = Array.from({ length: 20 }, (_, index) => ({
+  item: `agent-${String(index + 1).padStart(2, '0')}-long-uuid-like-name`,
+  value: 100 - index,
+}));
+
+const manyRowsConfig = Object.fromEntries(
+  manyRowsData.map(({ item }) => [item, { label: item }])
+) satisfies ChartConfig;
+
 const meta = {
   title: 'Widgets/RadialBarChart',
   component: RadialBarChart,
@@ -117,10 +126,22 @@ type Story = StoryObj<typeof meta>;
 // Concentric arcs sweeping a full circle (default).
 export const FullCircle: Story = {};
 
+// A long list stays inside the plot height and can be scrolled independently.
+export const ManyLegendRows: Story = {
+  tags: ['legend-scroll-regression'],
+  args: {
+    data: manyRowsData,
+    config: manyRowsConfig,
+    nameKey: 'item',
+    className: 'w-[360px]',
+  },
+};
+
 // Replication of the Figma design mockup: the chart widget inside a card with
 // a metric readout above the concentric arcs + legend. Rendered with a fixed
 // composition so it shows real consumer usage rather than the meta args playground.
 export const WidgetExample: Story = {
+  tags: ['legend-scroll-regression'],
   render: () => (
     <div className="w-[480px]">
       <ChartWidget
@@ -503,4 +524,3 @@ export const MinAngle: Story = {
     minAngle: 12,
   },
 };
-

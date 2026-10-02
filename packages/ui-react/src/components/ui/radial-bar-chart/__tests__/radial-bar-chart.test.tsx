@@ -184,6 +184,44 @@ describe('RadialBarChart', () => {
     );
   });
 
+  it('lets consumers name the legend region', () => {
+    const { container } = renderChart({
+      showLegend: true,
+      legendAriaLabel: 'Agentes',
+    });
+    expect(
+      container.querySelector('[data-slot="chart-legend"]')
+    ).toHaveAttribute('aria-label', 'Agentes');
+  });
+
+  it('scrolls a long legend within the chart height', () => {
+    const longData = Array.from({ length: 20 }, (_, index) => ({
+      item: `agent-${index + 1}`,
+      value: index + 1,
+    }));
+    const longConfig = Object.fromEntries(
+      longData.map(({ item }) => [item, { label: item }])
+    ) satisfies ChartConfig;
+    const { container } = renderChart({
+      data: longData,
+      config: longConfig,
+      nameKey: 'item',
+    });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+
+    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+  });
+
+  it('keeps the list legend scroll cap when outside labels expand the chart', () => {
+    const { container } = renderChart({
+      showLabels: true,
+      labelPosition: 'outside',
+    });
+    const legend = container.querySelector('[data-slot="chart-legend"]');
+
+    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+  });
+
   it('draws no arcs but still mounts on empty data', () => {
     const { container } = renderChart({ data: [] });
     expect(container.querySelector('[data-slot="chart"]')).toBeInTheDocument();
@@ -724,7 +762,13 @@ describe('RadialBarChart gauge, multi-metric and geometry props', () => {
       { browser: 'Safari', value: 0.2 },
     ];
     const span = (minAngle?: number) => {
-      const { container, unmount } = renderChart({ data: tiny, minAngle, showBackground: false, innerRadius: 30, outerRadius: 110 });
+      const { container, unmount } = renderChart({
+        data: tiny,
+        minAngle,
+        showBackground: false,
+        innerRadius: 30,
+        outerRadius: 110,
+      });
       const width = arcSpanX(arcsOf(container)[1]);
       unmount();
       return width;
