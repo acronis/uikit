@@ -39,7 +39,7 @@ tokens:
     description: Muted pagination / toolbar meta text (text-muted-foreground).
   - name: --ui-background-surface-secondary
     affects: row
-    description: Striped row background + skeleton placeholder bars.
+    description: Striped row background.
   - name: --ui-table-data-row-color-active
     affects: row
     description: Current (last-clicked) row highlight — the active-row color.

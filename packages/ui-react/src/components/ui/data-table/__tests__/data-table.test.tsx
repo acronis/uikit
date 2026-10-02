@@ -527,6 +527,24 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
     expect(MockIntersectionObserver.instances).toHaveLength(0);
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(1);
   });
+
+  it('renders the loading-more row as a live-region Skeleton', () => {
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        onLoadMore={() => {}}
+      />
+    );
+    const skeletons = container.querySelectorAll('[data-slot="skeleton"]');
+    expect(skeletons).toHaveLength(1);
+    const status = screen.getByRole('status');
+    expect(status).toBe(skeletons[0]);
+    expect(status).toHaveAttribute('aria-live', 'polite');
+  });
 });
 
 describe('DataTable column resizing', () => {
@@ -1286,6 +1304,57 @@ describe('DataTable presentational features', () => {
     expect(screen.queryByText('user1@example.com')).not.toBeInTheDocument();
     // 3 rows × 2 columns of pulse bars
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(6);
+  });
+
+  it('renders the skeleton placeholders with the Skeleton component', () => {
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data}
+        skeleton
+        skeletonRows={3}
+        hideActionColumn
+      />
+    );
+    expect(
+      container.querySelectorAll('tbody [data-slot="skeleton"]')
+    ).toHaveLength(6);
+  });
+
+  it('drops the bottom border on every header row but the last when headers are grouped', () => {
+    const grouped: ColumnDef<Row>[] = [
+      {
+        id: 'details',
+        header: 'Details',
+        columns: [
+          { accessorKey: 'email', header: 'Email' },
+          { accessorKey: 'amount', header: 'Amount' },
+        ],
+      },
+    ];
+    const { container } = render(
+      <DataTable
+        columns={grouped}
+        data={data.slice(0, 2)}
+        hideActionColumn
+      />
+    );
+    const headerRows = container.querySelectorAll('thead tr');
+    expect(headerRows.length).toBeGreaterThan(1);
+    const classes = (el: Element) => el.className.split(/\s+/);
+    expect(classes(headerRows[0])).toContain('border-b-0');
+    expect(classes(headerRows[headerRows.length - 1])).not.toContain(
+      'border-b-0'
+    );
+  });
+
+  it('keeps the bottom border on a flat (single-row) header', () => {
+    const { container } = render(
+      <DataTable columns={columns} data={data.slice(0, 2)} hideActionColumn />
+    );
+    const headerRows = container.querySelectorAll('thead tr');
+    expect(headerRows).toHaveLength(1);
+    expect(headerRows[0].className.split(/\s+/)).not.toContain('border-b-0');
   });
 
   it('highlights the clicked row when highlightCurrentRow', async () => {
