@@ -305,9 +305,9 @@ internal_state:
       dragstart on a draggable header cell sets it; drop / dragend clears it
       (pointer only — there is no keyboard path, see accessibility.md)
     description: >-
-      The header cell currently being dragged (`enableColumnReordering`). Dims
-      that cell and suppresses the header hints while the gesture is in flight;
-      the resulting order goes through TanStack's `columnOrder`.
+      The header cell currently being dragged (`enableColumnReordering`).
+      Suppresses the header hints while the gesture is in flight; the resulting
+      order goes through TanStack's `columnOrder`.
   - id: focused-row-index
     type: number
     initial: 0

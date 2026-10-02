@@ -128,8 +128,9 @@ contract:
       default: 'false'
       description: >-
         Opt in to column reordering by dragging a header cell onto another one
-        (native HTML5 drag-and-drop driving TanStack's `columnOrder`; the dragged
-        header dims while the gesture is in flight). Pinned columns are excluded
+        (native HTML5 drag-and-drop driving TanStack's `columnOrder`; a header
+        cell the drag passes over gets an unstyled `data-reorder-target`
+        attribute, cleared on drop / dragend). Pinned columns are excluded
         — they're anchored to a table edge by definition. Pointer-only: there is
         no keyboard equivalent yet. No-op when `table` is passed.
     - name: columnOrder

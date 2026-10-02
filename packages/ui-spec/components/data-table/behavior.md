@@ -177,6 +177,13 @@ Scenario: Reorder a column by dragging its header
   Then every non-pinned leaf header cell is draggable and shows the grab cursor
       (cursor-grab; cursor-grabbing while pressed)
   And group-label header cells (those spanning multiple leaf columns) are not draggable
+  When the user starts dragging a header
+  Then the dragged header cell is not dimmed — the browser's native drag image is the feedback
+  And during a column reorder drag, each header cell the drag passes over (dragover) gets a data-reorder-target attribute
+      (a foreign drag — files, text, another table's header — never sets it)
+  And no kit style is attached to data-reorder-target yet (the indicator look is pending design)
+  When the reorder drag ends, by a drop or by dragend without a drop
+  Then data-reorder-target is removed from every header cell
   When the user drags one header and drops it on another
   Then the dragged column moves to the drop target's position (headers and body cells alike)
   And onColumnOrderChange fires with the new order so a consumer can persist it
