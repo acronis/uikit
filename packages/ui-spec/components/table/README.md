@@ -37,7 +37,7 @@ sort and URL-synced state.
 
 | Part                | Element   | Purpose                                                                                                                                                                                   |
 | ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Table`             | `table`   | The table, in a horizontally scrollable container.                                                                                                                                        |
+| `Table`             | `table`   | The table, with no scroll wrapper. Add `overflow-auto` on a parent for horizontal scroll (DataTable does this).                                                                           |
 | `TableHeader`       | `thead`   | Column-header section.                                                                                                                                                                    |
 | `TableBody`         | `tbody`   | Data rows section.                                                                                                                                                                        |
 | `TableFooter`       | `tfoot`   | Summary section with a top divider.                                                                                                                                                       |

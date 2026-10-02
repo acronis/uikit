@@ -48,6 +48,13 @@ describe('Table', () => {
     expect(screen.getByText('Recent invoices')).toBeInTheDocument();
   });
 
+  it('renders <table> without an intermediate scroll wrapper', () => {
+    render(<InvoiceTable />);
+    const table = screen.getByRole('table');
+    expect(table.parentElement).not.toHaveClass('overflow-auto');
+    expect(table.parentElement).not.toHaveClass('relative');
+  });
+
   it('themes the cells from the --ui-table-* tier', () => {
     render(<InvoiceTable />);
     expect(screen.getByRole('cell', { name: 'INV001' })).toHaveClass(

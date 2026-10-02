@@ -132,6 +132,36 @@ describe('DataTable', () => {
     );
     expect(screen.getByText('Details for r1')).toBeInTheDocument();
   });
+
+  it('root div always has overflow-auto', () => {
+    render(<DataTable columns={columns} data={data.slice(0, 3)} />);
+    const root = document.querySelector(
+      '[data-slot="data-table"]'
+    ) as HTMLElement;
+    expect(root).toHaveClass('overflow-auto');
+  });
+
+  it('stickyHeader adds sticky classes to the header', () => {
+    render(
+      <DataTable columns={columns} data={data.slice(0, 3)} stickyHeader />
+    );
+    const root = document.querySelector(
+      '[data-slot="data-table"]'
+    ) as HTMLElement;
+    expect(root).toHaveClass('h-full');
+    const thead = document.querySelector('thead') as HTMLElement;
+    expect(thead).toHaveClass('sticky', 'top-0', 'z-10', 'bg-background');
+  });
+
+  it('stickyHeader defaults to false — no sticky header classes, no h-full', () => {
+    render(<DataTable columns={columns} data={data.slice(0, 3)} />);
+    const root = document.querySelector(
+      '[data-slot="data-table"]'
+    ) as HTMLElement;
+    expect(root).not.toHaveClass('h-full');
+    const thead = document.querySelector('thead') as HTMLElement;
+    expect(thead).not.toHaveClass('sticky');
+  });
 });
 
 describe('DataTable external table instance', () => {
@@ -1308,7 +1338,10 @@ describe('DataTable column overflow (meta.overflow)', () => {
     const button = screen.getByRole('button', { name: 'Sort by Identifier' });
     expect(button).not.toHaveClass('h-8');
     expect(button).toHaveClass('min-w-0', 'max-w-full');
-    expect(within(button).getByText('Identifier')).toHaveClass('min-w-0', 'overflow-hidden');
+    expect(within(button).getByText('Identifier')).toHaveClass(
+      'min-w-0',
+      'overflow-hidden'
+    );
   });
 
   describe('accessibility', () => {
@@ -1532,7 +1565,9 @@ describe('DataTable presentational features', () => {
     const { container } = render(
       <DataTable columns={columns} data={data.slice(0, 2)} bordered />
     );
-    const wrapper = container.querySelector('[data-slot="data-table"]') as HTMLElement;
+    const wrapper = container.querySelector(
+      '[data-slot="data-table"]'
+    ) as HTMLElement;
     expect(wrapper.className).toContain('[&_td:not(:last-child)]:border-e');
   });
 
@@ -2068,7 +2103,11 @@ describe('DataTable onRowClick and onRowActivate', () => {
     const classes = () => bodyRow('user1@example.com').className.split(/\s+/);
     expect(classes()).not.toContain('cursor-pointer');
     rerender(
-      <DataTable columns={columns} data={data.slice(0, 1)} onRowClick={vi.fn()} />
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 1)}
+        onRowClick={vi.fn()}
+      />
     );
     expect(classes()).toContain('cursor-pointer');
   });

@@ -573,6 +573,51 @@ Removing a `meta.pin` un-pins the column on the next render. Pinning is driven
 only for `DataTable`'s own instance — with an external `table`, pin columns
 yourself via `column.pin()`.
 
+Pinned cells stick to the edges of `DataTable`'s own root element. That element
+always has `overflow-auto`, so it is the table's horizontal scroll container.
+For vertical scrolling inside a bounded height, use
+[`stickyHeader`](#sticky-header). `Table` itself no longer adds a scroll
+wrapper.
+
+### Sticky header
+
+`stickyHeader` keeps the header row visible while the body scrolls vertically.
+It defaults to `false`. When it is `true`, the `<thead>` sticks to the top of
+`DataTable`'s scroll container (`sticky top-0 z-10`). It gets an opaque
+`bg-background` so body rows don't show through as they scroll beneath it.
+
+A sticky header needs a container with a bounded height to stick inside.
+With `stickyHeader`, the `DataTable` root also gets `h-full`, so it fills
+its parent, and its `overflow-auto` makes that box the scroll container.
+Wrap `DataTable` in an element that has a bounded height:
+
+```tsx
+<div className="h-96 flex flex-col">
+  <DataTable columns={columns} data={data} stickyHeader />
+</div>
+```
+
+The wrapper needs a real `height`, not only a `max-height`. These work:
+
+- A fixed-height `flex flex-col` wrapper, as above. This is the recommended
+  pattern.
+- An explicit fixed height on the wrapper, such as `h-96` or `h-[400px]`.
+- `h-full` on the wrapper, as long as every ancestor up to a bounded element
+  also has a height.
+
+`max-h-*` on its own does **not** work. A `max-height` gives the percentage
+height (`h-full`) on `DataTable` nothing to resolve against, so it falls back to
+`auto`. The table then grows to fit all its rows, nothing scrolls inside
+`DataTable`, and the header has nothing to stick to. The same happens when the
+wrapper's height isn't bounded at all.
+
+The header background is a fixed `bg-background` class, not a CSS custom
+property. `DataTable` has no prop or `className` that changes it.
+
+`stickyHeader` works well with [`paginationMode="infinite"`](#infinite-scroll)
+for long tables that scroll. Rows load into the same bounded container while
+the header stays in place.
+
 ### Column overflow
 
 `meta.overflow` sets how a column treats content longer than its width. DataTable
