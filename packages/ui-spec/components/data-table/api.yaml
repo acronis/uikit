@@ -391,6 +391,31 @@ contract:
       payload: 'RowSelectionState (TanStack OnChangeFn)'
       description: >-
         Passthrough for the `rowSelection` state; pairs with `rowSelection`.
+    - name: onRowClick
+      payload: '(row: Row<TData>, event: MouseEvent<HTMLTableRowElement>)'
+      description: >-
+        Called on a single pointer click on a data row. Not called when the
+        click lands on an interactive control inside a cell (button, link,
+        input, label, checkbox/switch/menuitem/link role, contenteditable, or a
+        Tab stop), comes from a portaled element opened from the row (e.g. the
+        row-actions menu), or ends a text selection. Rows get a pointer cursor
+        while it's set. Composes with `highlightCurrentRow` (both run). Silently
+        ignored when `renderRow` is set. Optional; no default.
+    - name: onRowActivate
+      payload: >-
+        (row: Row<TData>, details: { via: 'keyboard' | 'pointer'; event:
+        KeyboardEvent<HTMLTableRowElement> | MouseEvent<HTMLTableRowElement> })
+      description: >-
+        Called when a data row is activated — Enter while the row itself has
+        focus (`via: 'keyboard'`; key repeat ignored; Enter from a control
+        inside a cell does not count) or a double-click on the row (`via:
+        'pointer'`, with the same interactive-descendant and portal guards as
+        `onRowClick`, but not the text-selection guard since a double-click
+        selects a word on its own). A double-click also dispatches two single
+        clicks first, so don't wire navigation to `onRowClick` alongside this.
+        Space never activates a row — it's reserved for row selection when
+        `rowSelection` is in use. Silently ignored when `renderRow` is set.
+        Optional; no default.
     - name: onColumnSizingChange
       payload: 'ColumnSizingState (TanStack OnChangeFn)'
       description: >-
