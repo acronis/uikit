@@ -256,7 +256,8 @@ Scenario: Sticky (pinned) columns
 ```gherkin
 Scenario: Wrapping columns
   Given a column with meta.wrap = true
-  Then that column's header and cell content drop the fixed row height and wrap onto multiple lines
+  Then that column's header and cells use whitespace-normal and wrap onto multiple lines
+  And the row grows to fit the content
 ```
 
 ```gherkin

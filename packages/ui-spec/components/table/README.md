@@ -93,7 +93,7 @@ const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
   Name
 </TableHead>
 
-// Wrappable cell — drops the fixed row height and grows to fit multi-line content
+// Wrappable cell — enables whitespace-normal so multi-line content grows the row
 <TableCell wrap>{longDescription}</TableCell>
 
 // Header row — select-all cell leading, column-settings cell trailing

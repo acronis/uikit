@@ -55,11 +55,6 @@ tokens:
       description: Row / cell divider style,
     }
   - {
-      name: --ui-table-global-cell-min-height,
-      affects: cell,
-      description: Minimum cell height (40px) — the default single-line row height,
-    }
-  - {
       name: --ui-table-data-cell-color-idle,
       affects: cell,
       description: Data cell background — idle,

@@ -35,8 +35,9 @@ contract:
       default: false
       description: >-
         On a cell or column header — allow the content to wrap onto multiple
-        lines (`whitespace-normal`) and drop the fixed row height so the cell
-        grows to fit multi-line content. Default cells retain native table
+        lines (`whitespace-normal`) so the cell grows to fit multi-line
+        content. Without `wrap`, row height comes from `py` + `leading-6`
+        (40px at default tokens); no height class is applied. Default cells retain native table
         auto-layout; truncation is opt-in through a constrained cell or class.
     - name: header
       type: boolean

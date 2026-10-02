@@ -1242,7 +1242,7 @@ describe('DataTable action column', () => {
 });
 
 describe('DataTable wrapping (meta.wrap) columns', () => {
-  it('wraps a column flagged meta.wrap and drops the fixed row height', () => {
+  it('wraps a column flagged meta.wrap', () => {
     const wrapped: ColumnDef<Row>[] = [
       { accessorKey: 'email', header: 'Email' },
       {
@@ -1254,22 +1254,23 @@ describe('DataTable wrapping (meta.wrap) columns', () => {
     ];
     render(<DataTable columns={wrapped} data={data.slice(0, 1)} />);
 
-    // The wrap-flagged cell + header get `whitespace-normal` and lose the min-height token.
     const wrapCell = screen.getByText('100').closest('td')!;
     expect(wrapCell).toHaveClass('whitespace-normal');
-    expect(wrapCell).not.toHaveClass(
-      'h-[var(--ui-table-global-cell-min-height)]'
-    );
     const wrapHeader = screen.getByText('Amount').closest('th')!;
     expect(wrapHeader).toHaveClass('whitespace-normal');
-    expect(wrapHeader).not.toHaveClass(
+
+    // The unflagged column neither wraps nor forces overflow-hidden/nowrap, and
+    // takes its height from padding + line-height (no `h-*`, which Gecko/WebKit
+    // inflate by the row border in border-collapse tables).
+    const plainCell = screen.getByText('user1@example.com').closest('td')!;
+    expect(plainCell).not.toHaveClass('whitespace-normal');
+    expect(plainCell).toHaveClass(
+      'py-[var(--ui-table-global-cell-padding-y)]',
+      'leading-6'
+    );
+    expect(plainCell).not.toHaveClass(
       'h-[var(--ui-table-global-cell-min-height)]'
     );
-
-    // The unflagged column keeps the default fixed height without forcing
-    // overflow-hidden/nowrap, so native table auto-layout remains usable.
-    const plainCell = screen.getByText('user1@example.com').closest('td')!;
-    expect(plainCell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
     expect(plainCell).not.toHaveClass('truncate');
   });
 });
@@ -1505,6 +1506,17 @@ describe('DataTable presentational features', () => {
     expect(
       container.querySelectorAll('tbody [data-slot="skeleton"]')
     ).toHaveLength(6);
+  });
+
+  it('pads skeleton placeholders to the 24px line box so rows keep the 40px height', () => {
+    // Cells carry no fixed height (it inflates rows in Gecko/WebKit), so a bare
+    // h-4 block would collapse the row to 32px.
+    const { container } = render(
+      <DataTable columns={columns} data={data} skeleton skeletonRows={1} />
+    );
+    container
+      .querySelectorAll('tbody [data-slot="skeleton"]')
+      .forEach((el) => expect(el).toHaveClass('my-1', 'h-4'));
   });
 
   it('drops the bottom border on every header row but the last when headers are grouped', () => {

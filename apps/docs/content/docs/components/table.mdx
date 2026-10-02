@@ -214,11 +214,13 @@ cog trigger itself.
 
 ### Wrapping cells
 
-Cells and headers use a fixed row height (`--ui-table-global-cell-min-height`,
-40px) by default. The table keeps native auto-layout and does not force
-`overflow: hidden` or `white-space: nowrap` on every cell. `wrap` drops that
-height and switches the cell to `whitespace-normal`, so the row grows to fit
-multi-line content:
+Cells and headers take their row height from vertical padding
+(`--ui-table-global-cell-padding-y`) plus line-height (`leading-6`), which adds
+up to 40px at default token values and renders the same across browsers. The
+table keeps native auto-layout and does not force `overflow: hidden` or
+`white-space: nowrap` on every cell. `wrap` switches the cell to
+`whitespace-normal`, so the content runs onto multiple lines and the row grows
+to fit:
 
 ```tsx
 <TableRow>
@@ -226,6 +228,12 @@ multi-line content:
   <TableCell wrap>{longDescription}</TableCell>
 </TableRow>
 ```
+
+`--ui-table-global-cell-min-height` (40px) stays in the token tier as a
+reference value but no longer sets cell height. To change row density, override
+`--ui-table-global-cell-padding-y` instead: row height is
+`2 × padding-y + 1.5rem`, so compact (32px) is `4px`, default (40px) is `8px`,
+and relaxed (52px) is `14px`.
 
 ### Pagination
 

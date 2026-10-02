@@ -1090,7 +1090,9 @@ export function DataTable<TData, TValue = unknown>({
               >
                 {table.getVisibleLeafColumns().map((column) => (
                   <TableCell key={column.id}>
-                    <Skeleton className="h-4 w-full" />
+                    {/* my-1 fills the 24px line box so the row stays 40px —
+                        cells have no fixed height, a bare h-4 block gives 32px. */}
+                    <Skeleton className="my-1 h-4 w-full" />
                   </TableCell>
                 ))}
               </TableRow>
@@ -1268,7 +1270,7 @@ export function DataTable<TData, TValue = unknown>({
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={table.getVisibleLeafColumns().length}>
                   <Skeleton
-                    className="h-4 w-full"
+                    className="my-1 h-4 w-full"
                     role="status"
                     aria-live="polite"
                   >
