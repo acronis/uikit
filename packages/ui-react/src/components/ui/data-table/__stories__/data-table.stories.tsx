@@ -198,7 +198,7 @@ type Workload = {
   status: 'success' | 'failed' | 'pending';
 };
 
-const TOTAL_WORKLOADS = 24;
+const TOTAL_WORKLOADS = 128;
 const WORKLOADS_PAGE_SIZE = 6;
 
 function makeWorkloads(count: number): Workload[] {
@@ -359,7 +359,7 @@ function CoreCapabilitiesDemo() {
         )
       );
       setIsLoadingMore(false);
-    }, 600);
+    }, 1000);
   };
 
   // A second, minimal `useReactTable` instance driving only the actions bar —
@@ -589,7 +589,7 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
         )
       );
       setIsLoadingMore(false);
-    }, 600);
+    }, 1000);
   };
 
   const selectionTable = useReactTable({

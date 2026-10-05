@@ -1519,7 +1519,7 @@ export function DataTable<TData, TValue = unknown>({
             <TableRow
               ref={sentinelRef}
               aria-hidden
-              className="hover:bg-transparent"
+              className="border-0 hover:bg-transparent"
             >
               <TableCell
                 colSpan={table.getVisibleLeafColumns().length}
@@ -1531,16 +1531,30 @@ export function DataTable<TData, TValue = unknown>({
             !skeleton &&
             rows.length > 0 &&
             isLoadingMore && (
-              <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={table.getVisibleLeafColumns().length}>
-                  <Skeleton
-                    className="my-1 h-4 w-full"
-                    role="status"
-                    aria-live="polite"
-                  >
-                    <span className="sr-only">Loading more rows…</span>
-                  </Skeleton>
-                </TableCell>
+              <TableRow
+                className="hover:bg-transparent"
+                role="status"
+                aria-live="polite"
+              >
+                {table.getVisibleLeafColumns().map((column) => {
+                  const isPinned = column.getIsPinned();
+                  return (
+                    <TableCell
+                      key={column.id}
+                      overflow={column.columnDef.meta?.overflow ?? 'truncate'}
+                      style={{
+                        ...getPinnedStyle(column),
+                        ...getColumnSizeStyle(column, resizingEnabled),
+                      }}
+                      className={cn(
+                        isPinned && 'bg-background',
+                        column.id === firstDataColumnId && 'ps-0'
+                      )}
+                    >
+                      <Skeleton className="my-1 h-4 w-full" />
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             )}
         </TableBody>
