@@ -183,7 +183,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] data-[resizing]:bg-[var(--ui-table-header-cell-color-active)] [&:has([role=checkbox])]:pe-0',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] data-[resizing]:bg-[var(--ui-table-header-cell-color-active)]',
         // No `h-*` here: in border-collapse tables Gecko/WebKit add the row
         // border on top of a cell's `height` (~49px vs 40px in Blink).
         // py + leading-6 already yields the 40px row cross-engine.
@@ -235,7 +235,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
     <td
       ref={ref}
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors',
         // See TableHead: height comes from py + leading-6, not `h-*`.
         overflow === 'truncate' && 'overflow-hidden whitespace-nowrap',
         overflow === 'wrap' && 'whitespace-normal',
