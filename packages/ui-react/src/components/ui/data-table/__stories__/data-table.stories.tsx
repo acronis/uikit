@@ -79,6 +79,7 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'status',
+    size: 120,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
@@ -90,12 +91,14 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'email',
+    minSize: 200,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Email" />
     ),
   },
   {
     accessorKey: 'amount',
+    size: 120,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
