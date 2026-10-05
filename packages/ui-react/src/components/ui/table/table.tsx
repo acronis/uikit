@@ -36,7 +36,7 @@ const Table = React.forwardRef<
   <table
     ref={ref}
     className={cn(
-      'w-full caption-bottom border-collapse text-sm text-[var(--ui-table-data-value-color-idle)]',
+      'w-full table-fixed caption-bottom border-collapse text-sm text-[var(--ui-table-data-value-color-idle)]',
       className
     )}
     {...props}
