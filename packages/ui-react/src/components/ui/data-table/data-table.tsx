@@ -1335,6 +1335,13 @@ export function DataTable<TData, TValue = unknown>({
               }
               const isSelected = row.getIsSelected();
               const isCurrent = highlightCurrentRow && currentRowId === row.id;
+              // While a selection is in play the action cell renders nothing and
+              // carries no tint of its own, so suppressing the row's hover tint
+              // for it would leave the pointer over a row that reacts to
+              // nothing. Also covers a row hovered just before the selection
+              // started, whose id is still in `actionHoveredRowId`.
+              const isActionCellHovered =
+                !bulkSelectionActive && actionHoveredRowId === row.id;
               // Opaque background applied to pinned cells so sibling cells don't
               // show through while the grid scrolls horizontally. Mirrors the
               // row's own resolved background across selection/current/stripe —
@@ -1346,19 +1353,17 @@ export function DataTable<TData, TValue = unknown>({
               // doesn't look "stuck" idle while the rest of the row is
               // hovered — the row's native `hover:` can't reach it since it
               // needs its own opaque background (see `headerPinnedBg` above).
+              // When the action cell is hovered, `group-hover:` is stripped so
+              // pinned cells don't show hover while the rest of the row is
+              // suppressed via `hover:bg-transparent` on the <tr>.
               const rowBg =
                 isSelected || isCurrent
                   ? 'bg-[var(--ui-table-data-row-color-active)]'
                   : striped && rowIndex % 2 === 1
                     ? 'bg-[var(--ui-background-surface-secondary)]'
-                    : 'bg-background group-hover:bg-[var(--ui-table-data-row-color-hover)]';
-              // While a selection is in play the action cell renders nothing and
-              // carries no tint of its own, so suppressing the row's hover tint
-              // for it would leave the pointer over a row that reacts to
-              // nothing. Also covers a row hovered just before the selection
-              // started, whose id is still in `actionHoveredRowId`.
-              const isActionCellHovered =
-                !bulkSelectionActive && actionHoveredRowId === row.id;
+                    : isActionCellHovered
+                      ? 'bg-background'
+                      : 'bg-background group-hover:bg-[var(--ui-table-data-row-color-hover)]';
               return (
                 <Fragment key={row.id}>
                   <TableRow
