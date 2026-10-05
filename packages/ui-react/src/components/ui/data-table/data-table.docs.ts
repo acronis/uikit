@@ -140,7 +140,7 @@ export interface DataTableProps {
    * Renders a full row, bypassing DataTable's default per-cell `flexRender`
    * path entirely. Use to swap in a custom, independently memoizable row
    * component — the caller owns the row's markup and equality semantics. Reuse
-   * the exported `getCellStyle`/`getPinnedStyle`/`getColumnWidth` helpers to
+   * the exported `getCellStyle`/`getPinnedStyle`/`getColumnSizeStyle` helpers to
    * match DataTable's default cell styling if desired. Also bypasses
    * `renderExpandedRow` — a row rendered via `renderRow` never gets an
    * expanded-content row appended.

@@ -157,25 +157,19 @@ const TANSTACK_DEFAULT_SIZE = 150;
 const TANSTACK_DEFAULT_MIN_SIZE = 20;
 const TANSTACK_DEFAULT_MAX_SIZE = Number.MAX_SAFE_INTEGER;
 
-function hasUserSizing<TData>(column: Column<TData, unknown>): boolean {
-  return (
-    column.columnDef.size !== TANSTACK_DEFAULT_SIZE ||
-    column.columnDef.minSize !== TANSTACK_DEFAULT_MIN_SIZE ||
-    column.columnDef.maxSize !== TANSTACK_DEFAULT_MAX_SIZE
-  );
-}
-
-// A column's rendered width tracks TanStack's size model once the consumer has
-// opted in — either explicitly (any size/minSize/maxSize on the ColumnDef that
-// differs from TanStack's own defaults) or implicitly (column resizing enabled,
-// which needs every column's width to be deterministic for the drag math to
-// work). Without either, columns get no `width` style so the browser distributes
-// remaining table width freely among unsized columns.
+// CSS sizing rules per column — each column is evaluated independently:
 //
-// Chrome columns ('select', '__actions') are always strictly enforced:
-// width = minWidth = maxWidth. For all other columns, maxWidth is only applied
-// when the caller explicitly set a maxSize that differs from TanStack's default
-// — matching the convention that size === minSize === maxSize means "fixed width".
+//   size set        → strictly fixed: width = minWidth = maxWidth = size.
+//                     minSize/maxSize on the ColumnDef are ignored because
+//                     `size` is the definitive width.
+//   size not set    → flexible: only minSize/maxSize apply as CSS floors/ceilings.
+//                     No CSS `width` is emitted, so table-fixed still treats the
+//                     column as "unsized" and gives it a share of the remaining
+//                     space — while still honouring the floor/ceiling constraints.
+//   resizing on     → all columns get width = minWidth = getSize() so the drag-
+//                     handle offset math has a deterministic baseline.
+//
+// Chrome columns ('select', '__actions') are always strictly fixed.
 export function getColumnSizeStyle<TData>(
   column: Column<TData, unknown>,
   enableColumnResizing: boolean
@@ -191,14 +185,32 @@ export function getColumnSizeStyle<TData>(
     const size = column.getSize();
     return { width: size, minWidth: size, maxWidth: size };
   }
-  if (enableColumnResizing || hasUserSizing(column)) {
+
+  if (enableColumnResizing) {
+    // Drag math needs every column to have a deterministic CSS width.
     const size = column.getSize();
-    const maxWidth =
-      column.columnDef.maxSize !== TANSTACK_DEFAULT_MAX_SIZE
-        ? column.columnDef.maxSize
-        : undefined;
-    return { width: size, minWidth: size, ...(maxWidth !== undefined && { maxWidth }) };
+    return { width: size, minWidth: size };
   }
+
+  const hasExplicitSize = column.columnDef.size !== TANSTACK_DEFAULT_SIZE;
+  const hasExplicitMinSize = column.columnDef.minSize !== TANSTACK_DEFAULT_MIN_SIZE;
+  const hasExplicitMaxSize = column.columnDef.maxSize !== TANSTACK_DEFAULT_MAX_SIZE;
+
+  if (hasExplicitSize) {
+    // size overrides minSize/maxSize — strictly fixed column.
+    const size = column.columnDef.size!;
+    return { width: size, minWidth: size, maxWidth: size };
+  }
+
+  if (hasExplicitMinSize || hasExplicitMaxSize) {
+    // Flexible column: no CSS width (stays "unsized" for table-fixed distribution),
+    // only floor/ceiling constraints.
+    return {
+      ...(hasExplicitMinSize && { minWidth: column.columnDef.minSize }),
+      ...(hasExplicitMaxSize && { maxWidth: column.columnDef.maxSize }),
+    };
+  }
+
   return undefined;
 }
 
@@ -1046,6 +1058,17 @@ export function DataTable<TData, TValue = unknown>({
   // real opaque tokens and are safe to mirror as-is (see `rowBg` below).
   const headerPinnedBg = 'bg-background';
 
+  // Sum of every visible column's minimum CSS width. Applied as `min-width` on
+  // the <table> so the overflow-auto wrapper scrolls once the container is
+  // narrower than the columns' combined floor — without this the table is always
+  // w-full and individual cell min-widths have no effect on scrolling.
+  const tableMinWidth = resizingEnabled
+    ? undefined
+    : table.getVisibleLeafColumns().reduce<number>((sum, column) => {
+        const minWidth = getColumnSizeStyle(column, false)?.minWidth;
+        return sum + (typeof minWidth === 'number' ? minWidth : 0);
+      }, 0) || undefined;
+
   return (
     <div
       data-slot="data-table"
@@ -1053,7 +1076,11 @@ export function DataTable<TData, TValue = unknown>({
     >
       <Table
         style={
-          resizingEnabled ? { width: table.getCenterTotalSize() } : undefined
+          resizingEnabled
+            ? { width: table.getCenterTotalSize() }
+            : tableMinWidth
+              ? { minWidth: tableMinWidth }
+              : undefined
         }
       >
         {/* One provider for the whole header row so the capability hints share
