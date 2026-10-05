@@ -117,7 +117,7 @@ function TableViewOptions({
       <DropdownMenuTrigger
         render={
           iconOnly ? (
-            <ButtonIcon aria-label={triggerAriaLabel} />
+            <ButtonIcon aria-label={triggerAriaLabel} className="w-auto" />
           ) : (
             <Button variant="secondary" className="h-8 shrink-0 gap-2" />
           )
