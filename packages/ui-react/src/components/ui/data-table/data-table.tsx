@@ -1441,7 +1441,7 @@ export function DataTable<TData, TValue = unknown>({
                               <DropdownMenu>
                                 <DropdownMenuTrigger
                                   render={
-                                    <ButtonIcon aria-label={rowActionsLabel} />
+                                    <ButtonIcon aria-label={rowActionsLabel} className="w-auto" />
                                   }
                                 >
                                   <EllipsisIcon />
