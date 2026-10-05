@@ -462,8 +462,9 @@ interface DataTableOwnProps<TData> {
    * Keep the content ~24px tall so the row stays 40px. Decorative only: no
    * text or interactive elements, and `aria-hidden` on anything readable — the
    * kit adds no live region. Also suits an empty view (static placeholder rows
-   * under an empty-state overlay). Does not affect the infinite-scroll
-   * loading-more row.
+   * under an empty-state overlay). Also called for each infinite-scroll
+   * loading-more row (`paginationMode="infinite"` + `isLoadingMore`), with
+   * `rowIndex` 0-based within those rows.
    */
   renderSkeletonCell?: (context: {
     column: Column<TData, unknown>;
@@ -586,9 +587,16 @@ interface DataTableOwnProps<TData> {
   emptyLabel?: string;
   /**
    * Whether a load is in flight — suppresses further `onLoadMore` calls and
-   * renders a trailing loading row. `paginationMode="infinite"` only.
+   * renders trailing loading rows. `paginationMode="infinite"` only.
    */
   isLoadingMore?: boolean;
+  /**
+   * Number of skeleton rows to render at the bottom of the table while
+   * `isLoadingMore` is set. Defaults to `1`. Pairs with `renderSkeletonCell`
+   * (the same callback is used for both initial-load and load-more rows, with
+   * `rowIndex` 0-based within the loading-more block). `paginationMode="infinite"` only.
+   */
+  loadingMoreRows?: number;
   /**
    * Stick the header row to the top of the scroll container so it stays
    * visible while the user scrolls vertically through the table body.
@@ -673,6 +681,7 @@ export function DataTable<TData, TValue = unknown>({
   resizeColumnLabel = 'Resize column',
   emptyLabel = 'No results.',
   isLoadingMore = false,
+  loadingMoreRows = 1,
   stickyHeader = false,
   hideActionColumn = false,
   renderRowActions,
@@ -1317,20 +1326,31 @@ export function DataTable<TData, TValue = unknown>({
                 key={`skeleton-${rowIndex}`}
                 className="hover:bg-transparent"
               >
-                {table.getVisibleLeafColumns().map((column) => (
-                  <TableCell
-                    key={column.id}
-                    overflow={column.columnDef.meta?.overflow ?? 'truncate'}
-                  >
-                    {renderSkeletonCell ? (
-                      renderSkeletonCell({ column, rowIndex })
-                    ) : (
-                      /* my-1 fills the 24px line box so the row stays 40px —
-                         cells have no fixed height, a bare h-4 block gives 32px. */
-                      <Skeleton className="my-1 h-4 w-full" />
-                    )}
-                  </TableCell>
-                ))}
+                {table.getVisibleLeafColumns().map((column) => {
+                  const isPinned = column.getIsPinned();
+                  return (
+                    <TableCell
+                      key={column.id}
+                      overflow={column.columnDef.meta?.overflow ?? 'truncate'}
+                      style={{
+                        ...getPinnedStyle(column),
+                        ...getColumnSizeStyle(column, resizingEnabled),
+                      }}
+                      className={cn(
+                        isPinned && 'bg-background',
+                        column.id === firstDataColumnId && 'ps-0'
+                      )}
+                    >
+                      {renderSkeletonCell ? (
+                        renderSkeletonCell({ column, rowIndex })
+                      ) : (
+                        /* my-1 fills the 24px line box so the row stays 40px —
+                           cells have no fixed height, a bare h-4 block gives 32px. */
+                        <Skeleton className="my-1 h-4 w-full" />
+                      )}
+                    </TableCell>
+                  );
+                })}
               </TableRow>
             ))
           ) : rows?.length ? (
@@ -1530,8 +1550,10 @@ export function DataTable<TData, TValue = unknown>({
           {isInfiniteScroll &&
             !skeleton &&
             rows.length > 0 &&
-            isLoadingMore && (
+            isLoadingMore &&
+            Array.from({ length: loadingMoreRows }).map((_, rowIndex) => (
               <TableRow
+                key={`loading-more-${rowIndex}`}
                 className="hover:bg-transparent"
                 role="status"
                 aria-live="polite"
@@ -1551,12 +1573,16 @@ export function DataTable<TData, TValue = unknown>({
                         column.id === firstDataColumnId && 'ps-0'
                       )}
                     >
-                      <Skeleton className="my-1 h-4 w-full" />
+                      {renderSkeletonCell ? (
+                        renderSkeletonCell({ column, rowIndex })
+                      ) : (
+                        <Skeleton className="my-1 h-4 w-full" />
+                      )}
                     </TableCell>
                   );
                 })}
               </TableRow>
-            )}
+            ))}
         </TableBody>
       </Table>
     </div>
