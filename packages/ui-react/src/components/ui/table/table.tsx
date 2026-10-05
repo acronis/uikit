@@ -311,7 +311,7 @@ const TableActionsCell = React.forwardRef<
       'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle bg-[var(--ui-table-data-cell-color-idle)]',
       // See TableHead: no `h-*`; the row height comes from its data cells.
       !bulkSelectionActive &&
-        'rounded-sm transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+        'transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
       className
     )}
     {...props}
@@ -336,7 +336,7 @@ const TableSettingsCell = React.forwardRef<
     ref={ref}
     className={cn(
       // See TableHead: no `h-*`; the row height comes from its header cells.
-      'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle rounded-sm transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+      'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
       className
     )}
     {...props}
