@@ -31553,6 +31553,7 @@
       },
       "container": {
         "borderColor": {
+          "$description": "TEMP FIX (PLTFRM-95408): values.yellow_1c is hand-patched to {colors.border.onSurface.border} because its light-mode sidebar is yellow (#FADB1F) and the Figma value (onBrand white 10%) is invisible on it. Figma Brand collection is not fixed yet; the next /figma-brand-sync will revert this until it is.",
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
             "com.figma.scopes": ["STROKE_COLOR"],
@@ -31581,7 +31582,7 @@
             "telstra": "{colors.border.onSurface.border}",
             "virtual_one": "{colors.border.onBrand.border}",
             "virtuozzo": "{colors.border.onBrand.border}",
-            "yellow_1c": "{colors.border.onBrand.border}"
+            "yellow_1c": "{colors.border.onSurface.border}"
           }
         },
         "borderWidth": {
@@ -31687,6 +31688,7 @@
       },
       "containerFooter": {
         "borderColor": {
+          "$description": "TEMP FIX (PLTFRM-95408): values.yellow_1c is hand-patched to {colors.border.onSurface.border} because its light-mode sidebar is yellow (#FADB1F) and the Figma value (onBrand white 10%) is invisible on it. Figma Brand collection is not fixed yet; the next /figma-brand-sync will revert this until it is.",
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
             "com.figma.scopes": ["STROKE_COLOR"],
@@ -31715,7 +31717,7 @@
             "telstra": "{colors.border.onSurface.border}",
             "virtual_one": "{colors.border.onBrand.border}",
             "virtuozzo": "{colors.border.onBrand.border}",
-            "yellow_1c": "{colors.border.onBrand.border}"
+            "yellow_1c": "{colors.border.onSurface.border}"
           }
         },
         "borderWidth": {
@@ -31795,6 +31797,7 @@
       },
       "logo": {
         "color": {
+          "$description": "TEMP FIX (PLTFRM-95408): values.yellow_1c is hand-patched to {palette.blue.14} because its light-mode sidebar is yellow (#FADB1F) and the Figma value (onBrand white) is invisible on it. Figma Brand collection is not fixed yet; the next /figma-brand-sync will revert this until it is.",
           "$extensions": {
             "com.figma.hiddenFromPublishing": true,
             "com.figma.scopes": ["SHAPE_FILL", "STROKE_COLOR"],
@@ -31823,7 +31826,7 @@
             "telstra": "{palette.blue.14}",
             "virtual_one": "{colors.glyph.onBrand.primary}",
             "virtuozzo": "{colors.glyph.onBrand.primary}",
-            "yellow_1c": "{colors.glyph.onBrand.primary}"
+            "yellow_1c": "{palette.blue.14}"
           }
         }
       },
