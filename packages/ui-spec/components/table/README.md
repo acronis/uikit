@@ -2,7 +2,7 @@
 
 Displays rows and columns of data. Composable from native table parts, with
 sortable column headers, a selected row state, per-column overflow modes
-(wrap or clip), fixed-width
+(wrap, truncate, or clip), fixed-width
 leading selection and trailing actions/settings cells, and — as
 TanStack-independent companions — a pagination bar and a show/hide-columns
 menu. Two headless hooks (`useSortState`, `useTableUrlState`) supply optional
@@ -42,8 +42,8 @@ sort and URL-synced state.
 | `TableBody`         | `tbody`   | Data rows section.                                                                                                                                                                        |
 | `TableFooter`       | `tfoot`   | Summary section with a top divider.                                                                                                                                                       |
 | `TableRow`          | `tr`      | A row; `selected` applies the active state.                                                                                                                                               |
-| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `overflow` (`'wrap'` / `'hidden'`).                                                                                               |
-| `TableCell`         | `td`      | A data cell; `overflow='wrap'` grows it to fit multi-line content, `overflow='hidden'` clips at the column width.                                                                         |
+| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `overflow` (`'wrap'` / `'truncate'` / `'hidden'`).                                                                                |
+| `TableCell`         | `td`      | A data cell; `overflow='wrap'` grows it to fit multi-line content, `'truncate'` / `'hidden'` clip at the column width. Unset wraps (browser default).                                     |
 | `TableSelectCell`   | `td`/`th` | 32px leading selection cell for a `Checkbox`; `header` renders the select-all `th`.                                                                                                       |
 | `TableActionsCell`  | `td`      | 48px trailing cell for a row's overflow trigger; owns the hover/press tint and focus ring.                                                                                                |
 | `TableSettingsCell` | `th`      | 48px trailing header cell for the column-settings trigger.                                                                                                                                |
@@ -99,6 +99,11 @@ const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
 
 // Wrapping cell — whitespace-normal, so multi-line content grows the row
 <TableCell overflow="wrap">{longDescription}</TableCell>
+
+// Truncated column — overflow-hidden whitespace-nowrap, no max-w-0, so it never
+// collapses a column. The clip width holds under table-layout: fixed
+// (<Table className="table-fixed">, as DataTable renders it).
+<TableCell overflow="truncate">{path}</TableCell>
 
 // Clipped column — max-w-0 overflow-hidden whitespace-nowrap clips at the
 // column's CSS width, so the column needs one (here on the header). The kit only

@@ -56,7 +56,9 @@ from it too (see **Server-driven usage** below).
 - **Infinite scroll** — set `paginationMode="infinite"` and pass the full
   accumulated `data`, `hasNextPage`, `isLoadingMore`, and an `onLoadMore`
   callback. DataTable renders a sentinel row that calls `onLoadMore` once it
-  scrolls into view, and a trailing loading row while `isLoadingMore` is true.
+  scrolls into view, and trailing skeleton loading rows while `isLoadingMore`
+  is true (`loadingMoreRows`, default 1; `loadingMoreLabel` sets their
+  visually hidden text).
   The sentinel needs at least one row already rendered — it can't drive an
   empty table's very first fetch, so seed the first page yourself (e.g. on
   mount). Pass `loadMoreRootMargin` (e.g. `'400px'`) to fire `onLoadMore`
@@ -72,8 +74,8 @@ from it too (see **Server-driven usage** below).
   content itself). `renderEmptyState` swaps in a custom "no data" row,
   receiving `hasFilters` so the caller can distinguish "no data at all" from
   "no matches". `renderSkeletonCell` swaps only the content of each `skeleton`
-  placeholder cell (DataTable keeps the row and cell), e.g. for static
-  placeholder rows under an empty-state overlay.
+  and loading-more placeholder cell (DataTable keeps the row and cell), e.g. for
+  static placeholder rows under an empty-state overlay.
 
 ## Advanced columns
 
@@ -82,14 +84,24 @@ from it too (see **Server-driven usage** below).
   `columnResizing`). Pass `onColumnSizingChange` to persist widths.
 - **Sticky (pinned) columns** — set `meta.pin: 'left' | 'right'` on a
   `ColumnDef`. DataTable drives TanStack's native column-pinning and renders the
-  column as `position: sticky` cells with an opaque row background. The built-in
-  trailing settings/actions column is pinned right by default.
-- **Column overflow** — set `meta.overflow: 'wrap'` on a `ColumnDef` to let
-  that column's header and cells wrap onto multiple lines, or
-  `meta.overflow: 'hidden'` to clip content at the column's CSS width (set
-  `size` on the column — without a width source the column collapses). Unset —
-  browser default (wrapping). Forwarded to the `Table` primitives' `overflow`
-  prop. Ellipsis and tooltip are the inner component's responsibility.
+  column as `position: sticky` cells with an opaque row background. `select`
+  and `__actions` are reserved ids that ignore `meta.pin`: a `select` column is
+  always pinned left and the built-in trailing settings/actions column is
+  always pinned right.
+- **Column sizing** — a column with `size` is strictly fixed; a column without
+  one is flexible and shares the remaining width of the `table-fixed` layout,
+  with any explicit `minSize`/`maxSize` applied as CSS floor/ceiling. Widths go
+  on a `<colgroup>`, so they also hold with grouped headers.
+  `getColumnSizeStyle` / `getCellStyle` reproduce these styles in a `renderRow`
+  row.
+- **Column overflow** — DataTable defaults `meta.overflow` to `'truncate'`:
+  the header and cells stay on one line, clipped at the column's CSS width
+  (`overflow-hidden whitespace-nowrap`). Set `meta.overflow: 'wrap'` to let a
+  column wrap onto multiple lines, or `'hidden'` for the `max-w-0` clip (set
+  `size` on the column — without a width source the column collapses).
+  Forwarded to the `Table` primitives' `overflow` prop, where unset still means
+  browser default (wrapping). Ellipsis and tooltip are the inner component's
+  responsibility.
 - **Visibility labels and categories** — set `meta.label` for the text shown in
   the visibility dropdown and `meta.category` to group related columns under a
   labelled section with a Show all action. Labels fall back to a string header,

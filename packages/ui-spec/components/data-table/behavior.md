@@ -51,23 +51,38 @@ Scenario: Custom skeleton cell content
   When it returns null or undefined for a column
   Then that cell renders empty — the default Skeleton bar is not used as a fallback
   # Return the exported Skeleton to keep the default for a column. Content should
-  # stay ~24px tall so the row stays 40px. Pinning/width styles are not applied
-  # to skeleton cells.
+  # stay ~24px tall so the row stays 40px. Skeleton cells get the same pinned
+  # (sticky) and column-size styles as data cells.
 ```
 
 ```gherkin
 Scenario: renderSkeletonCell without skeleton
-  Given renderSkeletonCell is provided and skeleton is not set
+  Given renderSkeletonCell is provided, skeleton is not set, and no loading-more
+      rows are rendering
   Then renderSkeletonCell is never called and the data rows render as usual
 ```
 
 ```gherkin
-Scenario: Loading-more row is unaffected by renderSkeletonCell
-  Given paginationMode="infinite", isLoadingMore is true, and renderSkeletonCell is provided
-  And skeleton is not set (the loading-more row never renders while skeleton is set)
-  Then the trailing loading-more row renders its own single spanning Skeleton
-      (role="status", aria-live="polite", sr-only label)
-  And renderSkeletonCell is not called for it
+Scenario: Loading-more rows use renderSkeletonCell
+  Given paginationMode="infinite", isLoadingMore is true, and at least one data row
+  And skeleton is not set (loading-more rows never render while skeleton is set)
+  Then loadingMoreRows skeleton rows (default 1) render at the bottom of the body
+  And each visible leaf column gets one cell per row, with the column's pinned and
+      size styles and its meta.overflow mode (default 'truncate')
+  And each cell holds the default Skeleton bar, or renderSkeletonCell's content
+      when provided, called with { column, rowIndex } (rowIndex is 0-based within
+      the loading-more block)
+  And the first cell of the first loading row also holds a sr-only loadingMoreLabel
+      (default "Loading more rows…")
+  And the rows are not a live region — the label is read when a screen reader
+      reaches that cell, not announced automatically
+```
+
+```gherkin
+Scenario: Zero loading-more rows
+  Given paginationMode="infinite", isLoadingMore is true, and loadingMoreRows=0
+  Then no loading-more rows render
+  And no sr-only loadingMoreLabel renders
 ```
 
 ```gherkin
@@ -78,8 +93,9 @@ Scenario: Render from an external table instance
   And columnVisibility/onColumnVisibilityChange, onColumnSizingChange,
       enableColumnResizing, getRowCanExpand, manualSorting, sorting,
       onSortingChange, and paginationMode-related props are no-ops
-  And DataTable does not drive column pinning from meta.pin on that instance —
-      the caller pins/unpins its own columns via TanStack's column.pin()
+  And DataTable does not drive column pinning from meta.pin on that instance,
+      nor auto-pin a select column — the caller pins/unpins its own columns via
+      TanStack's column.pin()
 ```
 
 ```gherkin
@@ -232,7 +248,8 @@ Scenario: Infinite scroll
   Then onLoadMore fires
   And no further onLoadMore calls fire while isLoadingMore is true
   When isLoadingMore is true
-  Then a trailing loading row renders below the sentinel
+  Then loadingMoreRows trailing loading rows (default 1) render below the sentinel
+      (see "Loading-more rows use renderSkeletonCell" above)
 ```
 
 ```gherkin
@@ -423,6 +440,35 @@ Scenario: Sticky (pinned) columns
 ```
 
 ```gherkin
+Scenario: Reserved select and __actions columns are always pinned
+  Given DataTable builds its own table instance
+  And columns include one with id "select", and the built-in __actions column renders
+  Then the select column is pinned left and __actions is pinned right
+  And meta.pin set on either of them is ignored
+  And the first visible data column after select gets no start padding (ps-0) in
+      its header, data, skeleton, and loading-more cells, so the checkbox and the
+      first value aren't separated by two paddings
+```
+
+```gherkin
+Scenario: Column sizing
+  Given DataTable builds its own table instance without enableColumnResizing
+  Then the table renders with table-layout: fixed and a <colgroup> with one <col>
+      per visible leaf column
+  And a column with size set is strictly fixed (width = minWidth = maxWidth = size;
+      minSize/maxSize are ignored) and its <col> carries that width
+  And a column without size has no width; an explicit minSize/maxSize becomes a
+      CSS min-width/max-width, and the column shares the remaining table width
+  And the select column defaults to 48px (overridable with size) and __actions is
+      48px, both strictly fixed
+  And the <table> min-width is the sum of every visible column's min-width
+  When the columns are arranged in header groups
+  Then the same widths apply — the <col> elements carry them, so group-label
+      cells in the top header row don't affect leaf widths
+  # With enableColumnResizing every column gets width = minWidth = its current size.
+```
+
+```gherkin
 Scenario: DataTable owns the scroll container
   Given a DataTable rendering a wide table
   Then the DataTable root div (data-slot="data-table") always has overflow-auto
@@ -470,6 +516,17 @@ Scenario: Wrapping column
 ```
 
 ```gherkin
+Scenario: Truncated column
+  Given a column with meta.overflow = 'truncate'
+  Then that column's header and cells receive overflow="truncate"
+  And they apply overflow-hidden whitespace-nowrap (no max-w-0)
+  And content stays on one line, clipped at the column's CSS width
+  And a column without size still gets its share of the table-fixed layout, so it
+      does not collapse
+  And ellipsis and tooltip are the inner component's responsibility (the column's cell render)
+```
+
+```gherkin
 Scenario: Clipped column
   Given a column with meta.overflow = 'hidden'
   And the column has a CSS width (size on the column definition, or column resizing)
@@ -483,8 +540,10 @@ Scenario: Clipped column
 ```gherkin
 Scenario: Default column (meta.overflow unset)
   Given a column with no meta.overflow
-  Then its header and cells receive no overflow class
-  And the browser default (wrapping) applies
+  Then DataTable passes overflow="truncate" to its header and cells
+  And they behave as in "Truncated column" above
+  # Unlike the bare Table primitives, where an unset overflow adds no class and
+  # the browser default (wrapping) applies. Set meta.overflow = 'wrap' to wrap.
 ```
 
 ```gherkin

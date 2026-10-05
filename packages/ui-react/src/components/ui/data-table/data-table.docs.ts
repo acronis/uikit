@@ -23,9 +23,10 @@ export interface DataTableProps {
    * `getRowId`, `columnVisibility`, `onColumnVisibilityChange`,
    * `onColumnSizingChange`, `enableColumnResizing`, `enableColumnReordering`,
    * `columnOrder`, `onColumnOrderChange`, `getRowCanExpand`, `rowSelection`,
-   * `onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
-   * `paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
-   * `isLoadingMore`. `meta.pin`-driven column pinning is also skipped —
+   * `onRowSelectionChange`, `enableSorting`, `manualSorting`, `sorting`,
+   * `onSortingChange`, `paginationMode`, `onLoadMore`, `loadMoreRootMargin`,
+   * `hasNextPage`, `isLoadingMore`, `loadingMoreRows`, `loadingMoreLabel`.
+   * `meta.pin`-driven column pinning is also skipped —
    * pin/unpin the caller's own instance via TanStack's `column.pin()`.
    */
   table?: unknown;
@@ -124,6 +125,13 @@ export interface DataTableProps {
    */
   onRowActivate?: (row: unknown, details: { via: 'keyboard' | 'pointer'; event: unknown }) => void;
   /**
+   * Enable or disable column sorting globally (default `true`). Set to `false`
+   * to hide sort buttons and the "Sort column" tooltip hint on all header cells.
+   * Individual columns can also opt out via `enableSorting: false` on their
+   * `ColumnDef`. No-op when `table` is passed.
+   */
+  enableSorting?: boolean;
+  /**
    * Opt out of client-side sorting — pass already-sorted `data` and drive
    * sorting via `sorting`/`onSortingChange` (e.g. mapped to a server query by
    * the caller).
@@ -177,9 +185,23 @@ export interface DataTableProps {
   hasNextPage?: boolean;
   /**
    * Whether a load is in flight — suppresses further `onLoadMore` calls and
-   * renders a trailing loading row. `paginationMode="infinite"` only.
+   * renders trailing skeleton rows. `paginationMode="infinite"` only.
    */
   isLoadingMore?: boolean;
+  /**
+   * Number of skeleton rows to render at the bottom of the table while
+   * `isLoadingMore` is set (default `1`). Set to `0` to suppress all loading
+   * UI — no skeleton rows and no `loadingMoreLabel`; supply your own indicator
+   * instead. `paginationMode="infinite"` only.
+   */
+  loadingMoreRows?: number;
+  /**
+   * Visually hidden text placed in the first loading-more row, readable by
+   * screen readers when navigating to that cell (not a live region, not
+   * auto-announced). Default `'Loading more rows…'`. Override to localize.
+   * `paginationMode="infinite"` only.
+   */
+  loadingMoreLabel?: string;
   /**
    * Hide the trailing sticky action column — the column-visibility cog in the
    * header and each row's overflow-actions ellipsis. Shown by default. A

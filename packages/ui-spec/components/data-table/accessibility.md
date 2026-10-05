@@ -49,10 +49,14 @@
   renders no tooltip.
 - Per-column filter fields live in a keyboard-navigable `FilterSearchFilters`
   popover; each applied-filter chip below the toolbar removes its own filter.
-- The infinite-scroll loading row (`paginationMode="infinite"`, `isLoadingMore`)
-  carries `role="status"`/`aria-live="polite"` with an `sr-only` "Loading more
-  rows…" text, so a screen-reader user is told a fetch is in flight without
-  having to notice the animated placeholder.
+- The infinite-scroll loading-more rows (`paginationMode="infinite"`,
+  `isLoadingMore`, count set by `loadingMoreRows`) are plain table rows. The
+  first cell of the first row holds `sr-only` `loadingMoreLabel` text (default
+  "Loading more rows…", overridable to localize); with `loadingMoreRows={0}`
+  neither the rows nor the text render. A screen reader reads the text when the
+  user navigates to that cell. The rows are **not** a live region, so the text
+  is not announced automatically when loading starts. A consumer that needs an automatic announcement can render its own
+  live region outside the table.
 - **Skeleton rows** (`skeleton`) are not focusable (no `tabIndex`, outside the
   roving tabindex) and carry no live region: DataTable does not announce the
   initial load, so conveying it (e.g. a `role="status"` message elsewhere on

@@ -16,7 +16,7 @@ schematic: |
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
     sentinel:      aria-hidden row that triggers onLoadMore on scroll (infinite mode)
-    loading-row:   trailing "loading more" row (role=status) while isLoadingMore
+    loading-row:   trailing skeleton rows (loadingMoreRows) while isLoadingMore
     action-column: trailing sticky 48px column — settings cog (⚙) in the header,
                    per-row overflow-actions ellipsis (⋯) in each row
       view-options: [ ⚙ ] ▾ column-visibility menu opened from that header cog
@@ -150,9 +150,10 @@ parts:
   - id: loading-row
     element: tr
     description: >-
-      A trailing animated-placeholder row shown while `isLoadingMore` is true
-      (`paginationMode="infinite"`); carries `role="status"`/`aria-live="polite"`
-      with an `sr-only` text so the in-flight fetch is announced.
+      Trailing skeleton rows (`loadingMoreRows`, default 1) shown while
+      `isLoadingMore` is true (`paginationMode="infinite"`), one Skeleton per
+      column. Rows keep their implicit `row` role; the first cell of the first
+      row carries a single `sr-only` `loadingMoreLabel` text.
     optional: true
   - id: toolbar
     element: div

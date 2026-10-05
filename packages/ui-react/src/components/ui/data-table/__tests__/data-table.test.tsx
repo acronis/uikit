@@ -11,6 +11,7 @@ import {
 import {
   fireEvent,
   render,
+  renderHook,
   screen,
   waitFor,
   within,
@@ -27,6 +28,7 @@ import {
   DataTableExpandTrigger,
   DataTablePagination,
   DataTableToolbar,
+  getColumnSizeStyle,
 } from '../index';
 
 type Row = { id: string; email: string; amount: number };
@@ -99,6 +101,29 @@ describe('DataTable', () => {
     ).toBeInTheDocument();
     expect(
       screen.queryByRole('button', { name: 'Sort by Amount' })
+    ).not.toBeInTheDocument();
+  });
+
+  it('hides sort buttons when enableSorting={false}', () => {
+    const sortable: ColumnDef<Row>[] = [
+      {
+        accessorKey: 'amount',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Amount" />
+        ),
+        cell: ({ row }) => <span>{row.original.amount}</span>,
+      },
+    ];
+    render(
+      <DataTable
+        columns={sortable}
+        data={data.slice(0, 3)}
+        enableSorting={false}
+        hideActionColumn
+      />
+    );
+    expect(
+      screen.queryByRole('button', { name: /sort/i })
     ).not.toBeInTheDocument();
   });
 
@@ -556,10 +581,13 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
       />
     );
     expect(MockIntersectionObserver.instances).toHaveLength(0);
-    expect(container.querySelectorAll('.animate-pulse')).toHaveLength(1);
+    const loadingRows = Array.from(
+      container.querySelectorAll('tbody tr')
+    ).filter((row) => row.querySelector('.animate-pulse'));
+    expect(loadingRows).toHaveLength(1);
   });
 
-  it('renders the loading-more row as a live-region Skeleton', () => {
+  it('renders one skeleton per column in the loading-more row', () => {
     const { container } = render(
       <DataTable
         columns={columns}
@@ -567,14 +595,133 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
         paginationMode="infinite"
         hasNextPage
         isLoadingMore
+        hideActionColumn
         onLoadMore={() => {}}
       />
     );
     const skeletons = container.querySelectorAll('[data-slot="skeleton"]');
-    expect(skeletons).toHaveLength(1);
-    const status = screen.getByRole('status');
-    expect(status).toBe(skeletons[0]);
-    expect(status).toHaveAttribute('aria-live', 'polite');
+    expect(skeletons).toHaveLength(columns.length);
+  });
+
+  it('renders loadingMoreRows trailing loading rows', () => {
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        loadingMoreRows={3}
+        onLoadMore={() => {}}
+      />
+    );
+    const tbody = container.querySelector('tbody')!;
+    const loadingRows = Array.from(tbody.querySelectorAll('tr')).filter(
+      (row) => row.querySelector('[data-slot="skeleton"]')
+    );
+    expect(loadingRows).toHaveLength(3);
+  });
+
+  it('keeps loading-more rows as table rows, not live regions', () => {
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        loadingMoreRows={2}
+        onLoadMore={() => {}}
+      />
+    );
+    const tbody = container.querySelector('tbody')!;
+    expect(tbody.querySelectorAll('[role="status"], [aria-live]')).toHaveLength(
+      0
+    );
+    expect(within(tbody).getAllByRole('row')).toHaveLength(5);
+  });
+
+  it('announces loading more once via an sr-only loadingMoreLabel', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        loadingMoreRows={3}
+        onLoadMore={() => {}}
+      />
+    );
+    const labels = screen.getAllByText('Loading more rows…');
+    expect(labels).toHaveLength(1);
+    expect(labels[0]).toHaveClass('sr-only');
+  });
+
+  it('renders no skeletons and no label when loadingMoreRows is 0', () => {
+    const { container } = render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        loadingMoreRows={0}
+        onLoadMore={() => {}}
+      />
+    );
+    expect(container.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(
+      0
+    );
+    expect(screen.queryByText('Loading more rows…')).not.toBeInTheDocument();
+  });
+
+  it('lets loadingMoreLabel override the announcement text', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        loadingMoreLabel="Weitere Zeilen werden geladen…"
+        onLoadMore={() => {}}
+      />
+    );
+    expect(screen.getByText('Weitere Zeilen werden geladen…')).toHaveClass(
+      'sr-only'
+    );
+    expect(screen.queryByText('Loading more rows…')).not.toBeInTheDocument();
+  });
+});
+
+describe('getColumnSizeStyle', () => {
+  it('emits only floor/ceiling (no width) for a column with only minSize/maxSize', () => {
+    const { result } = renderHook(() =>
+      useReactTable<Row>({
+        data: [],
+        columns: [
+          { accessorKey: 'email', header: 'Email', minSize: 120, maxSize: 300 },
+        ],
+        getCoreRowModel: getCoreRowModel(),
+      })
+    );
+    const style = getColumnSizeStyle(result.current.getColumn('email')!, false);
+    expect(style).toEqual({ minWidth: 120, maxWidth: 300 });
+    expect(style).not.toHaveProperty('width');
+  });
+
+  it('strictly fixes a column with an explicit size', () => {
+    const { result } = renderHook(() =>
+      useReactTable<Row>({
+        data: [],
+        columns: [{ accessorKey: 'email', header: 'Email', size: 200 }],
+        getCoreRowModel: getCoreRowModel(),
+      })
+    );
+    expect(
+      getColumnSizeStyle(result.current.getColumn('email')!, false)
+    ).toEqual({ width: 200, minWidth: 200, maxWidth: 200 });
   });
 });
 
@@ -1097,6 +1244,58 @@ describe('DataTable sticky (pinned) columns', () => {
     });
   });
 
+  it('auto-pins the select column to the left, ignoring meta.pin', async () => {
+    const withSelect: ColumnDef<Row>[] = [
+      {
+        id: 'select',
+        header: () => <span>Select all</span>,
+        cell: () => <span>Select row</span>,
+        meta: { pin: 'right' },
+      },
+      ...columns,
+    ];
+    render(
+      <DataTable
+        columns={withSelect}
+        data={data.slice(0, 1)}
+        hideActionColumn
+      />
+    );
+    await waitFor(() => {
+      const headerCell = screen.getByText('Select all').closest('th')!;
+      expect(headerCell.style.position).toBe('sticky');
+      expect(headerCell.style.left).toBe('0px');
+      const bodyCell = screen.getByText('Select row').closest('td')!;
+      expect(bodyCell.style.position).toBe('sticky');
+      expect(bodyCell.style.left).toBe('0px');
+    });
+  });
+
+  it('gives a second left-pinned column the correct sticky offset after select', async () => {
+    const withSelectAndPin: ColumnDef<Row>[] = [
+      {
+        id: 'select',
+        header: () => <span>Select all</span>,
+        cell: () => <span>Select row</span>,
+      },
+      { accessorKey: 'email', header: 'Email', meta: { pin: 'left' } },
+      { accessorKey: 'amount', header: 'Amount' },
+    ];
+    render(
+      <DataTable
+        columns={withSelectAndPin}
+        data={data.slice(0, 1)}
+        hideActionColumn
+      />
+    );
+    await waitFor(() => {
+      const emailHeader = screen.getByText('Email').closest('th')!;
+      expect(emailHeader.style.position).toBe('sticky');
+      // select is 48px, so Email should be at left: 48px, not 150px (TanStack default)
+      expect(emailHeader.style.left).toBe('48px');
+    });
+  });
+
   it('applies position:sticky to a column pinned via meta', async () => {
     const pinned: ColumnDef<Row>[] = [
       { accessorKey: 'email', header: 'Email', meta: { pin: 'left' } },
@@ -1314,7 +1513,7 @@ describe('DataTable column overflow (meta.overflow)', () => {
     );
   });
 
-  it('adds no overflow classes to a column without meta.overflow', () => {
+  it("defaults a column without meta.overflow to 'truncate'", () => {
     render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
     // Height comes from padding + line-height (no `h-*`, which Gecko/WebKit
     // inflate by the row border in border-collapse tables).
@@ -1322,9 +1521,8 @@ describe('DataTable column overflow (meta.overflow)', () => {
     const plainHeader = screen.getByText('Email').closest('th');
     for (const el of [plainCell, plainHeader]) {
       expect(el).not.toHaveClass('whitespace-normal');
-      expect(el).not.toHaveClass('overflow-hidden');
+      expect(el).toHaveClass('overflow-hidden', 'whitespace-nowrap');
       expect(el).not.toHaveClass('max-w-0');
-      expect(el).not.toHaveClass('whitespace-nowrap');
     }
     expect(plainCell).toHaveClass(
       'py-[var(--ui-table-global-cell-padding-y)]',

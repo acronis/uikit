@@ -246,7 +246,7 @@ contract:
         table edge. DataTable drives TanStack's native column-pinning and renders
         the column as `position: sticky` cells with an opaque row background.
     - name: meta.overflow
-      type: "'wrap' | 'hidden'"
+      type: "'wrap' | 'hidden' | 'truncate'"
       required: false
       description: >-
         Set on a `ColumnDef.meta` (not a DataTable prop) — the overflow mode for
@@ -255,8 +255,10 @@ contract:
         multiple lines (`whitespace-normal`). `'hidden'` clips content at the
         column's CSS width (`max-w-0 overflow-hidden whitespace-nowrap`), so the
         column needs a width source — `size` on the column definition, or
-        column resizing; without one, `max-w-0` collapses the column. Unset —
-        browser default (wrapping). Ellipsis and tooltip are the inner
+        column resizing; without one, `max-w-0` collapses the column.
+        `'truncate'` clips at the column's CSS width (`overflow-hidden
+        whitespace-nowrap`) without forcing `max-w-0`. Unset — defaults to
+        `'truncate'`; set `'wrap'` explicitly for wrapping cells. Ellipsis and tooltip are the inner
         component's responsibility (e.g. a `block truncate` span inside a
         `Tooltip` in the column's `cell`).
     - name: meta.label
@@ -319,6 +321,16 @@ contract:
         On DataTableBulkActionsBar — trailing text shown in place of the
         selection summary while nothing is selected (e.g. "25 of 1250 items
         loaded"). Omit to render nothing in that state. Override to localize.
+    - name: enableSorting
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Enable or disable column sorting globally. Set to `false` to hide sort
+        buttons and the "Sort column" tooltip hint on all header cells. Individual
+        columns can also opt out via `enableSorting: false` on their `ColumnDef`.
+        No-op when `table` is passed (the external instance owns its own sorting
+        config).
     - name: manualSorting
       type: boolean
       required: false
@@ -342,8 +354,11 @@ contract:
         `flexRender` path entirely. Use to swap in a custom, independently
         memoizable row component — the caller owns the row's markup and
         equality semantics. Reuse the exported `getCellStyle` /
-        `getPinnedStyle` / `getColumnWidth` helpers to match DataTable's
-        default cell styling if desired. Also bypasses `renderExpandedRow` —
+        `getPinnedStyle` / `getColumnSizeStyle` helpers to match DataTable's
+        default cell styling if desired — `getColumnSizeStyle(column,
+        enableColumnResizing)` returns `Pick<CSSProperties, 'width' |
+        'minWidth' | 'maxWidth'> | undefined`, spread it into the cell style
+        (`style={{ ...getColumnSizeStyle(col, r) }}`). Also bypasses `renderExpandedRow` —
         a row rendered via `renderRow` never gets an expanded-content row
         appended; read `row.getIsExpanded()` and render it yourself if
         needed.
@@ -395,7 +410,31 @@ contract:
       default: 'false'
       description: >-
         Whether a load is in flight — suppresses further `onLoadMore` calls
-        and renders a trailing loading row. `paginationMode="infinite"` only.
+        and renders `loadingMoreRows` trailing skeleton rows (default 1)
+        while a load is in flight. Each row renders one `<Skeleton>` per
+        column via `renderSkeletonCell` (if provided).
+        `paginationMode="infinite"` only.
+    - name: loadingMoreRows
+      type: number
+      required: false
+      default: '1'
+      description: >-
+        Number of skeleton rows to render at the bottom of the table while
+        `isLoadingMore` is set. `0` suppresses all skeleton rows and the
+        sr-only label — consumers who pass `0` are expected to provide
+        their own loading indicator. Non-negative integer; fractions are
+        truncated. Pairs with
+        `renderSkeletonCell` — the same callback is used for both
+        initial-load and load-more rows, with `rowIndex` 0-based within
+        the loading-more block. `paginationMode="infinite"` only.
+    - name: loadingMoreLabel
+      type: string
+      required: false
+      default: "'Loading more rows…'"
+      description: >-
+        Visually hidden (`sr-only`) text announced to screen readers when
+        `isLoadingMore` is set. Override to localize.
+        `paginationMode="infinite"` only.
     - name: stickyHeader
       type: boolean
       required: false

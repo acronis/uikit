@@ -183,6 +183,52 @@ export const CustomSkeletonCells: Story = {
   ),
 };
 
+type OverflowDemoRow = { id: string; wrapped: string; truncated: string };
+
+const OVERFLOW_DEMO_TEXT =
+  'Runs scheduled batch jobs for nightly ETL pipelines and report generation across three regional data centers.';
+
+const overflowDemoRows: OverflowDemoRow[] = Array.from(
+  { length: 3 },
+  (_, i) => ({
+    id: `o${i + 1}`,
+    wrapped: OVERFLOW_DEMO_TEXT,
+    truncated: `/mnt/storage/backups/tenant-${1000 + i}/snapshots/2026-08-1${i}/full-backup.tar.zst`,
+  })
+);
+
+const overflowDemoColumns: ColumnDef<OverflowDemoRow>[] = [
+  {
+    accessorKey: 'wrapped',
+    header: "overflow: 'wrap'",
+    size: 240,
+    meta: { overflow: 'wrap' },
+  },
+  {
+    accessorKey: 'truncated',
+    header: "overflow: 'truncate'",
+    size: 240,
+    meta: { overflow: 'truncate' },
+    cell: ({ row }) => (
+      <TruncateText mode="middle">{row.original.truncated}</TruncateText>
+    ),
+  },
+];
+
+// New story: its light/dark VR baselines don't exist yet and must be generated
+// in Docker — no existing story's baseline changes.
+export const ColumnOverflowModes: Story = {
+  name: 'Column overflow modes (wrap vs truncate)',
+  render: () => (
+    <DataTable
+      columns={overflowDemoColumns}
+      data={overflowDemoRows}
+      enableSorting={false}
+      hideActionColumn
+    />
+  ),
+};
+
 /* ------------------------------- Header capability hints + sticky actions */
 
 type Workload = {
