@@ -141,22 +141,62 @@ export function getPinnedStyle<TData>(
   };
 }
 
+// Default width for the kit-injected selection column (checkbox). Consumers
+// override it by setting `size` on their 'select' ColumnDef; the component
+// always enforces it strictly (width = minWidth = maxWidth) so it never grows.
+const DEFAULT_SELECT_COLUMN_WIDTH = 32;
+
+// TanStack merges its own feature defaults (size: 150, minSize: 20,
+// maxSize: MAX_SAFE_INTEGER) into every column's resolved `columnDef` via
+// `_getDefaultColumnDef()`. As a result `column.columnDef.size` is never
+// `undefined` — checking it tells us nothing about whether the consumer
+// explicitly set a size. Instead we compare the live values against the
+// known defaults: any deviation means the consumer authored it.
+const TANSTACK_DEFAULT_SIZE = 150;
+const TANSTACK_DEFAULT_MIN_SIZE = 20;
+const TANSTACK_DEFAULT_MAX_SIZE = Number.MAX_SAFE_INTEGER;
+
+function hasUserSizing<TData>(column: Column<TData, unknown>): boolean {
+  return (
+    column.columnDef.size !== TANSTACK_DEFAULT_SIZE ||
+    column.columnDef.minSize !== TANSTACK_DEFAULT_MIN_SIZE ||
+    column.columnDef.maxSize !== TANSTACK_DEFAULT_MAX_SIZE
+  );
+}
+
 // A column's rendered width tracks TanStack's size model once the consumer has
-// opted in — either explicitly (a `size` set on the `ColumnDef`) or implicitly
-// (column resizing enabled, which needs every column's width to be deterministic
-// for the drag math to work). Without either, columns stay in native `<table>`
-// auto-layout so `size`'s internal default (TanStack falls back to 150) never
-// forces every untouched column to a fixed width.
-export function getColumnWidth<TData>(
+// opted in — either explicitly (any size/minSize/maxSize on the ColumnDef that
+// differs from TanStack's own defaults) or implicitly (column resizing enabled,
+// which needs every column's width to be deterministic for the drag math to
+// work). Without either, columns get no `width` style so the browser distributes
+// remaining table width freely among unsized columns.
+//
+// Chrome columns ('select', '__actions') are always strictly enforced:
+// width = minWidth = maxWidth. For all other columns, maxWidth is only applied
+// when the caller explicitly set a maxSize that differs from TanStack's default
+// — matching the convention that size === minSize === maxSize means "fixed width".
+export function getColumnSizeStyle<TData>(
   column: Column<TData, unknown>,
   enableColumnResizing: boolean
-): number | undefined {
+): Pick<CSSProperties, 'width' | 'minWidth' | 'maxWidth'> | undefined {
   if (column.id === 'select') {
-    // Matches the trailing `__actions` column's fixed 48px: symmetric gutters.
-    return 48;
+    const size =
+      column.columnDef.size !== TANSTACK_DEFAULT_SIZE
+        ? column.columnDef.size!
+        : DEFAULT_SELECT_COLUMN_WIDTH;
+    return { width: size, minWidth: size, maxWidth: size };
   }
-  if (enableColumnResizing || column.columnDef.size !== undefined) {
-    return column.getSize();
+  if (column.id === '__actions') {
+    const size = column.getSize();
+    return { width: size, minWidth: size, maxWidth: size };
+  }
+  if (enableColumnResizing || hasUserSizing(column)) {
+    const size = column.getSize();
+    const maxWidth =
+      column.columnDef.maxSize !== TANSTACK_DEFAULT_MAX_SIZE
+        ? column.columnDef.maxSize
+        : undefined;
+    return { width: size, minWidth: size, ...(maxWidth !== undefined && { maxWidth }) };
   }
   return undefined;
 }
@@ -168,12 +208,12 @@ function getHeaderStyle<TData>(
   const pin = getPinnedStyle(header.column);
   // Non-leaf cells (group-label spans and placeholders) have no single leaf
   // size — skip width so colSpan layout determines the cell's rendered width.
-  const width =
+  const sizeStyle =
     header.subHeaders.length === 0
-      ? getColumnWidth(header.column, enableColumnResizing)
+      ? getColumnSizeStyle(header.column, enableColumnResizing)
       : undefined;
-  if (!pin && width === undefined) return undefined;
-  return { ...pin, width };
+  if (!pin && sizeStyle === undefined) return undefined;
+  return { ...pin, ...sizeStyle };
 }
 
 export function getCellStyle<TData>(
@@ -181,9 +221,9 @@ export function getCellStyle<TData>(
   enableColumnResizing: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(cell.column);
-  const width = getColumnWidth(cell.column, enableColumnResizing);
-  if (!pin && width === undefined) return undefined;
-  return { ...pin, width };
+  const sizeStyle = getColumnSizeStyle(cell.column, enableColumnResizing);
+  if (!pin && sizeStyle === undefined) return undefined;
+  return { ...pin, ...sizeStyle };
 }
 
 // Matches TanStack's own `defaultColumnSizing` fallback bounds — the same
@@ -474,7 +514,7 @@ interface DataTableOwnProps<TData> {
    * path entirely (no `<TableRow>`/cell-styling/pinning of DataTable's own).
    * Use to swap in a custom, independently memoizable row component. The
    * caller owns the row's markup and equality semantics — reuse the exported
-   * `getCellStyle`/`getPinnedStyle`/`getColumnWidth` helpers to match
+   * `getCellStyle`/`getPinnedStyle`/`getColumnSizeStyle` helpers to match
    * DataTable's default cell styling if desired.
    *
    * Also bypasses DataTable's `renderExpandedRow` handling — a row rendered
@@ -712,6 +752,8 @@ export function DataTable<TData, TValue = unknown>({
             {
               id: '__actions',
               size: 48,
+              minSize: 48,
+              maxSize: 48,
               enableSorting: false,
               enableHiding: false,
               meta: { pin: 'right' },
