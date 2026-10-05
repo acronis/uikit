@@ -103,11 +103,12 @@ declare module '@tanstack/react-table' {
     pin?: 'left' | 'right';
     /**
      * Column overflow mode. Forwarded to `TableHead` and `TableCell`.
-     * - `'wrap'` — header + cells use `whitespace-normal`.
-     * - `'hidden'` — header + cells clip to the column's `size` CSS width
-     *   (`max-w-0 overflow-hidden whitespace-nowrap`). Ellipsis and tooltip are
-     *   the inner component's responsibility.
-     * - Unset — browser default (wrapping).
+     * Defaults to `'truncate'` when unset — clips to the column's CSS width,
+     * keeping all rows at a uniform height. Use a truncation component with a
+     * tooltip inside the cell renderer to surface the full value.
+     * - `'truncate'` (default) — `overflow-hidden whitespace-nowrap`.
+     * - `'wrap'` — `whitespace-normal`; the row grows to fit its content.
+     * - `'hidden'` — clips via `max-w-0`; the cell renderer manages its own overflow UI.
      */
     overflow?: TableOverflow;
     /** Label shown for this column in the visibility dropdown. */
@@ -1139,7 +1140,7 @@ export function DataTable<TData, TValue = unknown>({
                     const headerCell = (
                       <TableHead
                         colSpan={header.colSpan}
-                        overflow={header.column.columnDef.meta?.overflow}
+                        overflow={header.column.columnDef.meta?.overflow ?? 'truncate'}
                         style={getHeaderStyle(header, resizingEnabled)}
                         draggable={
                           (canReorder && !isAnyColumnResizing) || undefined
@@ -1285,7 +1286,7 @@ export function DataTable<TData, TValue = unknown>({
                 {table.getVisibleLeafColumns().map((column) => (
                   <TableCell
                     key={column.id}
-                    overflow={column.columnDef.meta?.overflow}
+                    overflow={column.columnDef.meta?.overflow ?? 'truncate'}
                   >
                     {renderSkeletonCell ? (
                       renderSkeletonCell({ column, rowIndex })
@@ -1429,7 +1430,7 @@ export function DataTable<TData, TValue = unknown>({
                       return (
                         <TableCell
                           key={cell.id}
-                          overflow={cell.column.columnDef.meta?.overflow}
+                          overflow={cell.column.columnDef.meta?.overflow ?? 'truncate'}
                           style={getCellStyle(cell, resizingEnabled)}
                           className={cn(isPinned && rowBg)}
                         >
