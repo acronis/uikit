@@ -105,7 +105,7 @@ TableRow.displayName = 'TableRow';
 
 type SortDirection = 'asc' | 'desc' | false;
 
-export type TableOverflow = 'wrap' | 'hidden';
+export type TableOverflow = 'wrap' | 'hidden' | 'truncate';
 
 export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   /** Render the column as sortable — adds a sort affordance and `aria-sort`. */
@@ -116,10 +116,11 @@ export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElem
   onSort?: () => void;
   /**
    * Column overflow mode.
+   * - `'truncate'` — clips to the column's CSS width (`overflow-hidden whitespace-nowrap`).
+   *   Use a truncation component with a tooltip inside the cell renderer.
    * - `'wrap'` — `whitespace-normal`; the cell grows to fit its content.
-   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; the cell clips
-   *   to its CSS width (set via `size` on the column). Ellipsis and tooltip are
-   *   the inner component's responsibility.
+   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; clips using the
+   *   `max-w-0` trick. Use when the cell renderer manages its own overflow UI.
    * - Unset — browser default (wrapping).
    */
   overflow?: TableOverflow;
@@ -186,6 +187,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         // No `h-*` here: in border-collapse tables Gecko/WebKit add the row
         // border on top of a cell's `height` (~49px vs 40px in Blink).
         // py + leading-6 already yields the 40px row cross-engine.
+        overflow === 'truncate' && 'overflow-hidden whitespace-nowrap',
         overflow === 'wrap' && 'whitespace-normal',
         overflow === 'hidden' && 'max-w-0 overflow-hidden whitespace-nowrap',
         // Per the design, a sortable header tints the whole cell on hover/press
@@ -218,9 +220,11 @@ TableHead.displayName = 'TableHead';
 export interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /**
    * Column overflow mode.
+   * - `'truncate'` — clips to the column's CSS width (`overflow-hidden whitespace-nowrap`).
+   *   Use a truncation component with a tooltip inside the cell renderer.
    * - `'wrap'` — `whitespace-normal`; the row grows to fit its content.
-   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; the cell clips
-   *   to its CSS width. Ellipsis and tooltip are the inner component's responsibility.
+   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; clips using the
+   *   `max-w-0` trick. Use when the cell renderer manages its own overflow UI.
    * - Unset — browser default (wrapping).
    */
   overflow?: TableOverflow;
@@ -233,6 +237,7 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
       className={cn(
         'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
         // See TableHead: height comes from py + leading-6, not `h-*`.
+        overflow === 'truncate' && 'overflow-hidden whitespace-nowrap',
         overflow === 'wrap' && 'whitespace-normal',
         overflow === 'hidden' && 'max-w-0 overflow-hidden whitespace-nowrap',
         className
