@@ -247,7 +247,7 @@ type Workload = {
   notes: string;
 };
 
-const TOTAL_WORKLOADS = 128;
+const TOTAL_WORKLOADS = 24;
 const WORKLOADS_PAGE_SIZE = 6;
 
 const WORKLOAD_DESCRIPTIONS = [
@@ -498,9 +498,10 @@ function CoreCapabilitiesDemo() {
 export const CoreCapabilities: Story = {
   render: () => <CoreCapabilitiesDemo />,
   // Visual regression needs a fixed frame, and this demo's height changes on
-  // every 600ms infinite-load round. `play` drives it to its terminal state
+  // every 1000ms infinite-load round. `play` drives it to its terminal state
   // (every page loaded, sentinel unmounted, no spinner row) and scrolls back to
   // the top; `animationDelay` leaves margin for that last render to paint.
+  // Timeout: 4 pages total, first is immediate, 3 × 1000ms = ~3s of load.
   parameters: { snapshot: { animationDelay: 600 } },
   play: async ({ canvasElement }) => {
     // `play` runs on every Storybook visit, including a human just opening
@@ -510,7 +511,10 @@ export const CoreCapabilities: Story = {
     // auto-load every page the moment it's opened.
     if (!navigator.webdriver) return;
     const canvas = within(canvasElement);
-    const pane = await canvas.findByTestId('infinite-scroll-pane');
+    const wrapper = await canvas.findByTestId('infinite-scroll-pane');
+    // stickyHeader moves overflow-auto into the DataTable root div; scroll that.
+    const pane =
+      wrapper.querySelector<HTMLElement>('[data-slot="data-table"]') ?? wrapper;
     // The sentinel only intersects once the pane is scrolled to the bottom, and
     // it moves down again after each appended page — so re-scroll on every poll
     // until the bulk-actions bar reports the full dataset as loaded.
@@ -725,14 +729,16 @@ export const CoreCapabilitiesWithGroupedHeaders: Story = {
   render: () => <CoreCapabilitiesWithGroupedHeadersDemo />,
   // Same infinite-load race as `CoreCapabilities` above — the sentinel row
   // fires on mount (six rows don't fill the pane), so without this the
-  // screenshot lands on whichever 600ms load cycle happens to be in flight.
+  // screenshot lands on whichever 1000ms load cycle happens to be in flight.
   // `play` drives it to its terminal state before `animationDelay` lets the
-  // final render paint.
+  // final render paint. Timeout: 4 pages total, first is immediate, 3 × 1000ms = ~3s.
   parameters: { snapshot: { animationDelay: 600 } },
   play: async ({ canvasElement }) => {
     if (!navigator.webdriver) return;
     const canvas = within(canvasElement);
-    const pane = await canvas.findByTestId('infinite-scroll-pane-grouped');
+    const wrapper = await canvas.findByTestId('infinite-scroll-pane-grouped');
+    const pane =
+      wrapper.querySelector<HTMLElement>('[data-slot="data-table"]') ?? wrapper;
     await waitFor(
       () => {
         pane.scrollTop = pane.scrollHeight;
