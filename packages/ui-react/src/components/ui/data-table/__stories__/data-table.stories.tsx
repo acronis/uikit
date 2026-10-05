@@ -626,6 +626,7 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
           onLoadMore={handleLoadMore}
           hasNextPage={hasNextPage}
           isLoadingMore={isLoadingMore}
+          loadingMoreRows={3}
           renderRowActions={(row) => (
             <DropdownMenuGroup>
               <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
