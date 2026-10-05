@@ -1073,6 +1073,21 @@ export function DataTable<TData, TValue = unknown>({
   // real opaque tokens and are safe to mirror as-is (see `rowBg` below).
   const headerPinnedBg = 'bg-background';
 
+  // CSS custom properties for every header and leaf column, keyed by
+  // `--header-{id}-size` and `--col-{id}-size`. Placed on the <table> element
+  // so that <col> elements can reference them via `calc(var(...) * 1px)`.
+  // Recomputed only when column sizing state actually changes — during a live
+  // resize drag only the single <table> style prop updates, not every <th>/<td>.
+  const columnSizeVars = useMemo(() => {
+    const vars: Record<string, number> = {};
+    for (const header of table.getFlatHeaders()) {
+      vars[`--header-${header.id}-size`] = header.getSize();
+      vars[`--col-${header.column.id}-size`] = header.column.getSize();
+    }
+    return vars;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [table.getState().columnSizingInfo, table.getState().columnSizing]);
+
   // Sum of every visible column's minimum CSS width. Applied as `min-width` on
   // the <table> so the overflow-auto wrapper scrolls once the container is
   // narrower than the columns' combined floor — without this the table is always
@@ -1091,13 +1106,39 @@ export function DataTable<TData, TValue = unknown>({
     >
       <Table
         style={
-          resizingEnabled
-            ? { width: table.getCenterTotalSize() }
-            : tableMinWidth
-              ? { minWidth: tableMinWidth }
-              : undefined
+          {
+            ...(resizingEnabled
+              ? { width: table.getCenterTotalSize() }
+              : tableMinWidth
+                ? { minWidth: tableMinWidth }
+                : undefined),
+            ...columnSizeVars,
+          } as CSSProperties
         }
       >
+        {/* <col> elements address physical leaf columns directly, before any
+            <tr> is read. This is required for table-layout:fixed + grouped
+            headers: group-span <th> cells cannot define individual column
+            widths, but <col> can — so the browser always picks up the right
+            sizes regardless of how many header rows exist.
+            Only columns with an explicit size get a width on their <col>;
+            flexible columns (no size, only minSize/maxSize) are left unsized
+            so table-fixed distributes the remaining space to them. */}
+        <colgroup>
+          {table.getVisibleLeafColumns().map((column) => {
+            const sizeStyle = getColumnSizeStyle(column, resizingEnabled);
+            return (
+              <col
+                key={column.id}
+                style={
+                  sizeStyle?.width !== undefined
+                    ? { width: sizeStyle.width }
+                    : undefined
+                }
+              />
+            );
+          })}
+        </colgroup>
         {/* One provider for the whole header row so the capability hints share
             a single open/close delay group (Provider renders no DOM, so the
             table markup is unaffected). */}
