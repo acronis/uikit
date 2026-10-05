@@ -14,6 +14,7 @@ import { Button } from '../../button';
 import { Checkbox } from '../../checkbox';
 import { DropdownMenuGroup, DropdownMenuItem } from '../../dropdown-menu';
 import { Tag } from '../../tag';
+import { TruncateText } from '../../truncate-text';
 import {
   DataTable,
   DataTableBulkActionsBar,
@@ -196,10 +197,21 @@ type Workload = {
   owner: string;
   lastBackup: string;
   status: 'success' | 'failed' | 'pending';
+  description: string;
+  notes: string;
 };
 
 const TOTAL_WORKLOADS = 128;
 const WORKLOADS_PAGE_SIZE = 6;
+
+const WORKLOAD_DESCRIPTIONS = [
+  'Hosts the primary database cluster and handles all transactional workloads for the production environment.',
+  'Runs scheduled batch jobs for nightly ETL pipelines and report generation across three regional data centers.',
+  'Dedicated build server for CI/CD pipelines; spins up ephemeral containers and archives artifacts to object storage.',
+  'Edge node serving static assets and terminating TLS for the customer-facing portal across EMEA regions.',
+  'Manages identity and access across the tenant; stores LDAP directory and issues SAML tokens.',
+  'Backup proxy routing incremental snapshots to the cloud vault and managing deduplication metadata locally.',
+];
 
 function makeWorkloads(count: number): Workload[] {
   return Array.from({ length: count }, (_, i) => ({
@@ -214,6 +226,8 @@ function makeWorkloads(count: number): Workload[] {
     owner: `owner${i + 1}@example.com`,
     lastBackup: `2026-08-${String(10 + (i % 20)).padStart(2, '0')} 04:15`,
     status: (['success', 'failed', 'pending'] as const)[i % 3],
+    description: WORKLOAD_DESCRIPTIONS[i % WORKLOAD_DESCRIPTIONS.length],
+    notes: `/mnt/storage/backups/tenant-${1000 + i}/snapshots/2026-08-${String(10 + (i % 20)).padStart(2, '0')}/full-backup-workstation-${i + 1}.tar.zst`,
   }));
 }
 
@@ -245,6 +259,28 @@ const workloadColumns: ColumnDef<Workload>[] = [
         aria-label="Select row"
       />
     ),
+  },
+  // `overflow: 'wrap'` — the cell grows vertically to accommodate its full content.
+  {
+    accessorKey: 'description',
+    meta: { label: 'Description', category: 'General', overflow: 'wrap' as const },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Description" />
+    ),
+    size: 240,
+    enableSorting: false,
+  },
+  // `overflow: 'hidden'` — the cell clips to max-w-0; TruncateText manages its
+  // own ellipsis and shows the full path in a tooltip on hover/focus.
+  // Both header and cells use TruncateText: `hidden` gives no built-in ellipsis,
+  // so the renderer owns it at every row level, header included.
+  {
+    accessorKey: 'notes',
+    meta: { label: 'Backup path', category: 'Protection', overflow: 'hidden' as const },
+    header: () => <TruncateText>Backup path</TruncateText>,
+    size: 220,
+    enableSorting: false,
+    cell: ({ row }) => <TruncateText mode="middle">{row.original.notes}</TruncateText>,
   },
   {
     accessorKey: 'name',
