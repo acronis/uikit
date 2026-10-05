@@ -510,6 +510,13 @@ interface DataTableOwnProps<TData> {
   /** Passthrough for the `rowSelection` state; pairs with `rowSelection`. */
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   /**
+   * Enable or disable column sorting. Defaults to `true`. Set to `false` to
+   * hide sort buttons and the "Sort column" tooltip hint on all header cells.
+   * Columns can also opt out individually via `enableSorting: false` on their
+   * `ColumnDef`.
+   */
+  enableSorting?: boolean;
+  /**
    * Opt out of client-side sorting — pass already-sorted `data` and drive
    * sorting via `sorting`/`onSortingChange` (e.g. mapped to a server query by
    * the caller). Mapping sort state to a query and refetching stays the
@@ -598,6 +605,12 @@ interface DataTableOwnProps<TData> {
    */
   loadingMoreRows?: number;
   /**
+   * Visually hidden text placed in the first loading-more row, readable by
+   * screen readers when navigating to that cell (not a live region, not
+   * auto-announced). Override to localize. `paginationMode="infinite"` only.
+   */
+  loadingMoreLabel?: string;
+  /**
    * Stick the header row to the top of the scroll container so it stays
    * visible while the user scrolls vertically through the table body.
    * Requires DataTable to have a bounded height — wrap it in a fixed-height
@@ -669,6 +682,7 @@ export function DataTable<TData, TValue = unknown>({
   onColumnVisibilityChange,
   rowSelection: controlledRowSelection,
   onRowSelectionChange,
+  enableSorting = true,
   manualSorting = false,
   sorting: controlledSorting,
   onSortingChange,
@@ -682,6 +696,7 @@ export function DataTable<TData, TValue = unknown>({
   emptyLabel = 'No results.',
   isLoadingMore = false,
   loadingMoreRows = 1,
+  loadingMoreLabel = 'Loading more rows…',
   stickyHeader = false,
   hideActionColumn = false,
   renderRowActions,
@@ -794,7 +809,18 @@ export function DataTable<TData, TValue = unknown>({
     [showActionColumn]
   );
   const tableColumns = useMemo(
-    () => [...columns, ...actionColumns],
+    () => [
+      // Inject the default size into the select column if the consumer didn't
+      // set one, so TanStack's getSize()/getStart() math matches the 48px the
+      // CSS enforces. Without this, any second left-pinned column gets a wrong
+      // sticky offset (left: 150px instead of left: 48px).
+      ...columns.map((col): ColumnDef<TData, TValue> =>
+        col.id === 'select' && col.size === undefined
+          ? { ...col, size: DEFAULT_SELECT_COLUMN_WIDTH }
+          : col
+      ),
+      ...actionColumns,
+    ],
     [columns, actionColumns]
   );
   // The pinned action cell's own hover (its ellipsis/cog trigger) should be
@@ -820,9 +846,10 @@ export function DataTable<TData, TValue = unknown>({
       : {}),
     getRowCanExpand,
     onExpandedChange: setExpanded,
+    enableSorting,
     manualSorting,
     onSortingChange: handleSortingChange,
-    ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
+    ...(manualSorting || !enableSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: handleColumnVisibilityChange,
@@ -1074,10 +1101,12 @@ export function DataTable<TData, TValue = unknown>({
   const headerPinnedBg = 'bg-background';
 
   // CSS custom properties for every header and leaf column, keyed by
-  // `--header-{id}-size` and `--col-{id}-size`. Placed on the <table> element
-  // so that <col> elements can reference them via `calc(var(...) * 1px)`.
-  // Recomputed only when column sizing state actually changes — during a live
-  // resize drag only the single <table> style prop updates, not every <th>/<td>.
+  // `--header-{id}-size` and `--col-{id}-size`. Emitted on the <table> element
+  // so consumer CSS or custom cell renderers can reference live column sizes
+  // (e.g. `calc(var(--col-name-size) * 1px)`) without querying the DOM.
+  // Recomputed only when column sizing state changes. Note: values reflect
+  // TanStack's getSize(), which is 150 for flexible columns (no explicit `size`)
+  // when resizing is off — not the rendered width in that case.
   const columnSizeVars = useMemo(() => {
     const vars: Record<string, number> = {};
     for (const header of table.getFlatHeaders()) {
@@ -1085,6 +1114,9 @@ export function DataTable<TData, TValue = unknown>({
       vars[`--col-${header.column.id}-size`] = header.column.getSize();
     }
     return vars;
+    // Table sizing state is read via getState() inside the loop; listing the
+    // derived objects (columnSizingInfo, columnSizing) as deps is intentional —
+    // they are the stable reactive signals TanStack exposes for size changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [table.getState().columnSizingInfo, table.getState().columnSizing]);
 
@@ -1105,6 +1137,7 @@ export function DataTable<TData, TValue = unknown>({
       className={cn('overflow-auto', stickyHeader && 'h-full', borderedClass)}
     >
       <Table
+        className="table-fixed"
         style={
           {
             ...(resizingEnabled
@@ -1121,8 +1154,8 @@ export function DataTable<TData, TValue = unknown>({
             headers: group-span <th> cells cannot define individual column
             widths, but <col> can — so the browser always picks up the right
             sizes regardless of how many header rows exist.
-            Only columns with an explicit size get a width on their <col>;
-            flexible columns (no size, only minSize/maxSize) are left unsized
+            Columns with an explicit size receive a direct pixel width.
+            Flexible columns (no size, only minSize/maxSize) are left unsized
             so table-fixed distributes the remaining space to them. */}
         <colgroup>
           {table.getVisibleLeafColumns().map((column) => {
@@ -1596,10 +1629,8 @@ export function DataTable<TData, TValue = unknown>({
               <TableRow
                 key={`loading-more-${rowIndex}`}
                 className="hover:bg-transparent"
-                role="status"
-                aria-live="polite"
               >
-                {table.getVisibleLeafColumns().map((column) => {
+                {table.getVisibleLeafColumns().map((column, columnIndex) => {
                   const isPinned = column.getIsPinned();
                   return (
                     <TableCell
@@ -1614,6 +1645,9 @@ export function DataTable<TData, TValue = unknown>({
                         column.id === firstDataColumnId && 'ps-0'
                       )}
                     >
+                      {rowIndex === 0 && columnIndex === 0 && (
+                        <span className="sr-only">{loadingMoreLabel}</span>
+                      )}
                       {renderSkeletonCell ? (
                         renderSkeletonCell({ column, rowIndex })
                       ) : (

@@ -131,11 +131,34 @@ Scenario: Clipped column without a width source
 ```
 
 ```gherkin
+Scenario: Truncated column
+  Given a TableHead or TableCell with overflow = 'truncate'
+  When it renders
+  Then the cell applies overflow-hidden whitespace-nowrap
+  And it does not apply max-w-0, so a column without a width does not collapse
+  And content stays on one line, clipped at the column's CSS width
+  And ellipsis and tooltip are the inner component's responsibility
+  # The clip width is only enforced under table-layout: fixed (e.g. Table with
+  # className="table-fixed", as DataTable renders it). Table itself does not set
+  # table-fixed, and in the default auto layout single-line content can widen the column.
+```
+
+```gherkin
 Scenario: Default column (overflow unset)
   Given a TableHead or TableCell with no overflow prop
   When it renders
   Then no overflow class is applied
   And the browser default (wrapping) applies
+  # DataTable does not leave overflow unset: it passes 'truncate' when a
+  # column's meta.overflow is unset.
+```
+
+```gherkin
+Scenario: Table layout
+  Given a Table with no className
+  When it renders
+  Then it does not apply table-fixed — the browser's auto table layout applies
+  # DataTable passes className="table-fixed" to its own Table.
 ```
 
 ```gherkin
