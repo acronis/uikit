@@ -741,6 +741,13 @@ export function DataTable<TData, TValue = unknown>({
   // what renders, DataTable doesn't own its state in that mode (see the
   // `table` prop's tsdoc).
   const showActionColumn = !hideActionColumn && !externalTable;
+  // Whether the caller provided a selection column — detected by the reserved
+  // id 'select'. When present, DataTable auto-pins it to the left (same
+  // mechanism as __actions on the right) so it stays sticky while the grid
+  // scrolls horizontally. Skipped for an external `table` — that instance
+  // manages its own pinning state.
+  const hasSelectColumn =
+    !externalTable && columns.some((col) => col.id === 'select');
   // A real `ColumnDef` (rather than chrome bolted onto the render loop) so
   // TanStack's own pinning geometry measures and offsets it like any other
   // pinned column — `header`/`cell` are never read (see the header/body
@@ -800,9 +807,15 @@ export function DataTable<TData, TValue = unknown>({
     onRowSelectionChange: handleRowSelectionChange,
     onColumnSizingChange: handleColumnSizingChange,
     onColumnOrderChange: handleColumnOrderChange,
-    initialState: showActionColumn
-      ? { columnPinning: { right: ['__actions'] } }
-      : undefined,
+    initialState:
+      hasSelectColumn || showActionColumn
+        ? {
+            columnPinning: {
+              ...(hasSelectColumn && { left: ['select'] }),
+              ...(showActionColumn && { right: ['__actions'] }),
+            },
+          }
+        : undefined,
     state: {
       sorting,
       columnFilters,
@@ -965,7 +978,14 @@ export function DataTable<TData, TValue = unknown>({
   useEffect(() => {
     if (externalTable) return;
     table.getAllLeafColumns().forEach((column) => {
-      column.pin(column.columnDef.meta?.pin ?? false);
+      // 'select' is always pinned left and '__actions' always right — the
+      // caller can't opt these out via meta.pin. Any other column follows
+      // its own meta.pin (or unpins when it has none).
+      if (column.id === 'select') {
+        column.pin('left');
+      } else {
+        column.pin(column.columnDef.meta?.pin ?? false);
+      }
     });
   }, [table, tableColumns, externalTable]);
 
