@@ -145,7 +145,7 @@ export function getPinnedStyle<TData>(
 // Default width for the kit-injected selection column (checkbox). Consumers
 // override it by setting `size` on their 'select' ColumnDef; the component
 // always enforces it strictly (width = minWidth = maxWidth) so it never grows.
-const DEFAULT_SELECT_COLUMN_WIDTH = 32;
+const DEFAULT_SELECT_COLUMN_WIDTH = 48;
 
 // TanStack merges its own feature defaults (size: 150, minSize: 20,
 // maxSize: MAX_SAFE_INTEGER) into every column's resolved `columnDef` via
@@ -1006,6 +1006,12 @@ export function DataTable<TData, TValue = unknown>({
   // Derived from the selection state, so it's the same for every row — compute
   // it once instead of per row inside the render loop below.
   const bulkSelectionActive = isBulkSelectionActive(table);
+  // When a select column is present its end padding and the first data column's
+  // start padding would double up the gap. Strip the first data column's ps so
+  // the spacing between the checkbox and the first cell matches the design.
+  const firstDataColumnId = hasSelectColumn
+    ? table.getVisibleLeafColumns().find((col) => col.id !== 'select')?.id
+    : undefined;
   const activeRowIndex = rows.length
     ? Math.min(focusedRowIndex, rows.length - 1)
     : 0;
@@ -1193,6 +1199,7 @@ export function DataTable<TData, TValue = unknown>({
                         onDragEnd={canReorder ? endColumnDrag : undefined}
                         className={cn(
                           canResize && 'relative',
+                          header.column.id === firstDataColumnId && 'ps-0',
                           // Per the design, a sortable header tints the whole
                           // cell on hover/press, not just the inner sort button.
                           // Suppressed while any column is resizing, since the
@@ -1464,7 +1471,7 @@ export function DataTable<TData, TValue = unknown>({
                           key={cell.id}
                           overflow={cell.column.columnDef.meta?.overflow ?? 'truncate'}
                           style={getCellStyle(cell, resizingEnabled)}
-                          className={cn(isPinned && rowBg)}
+                          className={cn(isPinned && rowBg, cell.column.id === firstDataColumnId && 'ps-0')}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
