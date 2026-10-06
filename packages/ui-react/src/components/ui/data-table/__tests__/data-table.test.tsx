@@ -859,6 +859,26 @@ describe('DataTable column resizing', () => {
     ).toHaveLength(columns.length);
   });
 
+  it('honours a consumer-authored size: 150 on the select column', () => {
+    const selectColumns: ColumnDef<Row>[] = [
+      {
+        id: 'select',
+        size: 150,
+        header: () => <Checkbox aria-label="Select all" />,
+        cell: () => <Checkbox aria-label="Select row" />,
+        enableSorting: false,
+        enableHiding: false,
+      },
+      ...columns,
+    ];
+    render(<DataTable columns={selectColumns} data={data.slice(0, 2)} />);
+
+    const selectHeader = screen.getByLabelText('Select all').closest('th')!;
+    expect(selectHeader.style.width).toBe('150px');
+    expect(selectHeader.style.minWidth).toBe('150px');
+    expect(selectHeader.style.maxWidth).toBe('150px');
+  });
+
   it('captures the pointer on the handle instead of flagging the document root', () => {
     render(
       <DataTable
