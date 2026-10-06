@@ -114,6 +114,22 @@ contract:
       required: false
       default: '5'
       description: Number of skeleton rows when skeleton is set.
+    - name: renderSkeletonCell
+      type: '(context: { column: Column; rowIndex: number }) => ReactNode'
+      required: false
+      description: >-
+        Custom content for each skeleton placeholder cell — called once per
+        visible leaf column in each of the `skeletonRows` rows, only while
+        `skeleton` is set (`rowIndex` is 0-based). Replaces the cell content
+        only: DataTable keeps the row (no hover tint, not focusable) and the
+        cell (padding, borders, the column's `meta.overflow` mode). Unset
+        renders the default Skeleton bar; returning null leaves the cell empty
+        (no fallback). Also called for the `__actions` column (absent with
+        `hideActionColumn` or an external `table`) and a consumer `select`
+        column — branch on `column.id`. Content should stay ~24px tall so the
+        row stays 40px, and be decorative only (no text or interactive
+        elements, `aria-hidden`); no live region is added. Does not affect the
+        infinite-scroll loading-more row.
     - name: enableColumnResizing
       type: boolean
       required: false
@@ -128,8 +144,9 @@ contract:
       default: 'false'
       description: >-
         Opt in to column reordering by dragging a header cell onto another one
-        (native HTML5 drag-and-drop driving TanStack's `columnOrder`; the dragged
-        header dims while the gesture is in flight). Pinned columns are excluded
+        (native HTML5 drag-and-drop driving TanStack's `columnOrder`; a header
+        cell the drag passes over gets an unstyled `data-reorder-target`
+        attribute, cleared on drop / dragend). Pinned columns are excluded
         — they're anchored to a table edge by definition. Pointer-only: there is
         no keyboard equivalent yet. No-op when `table` is passed.
     - name: columnOrder
@@ -228,13 +245,22 @@ contract:
         Set on a `ColumnDef.meta` (not a DataTable prop) — pins the column to a
         table edge. DataTable drives TanStack's native column-pinning and renders
         the column as `position: sticky` cells with an opaque row background.
-    - name: meta.wrap
-      type: boolean
+    - name: meta.overflow
+      type: "'wrap' | 'hidden' | 'truncate'"
       required: false
       description: >-
-        Set on a `ColumnDef.meta` (not a DataTable prop) — allows a column's
-        header and cell content to wrap onto multiple lines and drop the fixed
-        row height, mirroring the `Table` primitives' `wrap` prop.
+        Set on a `ColumnDef.meta` (not a DataTable prop) — the overflow mode for
+        a column's header and all its cells, forwarded to `TableHead` and
+        `TableCell` as their `overflow` prop. `'wrap'` lets content wrap onto
+        multiple lines (`whitespace-normal`). `'hidden'` clips content at the
+        column's CSS width (`max-w-0 overflow-hidden whitespace-nowrap`), so the
+        column needs a width source — `size` on the column definition, or
+        column resizing; without one, `max-w-0` collapses the column.
+        `'truncate'` clips at the column's CSS width (`overflow-hidden
+        whitespace-nowrap`) without forcing `max-w-0`. Unset — defaults to
+        `'truncate'`; set `'wrap'` explicitly for wrapping cells. Ellipsis and tooltip are the inner
+        component's responsibility (e.g. a `block truncate` span inside a
+        `Tooltip` in the column's `cell`).
     - name: meta.label
       type: string
       required: false
@@ -295,6 +321,16 @@ contract:
         On DataTableBulkActionsBar — trailing text shown in place of the
         selection summary while nothing is selected (e.g. "25 of 1250 items
         loaded"). Omit to render nothing in that state. Override to localize.
+    - name: enableSorting
+      type: boolean
+      required: false
+      default: 'true'
+      description: >-
+        Enable or disable column sorting globally. Set to `false` to hide sort
+        buttons and the "Sort column" tooltip hint on all header cells. Individual
+        columns can also opt out via `enableSorting: false` on their `ColumnDef`.
+        No-op when `table` is passed (the external instance owns its own sorting
+        config).
     - name: manualSorting
       type: boolean
       required: false
@@ -318,8 +354,14 @@ contract:
         `flexRender` path entirely. Use to swap in a custom, independently
         memoizable row component — the caller owns the row's markup and
         equality semantics. Reuse the exported `getCellStyle` /
-        `getPinnedStyle` / `getColumnWidth` helpers to match DataTable's
-        default cell styling if desired. Also bypasses `renderExpandedRow` —
+        `getPinnedStyle` / `getColumnSizeStyle` helpers to match DataTable's
+        default cell styling if desired — `getColumnSizeStyle(column,
+        enableColumnResizing)` returns `Pick<CSSProperties, 'width' |
+        'minWidth' | 'maxWidth'> | undefined`, spread it into the cell style
+        (`style={{ ...getColumnSizeStyle(col, r) }}`); both `getColumnSizeStyle`
+        and `getCellStyle` take an optional trailing table-defaults argument
+        (`table._getDefaultColumnDef()`), derived automatically by
+        `getCellStyle`. Also bypasses `renderExpandedRow` —
         a row rendered via `renderRow` never gets an expanded-content row
         appended; read `row.getIsExpanded()` and render it yourself if
         needed.
@@ -371,7 +413,44 @@ contract:
       default: 'false'
       description: >-
         Whether a load is in flight — suppresses further `onLoadMore` calls
-        and renders a trailing loading row. `paginationMode="infinite"` only.
+        and renders `loadingMoreRows` trailing skeleton rows (default 1)
+        while a load is in flight. Each row renders one `<Skeleton>` per
+        column via `renderSkeletonCell` (if provided).
+        `paginationMode="infinite"` only.
+    - name: loadingMoreRows
+      type: number
+      required: false
+      default: '1'
+      description: >-
+        Number of skeleton rows to render at the bottom of the table while
+        `isLoadingMore` is set. `0` suppresses all skeleton rows and the
+        sr-only label — consumers who pass `0` are expected to provide
+        their own loading indicator. Non-negative integer; fractions are
+        truncated. Pairs with
+        `renderSkeletonCell` — the same callback is used for both
+        initial-load and load-more rows, with `rowIndex` 0-based within
+        the loading-more block. `paginationMode="infinite"` only.
+    - name: loadingMoreLabel
+      type: string
+      required: false
+      default: "'Loading more rows…'"
+      description: >-
+        Visually hidden (`sr-only`) text announced to screen readers when
+        `isLoadingMore` is set. Override to localize.
+        `paginationMode="infinite"` only.
+    - name: stickyHeader
+      type: boolean
+      required: false
+      default: 'false'
+      description: >-
+        Stick the header row to the top of DataTable's scroll container so it
+        remains visible while the user scrolls vertically. The DataTable root
+        is always an `overflow-auto` scroll container; when true it also gains
+        `h-full` and the `<thead>` gains `sticky top-0 z-10 bg-background`.
+        Requires DataTable's parent to have a bounded height (e.g. a
+        `h-96 flex flex-col` wrapper) — otherwise the root grows with its
+        content and never scrolls. `max-h` alone does not work: it gives the
+        root's `h-full` nothing to resolve against.
   events:
     - name: onColumnOrderChange
       payload: 'ColumnOrderState (TanStack OnChangeFn)'
@@ -383,6 +462,31 @@ contract:
       payload: 'RowSelectionState (TanStack OnChangeFn)'
       description: >-
         Passthrough for the `rowSelection` state; pairs with `rowSelection`.
+    - name: onRowClick
+      payload: '(row: Row<TData>, event: MouseEvent<HTMLTableRowElement>)'
+      description: >-
+        Called on a single pointer click on a data row. Not called when the
+        click lands on an interactive control inside a cell (button, link,
+        input, label, checkbox/switch/menuitem/link role, contenteditable, or a
+        Tab stop), comes from a portaled element opened from the row (e.g. the
+        row-actions menu), or ends a text selection. Rows get a pointer cursor
+        while it's set. Composes with `highlightCurrentRow` (both run). Silently
+        ignored when `renderRow` is set. Optional; no default.
+    - name: onRowActivate
+      payload: >-
+        (row: Row<TData>, details: { via: 'keyboard' | 'pointer'; event:
+        KeyboardEvent<HTMLTableRowElement> | MouseEvent<HTMLTableRowElement> })
+      description: >-
+        Called when a data row is activated — Enter while the row itself has
+        focus (`via: 'keyboard'`; key repeat ignored; Enter from a control
+        inside a cell does not count) or a double-click on the row (`via:
+        'pointer'`, with the same interactive-descendant and portal guards as
+        `onRowClick`, but not the text-selection guard since a double-click
+        selects a word on its own). A double-click also dispatches two single
+        clicks first, so don't wire navigation to `onRowClick` alongside this.
+        Space never activates a row — it's reserved for row selection when
+        `rowSelection` is in use. Silently ignored when `renderRow` is set.
+        Optional; no default.
     - name: onColumnSizingChange
       payload: 'ColumnSizingState (TanStack OnChangeFn)'
       description: >-

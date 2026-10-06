@@ -30,7 +30,9 @@ of its own (see [Server-driven usage](#server-driven-usage)). The companion
 parts — `DataTableColumnHeader`, `DataTableToolbar`, `DataTablePagination`,
 `DataTableViewOptions`, `DataTableExpandTrigger` — always operate on a table
 instance (or a row of one). This is a design-pending v1; it reuses the `Table`
-component's `--ui-table-*` tokens (the wrapper border matches the cell borders).
+component's `--ui-table-*` tokens. The wrapper (`data-slot="data-table"`) has no
+outer border or border radius; visual row separators come from the Table primitives'
+per-row bottom border.
 
 A `DataTableColumnHeader` sorts in a **single click**: the trailing arrow toggles
 ascending → descending and shows the direction with an up/down arrow in the brand
@@ -118,8 +120,10 @@ props it would otherwise use to configure its own become no-ops (`getRowId`,
 `onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
 `columnVisibility`, `onColumnVisibilityChange`, `onColumnSizingChange`,
 `paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
-`isLoadingMore`), and `meta.pin` pinning is skipped too — set the
-equivalents on your own instance (pin via TanStack's `column.pin()`). The
+`isLoadingMore`, `loadingMoreRows`, `loadingMoreLabel`), and `meta.pin`
+pinning is skipped too, including the automatic left pin of a `select`
+column. Set the equivalents on your own instance (pin via TanStack's
+`column.pin()`). The
 trailing settings column is dropped as well, which is why the cog above is
 rendered next to the toolbar instead.
 
@@ -144,7 +148,11 @@ now lands on that index, instead of following the row it actually belonged to.
 Pass `getRowId` whenever rows carry their own stable identifier:
 
 ```tsx
-<DataTable columns={columns} data={payments} getRowId={(payment) => payment.id} />
+<DataTable
+  columns={columns}
+  data={payments}
+  getRowId={(payment) => payment.id}
+/>
 ```
 
 A no-op when an external `table` is passed — set `getRowId` directly on that
@@ -161,6 +169,130 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 <DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
 ```
 
+`highlightCurrentRow` is visual only: a click marks the row as current and calls
+nothing. To run your own code when a row is clicked or activated, use
+`onRowClick` / `onRowActivate` (below). They work with or without
+`highlightCurrentRow`.
+
+### Skeleton rows
+
+While `skeleton` is set, `DataTable` renders `skeletonRows` placeholder rows
+(default 5) in place of `data`. By default each cell holds a pulsing
+`<Skeleton className="my-1 h-4 w-full" />` bar.
+
+`renderSkeletonCell` replaces that bar. It is called with `{ column, rowIndex }`
+once per visible leaf column (columns hidden via `columnVisibility` are skipped)
+in each skeleton row. `rowIndex` is 0-based. It is called only for `skeleton`
+rows and for the infinite-scroll loading-more rows (below), never for data rows.
+Only the cell _content_ is yours: `DataTable` still renders the row (no hover
+tint, not focusable) and the `TableCell` (padding, borders, and the column's
+`meta.overflow` mode).
+
+- **Branch on `column.id`.** The callback also runs for the trailing
+  `__actions` column whenever DataTable renders it (not with `hideActionColumn`
+  or an external `table`) and for a `select`
+  column if you declared one. DataTable doesn't inject `select`. It gives it a
+  fixed width and pins it to the left (see
+  [Sticky (pinned) columns](#sticky-pinned-columns)).
+- **`null` / `undefined` leaves the cell empty.** There is no fallback. To keep
+  the default bar for some columns, return the exported `Skeleton` with the
+  same classes.
+- **Keep the content about 24px tall** so the row stays 40px. Cells have no
+  fixed height, which is why the default bar is `h-4` with `my-1` around it.
+- **Decorative only.** Don't render text or interactive elements. Put
+  `aria-hidden` on anything a screen reader could read.
+- **Announcing the load is your job.** The kit adds no live region.
+
+Skeleton cells get the same pinned (sticky) and column-width styles as data
+cells, so the placeholder grid lines up with the real one. The infinite-scroll
+loading-more rows (`isLoadingMore`) use the same callback: each of the
+`loadingMoreRows` rows calls `renderSkeletonCell` once per visible leaf column,
+with `rowIndex` 0-based within the loading-more block (see
+[Infinite scroll](#infinite-scroll)).
+
+The prop also works for an **empty view**: static, non-pulsing placeholder rows
+under an empty-state overlay. Render them with `skeleton` and plain `<div>` bars
+(not `Skeleton`, which pulses), and position an
+[`EmptyOverlay`](/components/empty-overlay) over the table:
+
+```tsx
+<div className="relative">
+  <DataTable
+    columns={columns}
+    data={[]}
+    skeleton
+    renderSkeletonCell={({ column }) => {
+      if (column.id === '__actions') return null;
+      return (
+        <div
+          aria-hidden="true"
+          className={cn(
+            'rounded-[4px] bg-[var(--ui-background-surface-active)]',
+            column.id === 'select' ? 'my-1 size-4' : 'my-0.5 h-5 w-full'
+          )}
+        />
+      );
+    }}
+  />
+  <EmptyOverlay
+    className="absolute inset-0"
+    title={t('noThreats')}
+    description={t('noThreatsDescription')}
+  />
+</div>
+```
+
+Both shapes come to the 24px guideline: the bars are `my-0.5 h-5`
+(2px + 20px + 2px), and the `select` placeholder is a 16px square,
+`my-1 size-4` (4px + 16px + 4px).
+
+### Clickable rows
+
+Two optional callbacks make a whole row interactive:
+
+- **`onRowClick(row, event)`** is called on a single click on a data row, with the
+  TanStack `Row` and the native mouse event. Rows show a pointer cursor while
+  it's set. It isn't called when the click lands on an interactive control inside
+  a cell (a button, link, input, checkbox, menu item, or any other Tab stop), comes
+  from a portaled element opened from the row (such as the row-actions menu), or
+  ends a drag-to-select of cell text. With `highlightCurrentRow` also set, the
+  row is highlighted first and then `onRowClick` runs.
+- **`onRowActivate(row, { via, event })`** is called when a row is _activated_:
+  <kbd>Enter</kbd> while the row itself has focus (`via: 'keyboard'`, key repeat
+  ignored) or a double-click on the row (`via: 'pointer'`). Enter pressed on a
+  control inside a cell doesn't count, and a double-click on an interactive
+  control or a portaled element is ignored, the same as for `onRowClick`.
+  <kbd>Space</kbd> never activates a row, because it's reserved for row
+  selection when `rowSelection` is in use.
+
+```tsx
+<DataTable
+  columns={columns}
+  data={devices}
+  getRowId={(device) => device.id}
+  highlightCurrentRow
+  onRowClick={(row) => setSelectedDevice(row.original)} // e.g. open a detail panel
+/>
+
+<DataTable
+  columns={columns}
+  data={devices}
+  onRowActivate={(row, { via }) => {
+    console.log(`Opened ${row.original.name} via ${via}`); // 'keyboard' | 'pointer'
+    router.push(`/devices/${row.original.id}`);
+  }}
+/>
+```
+
+Use one of the two for a given action. The browser sends a click before every
+double-click, so the first click of a double-click also calls `onRowClick`. If
+`onRowClick` navigates away, `onRowActivate` never gets the double-click.
+
+Both callbacks are ignored when `renderRow` is set, because your row then owns
+its own markup and handlers. Screen readers don't announce a row as actionable,
+so if assistive-technology users need to find the row's primary action, also
+offer it as a link or button inside a cell.
+
 ### Sorting
 
 Sorting is client-side by default. For a non-alphabetic order, give the column a
@@ -176,6 +308,11 @@ const SEVERITY_RANK = { Critical: 0, Error: 1, Warning: 2, Running: 3 };
   header: ({ column }) => <DataTableColumnHeader column={column} title="Severity" />,
 }
 ```
+
+To turn sorting off for the whole table, set `enableSorting={false}` (default
+`true`). It removes every sort button and its tooltip. To turn it off for one
+column only, set `enableSorting: false` on that `ColumnDef`. The prop does
+nothing when you pass an external `table`; configure sorting on that instance.
 
 For **server-side** sorting set `manualSorting` and drive the state yourself —
 `DataTable` reports what the user asked for and skips its own comparator, so
@@ -275,15 +412,41 @@ with `enableResizing: false`:
 Resizing makes every column's width deterministic, so give each column an
 explicit `size` (otherwise TanStack's 150px default applies to columns you never
 touched — noticeable on narrow chevron columns). Without `enableColumnResizing`,
-a column only gets a fixed width if its `ColumnDef` sets `size`; the rest stay
-in native table auto-layout.
+each column is sized on its own:
+
+- **`size` set** — the column is strictly fixed: `width`, `minWidth` and
+  `maxWidth` all equal `size`, and any `minSize`/`maxSize` is ignored. This
+  includes `size: 150`, which `DataTable`'s own table honours as authored even
+  though 150 is also TanStack's default (see the external-`table` caveat below).
+- **No `size`** — the column is flexible. DataTable renders its `<table>` with
+  `table-layout: fixed`, so flexible columns split the width the fixed columns
+  leave over. An explicit `minSize`/`maxSize` becomes a CSS `min-width`/
+  `max-width` floor or ceiling. The table's own `min-width` is the sum of every
+  visible column's minimum width (fixed columns included), so the grid scrolls
+  horizontally instead of squeezing below it.
+
+The widths are also written to a `<colgroup>` of `<col>` elements, so they hold
+in [grouped-header](#grouped-column-headers) mode too, where the top header row
+has only group-label cells.
 
 `id: 'select'` is a reserved column id: a selection `ColumnDef` with that id
-always renders at a fixed 48px and never gets a resize handle, the same way the
-built-in trailing `__actions` column is always 48px — no `size` or
-`enableResizing: false` needed, and neither can override it. This is a
-different column from `Table`'s hand-authored `TableSelectCell`, which is a
-fixed 32px — the two share a role but not a width.
+never gets a resize handle, the same way the built-in trailing `__actions`
+column is always 48px (its `size`, `minSize` and `maxSize` are all 48). No
+`enableResizing: false` is needed. On `DataTable`'s own table the `select`
+column is 48px by default; set `size` on it to change its width. The width stays
+strictly fixed either way.
+
+With an external `table`, DataTable doesn't inject that 48px default: an unsized
+`select` column renders at that table's own default size, TanStack's 150px, so
+its width matches the sticky offset of the next left-pinned column. Set
+`size: 48` on the `select` `ColumnDef` of an external table to keep it narrow.
+Also with an external `table`, an authored `size: 150` on a non-chrome column
+can't be told apart from TanStack's default, so that column is treated as
+unsized. Use another value, or set `defaultColumn: { size: undefined }` on your
+table so an authored `150` is honoured.
+
+This is a different column from `Table`'s hand-authored `TableSelectCell`, which
+is a fixed 32px — the two share a role but not a width.
 
 The handle is keyboard-operable: focus it and use <kbd>←</kbd>/<kbd>→</kbd> to
 step 10px, or <kbd>Shift</kbd> + arrow for 50px, clamped to the column's
@@ -339,26 +502,30 @@ render as empty `<th>` elements — they carry no visible content.
 const columns: ColumnDef<Workload>[] = [
   {
     id: 'workload',
-    header: 'Workload',         // group label — spans the two leaf columns below
+    header: 'Workload', // group label — spans the two leaf columns below
     columns: [
       {
         accessorKey: 'name',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Name" />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Name" />
+        ),
         size: 180,
       },
       {
         accessorKey: 'status',
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Status" />
+        ),
         size: 130,
       },
     ],
   },
   {
     id: 'system',
-    header: 'System',           // second group
+    header: 'System', // second group
     columns: [
-      { accessorKey: 'os',    header: 'OS',         size: 190 },
-      { accessorKey: 'ip',    header: 'IP address', size: 140 },
+      { accessorKey: 'os', header: 'OS', size: 190 },
+      { accessorKey: 'ip', header: 'IP address', size: 140 },
     ],
   },
 ];
@@ -389,20 +556,48 @@ as `bulkSelectionActive` — it then keeps its 48px column but renders no trigge
 and no hover tint. See the
 [data table bulk actions](/docs/components/data-table-bulk-actions) pattern.
 
-### Sticky (pinned) and wrapping columns
+`renderRowActions` populates a row's overflow-actions menu — the ellipsis
+trigger in the trailing action column — with whatever items you return. Each row
+gets its own call. When `renderRowActions` is omitted the trigger is not rendered
+but the 48px column is still reserved. The trigger is suppressed while any row is
+selected (bulk mode), matching `TableActionsCell`'s own behavior.
 
-`ColumnDef.meta` is augmented by ui-react with two flags. `pin` drives TanStack's
-native column pinning and renders the column as `position: sticky` cells (with an
-opaque row background so scrolled cells don't show through); `wrap` lets a
-column's header and cells drop the fixed row height and wrap onto multiple
-lines, mirroring the `Table` primitives' `wrap` prop. DataTable does not force
-truncation on auto-layout cells; add a constrained cell renderer or an explicit
-`truncate` class when ellipsis is required.
+```tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  renderRowActions={(row) => (
+    <>
+      <DropdownMenuItem>Edit</DropdownMenuItem>
+      <DropdownMenuItem variant="danger">Delete</DropdownMenuItem>
+    </>
+  )}
+  rowActionsLabel="Row actions"   {/* accessible name for the ellipsis trigger — override to localize */}
+/>
+```
+
+`hideActionColumn` removes the trailing column entirely — the settings cog and
+every row's ellipsis trigger both disappear. Use it when you need a purely
+informational table with no visibility or action controls:
+
+```tsx
+<DataTable columns={columns} data={rows} hideActionColumn />
+```
+
+A no-op when an external `table` is passed — the column is never added in that
+path anyway.
+
+### Sticky (pinned) columns
+
+`ColumnDef.meta` is augmented by ui-react (see [Column meta](#column-meta)).
+`meta.pin` drives TanStack's native column pinning and renders the column as
+`position: sticky` cells (with an opaque row background so scrolled cells don't
+show through):
 
 ```tsx
 const columns: ColumnDef<Device>[] = [
   { accessorKey: 'name', header: 'Name', meta: { pin: 'left' }, size: 150 },
-  { accessorKey: 'note', header: 'Note', meta: { wrap: true }, size: 280 },
+  { accessorKey: 'note', header: 'Note', size: 280 },
   {
     accessorKey: 'status',
     header: 'Status',
@@ -415,6 +610,134 @@ const columns: ColumnDef<Device>[] = [
 Removing a `meta.pin` un-pins the column on the next render. Pinning is driven
 only for `DataTable`'s own instance — with an external `table`, pin columns
 yourself via `column.pin()`.
+
+> **Reserved column ids:** `select` and `__actions` ignore `meta.pin`. A
+> `select` column is always pinned left, and the built-in `__actions` column is
+> always pinned right. When a `select` column is present, DataTable also removes
+> the start padding of the first visible data column after it, so the checkbox
+> and the first value aren't separated by two paddings.
+
+Pinned cells stick to the edges of `DataTable`'s own root element. That element
+always has `overflow-auto`, so it is the table's horizontal scroll container.
+For vertical scrolling inside a bounded height, use
+[`stickyHeader`](#sticky-header). `Table` itself no longer adds a scroll
+wrapper.
+
+### Sticky header
+
+`stickyHeader` keeps the header row visible while the body scrolls vertically.
+It defaults to `false`. When it is `true`, the `<thead>` sticks to the top of
+`DataTable`'s scroll container (`sticky top-0 z-10`). It gets an opaque
+`bg-background` so body rows don't show through as they scroll beneath it.
+
+A sticky header needs a container with a bounded height to stick inside.
+With `stickyHeader`, the `DataTable` root also gets `h-full`, so it fills
+its parent, and its `overflow-auto` makes that box the scroll container.
+Wrap `DataTable` in an element that has a bounded height:
+
+```tsx
+<div className="h-96 flex flex-col">
+  <DataTable columns={columns} data={data} stickyHeader />
+</div>
+```
+
+The wrapper needs a real `height`, not only a `max-height`. These work:
+
+- A fixed-height `flex flex-col` wrapper, as above. This is the recommended
+  pattern.
+- An explicit fixed height on the wrapper, such as `h-96` or `h-[400px]`.
+- `h-full` on the wrapper, as long as every ancestor up to a bounded element
+  also has a height.
+
+`max-h-*` on its own does **not** work. A `max-height` gives the percentage
+height (`h-full`) on `DataTable` nothing to resolve against, so it falls back to
+`auto`. The table then grows to fit all its rows, nothing scrolls inside
+`DataTable`, and the header has nothing to stick to. The same happens when the
+wrapper's height isn't bounded at all.
+
+The header background is a fixed `bg-background` class, not a CSS custom
+property. `DataTable` has no prop or `className` that changes it.
+
+`stickyHeader` works well with [`paginationMode="infinite"`](#infinite-scroll)
+for long tables that scroll. Rows load into the same bounded container while
+the header stays in place.
+
+### Column overflow
+
+`meta.overflow` sets how a column treats content longer than its width. DataTable
+forwards it to the column's `TableHead` and every `TableCell`, skeleton and
+loading-more placeholder cells included, as their
+[`overflow` prop](/components/table#column-overflow). When `meta.overflow` is
+unset, DataTable passes `'truncate'`, so every column stays on one line by
+default:
+
+| `meta.overflow`      | Result                                                                                                                              |
+| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| unset / `'truncate'` | `overflow-hidden whitespace-nowrap` — the content stays on one line, clipped at the column's CSS width. The default.                |
+| `'wrap'`             | `whitespace-normal` — the header and cells wrap onto multiple lines and the row grows to fit.                                       |
+| `'hidden'`           | `max-w-0 overflow-hidden whitespace-nowrap` — one line, clipped at the column's CSS width; the column collapses if it has no width. |
+
+This differs from the bare [`Table`](/components/table#column-overflow)
+primitives, where an unset `overflow` adds no class and the content wraps.
+To let a DataTable column wrap, set `meta: { overflow: 'wrap' }` on it.
+
+Row height is never fixed: a single-line row's height comes from the cell's
+padding + line-height (40px at default tokens).
+
+`'truncate'` clips at whatever width the column gets, including the share a
+flexible (no-`size`) column receives under the table's fixed layout, so it needs
+no `size`. `'hidden'` adds `max-w-0`, so it needs a width source: set `size` on
+the column (or enable column resizing), or `max-w-0` collapses the column. With
+`'truncate'` available, `'hidden'` is mainly kept for existing columns that use
+it.
+
+In both clipping modes **the ellipsis and tooltip are yours.** DataTable only
+clips; it adds no `text-overflow: ellipsis`. Render a `block truncate` element
+in the column's `cell`, inside a `Tooltip` so the full value stays reachable,
+and make the trigger focusable (`tabIndex={0}`) for keyboard users. Wrap the
+table in a `TooltipProvider`.
+
+The header cell clips too: `DataTableColumnHeader`'s sort button and title
+shrink with the column (`min-w-0`), while the sort arrow keeps its size. Its
+`title` is a plain string with no ellipsis; for an ellipsized header label,
+render your own component from the column's `header` function.
+
+```tsx
+const columns: ColumnDef<Article>[] = [
+  {
+    accessorKey: 'summary',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Summary" />
+    ),
+    meta: { overflow: 'wrap' },
+    size: 280,
+  },
+  {
+    accessorKey: 'path',
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="File path" />
+    ),
+    // No `meta.overflow`: the default 'truncate' clips at the column width.
+    size: 200,
+    cell: ({ row }) => (
+      <Tooltip>
+        <TooltipTrigger
+          render={<span className="block truncate" tabIndex={0} />}
+        >
+          {row.original.path}
+        </TooltipTrigger>
+        <TooltipContent>{row.original.path}</TooltipContent>
+      </Tooltip>
+    ),
+  },
+];
+```
+
+`--ui-table-global-cell-min-height` (40px) stays in the token tier as a
+reference value but no longer sets cell height. To change row density, override
+`--ui-table-global-cell-padding-y` instead: row height is
+`2 × padding-y + 1.5rem`, so compact (32px) is `4px`, default (40px) is `8px`,
+and relaxed (52px) is `14px`.
 
 ### Row expansion
 
@@ -453,15 +776,22 @@ The trigger renders nothing for a row that can't expand. With an external
 `renderRow` replaces `DataTable`'s per-cell render path for a row entirely,
 which is the escape hatch for a memoized row that must survive frequent parent
 re-renders (e.g. a polling screen). The exported `getCellStyle`,
-`getPinnedStyle` and `getColumnWidth` helpers let a custom row keep the default
-cell styling:
+`getPinnedStyle` and `getColumnSizeStyle` helpers let a custom row keep the
+default cell styling (see [Style helpers](#style-helpers)):
 
 ```tsx
 const PolicyRowView = memo(
   ({ row }: { row: Row<Policy> }) => (
     <TableRow>
-      <TableCell>{row.original.name}</TableCell>
-      <TableCell>{row.original.status}</TableCell>
+      {row.getVisibleCells().map((cell) => (
+        <TableCell
+          key={cell.id}
+          overflow={cell.column.columnDef.meta?.overflow ?? 'truncate'}
+          style={getCellStyle(cell, false)} // pass your enableColumnResizing value
+        >
+          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+        </TableCell>
+      ))}
     </TableRow>
   ),
   (prev, next) => prev.row.original === next.row.original
@@ -475,7 +805,9 @@ const PolicyRowView = memo(
 ```
 
 A `renderRow` row never gets an expanded-content row appended — read
-`row.getIsExpanded()` and render it yourself if you need both.
+`row.getIsExpanded()` and render it yourself if you need both. `onRowClick` and
+`onRowActivate` are ignored for a `renderRow` row too, so attach your own
+handlers to the `TableRow` you render.
 
 If you only need to change the empty-state text, `emptyLabel` overrides the
 default "No results." copy without a render prop. `renderEmptyState` replaces
@@ -492,13 +824,17 @@ the whole row and receives `hasFilters`, so you can tell "no data at all" from
 />
 ```
 
+For an empty view that keeps the table's shape (placeholder rows under an
+overlay), use `skeleton` with `renderSkeletonCell` instead. See
+[Skeleton rows](#skeleton-rows).
+
 ### Infinite scroll
 
 `paginationMode="infinite"` drops the paginated row model — `data` is the full
 accumulated array you append to — and renders a sentinel row that calls
 `onLoadMore` as it scrolls into view. While `isLoadingMore` is true, further
-calls are suppressed and a trailing loading row renders (`role="status"` +
-`aria-live="polite"`, with screen-reader-only "Loading more rows…" text):
+calls are suppressed and trailing loading rows render at the bottom of the
+table:
 
 ```tsx
 <DataTable
@@ -509,8 +845,21 @@ calls are suppressed and a trailing loading row renders (`role="status"` +
   loadMoreRootMargin="200px"
   hasNextPage={hasNextPage}
   isLoadingMore={isLoadingMore}
+  loadingMoreRows={3}          {/* default 1 */}
+  loadingMoreLabel={t('loadingMore')} {/* default 'Loading more rows…' */}
 />
 ```
+
+- **`loadingMoreRows`** (default `1`) sets how many loading rows render. Each
+  one is a skeleton row: one `Skeleton` bar per visible column, or your
+  [`renderSkeletonCell`](#skeleton-rows) content, with the same pinned and
+  width styles as the data rows. `0` turns off all loading UI: no skeleton
+  rows and no `loadingMoreLabel`.
+- **`loadingMoreLabel`** (default `'Loading more rows…'`) is visually hidden
+  text in the first cell of the first loading row. Override it to localize.
+  A screen reader reads it when the user moves to that cell. It is not a live
+  region, so it is **not** announced on its own when loading starts. To
+  announce the load, render your own `aria-live` region outside the table.
 
 - Fetching, cursor/offset tracking, dedup and accumulating `data` stay yours.
 - The sentinel needs at least one rendered row, so it **cannot drive the first
@@ -604,8 +953,21 @@ The heavier behaviors stay out of `DataTable` (to keep it lean) — compose the
   select is labelled "Rows per page".
 - Selection checkboxes need your own `aria-label` ("Select row" / "Select all")
   — they have no visible label in the cell.
-- The infinite-scroll loading row announces itself politely, so a fetch in
-  flight isn't conveyed by the animated placeholder alone.
+- Exactly one data row is a Tab stop (roving tabindex). <kbd>↑</kbd>/<kbd>↓</kbd>
+  move focus between rows, and with `onRowActivate` set, <kbd>Enter</kbd> on the
+  focused row activates it. <kbd>Space</kbd> stays reserved for row selection.
+  Keys and clicks on controls inside a cell are left to those controls. The row
+  isn't announced as actionable, so also offer the primary row action as an
+  in-cell link or button (see [Clickable rows](#clickable-rows)).
+- The infinite-scroll loading rows carry visually hidden `loadingMoreLabel`
+  text ("Loading more rows…" by default) in their first cell, so a fetch in
+  flight isn't conveyed by the animated placeholder alone when a screen-reader
+  user reaches the bottom of the table. The rows are not a live region and the
+  text is not announced automatically. For an automatic announcement, add your
+  own `aria-live` region outside the table.
+- Skeleton rows (`skeleton`) are not focusable and get no live region. Announce
+  the initial load yourself. Keep `renderSkeletonCell` content decorative: no
+  text or interactive elements, and `aria-hidden` on anything readable.
 
 ## API Reference
 
@@ -621,12 +983,12 @@ The heavier behaviors stay out of `DataTable` (to keep it lean) — compose the
 Set on a `ColumnDef`, not on `DataTable` (ui-react augments TanStack's
 `ColumnMeta`).
 
-| Key        | Type                | Purpose                                                                                    |
-| ---------- | ------------------- | ------------------------------------------------------------------------------------------ |
-| `pin`      | `'left' \| 'right'` | Pin the column to that edge (sticky on horizontal scroll).                                 |
-| `wrap`     | `boolean`           | Let the column's header + cells wrap onto multiple lines.                                  |
-| `label`    | `string`            | Label shown in the visibility dropdown; falls back to a string header, then the column id. |
-| `category` | `string`            | Group the column in a labelled visibility section with a per-category **Show all** action. |
+| Key        | Type                               | Purpose                                                                                                                                                                                                            |
+| ---------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `pin`      | `'left' \| 'right'`                | Pin the column to that edge (sticky on horizontal scroll). Ignored on the reserved `select` (always left) and `__actions` (always right) columns.                                                                  |
+| `overflow` | `'truncate' \| 'wrap' \| 'hidden'` | Default `'truncate'`: one line, clipped at the column's width. `'wrap'` wraps the header + cells onto multiple lines; `'hidden'` clips with `max-w-0` and needs a `size`. See [Column overflow](#column-overflow). |
+| `label`    | `string`                           | Label shown in the visibility dropdown; falls back to a string header, then the column id.                                                                                                                         |
+| `category` | `string`                           | Group the column in a labelled visibility section with a per-category **Show all** action.                                                                                                                         |
 
 ### Companion parts
 
@@ -639,10 +1001,28 @@ Set on a `ColumnDef`, not on `DataTable` (ui-react augments TanStack's
 | `DataTableExpandTrigger` | `row` (required), plus any `button` attribute; forwards a ref.                                                                                                              |
 
 When `DataTable` owns the table, localize the built-in visibility popup with
+`columnSettingsLabel` (the accessible name of the cog trigger itself),
 `columnSearchPlaceholder`, `showAllColumnsLabel`, and `noColumnsFoundLabel`.
 The popup searches the resolved column labels, groups matching `meta.category`
 values, and scrolls internally when the list exceeds the available viewport
 height.
+
+`headerHints` controls the tooltip that appears when a header cell is hovered or
+focused. The default lines are `"Sort column / Click"`, `"Reorder column / Drag"`,
+and `"Resize column / Drag border"` — each shown only when the column actually
+supports that capability. Pass any subset to localize just the strings you need:
+
+```tsx
+<DataTable
+  columns={columns}
+  data={rows}
+  headerHints={{
+    sort: { label: 'Ordina colonna', action: 'Clic' },
+    reorder: { label: 'Riordina colonna', action: 'Trascina' },
+    resize: { label: 'Ridimensiona colonna', action: 'Trascina il bordo' },
+  }}
+/>
+```
 
 ### useTableUrlState
 
@@ -658,6 +1038,63 @@ height.
 
 ### Style helpers
 
-`getPinnedStyle(column)`, `getColumnWidth(column, enableColumnResizing)` and
-`getCellStyle(cell, enableColumnResizing)` are exported so a `renderRow` row can
-reproduce `DataTable`'s own cell styling.
+`getPinnedStyle(column)`, `getColumnSizeStyle(column, enableColumnResizing,
+defaults?)` and `getCellStyle(cell, enableColumnResizing, defaults?)` are
+exported so a `renderRow` row can reproduce `DataTable`'s own cell styling.
+
+- `getPinnedStyle` returns the sticky offset, stacking and edge shadow for a
+  pinned column, or `undefined`.
+- `getColumnSizeStyle` returns the column's `width` / `minWidth` / `maxWidth`
+  (following the sizing rules in [Column resizing](#column-resizing)), or
+  `undefined` for a column with no sizing of its own.
+- `getCellStyle` merges the two for a cell. Prefer it: one call gives the cell
+  both its pin and size styles, and it reads the table's default column sizing
+  from the cell itself.
+- The optional trailing `defaults` argument is the table's
+  `table._getDefaultColumnDef()` (its `size` / `minSize` / `maxSize`). It tells
+  the helper which values mean "not set". `getCellStyle` derives it from
+  `cell.getContext().table` when omitted; `getColumnSizeStyle` has no table to
+  read, so it assumes TanStack's stock defaults (`150` / `20` / max) and also
+  treats `undefined` as unset.
+
+```tsx
+<TableCell style={getCellStyle(cell, enableColumnResizing)} />
+// or, when you only have the column:
+<TableCell style={{ ...getPinnedStyle(column), ...getColumnSizeStyle(column, enableColumnResizing) }} />
+```
+
+> **Limitation of the column-only form:** `getColumnSizeStyle(column, r)` is
+> correct on `DataTable`'s own table but can't honour an authored `size: 150`,
+> because a column has no reference to its table. On an external `table` that
+> keeps TanStack's defaults, an authored `150` is indistinguishable from the
+> default even when you pass `defaults`. Use `getCellStyle(cell, r)` in
+> `renderRow` where you can.
+
+> **Migrating from `getColumnWidth`:** it was renamed to `getColumnSizeStyle`,
+> which returns a style object instead of a number. Spread it instead of
+> assigning it to `width`:
+> `style={{ width: getColumnWidth(col, r) }}` →
+> `style={{ ...getColumnSizeStyle(col, r) }}`.
+
+### Column size CSS variables
+
+`DataTable` emits a CSS custom property on the `<table>` element for every
+visible header and leaf column:
+
+- `--header-{id}-size` — the header's current size in pixels (unitless number).
+- `--col-{id}-size` — the leaf column's current size in pixels (unitless number).
+
+Consumer cell renderers or overlay CSS can read these without querying the DOM:
+
+```css
+.my-cell { width: calc(var(--col-name-size) * 1px); }
+```
+
+**Caveats:** values reflect TanStack's `getSize()`. For flexible columns (no
+explicit `size` on the `ColumnDef`) when column resizing is **disabled**, this
+is TanStack's default of `150` — not the column's actual rendered width. Use
+these variables only when `enableColumnResizing` is on, or for columns with an
+explicit `size`. The same applies to an unsized `select` column on an external
+`table`: it reports (and renders) 150, since the 48px default is injected only by
+`DataTable`'s own table.
+

@@ -3,7 +3,7 @@ component: Table
 
 schematic: |
   view-options:  [ ⚙ View ▾ ]   (show/hide columns dropdown, optional)
-  root: <table> (in a horizontally scrollable container)
+  root: <table> (no scroll wrapper — add overflow-auto on a parent)
   +-----------------------------------------------------------------+
   | header: <thead>                                                 |
   |   row: <tr>                                                     |
@@ -12,7 +12,7 @@ schematic: |
   +-----------------------------------------------------------------+
   | body: <tbody>                                                   |
   |   row: <tr> (idle / hover / selected)                           |
-  |     select-cell ☐ | cell: <td> John Smith | cell ▸ wrap |       |
+  |     select-cell ☐ | cell: <td> John Smith | cell ▸ overflow |   |
   |                                            actions-cell ⋯       |
   +-----------------------------------------------------------------+
   | footer: <tfoot>                                                 |
@@ -25,8 +25,9 @@ schematic: |
                       the whole cell tints on hover/press and owns the focus ring
      row     -> idle/hover/active (selected) via --ui-table-data-row-color-*;
                 divider via --ui-table-global-row-border-{color,width,style}
-     cell    -> --ui-table-global-cell-{padding-x,padding-y,min-height},
-                idle/hover/active via --ui-table-data-cell-color-*; wrap grows height
+     cell    -> --ui-table-global-cell-{padding-x,padding-y},
+                idle/hover/active via --ui-table-data-cell-color-*;
+                overflow='wrap' grows height, overflow='hidden' clips to column width
      select-cell   -> 32px leading column (padding-start only), holds a Checkbox
      actions-cell  -> 48px trailing column, end-aligned overflow trigger
      settings-cell -> 48px trailing header column, end-aligned settings trigger
@@ -35,7 +36,8 @@ root:
   element: table
   role: table
   description: >-
-    The `<table>` (wrapped in a `overflow-auto` container for horizontal scroll).
+    The `<table>`, rendered directly with no scroll wrapper of its own. For
+    horizontal scroll, add `overflow-auto` on a parent (DataTable does this).
     Text color comes from `--ui-table-data-value-color-idle`.
 
 parts:
@@ -59,15 +61,23 @@ parts:
   - id: head
     description: >-
       A column header cell (`<th>`). When `sortable`, it renders a focusable sort
-      button with a sort icon and sets `aria-sort`. `wrap` lets the label wrap onto
-      multiple lines and drops the fixed row height (otherwise `h-10`).
+      button with a sort icon and sets `aria-sort`. No height class is applied:
+      the row height comes from `py` + `leading-6` (40px at default tokens).
+      `overflow='wrap'` switches it to `whitespace-normal` so the label can wrap
+      onto multiple lines and the row grows to fit; `overflow='hidden'` adds
+      `max-w-0 overflow-hidden whitespace-nowrap` so the label clips at the
+      column's CSS width.
     element: th
   - id: cell
     description: >-
-      A data cell (`<td>`) — padding/border from the cell tokens. Uses the fixed
-      row height (`h-10`) by default without forcing overflow-hidden or nowrap;
-      `wrap` switches it to `whitespace-normal` and lets the row grow to fit
-      multi-line content.
+      A data cell (`<td>`) — padding/border from the cell tokens. No height class
+      is applied: the row height comes from `py` + `leading-6` (40px at default
+      tokens). Unset `overflow` adds no overflow class (browser default,
+      wrapping); `overflow='wrap'` adds `whitespace-normal` and lets the row grow
+      to fit multi-line content; `overflow='hidden'` adds `max-w-0
+      overflow-hidden whitespace-nowrap` so content clips at the column's CSS
+      width (the column needs a width source, or `max-w-0` collapses it).
+      Ellipsis and tooltip belong to the cell's content, not the cell.
     element: td
   - id: select-cell
     description: >-
@@ -136,11 +146,20 @@ states:
       affects: [head],
     }
   - {
-      id: wrap,
-      trigger: 'wrap === true on a cell or head',
+      id: overflow-wrap,
+      trigger: "overflow === 'wrap' on a cell or head",
       kind: prop,
-      prop: wrap,
+      prop: overflow,
       affects: [cell, head],
+      exclusive_with: [overflow-hidden],
+    }
+  - {
+      id: overflow-hidden,
+      trigger: "overflow === 'hidden' on a cell or head",
+      kind: prop,
+      prop: overflow,
+      affects: [cell, head],
+      exclusive_with: [overflow-wrap],
     }
   - {
       id: header-hover,

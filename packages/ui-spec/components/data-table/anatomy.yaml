@@ -5,18 +5,18 @@ schematic: |
   bulk-actions-bar: [ Delete ] [ … ]        "N items selected:" [ Deselect ]
   toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]
   applied-filters: ( status: Success ✕ ) ( … )        (chip row, when filtering)
-  table: <div> rounded border wrapper
+  table: <div data-slot="data-table"> borderless wrapper
     column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
     header-hint:   hover/focus tooltip listing that column's gestures        ⚙
     resize-handle: drag handle at a resizable header's trailing edge (opt-in)
     pinned column: meta.pin left/right → position: sticky cell
     row:           data row (selectable; selected → tinted; roving Tab stop)  ⋯
-    select-column: leading fixed 48px column (consumer's id: 'select') → Checkbox
+    select-column: leading fixed column (consumer's id: 'select'; 48px by default on the internal table) → Checkbox
     expand-trigger: chevron toggle inside a cell → toggles the row's expansion
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
     sentinel:      aria-hidden row that triggers onLoadMore on scroll (infinite mode)
-    loading-row:   trailing "loading more" row (role=status) while isLoadingMore
+    loading-row:   trailing skeleton rows (loadingMoreRows) while isLoadingMore
     action-column: trailing sticky 48px column — settings cog (⚙) in the header,
                    per-row overflow-actions ellipsis (⋯) in each row
       view-options: [ ⚙ ] ▾ column-visibility menu opened from that header cog
@@ -25,11 +25,14 @@ schematic: |
 root:
   element: div
   description: >-
-    The bordered table wrapper. Renders a TanStack table over the Table
-    primitives. Manages sorting / filtering / visibility / selection /
+    The table wrapper (data-slot="data-table"). Renders a TanStack table over
+    the Table primitives. Manages sorting / filtering / visibility / selection /
     pagination / expansion / column-sizing / pinning state internally
     (DataTable), or accepts a caller-built `table` instance for the companion
-    parts.
+    parts. No outer border or radius — row separators come from the Table
+    primitives' per-row border-b. Always `overflow-auto` — DataTable, not the
+    Table primitive, owns the scroll context. When `stickyHeader` is true, also
+    gains `h-full` to form the bounded scroll container.
 
 parts:
   - id: table
@@ -72,8 +75,10 @@ parts:
     description: >-
       The leading row-selection column, when the consumer's own `ColumnDef`
       array declares one with the reserved `id: 'select'` — DataTable
-      recognizes that id and forces a fixed 48px width with no resize handle,
-      the same way the built-in trailing `__actions` column is always 48px.
+      recognizes that id and forces a strictly fixed width with no resize
+      handle (48px by default on the internal table; an external `table`
+      uses its own size, TanStack's 150px default unless `size` is set), the
+      same way the built-in trailing `__actions` column is always 48px.
       Unlike `action-column`, this column is not built in: the consumer still
       supplies its own `header`/`cell` render functions (typically a
       `Checkbox` bound to `table.toggleAllPageRowsSelected` /
@@ -147,9 +152,10 @@ parts:
   - id: loading-row
     element: tr
     description: >-
-      A trailing animated-placeholder row shown while `isLoadingMore` is true
-      (`paginationMode="infinite"`); carries `role="status"`/`aria-live="polite"`
-      with an `sr-only` text so the in-flight fetch is announced.
+      Trailing skeleton rows (`loadingMoreRows`, default 1) shown while
+      `isLoadingMore` is true (`paginationMode="infinite"`), one Skeleton per
+      column. Rows keep their implicit `row` role; the first cell of the first
+      row carries a single `sr-only` `loadingMoreLabel` text.
     optional: true
   - id: toolbar
     element: div
@@ -204,6 +210,11 @@ states:
     kind: prop
     prop: bordered
     affects: [table]
+  - id: sticky-header
+    trigger: stickyHeader is set
+    kind: prop
+    prop: stickyHeader
+    affects: [column-header, table]
   - id: current
     trigger: highlightCurrentRow is set and a row is clicked
     kind: prop
@@ -250,11 +261,18 @@ states:
     kind: prop
     prop: meta.pin
     affects: [row, column-header]
-  - id: wrapping
-    trigger: a column's meta.wrap is set
+  - id: overflow-wrap
+    trigger: "a column's meta.overflow is 'wrap'"
     kind: prop
-    prop: meta.wrap
+    prop: meta.overflow
     affects: [row, column-header]
+    exclusive_with: [overflow-hidden]
+  - id: overflow-hidden
+    trigger: "a column's meta.overflow is 'hidden'"
+    kind: prop
+    prop: meta.overflow
+    affects: [row, column-header]
+    exclusive_with: [overflow-wrap]
   - id: external-table
     trigger: >-
       table is provided — DataTable renders from a caller-built TanStack
@@ -286,6 +304,11 @@ states:
     kind: prop
     prop: renderEmptyState
     affects: [empty-state]
+  - id: custom-skeleton-cell
+    trigger: skeleton is set and renderSkeletonCell is provided
+    kind: prop
+    prop: renderSkeletonCell
+    affects: [row]
 
 internal_state:
   - id: row-selection
@@ -305,9 +328,9 @@ internal_state:
       dragstart on a draggable header cell sets it; drop / dragend clears it
       (pointer only — there is no keyboard path, see accessibility.md)
     description: >-
-      The header cell currently being dragged (`enableColumnReordering`). Dims
-      that cell and suppresses the header hints while the gesture is in flight;
-      the resulting order goes through TanStack's `columnOrder`.
+      The header cell currently being dragged (`enableColumnReordering`).
+      Suppresses the header hints while the gesture is in flight; the resulting
+      order goes through TanStack's `columnOrder`.
   - id: focused-row-index
     type: number
     initial: 0

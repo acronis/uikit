@@ -29,15 +29,23 @@ contract:
       description: >-
         On a sortable column header — the current sort direction (`false` =
         sortable but unsorted). Drives the sort icon and `aria-sort`.
-    - name: wrap
-      type: boolean
+    - name: overflow
+      type: "'wrap' | 'hidden' | 'truncate'"
       required: false
-      default: false
       description: >-
-        On a cell or column header — allow the content to wrap onto multiple
-        lines (`whitespace-normal`) and drop the fixed row height so the cell
-        grows to fit multi-line content. Default cells retain native table
-        auto-layout; truncation is opt-in through a constrained cell or class.
+        On a cell or column header — the column overflow mode. Applied to
+        `<th>` and `<td>`. `'wrap'` adds `whitespace-normal`; the cell grows to
+        fit its content. `'hidden'` adds `max-w-0 overflow-hidden
+        whitespace-nowrap`; the cell shrinks to zero unless the column has an
+        explicit size (`size` on the column, an explicit width, or column
+        resizing) — legacy mode for auto-layout tables. `'truncate'` adds
+        `overflow-hidden whitespace-nowrap`; it clips at the column's CSS
+        width without forcing `max-w-0` — the correct default for DataTable
+        columns under `table-fixed`, and the recommended mode for DataTable
+        usage. Unset — no overflow class is added; the browser default (wrapping)
+        applies. No height class is applied in any mode: a single-line row's
+        height comes from `py` + `leading-6` (40px at default tokens). Ellipsis
+        and tooltip are the inner component's responsibility.
     - name: header
       type: boolean
       required: false
@@ -266,7 +274,7 @@ adapters:
         <TableBody>
           <TableRow selected={isSelected}>
             <TableCell>web-server-01</TableCell>
-            <TableCell wrap>{longDescription}</TableCell>
+            <TableCell overflow="wrap">{longDescription}</TableCell>
             <TableCell><Tag>Protected</Tag></TableCell>
           </TableRow>
         </TableBody>

@@ -48,6 +48,13 @@ describe('Table', () => {
     expect(screen.getByText('Recent invoices')).toBeInTheDocument();
   });
 
+  it('renders <table> without an intermediate scroll wrapper', () => {
+    render(<InvoiceTable />);
+    const table = screen.getByRole('table');
+    expect(table.parentElement).not.toHaveClass('overflow-auto');
+    expect(table.parentElement).not.toHaveClass('relative');
+  });
+
   it('themes the cells from the --ui-table-* tier', () => {
     render(<InvoiceTable />);
     expect(screen.getByRole('cell', { name: 'INV001' })).toHaveClass(
@@ -130,7 +137,9 @@ describe('Table', () => {
     );
   });
 
-  it('keeps the fixed row height without constraining default cell content', () => {
+  it('sizes the row from padding + line-height, not a fixed cell height', () => {
+    // A `height` on border-collapse cells is inflated by the row border in
+    // Gecko/WebKit, so the 40px row must come from py + leading-6 alone.
     render(
       <Table>
         <TableBody>
@@ -141,8 +150,38 @@ describe('Table', () => {
       </Table>
     );
     const cell = screen.getByTestId('cell');
-    expect(cell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(cell).toHaveClass(
+      'py-[var(--ui-table-global-cell-padding-y)]',
+      'leading-6'
+    );
+    expect(cell).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
+    expect(cell).not.toHaveClass(
+      'min-h-[var(--ui-table-global-cell-min-height)]'
+    );
     expect(cell).not.toHaveClass('truncate');
+  });
+
+  it('sizes a header from padding + line-height, not a fixed cell height', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Name</TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+    const header = screen.getByRole('columnheader', { name: 'Name' });
+    expect(header).toHaveClass(
+      'py-[var(--ui-table-global-cell-padding-y)]',
+      'leading-6'
+    );
+    expect(header).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
+    );
+    expect(header).not.toHaveClass(
+      'min-h-[var(--ui-table-global-cell-min-height)]'
+    );
   });
 
   it('transitions its background so hover fades in sync with the row', () => {
@@ -162,40 +201,97 @@ describe('Table', () => {
     expect(screen.getByTestId('cell')).toHaveClass('transition-colors');
   });
 
-  it('drops the fixed height and wraps when a cell sets wrap', () => {
+  function renderCell(overflow?: 'wrap' | 'hidden') {
     render(
       <Table>
         <TableBody>
           <TableRow>
-            <TableCell wrap data-testid="cell">
+            <TableCell overflow={overflow} data-testid="cell">
               long value
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
     );
-    const cell = screen.getByTestId('cell');
+    return screen.getByTestId('cell');
+  }
+
+  function renderHead(overflow?: 'wrap' | 'hidden') {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead overflow={overflow}>Very long header label</TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+    return screen.getByRole('columnheader', { name: /Very long/ });
+  }
+
+  it('wraps a cell when overflow="wrap"', () => {
+    const cell = renderCell('wrap');
     expect(cell).toHaveClass('whitespace-normal');
     expect(cell).not.toHaveClass('truncate');
     expect(cell).not.toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
   });
 
-  it('wraps a header when TableHead sets wrap', () => {
-    render(
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead wrap>Very long header label</TableHead>
-          </TableRow>
-        </TableHeader>
-      </Table>
-    );
-    const header = screen.getByRole('columnheader', { name: /Very long/ });
+  it('wraps a header when overflow="wrap"', () => {
+    const header = renderHead('wrap');
     expect(header).toHaveClass('whitespace-normal');
     expect(header).not.toHaveClass('truncate');
     expect(header).not.toHaveClass(
       'h-[var(--ui-table-global-cell-min-height)]'
     );
+  });
+
+  it('clips a cell when overflow="hidden"', () => {
+    const cell = renderCell('hidden');
+    expect(cell).toHaveClass('max-w-0', 'overflow-hidden', 'whitespace-nowrap');
+    expect(cell).not.toHaveClass('whitespace-normal');
+  });
+
+  it('clips a header when overflow="hidden"', () => {
+    const header = renderHead('hidden');
+    expect(header).toHaveClass(
+      'max-w-0',
+      'overflow-hidden',
+      'whitespace-nowrap'
+    );
+    expect(header).not.toHaveClass('whitespace-normal');
+  });
+
+  it('adds no overflow classes to a cell when overflow is unset', () => {
+    const cell = renderCell();
+    expect(cell).not.toHaveClass('whitespace-normal');
+    expect(cell).not.toHaveClass('overflow-hidden');
+    expect(cell).not.toHaveClass('max-w-0');
+  });
+
+  it('adds no overflow classes to a header when overflow is unset', () => {
+    const header = renderHead();
+    expect(header).not.toHaveClass('whitespace-normal');
+    expect(header).not.toHaveClass('overflow-hidden');
+    expect(header).not.toHaveClass('max-w-0');
+  });
+
+  it('lets the sortable header button shrink while keeping the sort icon unshrunk', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead sortable overflow="hidden">
+              Name
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+    const button = screen.getByRole('button', { name: /Name/ });
+    expect(button).toHaveClass('min-w-0');
+    const iconWrapper = button.querySelector('svg')?.parentElement;
+    expect(iconWrapper?.tagName).toBe('SPAN');
+    expect(iconWrapper).toHaveClass('shrink-0');
   });
 
   it('keeps the sort icon in the DOM for narrow sortable headers', () => {
@@ -331,6 +427,31 @@ describe('Table structural cells', () => {
     expect(screen.getByTestId('select-cell').tagName).toBe('TD');
     expect(screen.getByLabelText('Select all')).toBeInTheDocument();
     expect(screen.getByLabelText('Select row')).toBeInTheDocument();
+  });
+
+  it('sets no fixed height on the structural cells so rows stay 40px cross-engine', () => {
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableSelectCell header data-testid="select-head" />
+            <TableSettingsCell data-testid="settings" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableSelectCell data-testid="select-cell" />
+            <TableActionsCell data-testid="actions" />
+          </TableRow>
+        </TableBody>
+      </Table>
+    );
+
+    for (const id of ['select-head', 'settings', 'select-cell', 'actions']) {
+      expect(screen.getByTestId(id)).not.toHaveClass(
+        'h-[var(--ui-table-global-cell-min-height)]'
+      );
+    }
   });
 
   it('pads the selection cell only at the inline start so it stays RTL-safe', () => {
