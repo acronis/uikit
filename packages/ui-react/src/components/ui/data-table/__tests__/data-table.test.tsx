@@ -723,6 +723,25 @@ describe('getColumnSizeStyle', () => {
       getColumnSizeStyle(result.current.getColumn('email')!, false)
     ).toEqual({ width: 200, minWidth: 200, maxWidth: 200 });
   });
+
+  it('strictly fixes a column whose explicit size equals the TanStack default (150)', () => {
+    const { result } = renderHook(() =>
+      useReactTable<Row>({
+        data: [],
+        columns: [{ accessorKey: 'email', header: 'Email', size: 150 }],
+        defaultColumn: { size: undefined, minSize: undefined, maxSize: undefined },
+        getCoreRowModel: getCoreRowModel(),
+      })
+    );
+    const table = result.current;
+    expect(
+      getColumnSizeStyle(
+        table.getColumn('email')!,
+        false,
+        table._getDefaultColumnDef()
+      )
+    ).toEqual({ width: 150, minWidth: 150, maxWidth: 150 });
+  });
 });
 
 describe('DataTable column resizing', () => {

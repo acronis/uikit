@@ -148,14 +148,17 @@ export function getPinnedStyle<TData>(
 const DEFAULT_SELECT_COLUMN_WIDTH = 48;
 
 // TanStack merges its own feature defaults (size: 150, minSize: 20,
-// maxSize: MAX_SAFE_INTEGER) into every column's resolved `columnDef` via
-// `_getDefaultColumnDef()`. As a result `column.columnDef.size` is never
-// `undefined` — checking it tells us nothing about whether the consumer
-// explicitly set a size. Instead we compare the live values against the
-// known defaults: any deviation means the consumer authored it.
-const TANSTACK_DEFAULT_SIZE = 150;
-const TANSTACK_DEFAULT_MIN_SIZE = 20;
-const TANSTACK_DEFAULT_MAX_SIZE = Number.MAX_SAFE_INTEGER;
+// maxSize: MAX_SAFE_INTEGER) into every column's resolved `columnDef`, so a
+// consumer-authored `size: 150` is indistinguishable from "not set". The
+// internal table clears those defaults via `defaultColumn` (making `undefined`
+// mean "not set") and callers pass the table's own defaults; an external
+// `table` that keeps TanStack's defaults falls back to comparing against them.
+type ColumnSizeDefaults = Pick<ColumnDef<unknown>, 'size' | 'minSize' | 'maxSize'>;
+const TANSTACK_COLUMN_SIZE_DEFAULTS: ColumnSizeDefaults = {
+  size: 150,
+  minSize: 20,
+  maxSize: Number.MAX_SAFE_INTEGER,
+};
 
 // CSS sizing rules per column — each column is evaluated independently:
 //
@@ -172,11 +175,12 @@ const TANSTACK_DEFAULT_MAX_SIZE = Number.MAX_SAFE_INTEGER;
 // Chrome columns ('select', '__actions') are always strictly fixed.
 export function getColumnSizeStyle<TData>(
   column: Column<TData, unknown>,
-  enableColumnResizing: boolean
+  enableColumnResizing: boolean,
+  defaults: ColumnSizeDefaults = TANSTACK_COLUMN_SIZE_DEFAULTS
 ): Pick<CSSProperties, 'width' | 'minWidth' | 'maxWidth'> | undefined {
   if (column.id === 'select') {
     const size =
-      column.columnDef.size !== TANSTACK_DEFAULT_SIZE
+      column.columnDef.size !== defaults.size
         ? column.columnDef.size!
         : DEFAULT_SELECT_COLUMN_WIDTH;
     return { width: size, minWidth: size, maxWidth: size };
@@ -192,9 +196,9 @@ export function getColumnSizeStyle<TData>(
     return { width: size, minWidth: size };
   }
 
-  const hasExplicitSize = column.columnDef.size !== TANSTACK_DEFAULT_SIZE;
-  const hasExplicitMinSize = column.columnDef.minSize !== TANSTACK_DEFAULT_MIN_SIZE;
-  const hasExplicitMaxSize = column.columnDef.maxSize !== TANSTACK_DEFAULT_MAX_SIZE;
+  const hasExplicitSize = column.columnDef.size !== defaults.size;
+  const hasExplicitMinSize = column.columnDef.minSize !== defaults.minSize;
+  const hasExplicitMaxSize = column.columnDef.maxSize !== defaults.maxSize;
 
   if (hasExplicitSize) {
     // size overrides minSize/maxSize — strictly fixed column.
@@ -216,14 +220,15 @@ export function getColumnSizeStyle<TData>(
 
 function getHeaderStyle<TData>(
   header: Header<TData, unknown>,
-  enableColumnResizing: boolean
+  enableColumnResizing: boolean,
+  sizeDefaults?: ColumnSizeDefaults
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(header.column);
   // Non-leaf cells (group-label spans and placeholders) have no single leaf
   // size — skip width so colSpan layout determines the cell's rendered width.
   const sizeStyle =
     header.subHeaders.length === 0
-      ? getColumnSizeStyle(header.column, enableColumnResizing)
+      ? getColumnSizeStyle(header.column, enableColumnResizing, sizeDefaults)
       : undefined;
   if (!pin && sizeStyle === undefined) return undefined;
   return { ...pin, ...sizeStyle };
@@ -231,10 +236,11 @@ function getHeaderStyle<TData>(
 
 export function getCellStyle<TData>(
   cell: Cell<TData, unknown>,
-  enableColumnResizing: boolean
+  enableColumnResizing: boolean,
+  sizeDefaults?: ColumnSizeDefaults
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(cell.column);
-  const sizeStyle = getColumnSizeStyle(cell.column, enableColumnResizing);
+  const sizeStyle = getColumnSizeStyle(cell.column, enableColumnResizing, sizeDefaults);
   if (!pin && sizeStyle === undefined) return undefined;
   return { ...pin, ...sizeStyle };
 }
@@ -836,6 +842,7 @@ export function DataTable<TData, TValue = unknown>({
   const internalTable = useReactTable({
     data,
     columns: tableColumns,
+    defaultColumn: { size: undefined, minSize: undefined, maxSize: undefined },
     getRowId,
     enableColumnResizing,
     columnResizeMode: 'onChange',
@@ -879,6 +886,7 @@ export function DataTable<TData, TValue = unknown>({
   // The caller's instance is the single source of truth when passed — it
   // configures its own row models/state, so DataTable just renders from it.
   const table = externalTable ?? internalTable;
+  const sizeDefaults = table._getDefaultColumnDef();
   const isInfiniteScroll = !externalTable && paginationMode === 'infinite';
   // `enableColumnResizing` is documented as a no-op with an external `table`
   // (the caller owns that instance's ColumnSizing state), but ColumnSizing is
@@ -1127,7 +1135,7 @@ export function DataTable<TData, TValue = unknown>({
   const tableMinWidth = resizingEnabled
     ? undefined
     : table.getVisibleLeafColumns().reduce<number>((sum, column) => {
-        const minWidth = getColumnSizeStyle(column, false)?.minWidth;
+        const minWidth = getColumnSizeStyle(column, false, sizeDefaults)?.minWidth;
         return sum + (typeof minWidth === 'number' ? minWidth : 0);
       }, 0) || undefined;
 
@@ -1159,7 +1167,7 @@ export function DataTable<TData, TValue = unknown>({
             so table-fixed distributes the remaining space to them. */}
         <colgroup>
           {table.getVisibleLeafColumns().map((column) => {
-            const sizeStyle = getColumnSizeStyle(column, resizingEnabled);
+            const sizeStyle = getColumnSizeStyle(column, resizingEnabled, sizeDefaults);
             return (
               <col
                 key={column.id}
@@ -1231,7 +1239,7 @@ export function DataTable<TData, TValue = unknown>({
                         return (
                           <TableSettingsCell
                             key={header.id}
-                            style={getHeaderStyle(header, resizingEnabled)}
+                            style={getHeaderStyle(header, resizingEnabled, sizeDefaults)}
                             className={headerPinnedBg}
                           />
                         );
@@ -1239,7 +1247,7 @@ export function DataTable<TData, TValue = unknown>({
                       return (
                         <TableSettingsCell
                           key={header.id}
-                          style={getHeaderStyle(header, resizingEnabled)}
+                          style={getHeaderStyle(header, resizingEnabled, sizeDefaults)}
                           className={headerPinnedBg}
                         >
                           <DataTableViewOptions
@@ -1257,7 +1265,7 @@ export function DataTable<TData, TValue = unknown>({
                       <TableHead
                         colSpan={header.colSpan}
                         overflow={header.column.columnDef.meta?.overflow ?? 'truncate'}
-                        style={getHeaderStyle(header, resizingEnabled)}
+                        style={getHeaderStyle(header, resizingEnabled, sizeDefaults)}
                         draggable={
                           (canReorder && !isAnyColumnResizing) || undefined
                         }
@@ -1408,7 +1416,7 @@ export function DataTable<TData, TValue = unknown>({
                       overflow={column.columnDef.meta?.overflow ?? 'truncate'}
                       style={{
                         ...getPinnedStyle(column),
-                        ...getColumnSizeStyle(column, resizingEnabled),
+                        ...getColumnSizeStyle(column, resizingEnabled, sizeDefaults),
                       }}
                       className={cn(
                         isPinned && 'bg-background',
@@ -1526,7 +1534,7 @@ export function DataTable<TData, TValue = unknown>({
                         return (
                           <TableActionsCell
                             key={cell.id}
-                            style={getCellStyle(cell, resizingEnabled)}
+                            style={getCellStyle(cell, resizingEnabled, sizeDefaults)}
                             className={rowBg}
                             bulkSelectionActive={bulkSelectionActive}
                             onMouseEnter={
@@ -1564,7 +1572,7 @@ export function DataTable<TData, TValue = unknown>({
                         <TableCell
                           key={cell.id}
                           overflow={cell.column.columnDef.meta?.overflow ?? 'truncate'}
-                          style={getCellStyle(cell, resizingEnabled)}
+                          style={getCellStyle(cell, resizingEnabled, sizeDefaults)}
                           className={cn(isPinned && rowBg, cell.column.id === firstDataColumnId && 'ps-0')}
                         >
                           {flexRender(
@@ -1638,7 +1646,7 @@ export function DataTable<TData, TValue = unknown>({
                       overflow={column.columnDef.meta?.overflow ?? 'truncate'}
                       style={{
                         ...getPinnedStyle(column),
-                        ...getColumnSizeStyle(column, resizingEnabled),
+                        ...getColumnSizeStyle(column, resizingEnabled, sizeDefaults),
                       }}
                       className={cn(
                         isPinned && 'bg-background',
