@@ -358,7 +358,10 @@ contract:
         default cell styling if desired — `getColumnSizeStyle(column,
         enableColumnResizing)` returns `Pick<CSSProperties, 'width' |
         'minWidth' | 'maxWidth'> | undefined`, spread it into the cell style
-        (`style={{ ...getColumnSizeStyle(col, r) }}`). Also bypasses `renderExpandedRow` —
+        (`style={{ ...getColumnSizeStyle(col, r) }}`); both `getColumnSizeStyle`
+        and `getCellStyle` take an optional trailing table-defaults argument
+        (`table._getDefaultColumnDef()`), derived automatically by
+        `getCellStyle`. Also bypasses `renderExpandedRow` —
         a row rendered via `renderRow` never gets an expanded-content row
         appended; read `row.getIsExpanded()` and render it yourself if
         needed.

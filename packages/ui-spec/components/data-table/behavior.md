@@ -113,6 +113,11 @@ Scenario: Custom row rendering
   And DataTable's own per-cell flexRender/pinning/styling path is skipped for that row
   And no expanded-content row is appended even if getRowCanExpand returns true for it —
       the caller must read row.getIsExpanded() and render it themselves inside renderRow
+  # Style helpers: getCellStyle(cell, r) is the recommended call; it and
+  # getColumnSizeStyle(column, r, defaults?) take an optional trailing defaults
+  # argument (table._getDefaultColumnDef()). getCellStyle derives it from the
+  # cell's table. The column-only getColumnSizeStyle(column, r) assumes TanStack's
+  # defaults, so it cannot honour an authored size of 150.
 ```
 
 ```gherkin
@@ -461,11 +466,29 @@ Scenario: Column sizing
       CSS min-width/max-width, and the column shares the remaining table width
   And the select column defaults to 48px (overridable with size) and __actions is
       48px, both strictly fixed
+  And an authored size of 150 is honoured as strictly fixed too, even though 150
+      is TanStack's default (the internal table clears TanStack's default
+      size/minSize/maxSize, so undefined means "not set")
   And the <table> min-width is the sum of every visible column's min-width
   When the columns are arranged in header groups
   Then the same widths apply — the <col> elements carry them, so group-label
       cells in the top header row don't affect leaf widths
   # With enableColumnResizing every column gets width = minWidth = its current size.
+```
+
+```gherkin
+Scenario: Select column on an external table
+  Given an external table is passed and its columns include one with id "select"
+  And that ColumnDef sets no size
+  Then the 48px select default is not applied — the column renders at the table's
+      own default size (TanStack's 150px)
+  And its rendered width equals the size TanStack sums for the sticky offset of the
+      next left-pinned column, so the two cells sit flush with no gap
+  When the select ColumnDef sets size: 48
+  Then the column renders 48px wide and the pinned neighbour's offset is 48px
+  # Caveat: on an external table an authored size of 150 is indistinguishable from
+  # TanStack's default, so it is treated as unsized unless the table sets
+  # defaultColumn size/minSize/maxSize to undefined.
 ```
 
 ```gherkin

@@ -88,12 +88,15 @@ from it too (see **Server-driven usage** below).
   and `__actions` are reserved ids that ignore `meta.pin`: a `select` column is
   always pinned left and the built-in trailing settings/actions column is
   always pinned right.
-- **Column sizing** — a column with `size` is strictly fixed; a column without
-  one is flexible and shares the remaining width of the `table-fixed` layout,
+- **Column sizing** — a column with `size` (including `size: 150`) is strictly
+  fixed; a column without one is flexible and shares the remaining width of the `table-fixed` layout,
   with any explicit `minSize`/`maxSize` applied as CSS floor/ceiling. Widths go
-  on a `<colgroup>`, so they also hold with grouped headers.
-  `getColumnSizeStyle` / `getCellStyle` reproduce these styles in a `renderRow`
-  row.
+  on a `<colgroup>`, so they also hold with grouped headers. The `select`
+  column is 48px by default on DataTable's own table; with an external `table`
+  an unsized `select` renders at that table's default (150px), so set
+  `size: 48` there to keep it narrow. `getColumnSizeStyle` / `getCellStyle`
+  reproduce these styles in a `renderRow` row (prefer `getCellStyle(cell, r)`;
+  both take an optional trailing `table._getDefaultColumnDef()` argument).
 - **Column overflow** — DataTable defaults `meta.overflow` to `'truncate'`:
   the header and cells stay on one line, clipped at the column's CSS width
   (`overflow-hidden whitespace-nowrap`). Set `meta.overflow: 'wrap'` to let a

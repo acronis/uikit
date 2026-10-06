@@ -11,7 +11,7 @@ schematic: |
     resize-handle: drag handle at a resizable header's trailing edge (opt-in)
     pinned column: meta.pin left/right → position: sticky cell
     row:           data row (selectable; selected → tinted; roving Tab stop)  ⋯
-    select-column: leading fixed 48px column (consumer's id: 'select') → Checkbox
+    select-column: leading fixed column (consumer's id: 'select'; 48px by default on the internal table) → Checkbox
     expand-trigger: chevron toggle inside a cell → toggles the row's expansion
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
@@ -75,8 +75,10 @@ parts:
     description: >-
       The leading row-selection column, when the consumer's own `ColumnDef`
       array declares one with the reserved `id: 'select'` — DataTable
-      recognizes that id and forces a fixed 48px width with no resize handle,
-      the same way the built-in trailing `__actions` column is always 48px.
+      recognizes that id and forces a strictly fixed width with no resize
+      handle (48px by default on the internal table; an external `table`
+      uses its own size, TanStack's 150px default unless `size` is set), the
+      same way the built-in trailing `__actions` column is always 48px.
       Unlike `action-column`, this column is not built in: the consumer still
       supplies its own `header`/`cell` render functions (typically a
       `Checkbox` bound to `table.toggleAllPageRowsSelected` /

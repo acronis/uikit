@@ -28,6 +28,7 @@ import {
   DataTableExpandTrigger,
   DataTablePagination,
   DataTableToolbar,
+  getCellStyle,
   getColumnSizeStyle,
 } from '../index';
 
@@ -741,6 +742,120 @@ describe('getColumnSizeStyle', () => {
         table._getDefaultColumnDef()
       )
     ).toEqual({ width: 150, minWidth: 150, maxWidth: 150 });
+  });
+});
+
+describe('getColumnSizeStyle / getCellStyle 2-arg form on the internal-table defaults', () => {
+  const internalDefaults = {
+    size: undefined,
+    minSize: undefined,
+    maxSize: undefined,
+  };
+  const buildTable = (column: ColumnDef<Row>) =>
+    renderHook(() =>
+      useReactTable<Row>({
+        data,
+        columns: [column],
+        defaultColumn: internalDefaults,
+        getCoreRowModel: getCoreRowModel(),
+      })
+    ).result.current;
+
+  const styles = (column: ColumnDef<Row>) => {
+    const table = buildTable(column);
+    const cell = table.getRowModel().rows[0].getVisibleCells()[0];
+    return {
+      size: getColumnSizeStyle(table.getColumn('email')!, false),
+      cell: getCellStyle(cell, false),
+    };
+  };
+
+  it('emits no size for an unsized column', () => {
+    const { size, cell } = styles({ accessorKey: 'email', header: 'Email' });
+    expect(size).toBeUndefined();
+    expect(cell).toBeUndefined();
+  });
+
+  it('emits only minWidth/maxWidth for minSize/maxSize', () => {
+    const { size, cell } = styles({
+      accessorKey: 'email',
+      header: 'Email',
+      minSize: 100,
+      maxSize: 300,
+    });
+    expect(size).toEqual({ minWidth: 100, maxWidth: 300 });
+    expect(cell).toEqual({ minWidth: 100, maxWidth: 300 });
+  });
+
+  it('strictly fixes an authored size of 200', () => {
+    const { size, cell } = styles({ accessorKey: 'email', header: 'Email', size: 200 });
+    const expected = { width: 200, minWidth: 200, maxWidth: 200 };
+    expect(size).toEqual(expected);
+    expect(cell).toEqual(expected);
+  });
+
+  it('getCellStyle(cell, false) fixes an authored size of 150; 2-arg getColumnSizeStyle cannot (no table access) but the 3-arg form can', () => {
+    const column: ColumnDef<Row> = { accessorKey: 'email', header: 'Email', size: 150 };
+    const table = buildTable(column);
+    const cell = table.getRowModel().rows[0].getVisibleCells()[0];
+    const expected = { width: 150, minWidth: 150, maxWidth: 150 };
+    expect(getCellStyle(cell, false)).toEqual(expected);
+    expect(
+      getColumnSizeStyle(table.getColumn('email')!, false, table._getDefaultColumnDef())
+    ).toEqual(expected);
+    expect(getColumnSizeStyle(table.getColumn('email')!, false)).toBeUndefined();
+  });
+
+  it('on an external table keeping TanStack defaults, authored size 150 is unstyled (known limitation), even with the defaults passed explicitly', () => {
+    const table = renderHook(() =>
+      useReactTable<Row>({
+        data,
+        columns: [{ accessorKey: 'email', header: 'Email', size: 150 }],
+        getCoreRowModel: getCoreRowModel(),
+      })
+    ).result.current;
+    const column = table.getColumn('email')!;
+    expect(getColumnSizeStyle(column, false)).toBeUndefined();
+    expect(
+      getColumnSizeStyle(column, false, table._getDefaultColumnDef())
+    ).toBeUndefined();
+  });
+
+  it('renderRow consumers get the right DOM styles from getCellStyle(cell, false)', () => {
+    const cols: ColumnDef<Row>[] = [
+      { accessorKey: 'email', header: 'Email' },
+      { accessorKey: 'amount', header: 'Amount', minSize: 100, maxSize: 300 },
+      { accessorKey: 'id', header: 'Id', size: 150 },
+    ];
+    render(
+      <DataTable
+        columns={cols}
+        data={data.slice(0, 1)}
+        renderRow={(row) => (
+          <tr key={row.id}>
+            {row.getVisibleCells().map((cell) => (
+              <td
+                key={cell.id}
+                data-testid={`cell-${cell.column.id}`}
+                style={getCellStyle(cell, false)}
+              />
+            ))}
+          </tr>
+        )}
+      />
+    );
+    const unsized = screen.getByTestId('cell-email');
+    expect(unsized.style.width).toBe('');
+    expect(unsized.style.minWidth).toBe('');
+    expect(unsized.style.maxWidth).toBe('');
+    const flexible = screen.getByTestId('cell-amount');
+    expect(flexible.style.width).toBe('');
+    expect(flexible.style.minWidth).toBe('100px');
+    expect(flexible.style.maxWidth).toBe('300px');
+    const fixed = screen.getByTestId('cell-id');
+    expect(fixed.style.width).toBe('150px');
+    expect(fixed.style.minWidth).toBe('150px');
+    expect(fixed.style.maxWidth).toBe('150px');
   });
 });
 

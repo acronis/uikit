@@ -174,6 +174,14 @@ const TANSTACK_COLUMN_SIZE_DEFAULTS: ColumnSizeDefaults = {
 //                     handle offset math has a deterministic baseline.
 //
 // Chrome columns ('select', '__actions') are always strictly fixed.
+//
+// `defaults` is the table's `_getDefaultColumnDef()`; omitted, TanStack's
+// stock defaults are assumed and `undefined` is also treated as "not set"
+// (correct for the internal table). A `Column` has no table reference, so on
+// an external `table` that keeps TanStack's defaults an authored `size: 150`
+// is indistinguishable from unset — callers wanting it fixed must set the
+// `defaultColumn` size to `undefined` on their table and pass
+// `table._getDefaultColumnDef()` here. `getCellStyle` derives it itself.
 export function getColumnSizeStyle<TData>(
   column: Column<TData, unknown>,
   enableColumnResizing: boolean,
@@ -194,9 +202,13 @@ export function getColumnSizeStyle<TData>(
     return { width: size, minWidth: size };
   }
 
-  const hasExplicitSize = column.columnDef.size !== defaults.size;
-  const hasExplicitMinSize = column.columnDef.minSize !== defaults.minSize;
-  const hasExplicitMaxSize = column.columnDef.maxSize !== defaults.maxSize;
+  // `undefined` always means "not set" (the internal table's cleared defaults),
+  // so the 2-arg form stays correct there.
+  const isSet = (value: number | undefined, fallback: number | undefined): boolean =>
+    value !== undefined && value !== fallback;
+  const hasExplicitSize = isSet(column.columnDef.size, defaults.size);
+  const hasExplicitMinSize = isSet(column.columnDef.minSize, defaults.minSize);
+  const hasExplicitMaxSize = isSet(column.columnDef.maxSize, defaults.maxSize);
 
   if (hasExplicitSize) {
     // size overrides minSize/maxSize — strictly fixed column.
@@ -238,7 +250,11 @@ export function getCellStyle<TData>(
   sizeDefaults?: ColumnSizeDefaults
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(cell.column);
-  const sizeStyle = getColumnSizeStyle(cell.column, enableColumnResizing, sizeDefaults);
+  const sizeStyle = getColumnSizeStyle(
+    cell.column,
+    enableColumnResizing,
+    sizeDefaults ?? cell.getContext().table._getDefaultColumnDef()
+  );
   if (!pin && sizeStyle === undefined) return undefined;
   return { ...pin, ...sizeStyle };
 }

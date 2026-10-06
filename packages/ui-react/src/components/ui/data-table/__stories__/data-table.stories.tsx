@@ -797,9 +797,10 @@ export const ClickableRows: Story = {
 /* ------------------------- External table + unsized select + pinned column */
 
 const externalPinnedColumns: ColumnDef<Payment>[] = [
-  // An external table gets no injected default, so the select width must be set
-  // here; the pinned column after it must anchor at the same width.
-  { ...columns[0], size: 48 },
+  // Deliberately unsized (columns[0] carries no `size`): an external table gets
+  // no injected 48px default, so the select renders at TanStack's default 150px
+  // and the pinned column after it must anchor at that same 150px.
+  columns[0],
   {
     accessorKey: 'email',
     size: 200,
@@ -828,7 +829,9 @@ function ExternalTableUnsizedSelectPinnedDemo() {
  * Regression: an external `table` with a pinned `select` column. The
  * select cell's rendered width and the next left-pinned column's sticky `left`
  * must both come from the external table's `getSize()`; otherwise a gap opens
- * between them.
+ * between them. The select column is unsized, so on an external table it renders
+ * at TanStack's default 150px (the 48px default exists only for the internal
+ * table); the story asserts both that width and the matching sticky offset.
  */
 export const ExternalTableUnsizedSelectPinned: Story = {
   render: () => <ExternalTableUnsizedSelectPinnedDemo />,
@@ -846,6 +849,11 @@ export const ExternalTableUnsizedSelectPinned: Story = {
     }
     const selectWidth = selectHeader.getBoundingClientRect().width;
     const stickyLeft = Number.parseFloat(emailHeader.style.left);
+    if (selectWidth !== 150) {
+      throw new Error(
+        `Unsized select should render at TanStack's default 150px, got ${selectWidth}px`
+      );
+    }
     if (stickyLeft !== selectWidth) {
       throw new Error(
         `Pinned column sticky offset ${stickyLeft}px != select width ${selectWidth}px (gap ${stickyLeft - selectWidth}px)`

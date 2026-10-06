@@ -415,7 +415,9 @@ touched — noticeable on narrow chevron columns). Without `enableColumnResizing
 each column is sized on its own:
 
 - **`size` set** — the column is strictly fixed: `width`, `minWidth` and
-  `maxWidth` all equal `size`, and any `minSize`/`maxSize` is ignored.
+  `maxWidth` all equal `size`, and any `minSize`/`maxSize` is ignored. This
+  includes `size: 150`, which `DataTable`'s own table honours as authored even
+  though 150 is also TanStack's default (see the external-`table` caveat below).
 - **No `size`** — the column is flexible. DataTable renders its `<table>` with
   `table-layout: fixed`, so flexible columns split the width the fixed columns
   leave over. An explicit `minSize`/`maxSize` becomes a CSS `min-width`/
@@ -428,12 +430,23 @@ in [grouped-header](#grouped-column-headers) mode too, where the top header row
 has only group-label cells.
 
 `id: 'select'` is a reserved column id: a selection `ColumnDef` with that id
-renders at a fixed 48px by default and never gets a resize handle, the same way
-the built-in trailing `__actions` column is always 48px (its `size`, `minSize`
-and `maxSize` are all 48). No `enableResizing: false` is needed. Set `size` on
-the `select` column to change its width; the width stays strictly fixed either
-way. This is a different column from `Table`'s hand-authored `TableSelectCell`,
-which is a fixed 32px — the two share a role but not a width.
+never gets a resize handle, the same way the built-in trailing `__actions`
+column is always 48px (its `size`, `minSize` and `maxSize` are all 48). No
+`enableResizing: false` is needed. On `DataTable`'s own table the `select`
+column is 48px by default; set `size` on it to change its width. The width stays
+strictly fixed either way.
+
+With an external `table`, DataTable doesn't inject that 48px default: an unsized
+`select` column renders at that table's own default size, TanStack's 150px, so
+its width matches the sticky offset of the next left-pinned column. Set
+`size: 48` on the `select` `ColumnDef` of an external table to keep it narrow.
+Also with an external `table`, an authored `size: 150` on a non-chrome column
+can't be told apart from TanStack's default, so that column is treated as
+unsized. Use another value, or set `defaultColumn: { size: undefined }` on your
+table so an authored `150` is honoured.
+
+This is a different column from `Table`'s hand-authored `TableSelectCell`, which
+is a fixed 32px — the two share a role but not a width.
 
 The handle is keyboard-operable: focus it and use <kbd>←</kbd>/<kbd>→</kbd> to
 step 10px, or <kbd>Shift</kbd> + arrow for 50px, clamped to the column's
@@ -1025,9 +1038,9 @@ supports that capability. Pass any subset to localize just the strings you need:
 
 ### Style helpers
 
-`getPinnedStyle(column)`, `getColumnSizeStyle(column, enableColumnResizing)` and
-`getCellStyle(cell, enableColumnResizing)` are exported so a `renderRow` row can
-reproduce `DataTable`'s own cell styling.
+`getPinnedStyle(column)`, `getColumnSizeStyle(column, enableColumnResizing,
+defaults?)` and `getCellStyle(cell, enableColumnResizing, defaults?)` are
+exported so a `renderRow` row can reproduce `DataTable`'s own cell styling.
 
 - `getPinnedStyle` returns the sticky offset, stacking and edge shadow for a
   pinned column, or `undefined`.
@@ -1035,13 +1048,27 @@ reproduce `DataTable`'s own cell styling.
   (following the sizing rules in [Column resizing](#column-resizing)), or
   `undefined` for a column with no sizing of its own.
 - `getCellStyle` merges the two for a cell. Prefer it: one call gives the cell
-  both its pin and size styles.
+  both its pin and size styles, and it reads the table's default column sizing
+  from the cell itself.
+- The optional trailing `defaults` argument is the table's
+  `table._getDefaultColumnDef()` (its `size` / `minSize` / `maxSize`). It tells
+  the helper which values mean "not set". `getCellStyle` derives it from
+  `cell.getContext().table` when omitted; `getColumnSizeStyle` has no table to
+  read, so it assumes TanStack's stock defaults (`150` / `20` / max) and also
+  treats `undefined` as unset.
 
 ```tsx
 <TableCell style={getCellStyle(cell, enableColumnResizing)} />
 // or, when you only have the column:
 <TableCell style={{ ...getPinnedStyle(column), ...getColumnSizeStyle(column, enableColumnResizing) }} />
 ```
+
+> **Limitation of the column-only form:** `getColumnSizeStyle(column, r)` is
+> correct on `DataTable`'s own table but can't honour an authored `size: 150`,
+> because a column has no reference to its table. On an external `table` that
+> keeps TanStack's defaults, an authored `150` is indistinguishable from the
+> default even when you pass `defaults`. Use `getCellStyle(cell, r)` in
+> `renderRow` where you can.
 
 > **Migrating from `getColumnWidth`:** it was renamed to `getColumnSizeStyle`,
 > which returns a style object instead of a number. Spread it instead of
@@ -1067,5 +1094,7 @@ Consumer cell renderers or overlay CSS can read these without querying the DOM:
 explicit `size` on the `ColumnDef`) when column resizing is **disabled**, this
 is TanStack's default of `150` — not the column's actual rendered width. Use
 these variables only when `enableColumnResizing` is on, or for columns with an
-explicit `size`.
+explicit `size`. The same applies to an unsized `select` column on an external
+`table`: it reports (and renders) 150, since the 48px default is injected only by
+`DataTable`'s own table.
 
