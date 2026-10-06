@@ -1335,6 +1335,42 @@ describe('DataTable sticky (pinned) columns', () => {
     });
   });
 
+  it('keeps a pinned column flush after an unsized select on an external table', async () => {
+    const cols: ColumnDef<Row>[] = [
+      {
+        id: 'select',
+        header: () => <span>Select all</span>,
+        cell: () => <span>Select row</span>,
+      },
+      { accessorKey: 'email', header: 'Email' },
+      { accessorKey: 'amount', header: 'Amount' },
+    ];
+    function Harness() {
+      const table = useReactTable({
+        data: data.slice(0, 1),
+        columns: cols,
+        state: { columnPinning: { left: ['select', 'email'] } },
+        getCoreRowModel: getCoreRowModel(),
+      });
+      return (
+        <DataTable
+          columns={cols}
+          data={data.slice(0, 1)}
+          table={table}
+          hideActionColumn
+        />
+      );
+    }
+    render(<Harness />);
+    await waitFor(() => {
+      const selectHeader = screen.getByText('Select all').closest('th')!;
+      const emailHeader = screen.getByText('Email').closest('th')!;
+      // Rendered select width and the next pinned column's sticky offset must
+      // both come from the external table's own getSize().
+      expect(emailHeader.style.left).toBe(selectHeader.style.width);
+    });
+  });
+
   it('applies position:sticky to a column pinned via meta', async () => {
     const pinned: ColumnDef<Row>[] = [
       { accessorKey: 'email', header: 'Email', meta: { pin: 'left' } },

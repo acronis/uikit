@@ -142,9 +142,10 @@ export function getPinnedStyle<TData>(
   };
 }
 
-// Default width for the kit-injected selection column (checkbox). Consumers
-// override it by setting `size` on their 'select' ColumnDef; the component
-// always enforces it strictly (width = minWidth = maxWidth) so it never grows.
+// Default width for the kit-injected selection column (checkbox) of the
+// internal table. Consumers override it by setting `size` on their 'select'
+// ColumnDef; the component always enforces it strictly (width = minWidth =
+// maxWidth) so it never grows.
 const DEFAULT_SELECT_COLUMN_WIDTH = 48;
 
 // TanStack merges its own feature defaults (size: 150, minSize: 20,
@@ -178,14 +179,11 @@ export function getColumnSizeStyle<TData>(
   enableColumnResizing: boolean,
   defaults: ColumnSizeDefaults = TANSTACK_COLUMN_SIZE_DEFAULTS
 ): Pick<CSSProperties, 'width' | 'minWidth' | 'maxWidth'> | undefined {
-  if (column.id === 'select') {
-    const size =
-      column.columnDef.size !== defaults.size
-        ? column.columnDef.size!
-        : DEFAULT_SELECT_COLUMN_WIDTH;
-    return { width: size, minWidth: size, maxWidth: size };
-  }
-  if (column.id === '__actions') {
+  // `getSize()` is what TanStack's sticky offsets (`getStart`/`getAfter`) sum, so
+  // using it keeps a pinned neighbour flush. The internal table gets its 48px
+  // default injected via `tableColumns`; an external table's unsized select
+  // keeps TanStack's default size, and its width and offsets agree.
+  if (column.id === 'select' || column.id === '__actions') {
     const size = column.getSize();
     return { width: size, minWidth: size, maxWidth: size };
   }

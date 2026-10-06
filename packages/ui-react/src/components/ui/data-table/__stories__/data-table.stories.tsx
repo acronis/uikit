@@ -793,3 +793,63 @@ function ClickableRowsDemo() {
 export const ClickableRows: Story = {
   render: () => <ClickableRowsDemo />,
 };
+
+/* ------------------------- External table + unsized select + pinned column */
+
+const externalPinnedColumns: ColumnDef<Payment>[] = [
+  // An external table gets no injected default, so the select width must be set
+  // here; the pinned column after it must anchor at the same width.
+  { ...columns[0], size: 48 },
+  {
+    accessorKey: 'email',
+    size: 200,
+    header: 'Email',
+  },
+  { accessorKey: 'status', size: 240, header: 'Status' },
+  { accessorKey: 'amount', size: 240, header: 'Amount' },
+];
+
+function ExternalTableUnsizedSelectPinnedDemo() {
+  const table = useReactTable({
+    data: payments,
+    columns: externalPinnedColumns,
+    state: { columnPinning: { left: ['select', 'email'] } },
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="max-w-md" data-testid="external-pinned-pane">
+      <DataTable columns={externalPinnedColumns} data={payments} table={table} />
+    </div>
+  );
+}
+
+/**
+ * Regression: an external `table` with a pinned `select` column. The
+ * select cell's rendered width and the next left-pinned column's sticky `left`
+ * must both come from the external table's `getSize()`; otherwise a gap opens
+ * between them.
+ */
+export const ExternalTableUnsizedSelectPinned: Story = {
+  render: () => <ExternalTableUnsizedSelectPinnedDemo />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const pane = await canvas.findByTestId('external-pinned-pane');
+    const selectHeader = pane.querySelector<HTMLElement>(
+      'thead th:nth-child(1)'
+    );
+    const emailHeader = pane.querySelector<HTMLElement>(
+      'thead th:nth-child(2)'
+    );
+    if (!selectHeader || !emailHeader) {
+      throw new Error('Expected select and email header cells');
+    }
+    const selectWidth = selectHeader.getBoundingClientRect().width;
+    const stickyLeft = Number.parseFloat(emailHeader.style.left);
+    if (stickyLeft !== selectWidth) {
+      throw new Error(
+        `Pinned column sticky offset ${stickyLeft}px != select width ${selectWidth}px (gap ${stickyLeft - selectWidth}px)`
+      );
+    }
+  },
+};
