@@ -1,5 +1,14 @@
 # @acronis-platform/ui-react
 
+## 5.5.3
+
+### Patch Changes
+
+- [#757](https://github.com/acronis/uikit/pull/757) [`275ff6a`](https://github.com/acronis/uikit/commit/275ff6a7a1c21e84a6284cc96bc0b7f26655a07b) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Enable the Storybook code panel across component stories.
+
+- Updated dependencies [[`2770801`](https://github.com/acronis/uikit/commit/27708011e90efca92f19f95f275663f96879a40b)]:
+  - @acronis-platform/tokens-pd@4.0.1
+
 ## 5.5.2
 
 ### Patch Changes
