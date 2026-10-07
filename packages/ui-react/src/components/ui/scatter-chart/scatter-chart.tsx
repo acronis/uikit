@@ -164,7 +164,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
     );
     const yAxisWidth = resolveYAxisWidth(
       series.some(({ data }) => data.length > 0),
-      yAxisLabel ? 72 : undefined
+      Boolean(yAxisLabel)
     );
     const chartContainerRef = React.useRef<HTMLDivElement>(null);
     const xAxisLayout = useXAxisLayout(

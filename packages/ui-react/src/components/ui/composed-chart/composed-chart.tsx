@@ -446,11 +446,11 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
     const secondaryYDomain = resolveAxisDomain(secondaryYAxisDomain);
     const yAxisWidth = resolveYAxisWidth(
       data.length > 0,
-      yAxisLabel ? 72 : undefined
+      Boolean(yAxisLabel)
     );
     const secondaryYAxisWidth = resolveYAxisWidth(
       data.length > 0,
-      secondaryYAxisLabel ? 72 : undefined
+      Boolean(secondaryYAxisLabel)
     );
 
     // Which axis a series (or the grid, or a reference element) binds to. The

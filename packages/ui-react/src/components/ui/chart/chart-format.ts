@@ -36,17 +36,21 @@ export function resolveXAxisTickLabels(
   });
 }
 
+// Preserve the charts' previous 72px reserve for a rotated Y-axis title while
+// empty. It is only a pre-measurement fallback; rendered ticks determine the
+// width as soon as data exists.
+const Y_AXIS_LABEL_FALLBACK_WIDTH = 72;
+
 /**
  * Internal shared layout helper. Recharts measures an automatic Y axis from
  * rendered tick nodes. Starting that process with no data can store a zero-width
- * axis before any tick exists; keep the caller's existing fallback until data
- * arrives, then let it measure.
+ * axis before any tick exists, so retain the title fallback until it can measure.
  */
 export function resolveYAxisWidth(
   hasData: boolean,
-  fallbackWidth: number | undefined
+  hasYAxisLabel: boolean
 ): 'auto' | number | undefined {
-  return hasData ? 'auto' : fallbackWidth;
+  return hasData ? 'auto' : hasYAxisLabel ? Y_AXIS_LABEL_FALLBACK_WIDTH : undefined;
 }
 
 /**
