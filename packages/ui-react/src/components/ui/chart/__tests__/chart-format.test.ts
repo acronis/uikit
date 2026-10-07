@@ -93,15 +93,15 @@ describe('resolveAxisDomain', () => {
 
 describe('resolveYAxisWidth', () => {
   it('keeps recharts’ default width until there are ticks to measure', () => {
-    expect(resolveYAxisWidth(false, undefined)).toBeUndefined();
+    expect(resolveYAxisWidth(false, false)).toBeUndefined();
   });
 
   it('uses rendered tick bounds once the chart has data', () => {
-    expect(resolveYAxisWidth(true, 72)).toBe('auto');
+    expect(resolveYAxisWidth(true, true)).toBe('auto');
   });
 
-  it('preserves the caller’s label fallback while a chart is empty', () => {
-    expect(resolveYAxisWidth(false, 72)).toBe(72);
+  it('reserves the Y-axis title width while a chart is empty', () => {
+    expect(resolveYAxisWidth(false, true)).toBe(72);
   });
 });
 

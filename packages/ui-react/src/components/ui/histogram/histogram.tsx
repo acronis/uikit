@@ -232,7 +232,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
               tickFormatter={yTickFormatter}
               tickCount={yAxisTickCount}
               domain={yDomain}
-              width={resolveYAxisWidth(bins.length > 0, yAxisLabel ? 72 : undefined)}
+              width={resolveYAxisWidth(bins.length > 0, Boolean(yAxisLabel))}
               label={yAxisTitle}
             />
             {showTooltip && (

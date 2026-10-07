@@ -493,7 +493,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           tickFormatter={yTickFormatter}
           tickCount={yAxisTickCount}
           domain={yDomain}
-          width={resolveYAxisWidth(data.length > 0, yAxisLabel ? 72 : undefined)}
+          width={resolveYAxisWidth(data.length > 0, Boolean(yAxisLabel))}
           label={yAxisTitle}
         />
       </>
