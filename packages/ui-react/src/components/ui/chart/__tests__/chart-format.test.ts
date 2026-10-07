@@ -15,6 +15,7 @@ import {
   resolveXAxisTickLabels,
   resolveXAxisHeight,
   resolveXAxisTitle,
+  resolveYAxisWidth,
   resolveYAxisTitle,
   toLabelFormatter,
   CHART_BRUSH_ARIA_LABEL,
@@ -87,6 +88,20 @@ describe('resolveAxisDomain', () => {
     expect(resolveAxisDomain('auto')).toEqual(['auto', 'auto']);
     expect(resolveAxisDomain('auto')).not.toEqual(resolveAxisDomain('zero'));
     expect(resolveAxisDomain('auto')).not.toEqual(resolveAxisDomain(undefined));
+  });
+});
+
+describe('resolveYAxisWidth', () => {
+  it('keeps recharts’ default width until there are ticks to measure', () => {
+    expect(resolveYAxisWidth(false, undefined)).toBeUndefined();
+  });
+
+  it('uses rendered tick bounds once the chart has data', () => {
+    expect(resolveYAxisWidth(true, 72)).toBe('auto');
+  });
+
+  it('preserves the caller’s label fallback while a chart is empty', () => {
+    expect(resolveYAxisWidth(false, 72)).toBe(72);
   });
 });
 

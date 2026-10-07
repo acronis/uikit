@@ -63,7 +63,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // The two CVA axes are the design's Bar-chart variant set (B2): `orientation`
 // and `layout` (grouped side-by-side vs stacked). `orientation` is the
@@ -1244,7 +1244,7 @@ const BarChart = React.forwardRef<HTMLDivElement, BarChartProps>(
           tickFormatter={yTickFormatter}
           tickCount={yAxisTickCount}
           domain={yDomain}
-          width={yAxisLabel ? 72 : undefined}
+          width={resolveYAxisWidth(data.length > 0, yAxisLabel ? 72 : undefined)}
           label={yAxisTitle}
         />
       </>

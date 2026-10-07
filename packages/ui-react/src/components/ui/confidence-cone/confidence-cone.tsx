@@ -40,7 +40,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // A forecast confidence-cone: a solid line over the known/actual period, a
 // dashed line over the forecast period, and a shaded band (the "cone") between
@@ -493,7 +493,7 @@ const ConfidenceCone = React.forwardRef<HTMLDivElement, ConfidenceConeProps>(
           tickFormatter={yTickFormatter}
           tickCount={yAxisTickCount}
           domain={yDomain}
-          width={yAxisLabel ? 72 : undefined}
+          width={resolveYAxisWidth(data.length > 0, yAxisLabel ? 72 : undefined)}
           label={yAxisTitle}
         />
       </>
