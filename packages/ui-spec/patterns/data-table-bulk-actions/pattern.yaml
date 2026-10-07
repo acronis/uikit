@@ -24,7 +24,8 @@ description: >-
   self-contained `DataTable` is equally valid: it keeps its own internal
   instance, but its controlled `rowSelection` / `onRowSelectionChange` props let
   the consumer lift the selection and drive a minimal second instance for the bar
-  off the same state (the `CoreCapabilities` story).
+  off the same state (the `CoreCapabilities` /
+  `CoreCapabilitiesWithPagination` stories).
 
 when_to_use:
   - A table where users pick several rows and apply one action to all of them.

@@ -79,21 +79,9 @@ Scenario: The settings cell holds the column-settings trigger
 
 ```gherkin
 Scenario: Overflow scrolls horizontally
-  Given a standalone Table (used outside DataTable) wider than its container
-  And the consumer has wrapped it in an overflow-auto element
+  Given a table wider than its container
   When it renders
   Then the wrapping container scrolls horizontally, keeping the page intact
-  # Table renders the <table> directly and has no overflow-auto wrapper of its own.
-  # DataTable puts overflow-auto on its root div and is the preferred way to
-  # render wide tables. Consumers using Table directly must add overflow-auto
-  # on a wrapping element if they need horizontal scrolling.
-```
-
-```gherkin
-Scenario: Table creates no scroll container
-  Given a standalone Table with no overflow-auto ancestor
-  When it is wider than its container
-  Then the table overflows its container instead of scrolling inside it
 ```
 
 ```gherkin
@@ -104,69 +92,11 @@ Scenario: Hover feedback
 ```
 
 ```gherkin
-Scenario: Wrapping column
-  Given a TableHead or TableCell with overflow = 'wrap' holding multi-line content
+Scenario: A wrapping cell grows the row
+  Given a TableCell (or TableHead) with wrap = true holding multi-line content
   When it renders
-  Then the cell uses whitespace-normal and grows to fit its content
-  And the row height is not fixed
-```
-
-```gherkin
-Scenario: Clipped column
-  Given a TableHead or TableCell with overflow = 'hidden'
-  And the column has a CSS width (size on the column, an explicit width, or column resizing)
-  When it renders
-  Then the cell applies max-w-0 overflow-hidden whitespace-nowrap
-  And content is clipped at the column's CSS width
-  And ellipsis and tooltip are the inner component's responsibility
-```
-
-```gherkin
-Scenario: Clipped column without a width source
-  Given a TableHead or TableCell with overflow = 'hidden'
-  And the column has no CSS width
-  When it renders
-  Then max-w-0 collapses the column
-  # A width source is a requirement of overflow = 'hidden', not optional
-```
-
-```gherkin
-Scenario: Truncated column
-  Given a TableHead or TableCell with overflow = 'truncate'
-  When it renders
-  Then the cell applies overflow-hidden whitespace-nowrap
-  And it does not apply max-w-0, so a column without a width does not collapse
-  And content stays on one line, clipped at the column's CSS width
-  And ellipsis and tooltip are the inner component's responsibility
-  # The clip width is only enforced under table-layout: fixed (e.g. Table with
-  # className="table-fixed", as DataTable renders it). Table itself does not set
-  # table-fixed, and in the default auto layout single-line content can widen the column.
-```
-
-```gherkin
-Scenario: Default column (overflow unset)
-  Given a TableHead or TableCell with no overflow prop
-  When it renders
-  Then no overflow class is applied
-  And the browser default (wrapping) applies
-  # DataTable does not leave overflow unset: it passes 'truncate' when a
-  # column's meta.overflow is unset.
-```
-
-```gherkin
-Scenario: Table layout
-  Given a Table with no className
-  When it renders
-  Then it does not apply table-fixed — the browser's auto table layout applies
-  # DataTable passes className="table-fixed" to its own Table.
-```
-
-```gherkin
-Scenario: No fixed row height
-  Given any TableHead or TableCell
-  When it renders
-  Then no height class is applied
-  And a single-line row's height comes from the cell's vertical padding plus line-height (40px at default tokens)
+  Then it uses whitespace-normal and drops the fixed row height
+  And the row grows to fit the content
 ```
 
 ## Pagination (TablePagination)

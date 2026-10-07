@@ -127,6 +127,15 @@
   --ui-breakpoint-4xl: 1920px;
 }
 
+/* While a DataTable column resize is in progress, force the resize cursor
+   over every element the pointer crosses — a plain inline `cursor` on
+   `<body>` loses to any element underneath that sets its own `cursor`
+   (e.g. a sortable header's `cursor-pointer` button), so the cursor would
+   flicker back to `pointer` while dragging over a neighboring header. */
+html[data-ui-column-resizing] * {
+  cursor: var(--ui-resizable-cursor) !important;
+}
+
 @keyframes indeterminate-progress {
   0% {
     transform: translateX(-100%);

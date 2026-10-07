@@ -3,7 +3,6 @@ import {
   type DragEvent,
   Fragment,
   type KeyboardEvent,
-  type MouseEvent,
   type ReactNode,
   useEffect,
   useMemo,
@@ -45,7 +44,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../dropdown-menu';
-import { Skeleton } from '../skeleton';
 import {
   Table,
   TableActionsCell,
@@ -55,7 +53,6 @@ import {
   TableHeader,
   TableRow,
   TableSettingsCell,
-  type TableOverflow,
 } from '../table';
 import {
   Tooltip,
@@ -102,15 +99,10 @@ declare module '@tanstack/react-table' {
     /** Pin the column to a table edge (sticky while the grid scrolls horizontally). */
     pin?: 'left' | 'right';
     /**
-     * Column overflow mode. Forwarded to `TableHead` and `TableCell`.
-     * Defaults to `'truncate'` when unset — clips to the column's CSS width,
-     * keeping all rows at a uniform height. Use a truncation component with a
-     * tooltip inside the cell renderer to surface the full value.
-     * - `'truncate'` (default) — `overflow-hidden whitespace-nowrap`.
-     * - `'wrap'` — `whitespace-normal`; the row grows to fit its content.
-     * - `'hidden'` — clips via `max-w-0`; the cell renderer manages its own overflow UI.
+     * Let the column's header + cells wrap onto multiple lines (drops the fixed
+     * row height); mirrors the `Table` primitives' `wrap` prop on TableHead/TableCell.
      */
-    overflow?: TableOverflow;
+    wrap?: boolean;
     /** Label shown for this column in the visibility dropdown. */
     label?: string;
     /** Optional visibility-dropdown category for this column. */
@@ -142,121 +134,49 @@ export function getPinnedStyle<TData>(
   };
 }
 
-// Default width for the kit-injected selection column (checkbox) of the
-// internal table. Consumers override it by setting `size` on their 'select'
-// ColumnDef; the component always enforces it strictly (width = minWidth =
-// maxWidth) so it never grows.
-const DEFAULT_SELECT_COLUMN_WIDTH = 48;
-
-// TanStack merges its own feature defaults (size: 150, minSize: 20,
-// maxSize: MAX_SAFE_INTEGER) into every column's resolved `columnDef`, so a
-// consumer-authored `size: 150` is indistinguishable from "not set". The
-// internal table clears those defaults via `defaultColumn` (making `undefined`
-// mean "not set") and callers pass the table's own defaults; an external
-// `table` that keeps TanStack's defaults falls back to comparing against them.
-type ColumnSizeDefaults = Pick<ColumnDef<unknown>, 'size' | 'minSize' | 'maxSize'>;
-const TANSTACK_COLUMN_SIZE_DEFAULTS: ColumnSizeDefaults = {
-  size: 150,
-  minSize: 20,
-  maxSize: Number.MAX_SAFE_INTEGER,
-};
-
-// CSS sizing rules per column — each column is evaluated independently:
-//
-//   size set        → strictly fixed: width = minWidth = maxWidth = size.
-//                     minSize/maxSize on the ColumnDef are ignored because
-//                     `size` is the definitive width.
-//   size not set    → flexible: only minSize/maxSize apply as CSS floors/ceilings.
-//                     No CSS `width` is emitted, so table-fixed still treats the
-//                     column as "unsized" and gives it a share of the remaining
-//                     space — while still honouring the floor/ceiling constraints.
-//   resizing on     → all columns get width = minWidth = getSize() so the drag-
-//                     handle offset math has a deterministic baseline.
-//
-// Chrome columns ('select', '__actions') are always strictly fixed.
-//
-// `defaults` is the table's `_getDefaultColumnDef()`; omitted, TanStack's
-// stock defaults are assumed and `undefined` is also treated as "not set"
-// (correct for the internal table). A `Column` has no table reference, so on
-// an external `table` that keeps TanStack's defaults an authored `size: 150`
-// is indistinguishable from unset — callers wanting it fixed must set the
-// `defaultColumn` size to `undefined` on their table and pass
-// `table._getDefaultColumnDef()` here. `getCellStyle` derives it itself.
-export function getColumnSizeStyle<TData>(
+// A column's rendered width tracks TanStack's size model once the consumer has
+// opted in — either explicitly (a `size` set on the `ColumnDef`) or implicitly
+// (column resizing enabled, which needs every column's width to be deterministic
+// for the drag math to work). Without either, columns stay in native `<table>`
+// auto-layout so `size`'s internal default (TanStack falls back to 150) never
+// forces every untouched column to a fixed width.
+export function getColumnWidth<TData>(
   column: Column<TData, unknown>,
-  enableColumnResizing: boolean,
-  defaults: ColumnSizeDefaults = TANSTACK_COLUMN_SIZE_DEFAULTS
-): Pick<CSSProperties, 'width' | 'minWidth' | 'maxWidth'> | undefined {
-  // `getSize()` is what TanStack's sticky offsets (`getStart`/`getAfter`) sum, so
-  // using it keeps a pinned neighbour flush. The internal table gets its 48px
-  // default injected via `tableColumns`; an external table's unsized select
-  // keeps TanStack's default size, and its width and offsets agree.
-  if (column.id === 'select' || column.id === '__actions') {
-    const size = column.getSize();
-    return { width: size, minWidth: size, maxWidth: size };
+  enableColumnResizing: boolean
+): number | undefined {
+  if (column.id === 'select') {
+    // Matches the trailing `__actions` column's fixed 48px: symmetric gutters.
+    return 48;
   }
-
-  if (enableColumnResizing) {
-    // Drag math needs every column to have a deterministic CSS width.
-    const size = column.getSize();
-    return { width: size, minWidth: size };
+  if (enableColumnResizing || column.columnDef.size !== undefined) {
+    return column.getSize();
   }
-
-  // `undefined` always means "not set" (the internal table's cleared defaults),
-  // so the 2-arg form stays correct there.
-  const isSet = (value: number | undefined, fallback: number | undefined): boolean =>
-    value !== undefined && value !== fallback;
-  const hasExplicitSize = isSet(column.columnDef.size, defaults.size);
-  const hasExplicitMinSize = isSet(column.columnDef.minSize, defaults.minSize);
-  const hasExplicitMaxSize = isSet(column.columnDef.maxSize, defaults.maxSize);
-
-  if (hasExplicitSize) {
-    // size overrides minSize/maxSize — strictly fixed column.
-    const size = column.columnDef.size!;
-    return { width: size, minWidth: size, maxWidth: size };
-  }
-
-  if (hasExplicitMinSize || hasExplicitMaxSize) {
-    // Flexible column: no CSS width (stays "unsized" for table-fixed distribution),
-    // only floor/ceiling constraints.
-    return {
-      ...(hasExplicitMinSize && { minWidth: column.columnDef.minSize }),
-      ...(hasExplicitMaxSize && { maxWidth: column.columnDef.maxSize }),
-    };
-  }
-
   return undefined;
 }
 
 function getHeaderStyle<TData>(
   header: Header<TData, unknown>,
-  enableColumnResizing: boolean,
-  sizeDefaults?: ColumnSizeDefaults
+  enableColumnResizing: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(header.column);
   // Non-leaf cells (group-label spans and placeholders) have no single leaf
   // size — skip width so colSpan layout determines the cell's rendered width.
-  const sizeStyle =
+  const width =
     header.subHeaders.length === 0
-      ? getColumnSizeStyle(header.column, enableColumnResizing, sizeDefaults)
+      ? getColumnWidth(header.column, enableColumnResizing)
       : undefined;
-  if (!pin && sizeStyle === undefined) return undefined;
-  return { ...pin, ...sizeStyle };
+  if (!pin && width === undefined) return undefined;
+  return { ...pin, width };
 }
 
 export function getCellStyle<TData>(
   cell: Cell<TData, unknown>,
-  enableColumnResizing: boolean,
-  sizeDefaults?: ColumnSizeDefaults
+  enableColumnResizing: boolean
 ): CSSProperties | undefined {
   const pin = getPinnedStyle(cell.column);
-  const sizeStyle = getColumnSizeStyle(
-    cell.column,
-    enableColumnResizing,
-    sizeDefaults ?? cell.getContext().table._getDefaultColumnDef()
-  );
-  if (!pin && sizeStyle === undefined) return undefined;
-  return { ...pin, ...sizeStyle };
+  const width = getColumnWidth(cell.column, enableColumnResizing);
+  if (!pin && width === undefined) return undefined;
+  return { ...pin, width };
 }
 
 // Matches TanStack's own `defaultColumnSizing` fallback bounds — the same
@@ -325,48 +245,6 @@ const DEFAULT_HEADER_HINTS: DataTableHeaderHints = {
   resize: { label: 'Resize column', action: 'Drag border' },
 };
 
-// Controls inside a cell own their own click — a row click/activate handler
-// must not also fire for them (e.g. a row-actions trigger, a selection
-// checkbox, a link). Mirrors what's natively/ARIA interactive or a Tab stop.
-const ROW_INTERACTIVE_DESCENDANT_SELECTOR = [
-  'a[href]',
-  'button',
-  'input',
-  'select',
-  'textarea',
-  'label',
-  '[contenteditable]:not([contenteditable="false"])',
-  '[role="button"]',
-  '[role="checkbox"]',
-  '[role="switch"]',
-  '[role="menuitem"]',
-  '[role="link"]',
-  '[tabindex]:not([tabindex="-1"])',
-].join(', ');
-
-function isFromInteractiveDescendant(
-  event: MouseEvent<HTMLTableRowElement>,
-  { checkSelection = true }: { checkSelection?: boolean } = {}
-): boolean {
-  const row = event.currentTarget;
-  const target = event.target as Node;
-  // React synthetic events bubble through portals, so a click inside a menu
-  // or popover opened from a cell reaches the row although its DOM node
-  // isn't inside it.
-  if (!row.contains(target)) return true;
-  const element = target instanceof Element ? target : target.parentElement;
-  const interactive = element?.closest(ROW_INTERACTIVE_DESCENDANT_SELECTOR);
-  // The row itself is a roving Tab stop (`tabIndex={0}`) — only its
-  // descendants count, and a match above the row is irrelevant.
-  if (interactive && interactive !== row && row.contains(interactive)) {
-    return true;
-  }
-  // A drag-to-select of cell text ends in a click; don't treat it as one.
-  // Skipped for double-click: the browser itself selects the word under the
-  // pointer on the second press, so a selection is always present by then.
-  return checkSelection && !!window.getSelection()?.toString();
-}
-
 // `columns`/`data` build DataTable's own table instance; `table` renders an
 // externally-built one instead. At least one of the two forms is required —
 // omitting both would otherwise silently render an empty table — but `table`
@@ -424,72 +302,10 @@ interface DataTableOwnProps<TData> {
   bordered?: boolean;
   /** Highlight the row the user last clicked (the "current" row). */
   highlightCurrentRow?: boolean;
-  /**
-   * Called on a single pointer click on a data row. Not called when the click
-   * lands on an interactive control inside a cell (button, link, input,
-   * checkbox, menu item, …), comes from a portaled element opened from the
-   * row, or ends a text selection. The row gets a pointer cursor while this
-   * is set. Composes with `highlightCurrentRow` (both run). Silently ignored
-   * when `renderRow` is set — the caller owns that row's markup and handlers.
-   */
-  onRowClick?: (
-    row: Row<TData>,
-    event: MouseEvent<HTMLTableRowElement>
-  ) => void;
-  /**
-   * Called when a data row is activated: Enter while the row itself is
-   * focused (`via: 'keyboard'`; key repeat is ignored) or a double-click on
-   * it (`via: 'pointer'`). The same interactive-descendant and portal guards
-   * as `onRowClick` apply (Enter only counts when the row itself has focus);
-   * the text-selection guard does not, since a double-click selects the word
-   * under the pointer by itself. Silently ignored when `renderRow` is set.
-   *
-   * A double-click dispatches two single clicks first. The first normally
-   * fires `onRowClick`; the second usually does not (browsers select a word
-   * on the second press, and the text-selection guard suppresses it). Don't
-   * wire navigation to `onRowClick` alongside this prop.
-   *
-   * Space does not activate a row: it's reserved for row selection when
-   * `rowSelection` is in use.
-   */
-  onRowActivate?: (
-    row: Row<TData>,
-    details: {
-      via: 'keyboard' | 'pointer';
-      event:
-        | KeyboardEvent<HTMLTableRowElement>
-        | MouseEvent<HTMLTableRowElement>;
-    }
-  ) => void;
   /** Render placeholder skeleton rows instead of data (loading state). */
   skeleton?: boolean;
   /** Number of skeleton rows to render when `skeleton` is set. */
   skeletonRows?: number;
-  /**
-   * Custom content for each skeleton placeholder cell. Called once per visible
-   * leaf column in each of the `skeletonRows` rows, only while `skeleton` is
-   * set; `rowIndex` is 0-based. Replaces only the cell content — DataTable
-   * keeps the `<TableRow>` (no hover tint, not focusable) and `<TableCell>`
-   * (padding, borders, the column's `meta.overflow` mode).
-   *
-   * Unset renders the default `<Skeleton className="my-1 h-4 w-full" />`.
-   * Returning `null`/`undefined` leaves the cell empty — there is no fallback,
-   * so return the exported `Skeleton` to keep the default for a column. Also
-   * called for the kit-injected `__actions` column (absent with
-   * `hideActionColumn` or an external `table`) and for a consumer `select`
-   * column — branch on `column.id`.
-   *
-   * Keep the content ~24px tall so the row stays 40px. Decorative only: no
-   * text or interactive elements, and `aria-hidden` on anything readable — the
-   * kit adds no live region. Also suits an empty view (static placeholder rows
-   * under an empty-state overlay). Also called for each infinite-scroll
-   * loading-more row (`paginationMode="infinite"` + `isLoadingMore`), with
-   * `rowIndex` 0-based within those rows.
-   */
-  renderSkeletonCell?: (context: {
-    column: Column<TData, unknown>;
-    rowIndex: number;
-  }) => ReactNode;
   /**
    * Opt in to interactive column resizing. Renders a drag handle at the trailing
    * edge of each resizable header cell (TanStack's native `columnResizing`).
@@ -530,13 +346,6 @@ interface DataTableOwnProps<TData> {
   /** Passthrough for the `rowSelection` state; pairs with `rowSelection`. */
   onRowSelectionChange?: OnChangeFn<RowSelectionState>;
   /**
-   * Enable or disable column sorting. Defaults to `true`. Set to `false` to
-   * hide sort buttons and the "Sort column" tooltip hint on all header cells.
-   * Columns can also opt out individually via `enableSorting: false` on their
-   * `ColumnDef`.
-   */
-  enableSorting?: boolean;
-  /**
    * Opt out of client-side sorting — pass already-sorted `data` and drive
    * sorting via `sorting`/`onSortingChange` (e.g. mapped to a server query by
    * the caller). Mapping sort state to a query and refetching stays the
@@ -555,7 +364,7 @@ interface DataTableOwnProps<TData> {
    * path entirely (no `<TableRow>`/cell-styling/pinning of DataTable's own).
    * Use to swap in a custom, independently memoizable row component. The
    * caller owns the row's markup and equality semantics — reuse the exported
-   * `getCellStyle`/`getPinnedStyle`/`getColumnSizeStyle` helpers to match
+   * `getCellStyle`/`getPinnedStyle`/`getColumnWidth` helpers to match
    * DataTable's default cell styling if desired.
    *
    * Also bypasses DataTable's `renderExpandedRow` handling — a row rendered
@@ -614,30 +423,9 @@ interface DataTableOwnProps<TData> {
   emptyLabel?: string;
   /**
    * Whether a load is in flight — suppresses further `onLoadMore` calls and
-   * renders trailing loading rows. `paginationMode="infinite"` only.
+   * renders a trailing loading row. `paginationMode="infinite"` only.
    */
   isLoadingMore?: boolean;
-  /**
-   * Number of skeleton rows to render at the bottom of the table while
-   * `isLoadingMore` is set. Defaults to `1`. Pairs with `renderSkeletonCell`
-   * (the same callback is used for both initial-load and load-more rows, with
-   * `rowIndex` 0-based within the loading-more block). `paginationMode="infinite"` only.
-   */
-  loadingMoreRows?: number;
-  /**
-   * Visually hidden text placed in the first loading-more row, readable by
-   * screen readers when navigating to that cell (not a live region, not
-   * auto-announced). Override to localize. `paginationMode="infinite"` only.
-   */
-  loadingMoreLabel?: string;
-  /**
-   * Stick the header row to the top of the scroll container so it stays
-   * visible while the user scrolls vertically through the table body.
-   * Requires DataTable to have a bounded height — wrap it in a fixed-height
-   * `flex flex-col` container (e.g. `<div className="h-96 flex flex-col">`);
-   * `max-h` alone does not work.
-   */
-  stickyHeader?: boolean;
   /**
    * Hide the trailing sticky action column — the column-visibility cog in the
    * header and each row's overflow-actions ellipsis. Shown by default. A
@@ -688,11 +476,8 @@ export function DataTable<TData, TValue = unknown>({
   striped = false,
   bordered = false,
   highlightCurrentRow = false,
-  onRowClick,
-  onRowActivate,
   skeleton = false,
   skeletonRows = 5,
-  renderSkeletonCell,
   enableColumnResizing = false,
   onColumnSizingChange,
   enableColumnReordering = false,
@@ -702,7 +487,6 @@ export function DataTable<TData, TValue = unknown>({
   onColumnVisibilityChange,
   rowSelection: controlledRowSelection,
   onRowSelectionChange,
-  enableSorting = true,
   manualSorting = false,
   sorting: controlledSorting,
   onSortingChange,
@@ -715,9 +499,6 @@ export function DataTable<TData, TValue = unknown>({
   resizeColumnLabel = 'Resize column',
   emptyLabel = 'No results.',
   isLoadingMore = false,
-  loadingMoreRows = 1,
-  loadingMoreLabel = 'Loading more rows…',
-  stickyHeader = false,
   hideActionColumn = false,
   renderRowActions,
   rowActionsLabel = 'Row actions',
@@ -758,7 +539,6 @@ export function DataTable<TData, TValue = unknown>({
   // end.
   const [focusedRowIndex, setFocusedRowIndex] = useState(0);
   const rowRefs = useRef<Array<HTMLTableRowElement | null>>([]);
-  const theadRef = useRef<HTMLTableSectionElement>(null);
 
   const handleColumnSizingChange: OnChangeFn<ColumnSizingState> = (updater) => {
     setColumnSizing(updater);
@@ -798,13 +578,6 @@ export function DataTable<TData, TValue = unknown>({
   // what renders, DataTable doesn't own its state in that mode (see the
   // `table` prop's tsdoc).
   const showActionColumn = !hideActionColumn && !externalTable;
-  // Whether the caller provided a selection column — detected by the reserved
-  // id 'select'. When present, DataTable auto-pins it to the left (same
-  // mechanism as __actions on the right) so it stays sticky while the grid
-  // scrolls horizontally. Skipped for an external `table` — that instance
-  // manages its own pinning state.
-  const hasSelectColumn =
-    !externalTable && columns.some((col) => col.id === 'select');
   // A real `ColumnDef` (rather than chrome bolted onto the render loop) so
   // TanStack's own pinning geometry measures and offsets it like any other
   // pinned column — `header`/`cell` are never read (see the header/body
@@ -816,8 +589,6 @@ export function DataTable<TData, TValue = unknown>({
             {
               id: '__actions',
               size: 48,
-              minSize: 48,
-              maxSize: 48,
               enableSorting: false,
               enableHiding: false,
               meta: { pin: 'right' },
@@ -829,18 +600,7 @@ export function DataTable<TData, TValue = unknown>({
     [showActionColumn]
   );
   const tableColumns = useMemo(
-    () => [
-      // Inject the default size into the select column if the consumer didn't
-      // set one, so TanStack's getSize()/getStart() math matches the 48px the
-      // CSS enforces. Without this, any second left-pinned column gets a wrong
-      // sticky offset (left: 150px instead of left: 48px).
-      ...columns.map((col): ColumnDef<TData, TValue> =>
-        col.id === 'select' && col.size === undefined
-          ? { ...col, size: DEFAULT_SELECT_COLUMN_WIDTH }
-          : col
-      ),
-      ...actionColumns,
-    ],
+    () => [...columns, ...actionColumns],
     [columns, actionColumns]
   );
   // The pinned action cell's own hover (its ellipsis/cog trigger) should be
@@ -856,7 +616,6 @@ export function DataTable<TData, TValue = unknown>({
   const internalTable = useReactTable({
     data,
     columns: tableColumns,
-    defaultColumn: { size: undefined, minSize: undefined, maxSize: undefined },
     getRowId,
     enableColumnResizing,
     columnResizeMode: 'onChange',
@@ -867,25 +626,18 @@ export function DataTable<TData, TValue = unknown>({
       : {}),
     getRowCanExpand,
     onExpandedChange: setExpanded,
-    enableSorting,
     manualSorting,
     onSortingChange: handleSortingChange,
-    ...(manualSorting || !enableSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
+    ...(manualSorting ? {} : { getSortedRowModel: getSortedRowModel() }),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: handleColumnVisibilityChange,
     onRowSelectionChange: handleRowSelectionChange,
     onColumnSizingChange: handleColumnSizingChange,
     onColumnOrderChange: handleColumnOrderChange,
-    initialState:
-      hasSelectColumn || showActionColumn
-        ? {
-            columnPinning: {
-              ...(hasSelectColumn && { left: ['select'] }),
-              ...(showActionColumn && { right: ['__actions'] }),
-            },
-          }
-        : undefined,
+    initialState: showActionColumn
+      ? { columnPinning: { right: ['__actions'] } }
+      : undefined,
     state: {
       sorting,
       columnFilters,
@@ -900,7 +652,6 @@ export function DataTable<TData, TValue = unknown>({
   // The caller's instance is the single source of truth when passed — it
   // configures its own row models/state, so DataTable just renders from it.
   const table = externalTable ?? internalTable;
-  const sizeDefaults = table._getDefaultColumnDef();
   const isInfiniteScroll = !externalTable && paginationMode === 'infinite';
   // `enableColumnResizing` is documented as a no-op with an external `table`
   // (the caller owns that instance's ColumnSizing state), but ColumnSizing is
@@ -924,6 +675,21 @@ export function DataTable<TData, TValue = unknown>({
   const isAnyColumnResizing = Boolean(
     table.getState().columnSizingInfo.isResizingColumn
   );
+  // The resize handle only shows its `ew-resize` cursor while the pointer is
+  // directly over its thin 4px hit area — once a drag starts, fast pointer
+  // movement leaves that area and the browser shows whatever cursor the
+  // element underneath declares (e.g. a sortable header's `cursor-pointer`).
+  // This attribute + the `html[data-ui-column-resizing] *` rule in
+  // styles/index.css force `ew-resize` everywhere for the duration of the
+  // drag — a plain `<body>` inline cursor loses to a descendant's own
+  // `cursor` declaration, so it isn't enough on its own.
+  useEffect(() => {
+    if (!isAnyColumnResizing) return;
+    document.documentElement.setAttribute('data-ui-column-resizing', '');
+    return () => {
+      document.documentElement.removeAttribute('data-ui-column-resizing');
+    };
+  }, [isAnyColumnResizing]);
   const sentinelRef = useIntersectionObserver<HTMLTableRowElement>({
     onIntersect: () => onLoadMore?.(),
     disabled: !isInfiniteScroll || !hasNextPage || isLoadingMore,
@@ -964,33 +730,12 @@ export function DataTable<TData, TValue = unknown>({
     setDraggedColumnId(columnId);
   };
 
-  // The drop-target marker is set imperatively on dragover, so it's swept
-  // imperatively too — on every exit path of a drag that started in this
-  // table (`dragend` and `drop`), the only drags it's ever set for — rather
-  // than derived from state. A missed `dragend` (e.g. the source cell
-  // unmounted mid-drag) would otherwise leave a stale marker that React state
-  // never knew about.
-  const endColumnDrag = () => {
-    setDraggedColumnId(undefined);
-    // Scoped to this table's own <thead>: `document.querySelectorAll` doesn't
-    // reach inside shadow roots.
-    theadRef.current
-      ?.querySelectorAll('[data-reorder-target]')
-      .forEach((element) => element.removeAttribute('data-reorder-target'));
-  };
-
   const handleColumnDragOver = (
     event: DragEvent<HTMLTableCellElement>,
     targetColumnId: string
   ) => {
     // Without this the browser rejects the drop and no `onDrop` ever fires.
     event.preventDefault();
-    // Only a drag that started in this table is ever swept (foreign drags never
-    // reach `endColumnDrag` — no local `dragend`, and `drop` bails early), so
-    // marking for a file/text/sibling-table drag would leave it stuck.
-    if (draggedColumnId) {
-      event.currentTarget.setAttribute('data-reorder-target', '');
-    }
     if (!event.dataTransfer) return;
     // Show "no drop" cursor when the source and target belong to different
     // header groups — cross-group reordering is not allowed (it interleaves
@@ -1022,7 +767,7 @@ export function DataTable<TData, TValue = unknown>({
     const draggedParentId = table.getColumn(draggedColumnId)?.parent?.id;
     const targetParentId = table.getColumn(targetColumnId)?.parent?.id;
     if (draggedParentId !== targetParentId) {
-      endColumnDrag();
+      setDraggedColumnId(undefined);
       return;
     }
     const current = table.getState().columnOrder;
@@ -1030,7 +775,7 @@ export function DataTable<TData, TValue = unknown>({
       ? current
       : table.getAllLeafColumns().map((column) => column.id);
     table.setColumnOrder(reorderColumn(base, draggedColumnId, targetColumnId));
-    endColumnDrag();
+    setDraggedColumnId(undefined);
   };
 
   // Read each column's `meta.pin` and drive TanStack's native pinning state.
@@ -1049,14 +794,7 @@ export function DataTable<TData, TValue = unknown>({
   useEffect(() => {
     if (externalTable) return;
     table.getAllLeafColumns().forEach((column) => {
-      // 'select' is always pinned left and '__actions' always right — the
-      // caller can't opt these out via meta.pin. Any other column follows
-      // its own meta.pin (or unpins when it has none).
-      if (column.id === 'select') {
-        column.pin('left');
-      } else {
-        column.pin(column.columnDef.meta?.pin ?? false);
-      }
+      column.pin(column.columnDef.meta?.pin ?? false);
     });
   }, [table, tableColumns, externalTable]);
 
@@ -1064,12 +802,6 @@ export function DataTable<TData, TValue = unknown>({
   // Derived from the selection state, so it's the same for every row — compute
   // it once instead of per row inside the render loop below.
   const bulkSelectionActive = isBulkSelectionActive(table);
-  // When a select column is present its end padding and the first data column's
-  // start padding would double up the gap. Strip the first data column's ps so
-  // the spacing between the checkbox and the first cell matches the design.
-  const firstDataColumnId = hasSelectColumn
-    ? table.getVisibleLeafColumns().find((col) => col.id !== 'select')?.id
-    : undefined;
   const activeRowIndex = rows.length
     ? Math.min(focusedRowIndex, rows.length - 1)
     : 0;
@@ -1084,19 +816,12 @@ export function DataTable<TData, TValue = unknown>({
 
   const handleRowKeyDown = (
     event: KeyboardEvent<HTMLTableRowElement>,
-    row: Row<TData>,
     rowIndex: number
   ) => {
     // Keydown bubbles, so arrow keys from an interactive control inside a cell
     // (number spinner, textarea caret, native select) would otherwise be
     // hijacked to move row focus. Only roam when the row itself is focused.
-    // The same guard keeps Enter on a cell's button from activating the row.
     if (event.target !== event.currentTarget) return;
-    if (event.key === 'Enter' && onRowActivate && !event.repeat) {
-      event.preventDefault();
-      onRowActivate(row, { via: 'keyboard', event });
-      return;
-    }
     if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
     const nextIndex =
       event.key === 'ArrowDown'
@@ -1122,297 +847,203 @@ export function DataTable<TData, TValue = unknown>({
   // real opaque tokens and are safe to mirror as-is (see `rowBg` below).
   const headerPinnedBg = 'bg-background';
 
-  // CSS custom properties for every header and leaf column, keyed by
-  // `--header-{id}-size` and `--col-{id}-size`. Emitted on the <table> element
-  // so consumer CSS or custom cell renderers can reference live column sizes
-  // (e.g. `calc(var(--col-name-size) * 1px)`) without querying the DOM.
-  // Recomputed only when column sizing state changes. Note: values reflect
-  // TanStack's getSize(), which is 150 for flexible columns (no explicit `size`)
-  // when resizing is off — not the rendered width in that case.
-  const columnSizeVars = useMemo(() => {
-    const vars: Record<string, number> = {};
-    for (const header of table.getFlatHeaders()) {
-      vars[`--header-${header.id}-size`] = header.getSize();
-      vars[`--col-${header.column.id}-size`] = header.column.getSize();
-    }
-    return vars;
-    // Table sizing state is read via getState() inside the loop; listing the
-    // derived objects (columnSizingInfo, columnSizing) as deps is intentional —
-    // they are the stable reactive signals TanStack exposes for size changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [table.getState().columnSizingInfo, table.getState().columnSizing]);
-
-  // Sum of every visible column's minimum CSS width. Applied as `min-width` on
-  // the <table> so the overflow-auto wrapper scrolls once the container is
-  // narrower than the columns' combined floor — without this the table is always
-  // w-full and individual cell min-widths have no effect on scrolling.
-  const tableMinWidth = resizingEnabled
-    ? undefined
-    : table.getVisibleLeafColumns().reduce<number>((sum, column) => {
-        const minWidth = getColumnSizeStyle(column, false, sizeDefaults)?.minWidth;
-        return sum + (typeof minWidth === 'number' ? minWidth : 0);
-      }, 0) || undefined;
-
   return (
     <div
-      data-slot="data-table"
-      className={cn('overflow-auto', stickyHeader && 'h-full', borderedClass)}
+      className={cn(
+        'rounded-md border border-[var(--ui-table-global-row-border-color)]',
+        borderedClass
+      )}
     >
       <Table
-        className="table-fixed"
         style={
-          {
-            ...(resizingEnabled
-              ? { width: table.getCenterTotalSize() }
-              : tableMinWidth
-                ? { minWidth: tableMinWidth }
-                : undefined),
-            ...columnSizeVars,
-          } as CSSProperties
+          resizingEnabled ? { width: table.getCenterTotalSize() } : undefined
         }
       >
-        {/* <col> elements address physical leaf columns directly, before any
-            <tr> is read. This is required for table-layout:fixed + grouped
-            headers: group-span <th> cells cannot define individual column
-            widths, but <col> can — so the browser always picks up the right
-            sizes regardless of how many header rows exist.
-            Columns with an explicit size receive a direct pixel width.
-            Flexible columns (no size, only minSize/maxSize) are left unsized
-            so table-fixed distributes the remaining space to them. */}
-        <colgroup>
-          {table.getVisibleLeafColumns().map((column) => {
-            const sizeStyle = getColumnSizeStyle(column, resizingEnabled, sizeDefaults);
-            return (
-              <col
-                key={column.id}
-                style={
-                  sizeStyle?.width !== undefined
-                    ? { width: sizeStyle.width }
-                    : undefined
-                }
-              />
-            );
-          })}
-        </colgroup>
         {/* One provider for the whole header row so the capability hints share
             a single open/close delay group (Provider renders no DOM, so the
             table markup is unaffected). */}
         <TooltipProvider>
-          <TableHeader
-            ref={theadRef}
-            className={
-              stickyHeader ? 'sticky top-0 z-10 bg-background' : undefined
-            }
-          >
-            {table
-              .getHeaderGroups()
-              .map((headerGroup, groupIndex, headerGroups) => (
-                <TableRow
-                  key={headerGroup.id}
-                  className={cn(
-                    'hover:bg-transparent',
-                    groupIndex < headerGroups.length - 1 && 'border-b-0'
-                  )}
-                >
-                  {headerGroup.headers.map((header) => {
-                    const isPinned = header.column.getIsPinned();
-                    // Non-leaf header cells (group-label spans and TanStack's
-                    // structural placeholder cells) are purely presentational —
-                    // no sort/reorder/resize/tooltip.
-                    const isGroupHeader = header.subHeaders.length > 0;
-                    const canResize =
-                      !isGroupHeader &&
-                      resizingEnabled &&
-                      header.column.getCanResize() &&
-                      header.column.id !== 'select';
-                    // A pinned column is anchored to a table edge, so dragging it
-                    // out of that edge would contradict its own pinning.
-                    const canReorder =
-                      !isGroupHeader &&
-                      reorderingEnabled &&
-                      !header.isPlaceholder &&
-                      !isPinned;
-                    const canSort =
-                      !isGroupHeader &&
-                      !header.isPlaceholder &&
-                      header.column.getCanSort();
-                    // One tooltip line per capability the column actually has, in
-                    // the design's order; a column with none gets no tooltip.
-                    const hints = [
-                      canSort && resolvedHeaderHints.sort,
-                      canReorder && resolvedHeaderHints.reorder,
-                      canResize && resolvedHeaderHints.resize,
-                    ].filter((hint): hint is DataTableHeaderHint =>
-                      Boolean(hint)
-                    );
-                    if (header.column.id === '__actions') {
-                      if (groupIndex < headerGroups.length - 1) {
-                        // Group-header rows carry no cog, but the pinned cell
-                        // must still be present so the row scrolls horizontally
-                        // in sync with the leaf header row and the body.
-                        return (
-                          <TableSettingsCell
-                            key={header.id}
-                            style={getHeaderStyle(header, resizingEnabled, sizeDefaults)}
-                            className={headerPinnedBg}
-                          />
-                        );
-                      }
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup, groupIndex, headerGroups) => (
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
+                {headerGroup.headers.map((header) => {
+                  const isPinned = header.column.getIsPinned();
+                  // Non-leaf header cells (group-label spans and TanStack's
+                  // structural placeholder cells) are purely presentational —
+                  // no sort/reorder/resize/tooltip.
+                  const isGroupHeader = header.subHeaders.length > 0;
+                  const canResize =
+                    !isGroupHeader &&
+                    resizingEnabled &&
+                    header.column.getCanResize() &&
+                    header.column.id !== 'select';
+                  // A pinned column is anchored to a table edge, so dragging it
+                  // out of that edge would contradict its own pinning.
+                  const canReorder =
+                    !isGroupHeader &&
+                    reorderingEnabled &&
+                    !header.isPlaceholder &&
+                    !isPinned;
+                  const canSort =
+                    !isGroupHeader &&
+                    !header.isPlaceholder &&
+                    header.column.getCanSort();
+                  // One tooltip line per capability the column actually has, in
+                  // the design's order; a column with none gets no tooltip.
+                  const hints = [
+                    canSort && resolvedHeaderHints.sort,
+                    canReorder && resolvedHeaderHints.reorder,
+                    canResize && resolvedHeaderHints.resize,
+                  ].filter((hint): hint is DataTableHeaderHint =>
+                    Boolean(hint)
+                  );
+                  if (header.column.id === '__actions') {
+                    if (groupIndex < headerGroups.length - 1) {
+                      // Group-header rows carry no cog, but the pinned cell
+                      // must still be present so the row scrolls horizontally
+                      // in sync with the leaf header row and the body.
                       return (
                         <TableSettingsCell
                           key={header.id}
-                          style={getHeaderStyle(header, resizingEnabled, sizeDefaults)}
+                          style={getHeaderStyle(header, resizingEnabled)}
                           className={headerPinnedBg}
-                        >
-                          <DataTableViewOptions
-                            table={table}
-                            iconOnly
-                            triggerAriaLabel={columnSettingsLabel}
-                            searchPlaceholder={columnSearchPlaceholder}
-                            showAllLabel={showAllColumnsLabel}
-                            noResultsLabel={noColumnsFoundLabel}
-                          />
-                        </TableSettingsCell>
+                        />
                       );
                     }
-                    const headerCell = (
-                      <TableHead
-                        colSpan={header.colSpan}
-                        overflow={header.column.columnDef.meta?.overflow ?? 'truncate'}
-                        style={getHeaderStyle(header, resizingEnabled, sizeDefaults)}
-                        draggable={
-                          (canReorder && !isAnyColumnResizing) || undefined
-                        }
-                        onDragStart={
-                          canReorder
-                            ? (event) =>
-                                handleColumnDragStart(event, header.column.id)
-                            : undefined
-                        }
-                        onDragOver={
-                          canReorder
-                            ? (event) =>
-                                handleColumnDragOver(event, header.column.id)
-                            : undefined
-                        }
-                        onDrop={
-                          canReorder
-                            ? (event) =>
-                                handleColumnDrop(event, header.column.id)
-                            : undefined
-                        }
-                        onDragEnd={canReorder ? endColumnDrag : undefined}
-                        className={cn(
-                          canResize && 'relative',
-                          header.column.id === firstDataColumnId && 'ps-0',
-                          // Per the design, a sortable header tints the whole
-                          // cell on hover/press, not just the inner sort button.
-                          // Suppressed while any column is resizing, since the
-                          // pointer drags across neighboring `<th>`s and would
-                          // otherwise tint them via native `:hover`.
-                          canSort &&
-                            !isAnyColumnResizing &&
-                            'transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)]',
-                          canReorder &&
-                            !isAnyColumnResizing &&
-                            'cursor-grab select-none active:cursor-grabbing',
-                          isPinned && headerPinnedBg
-                        )}
-                      >
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                        {canResize && (
-                          <div
-                            role="separator"
-                            aria-orientation="vertical"
-                            aria-label={resizeColumnLabel}
-                            aria-valuenow={header.column.getSize()}
-                            aria-valuemin={
-                              header.column.columnDef.minSize ??
-                              DEFAULT_MIN_COLUMN_SIZE
-                            }
-                            aria-valuemax={
-                              header.column.columnDef.maxSize ??
-                              DEFAULT_MAX_COLUMN_SIZE
-                            }
-                            tabIndex={0}
-                            // Keeps a press on the handle from starting the header
-                            // cell's reorder drag instead of a resize when both
-                            // features are enabled.
-                            draggable={false}
-                            // Capturing the pointer keeps this handle the hit
-                            // target (and so its own resize cursor in effect) for
-                            // the whole drag, even once the pointer leaves the
-                            // 4px hit area. Unlike a document-level cursor
-                            // override, this works inside a Shadow DOM host.
-                            // Capture releases on pointerup/pointercancel.
-                            onPointerDown={(event) => {
-                              event.currentTarget.setPointerCapture(
-                                event.pointerId
-                              );
-                              event.currentTarget
-                                .closest('th')
-                                ?.setAttribute('data-resizing', '');
-                            }}
-                            onPointerUp={(event) => {
-                              event.currentTarget
-                                .closest('th')
-                                ?.removeAttribute('data-resizing');
-                            }}
-                            onPointerCancel={(event) => {
-                              event.currentTarget
-                                .closest('th')
-                                ?.removeAttribute('data-resizing');
-                            }}
-                            onMouseDown={header.getResizeHandler()}
-                            onTouchStart={header.getResizeHandler()}
-                            onKeyDown={(event) =>
-                              handleResizeKeyDown(event, header)
-                            }
-                            className={cn(
-                              'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-[opacity,background-color] hover:bg-[var(--ui-resizable-border-color-hover)] hover:opacity-100 focus-visible:bg-[var(--ui-resizable-border-color-hover)] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)]',
-                              header.column.getIsResizing() &&
-                                'bg-[var(--ui-resizable-border-color-active)] opacity-100'
-                            )}
-                          />
-                        )}
-                      </TableHead>
-                    );
-                    if (hints.length === 0) {
-                      return <Fragment key={header.id}>{headerCell}</Fragment>;
-                    }
                     return (
-                      <Tooltip
+                      <TableSettingsCell
                         key={header.id}
-                        disabled={
-                          isAnyColumnResizing || draggedColumnId !== undefined
-                        }
+                        style={getHeaderStyle(header, resizingEnabled)}
+                        className={headerPinnedBg}
                       >
-                        {/* The whole header cell is the trigger (not just its sort
+                        <DataTableViewOptions
+                          table={table}
+                          iconOnly
+                          triggerAriaLabel={columnSettingsLabel}
+                          searchPlaceholder={columnSearchPlaceholder}
+                          showAllLabel={showAllColumnsLabel}
+                          noResultsLabel={noColumnsFoundLabel}
+                        />
+                      </TableSettingsCell>
+                    );
+                  }
+                  const headerCell = (
+                    <TableHead
+                      colSpan={header.colSpan}
+                      wrap={header.column.columnDef.meta?.wrap}
+                      style={getHeaderStyle(header, resizingEnabled)}
+                      draggable={
+                        (canReorder && !isAnyColumnResizing) || undefined
+                      }
+                      onDragStart={
+                        canReorder
+                          ? (event) =>
+                              handleColumnDragStart(event, header.column.id)
+                          : undefined
+                      }
+                      onDragOver={
+                        canReorder
+                          ? (event) =>
+                              handleColumnDragOver(event, header.column.id)
+                          : undefined
+                      }
+                      onDrop={
+                        canReorder
+                          ? (event) => handleColumnDrop(event, header.column.id)
+                          : undefined
+                      }
+                      onDragEnd={
+                        canReorder
+                          ? () => setDraggedColumnId(undefined)
+                          : undefined
+                      }
+                      className={cn(
+                        canResize && 'relative',
+                        // Per the design, a sortable header tints the whole
+                        // cell on hover/press, not just the inner sort button.
+                        // Suppressed while any column is resizing, since the
+                        // pointer drags across neighboring `<th>`s and would
+                        // otherwise tint them via native `:hover`.
+                        canSort &&
+                          !isAnyColumnResizing &&
+                          'transition-colors hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)]',
+                        canReorder &&
+                          !isAnyColumnResizing &&
+                          'cursor-grab select-none active:cursor-grabbing',
+                        canReorder &&
+                          draggedColumnId === header.column.id &&
+                          'opacity-50',
+                        isPinned && headerPinnedBg
+                      )}
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                      {canResize && (
+                        <div
+                          role="separator"
+                          aria-orientation="vertical"
+                          aria-label={resizeColumnLabel}
+                          aria-valuenow={header.column.getSize()}
+                          aria-valuemin={
+                            header.column.columnDef.minSize ??
+                            DEFAULT_MIN_COLUMN_SIZE
+                          }
+                          aria-valuemax={
+                            header.column.columnDef.maxSize ??
+                            DEFAULT_MAX_COLUMN_SIZE
+                          }
+                          tabIndex={0}
+                          // Keeps a press on the handle from starting the header
+                          // cell's reorder drag instead of a resize when both
+                          // features are enabled.
+                          draggable={false}
+                          onMouseDown={header.getResizeHandler()}
+                          onTouchStart={header.getResizeHandler()}
+                          onKeyDown={(event) =>
+                            handleResizeKeyDown(event, header)
+                          }
+                          className={cn(
+                            'absolute end-0 top-0 h-full w-1 cursor-(--ui-resizable-cursor) touch-none select-none bg-[var(--ui-table-global-row-border-color)] opacity-0 transition-[opacity,background-color] hover:bg-[var(--ui-resizable-border-color-hover)] hover:opacity-100 focus-visible:bg-[var(--ui-resizable-border-color-hover)] focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[var(--ui-focus-primary)]',
+                            header.column.getIsResizing() &&
+                              'bg-[var(--ui-resizable-border-color-active)] opacity-100'
+                          )}
+                        />
+                      )}
+                    </TableHead>
+                  );
+                  if (hints.length === 0) {
+                    return <Fragment key={header.id}>{headerCell}</Fragment>;
+                  }
+                  return (
+                    <Tooltip
+                      key={header.id}
+                      disabled={
+                        isAnyColumnResizing || draggedColumnId !== undefined
+                      }
+                    >
+                      {/* The whole header cell is the trigger (not just its sort
                           button), so the hint covers the reorder/resize gestures
                           that live on the cell itself. Disabled mid-drag/resize
                           so the hint doesn't pop up over a neighboring cell
                           while the pointer passes through it. */}
-                        <TooltipTrigger render={headerCell} />
-                        <TooltipContent className="flex flex-col gap-1">
-                          {hints.map((hint) => (
-                            <span key={hint.label}>
-                              <span className="font-semibold">
-                                {hint.label}:
-                              </span>{' '}
-                              {hint.action}
-                            </span>
-                          ))}
-                        </TooltipContent>
-                      </Tooltip>
-                    );
-                  })}
-                </TableRow>
-              ))}
+                      <TooltipTrigger render={headerCell} />
+                      <TooltipContent className="flex flex-col gap-1">
+                        {hints.map((hint) => (
+                          <span key={hint.label}>
+                            <span className="font-semibold">{hint.label}:</span>{' '}
+                            {hint.action}
+                          </span>
+                        ))}
+                      </TooltipContent>
+                    </Tooltip>
+                  );
+                })}
+              </TableRow>
+            ))}
           </TableHeader>
         </TooltipProvider>
         <TableBody>
@@ -1422,31 +1053,11 @@ export function DataTable<TData, TValue = unknown>({
                 key={`skeleton-${rowIndex}`}
                 className="hover:bg-transparent"
               >
-                {table.getVisibleLeafColumns().map((column) => {
-                  const isPinned = column.getIsPinned();
-                  return (
-                    <TableCell
-                      key={column.id}
-                      overflow={column.columnDef.meta?.overflow ?? 'truncate'}
-                      style={{
-                        ...getPinnedStyle(column),
-                        ...getColumnSizeStyle(column, resizingEnabled, sizeDefaults),
-                      }}
-                      className={cn(
-                        isPinned && 'bg-background',
-                        column.id === firstDataColumnId && 'ps-0'
-                      )}
-                    >
-                      {renderSkeletonCell ? (
-                        renderSkeletonCell({ column, rowIndex })
-                      ) : (
-                        /* my-1 fills the 24px line box so the row stays 40px —
-                           cells have no fixed height, a bare h-4 block gives 32px. */
-                        <Skeleton className="my-1 h-4 w-full" />
-                      )}
-                    </TableCell>
-                  );
-                })}
+                {table.getVisibleLeafColumns().map((column) => (
+                  <TableCell key={column.id}>
+                    <div className="h-4 w-full animate-pulse rounded bg-[var(--ui-background-surface-secondary)]" />
+                  </TableCell>
+                ))}
               </TableRow>
             ))
           ) : rows?.length ? (
@@ -1458,13 +1069,6 @@ export function DataTable<TData, TValue = unknown>({
               }
               const isSelected = row.getIsSelected();
               const isCurrent = highlightCurrentRow && currentRowId === row.id;
-              // While a selection is in play the action cell renders nothing and
-              // carries no tint of its own, so suppressing the row's hover tint
-              // for it would leave the pointer over a row that reacts to
-              // nothing. Also covers a row hovered just before the selection
-              // started, whose id is still in `actionHoveredRowId`.
-              const isActionCellHovered =
-                !bulkSelectionActive && actionHoveredRowId === row.id;
               // Opaque background applied to pinned cells so sibling cells don't
               // show through while the grid scrolls horizontally. Mirrors the
               // row's own resolved background across selection/current/stripe —
@@ -1476,17 +1080,19 @@ export function DataTable<TData, TValue = unknown>({
               // doesn't look "stuck" idle while the rest of the row is
               // hovered — the row's native `hover:` can't reach it since it
               // needs its own opaque background (see `headerPinnedBg` above).
-              // When the action cell is hovered, `group-hover:` is stripped so
-              // pinned cells don't show hover while the rest of the row is
-              // suppressed via `hover:bg-transparent` on the <tr>.
               const rowBg =
                 isSelected || isCurrent
                   ? 'bg-[var(--ui-table-data-row-color-active)]'
                   : striped && rowIndex % 2 === 1
                     ? 'bg-[var(--ui-background-surface-secondary)]'
-                    : isActionCellHovered
-                      ? 'bg-background'
-                      : 'bg-background group-hover:bg-[var(--ui-table-data-row-color-hover)]';
+                    : 'bg-background group-hover:bg-[var(--ui-table-data-row-color-hover)]';
+              // While a selection is in play the action cell renders nothing and
+              // carries no tint of its own, so suppressing the row's hover tint
+              // for it would leave the pointer over a row that reacts to
+              // nothing. Also covers a row hovered just before the selection
+              // started, whose id is still in `actionHoveredRowId`.
+              const isActionCellHovered =
+                !bulkSelectionActive && actionHoveredRowId === row.id;
               return (
                 <Fragment key={row.id}>
                   <TableRow
@@ -1495,39 +1101,16 @@ export function DataTable<TData, TValue = unknown>({
                     }}
                     tabIndex={rowIndex === activeRowIndex ? 0 : -1}
                     onFocus={() => handleRowFocus(rowIndex)}
-                    onKeyDown={(event) =>
-                      handleRowKeyDown(event, row, rowIndex)
-                    }
+                    onKeyDown={(event) => handleRowKeyDown(event, rowIndex)}
                     selected={isSelected}
                     onClick={
-                      highlightCurrentRow || onRowClick
-                        ? (event) => {
-                            if (highlightCurrentRow) setCurrentRowId(row.id);
-                            if (
-                              onRowClick &&
-                              !isFromInteractiveDescendant(event)
-                            ) {
-                              onRowClick(row, event);
-                            }
-                          }
-                        : undefined
-                    }
-                    onDoubleClick={
-                      onRowActivate
-                        ? (event) => {
-                            if (
-                              !isFromInteractiveDescendant(event, {
-                                checkSelection: false,
-                              })
-                            ) {
-                              onRowActivate(row, { via: 'pointer', event });
-                            }
-                          }
+                      highlightCurrentRow
+                        ? () => setCurrentRowId(row.id)
                         : undefined
                     }
                     className={cn(
                       'group',
-                      (highlightCurrentRow || !!onRowClick) && 'cursor-pointer',
+                      highlightCurrentRow && 'cursor-pointer',
                       striped &&
                         rowIndex % 2 === 1 &&
                         !isSelected &&
@@ -1548,7 +1131,7 @@ export function DataTable<TData, TValue = unknown>({
                         return (
                           <TableActionsCell
                             key={cell.id}
-                            style={getCellStyle(cell, resizingEnabled, sizeDefaults)}
+                            style={getCellStyle(cell, resizingEnabled)}
                             className={rowBg}
                             bulkSelectionActive={bulkSelectionActive}
                             onMouseEnter={
@@ -1569,7 +1152,7 @@ export function DataTable<TData, TValue = unknown>({
                               <DropdownMenu>
                                 <DropdownMenuTrigger
                                   render={
-                                    <ButtonIcon aria-label={rowActionsLabel} className="w-auto" />
+                                    <ButtonIcon aria-label={rowActionsLabel} />
                                   }
                                 >
                                   <EllipsisIcon />
@@ -1585,9 +1168,9 @@ export function DataTable<TData, TValue = unknown>({
                       return (
                         <TableCell
                           key={cell.id}
-                          overflow={cell.column.columnDef.meta?.overflow ?? 'truncate'}
-                          style={getCellStyle(cell, resizingEnabled, sizeDefaults)}
-                          className={cn(isPinned && rowBg, cell.column.id === firstDataColumnId && 'ps-0')}
+                          wrap={cell.column.columnDef.meta?.wrap}
+                          style={getCellStyle(cell, resizingEnabled)}
+                          className={cn(isPinned && rowBg)}
                         >
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -1635,7 +1218,7 @@ export function DataTable<TData, TValue = unknown>({
             <TableRow
               ref={sentinelRef}
               aria-hidden
-              className="border-0 hover:bg-transparent"
+              className="hover:bg-transparent"
             >
               <TableCell
                 colSpan={table.getVisibleLeafColumns().length}
@@ -1646,40 +1229,19 @@ export function DataTable<TData, TValue = unknown>({
           {isInfiniteScroll &&
             !skeleton &&
             rows.length > 0 &&
-            isLoadingMore &&
-            Array.from({ length: loadingMoreRows }).map((_, rowIndex) => (
-              <TableRow
-                key={`loading-more-${rowIndex}`}
-                className="hover:bg-transparent"
-              >
-                {table.getVisibleLeafColumns().map((column, columnIndex) => {
-                  const isPinned = column.getIsPinned();
-                  return (
-                    <TableCell
-                      key={column.id}
-                      overflow={column.columnDef.meta?.overflow ?? 'truncate'}
-                      style={{
-                        ...getPinnedStyle(column),
-                        ...getColumnSizeStyle(column, resizingEnabled, sizeDefaults),
-                      }}
-                      className={cn(
-                        isPinned && 'bg-background',
-                        column.id === firstDataColumnId && 'ps-0'
-                      )}
-                    >
-                      {rowIndex === 0 && columnIndex === 0 && (
-                        <span className="sr-only">{loadingMoreLabel}</span>
-                      )}
-                      {renderSkeletonCell ? (
-                        renderSkeletonCell({ column, rowIndex })
-                      ) : (
-                        <Skeleton className="my-1 h-4 w-full" />
-                      )}
-                    </TableCell>
-                  );
-                })}
+            isLoadingMore && (
+              <TableRow className="hover:bg-transparent">
+                <TableCell colSpan={table.getVisibleLeafColumns().length}>
+                  <div
+                    role="status"
+                    aria-live="polite"
+                    className="h-4 w-full animate-pulse rounded bg-[var(--ui-background-surface-secondary)]"
+                  >
+                    <span className="sr-only">Loading more rows…</span>
+                  </div>
+                </TableCell>
               </TableRow>
-            ))}
+            )}
         </TableBody>
       </Table>
     </div>

@@ -1,6 +1,6 @@
 ---
 title: Table
-description: Composable table primitives — sortable headers, selectable rows, per-column overflow modes, plus TanStack-free pagination, column-visibility and state hooks.
+description: Composable table primitives — sortable headers, selectable rows, wrapping cells, plus TanStack-free pagination, column-visibility and state hooks.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -31,8 +31,7 @@ import {
 column-header rows of `TableHead`; `TableBody` holds data rows of `TableCell`;
 `TableFooter` and `TableCaption` are optional. `TableHead` can be `sortable`
 (renders a sort button + `aria-sort`), `TableRow` takes a `selected` flag, and
-both `TableHead` and `TableCell` take an `overflow` mode (`'wrap'`,
-`'truncate'` or `'hidden'`) for multi-line or clipped content. Three
+both `TableHead` and `TableCell` take `wrap` for multi-line content. Three
 fixed-width structural cells complete the design's anatomy: `TableSelectCell`
 (the 32px row-selection column), `TableActionsCell` (the 48px trailing
 row-actions column) and `TableSettingsCell` (the 48px trailing header column for
@@ -52,21 +51,21 @@ built on these same primitives.
 
 ## Parts
 
-| Export              | Purpose                                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `Table`             | The `<table>` itself, with no scroll wrapper. See [Horizontal scrolling](#horizontal-scrolling).             |
-| `TableHeader`       | `<thead>` — holds column-header rows.                                                                        |
-| `TableBody`         | `<tbody>` — holds data rows.                                                                                 |
-| `TableFooter`       | `<tfoot>` — summary rows, with a top divider.                                                                |
-| `TableRow`          | `<tr>`. `selected` applies the active row token + `data-state="selected"`.                                   |
-| `TableHead`         | `<th>`. `sortable` / `sortDirection` / `onSort` render the sort button; `overflow` as below.                 |
-| `TableCell`         | `<td>`. `overflow` wraps the content (`'wrap'`) or clips it at the column width (`'truncate'` / `'hidden'`). |
-| `TableSelectCell`   | 32px selection column holding a `Checkbox`. `header` renders the select-all `<th>`.                          |
-| `TableActionsCell`  | 48px trailing `<td>` for a row's overflow trigger; tints on hover/press.                                     |
-| `TableSettingsCell` | 48px trailing `<th>` for a column-settings trigger; tints on hover/press.                                    |
-| `TableCaption`      | `<caption>` — muted, below the table.                                                                        |
-| `TablePagination`   | Controlled pagination bar: row summary, rows-per-page select, first/prev/next/last.                          |
-| `TableViewOptions`  | Show/hide-columns dropdown driven by a plain `{ id, label, hidden }[]`.                                      |
+| Export              | Purpose                                                                                  |
+| ------------------- | ---------------------------------------------------------------------------------------- |
+| `Table`             | The `<table>`, inside a horizontally scrollable container.                               |
+| `TableHeader`       | `<thead>` — holds column-header rows.                                                    |
+| `TableBody`         | `<tbody>` — holds data rows.                                                             |
+| `TableFooter`       | `<tfoot>` — summary rows, with a top divider.                                            |
+| `TableRow`          | `<tr>`. `selected` applies the active row token + `data-state="selected"`.               |
+| `TableHead`         | `<th>`. `sortable` / `sortDirection` / `onSort` render the sort button; `wrap` as below. |
+| `TableCell`         | `<td>`. `wrap` lets the content run onto multiple lines.                                 |
+| `TableSelectCell`   | 32px selection column holding a `Checkbox`. `header` renders the select-all `<th>`.      |
+| `TableActionsCell`  | 48px trailing `<td>` for a row's overflow trigger; tints on hover/press.                 |
+| `TableSettingsCell` | 48px trailing `<th>` for a column-settings trigger; tints on hover/press.                |
+| `TableCaption`      | `<caption>` — muted, below the table.                                                    |
+| `TablePagination`   | Controlled pagination bar: row summary, rows-per-page select, first/prev/next/last.      |
+| `TableViewOptions`  | Show/hide-columns dropdown driven by a plain `{ id, label, hidden }[]`.                  |
 
 ## Examples
 
@@ -101,24 +100,6 @@ A basic table with a footer:
   </TableFooter>
 </Table>
 ```
-
-### Horizontal scrolling
-
-`Table` renders the `<table>` element directly and doesn't create its own
-scroll container. When a table can be wider than the space it's in, put it
-inside an element with `overflow-auto`:
-
-```tsx
-<div className="overflow-auto">
-  <Table>{/* … */}</Table>
-</div>
-```
-
-[`DataTable`](/components/data-table) does this for you. Its root element always
-has `overflow-auto`, so it is the horizontal scroll container that its pinned
-columns stick inside. With
-[`stickyHeader`](/components/data-table#sticky-header) and a bounded height, it
-also scrolls vertically, and the sticky header sticks inside the same box.
 
 ### Sortable headers
 
@@ -231,110 +212,20 @@ What the settings trigger opens is your choice — `TableViewOptions` with
 `iconOnly` is the ready-made column-visibility menu, and renders exactly this
 cog trigger itself.
 
-### Column overflow
+### Wrapping cells
 
-Cells and headers take their row height from vertical padding
-(`--ui-table-global-cell-padding-y`) plus line-height (`leading-6`), which adds
-up to 40px at default token values and renders the same across browsers. The
-table keeps native auto-layout (`Table` doesn't set `table-layout: fixed`) and
-does not force `overflow: hidden` or `white-space: nowrap` on every cell.
-`TableHead` and `TableCell` take an `overflow` prop that sets how a column
-treats content longer than its width:
-
-| `overflow`   | Classes added                               | Result                                                                                |
-| ------------ | ------------------------------------------- | ------------------------------------------------------------------------------------- |
-| unset        | none                                        | Browser default — the content wraps. The default on `Table`.                          |
-| `'wrap'`     | `whitespace-normal`                         | The content runs onto multiple lines and the row grows.                               |
-| `'truncate'` | `overflow-hidden whitespace-nowrap`         | The content stays on one line and is clipped at the column's CSS width. No `max-w-0`. |
-| `'hidden'`   | `max-w-0 overflow-hidden whitespace-nowrap` | The content stays on one line and is clipped at the column's CSS width.               |
-
-Unset is the default on these primitives. [`DataTable`](/components/data-table#column-overflow)
-is different: it passes `'truncate'` to every column that doesn't set
-`meta.overflow`.
-
-Use `'wrap'` when a column holds prose that should stay fully visible:
+Cells and headers use a fixed row height (`--ui-table-global-cell-min-height`,
+40px) by default. The table keeps native auto-layout and does not force
+`overflow: hidden` or `white-space: nowrap` on every cell. `wrap` drops that
+height and switches the cell to `whitespace-normal`, so the row grows to fit
+multi-line content:
 
 ```tsx
 <TableRow>
   <TableCell>web-server-01</TableCell>
-  <TableCell overflow="wrap">{longDescription}</TableCell>
+  <TableCell wrap>{longDescription}</TableCell>
 </TableRow>
 ```
-
-Use `'truncate'` or `'hidden'` to keep long values (paths, IDs, URLs) in a
-narrow, single-line column. They differ in how the clip width is set:
-
-- **`'truncate'` clips at the width the column already has.** It doesn't add
-  `max-w-0`, so it never collapses a column. In the native auto-layout a
-  `width` on a cell acts as a minimum, and a single-line value can still widen
-  the column. For a hard clip, give the column a width and lay the table out
-  with `table-layout: fixed` (`<Table className="table-fixed">`), which is what
-  `DataTable` does.
-- **`'hidden'` uses `max-w-0`, so the column needs a width.** Give it one — a
-  `width` on its `TableHead`, or `size` / column resizing in
-  [`DataTable`](/components/data-table#column-overflow). Without a width
-  source, `max-w-0` collapses the column. It works in the native auto-layout.
-
-In both modes **the kit only clips.** It adds no ellipsis and no tooltip. Put
-them in the cell content: a `block truncate` element for the ellipsis, wrapped
-in a `Tooltip` so the full value stays reachable. Make the trigger focusable
-(`tabIndex={0}`) so keyboard users can open the tooltip too.
-
-```tsx
-<Table className="table-fixed">
-  <TableHeader>
-    <TableRow>
-      <TableHead style={{ width: 200 }}>Name</TableHead>
-      <TableHead overflow="truncate">Path</TableHead>
-    </TableRow>
-  </TableHeader>
-  <TableBody>
-    <TableRow>
-      <TableCell>web-server-01</TableCell>
-      <TableCell overflow="truncate">
-        <Tooltip>
-          <TooltipTrigger
-            render={<span className="block truncate" tabIndex={0} />}
-          >
-            {path}
-          </TooltipTrigger>
-          <TooltipContent>{path}</TooltipContent>
-        </Tooltip>
-      </TableCell>
-    </TableRow>
-  </TableBody>
-</Table>
-```
-
-The `'hidden'` equivalent, in the default auto-layout:
-
-```tsx
-<TableHeader>
-  <TableRow>
-    <TableHead overflow="hidden" style={{ width: 200 }}>
-      Path
-    </TableHead>
-  </TableRow>
-</TableHeader>
-<TableBody>
-  <TableRow>
-    <TableCell overflow="hidden">
-      <Tooltip>
-        <TooltipTrigger render={<span className="block truncate" tabIndex={0} />}>
-          {path}
-        </TooltipTrigger>
-        <TooltipContent>{path}</TooltipContent>
-      </Tooltip>
-    </TableCell>
-  </TableRow>
-</TableBody>
-```
-
-`--ui-table-global-cell-min-height` (40px) stays in the token tier as a
-reference value but no longer sets cell height. To change row density, override
-`--ui-table-global-cell-padding-y` instead: row height is
-`2 × padding-y + 1.5rem`, so compact (32px) is `4px`, default (40px) is `8px`,
-and relaxed (52px) is `14px`.
 
 ### Pagination
 

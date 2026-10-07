@@ -1,5 +1,4 @@
-import { Profiler, type ReactElement, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useState } from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -11,7 +10,6 @@ import {
 import {
   fireEvent,
   render,
-  renderHook,
   screen,
   waitFor,
   within,
@@ -28,8 +26,6 @@ import {
   DataTableExpandTrigger,
   DataTablePagination,
   DataTableToolbar,
-  getCellStyle,
-  getColumnSizeStyle,
 } from '../index';
 
 type Row = { id: string; email: string; amount: number };
@@ -105,29 +101,6 @@ describe('DataTable', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('hides sort buttons when enableSorting={false}', () => {
-    const sortable: ColumnDef<Row>[] = [
-      {
-        accessorKey: 'amount',
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column} title="Amount" />
-        ),
-        cell: ({ row }) => <span>{row.original.amount}</span>,
-      },
-    ];
-    render(
-      <DataTable
-        columns={sortable}
-        data={data.slice(0, 3)}
-        enableSorting={false}
-        hideActionColumn
-      />
-    );
-    expect(
-      screen.queryByRole('button', { name: /sort/i })
-    ).not.toBeInTheDocument();
-  });
-
   it('renders expanded content for an expanded row', async () => {
     const expandable: ColumnDef<Row>[] = [
       {
@@ -157,36 +130,6 @@ describe('DataTable', () => {
       screen.getAllByRole('button', { name: 'Expand row' })[0]
     );
     expect(screen.getByText('Details for r1')).toBeInTheDocument();
-  });
-
-  it('root div always has overflow-auto', () => {
-    render(<DataTable columns={columns} data={data.slice(0, 3)} />);
-    const root = document.querySelector(
-      '[data-slot="data-table"]'
-    ) as HTMLElement;
-    expect(root).toHaveClass('overflow-auto');
-  });
-
-  it('stickyHeader adds sticky classes to the header', () => {
-    render(
-      <DataTable columns={columns} data={data.slice(0, 3)} stickyHeader />
-    );
-    const root = document.querySelector(
-      '[data-slot="data-table"]'
-    ) as HTMLElement;
-    expect(root).toHaveClass('h-full');
-    const thead = document.querySelector('thead') as HTMLElement;
-    expect(thead).toHaveClass('sticky', 'top-0', 'z-10', 'bg-background');
-  });
-
-  it('stickyHeader defaults to false — no sticky header classes, no h-full', () => {
-    render(<DataTable columns={columns} data={data.slice(0, 3)} />);
-    const root = document.querySelector(
-      '[data-slot="data-table"]'
-    ) as HTMLElement;
-    expect(root).not.toHaveClass('h-full');
-    const thead = document.querySelector('thead') as HTMLElement;
-    expect(thead).not.toHaveClass('sticky');
   });
 });
 
@@ -386,7 +329,7 @@ describe('DataTable getRowId', () => {
     expect(screen.getByText('r2: off')).toBeInTheDocument();
   });
 
-  it("without it, a row's state stays with its array slot instead of following the data", async () => {
+  it('without it, a row\'s state stays with its array slot instead of following the data', async () => {
     const [r1, r2, r3] = data.slice(0, 3);
     const { rerender } = render(
       <DataTable columns={rowIdColumns} data={[r1, r2, r3]} hideActionColumn />
@@ -582,280 +525,7 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
       />
     );
     expect(MockIntersectionObserver.instances).toHaveLength(0);
-    const loadingRows = Array.from(
-      container.querySelectorAll('tbody tr')
-    ).filter((row) => row.querySelector('.animate-pulse'));
-    expect(loadingRows).toHaveLength(1);
-  });
-
-  it('renders one skeleton per column in the loading-more row', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        paginationMode="infinite"
-        hasNextPage
-        isLoadingMore
-        hideActionColumn
-        onLoadMore={() => {}}
-      />
-    );
-    const skeletons = container.querySelectorAll('[data-slot="skeleton"]');
-    expect(skeletons).toHaveLength(columns.length);
-  });
-
-  it('renders loadingMoreRows trailing loading rows', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        paginationMode="infinite"
-        hasNextPage
-        isLoadingMore
-        loadingMoreRows={3}
-        onLoadMore={() => {}}
-      />
-    );
-    const tbody = container.querySelector('tbody')!;
-    const loadingRows = Array.from(tbody.querySelectorAll('tr')).filter(
-      (row) => row.querySelector('[data-slot="skeleton"]')
-    );
-    expect(loadingRows).toHaveLength(3);
-  });
-
-  it('keeps loading-more rows as table rows, not live regions', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        paginationMode="infinite"
-        hasNextPage
-        isLoadingMore
-        loadingMoreRows={2}
-        onLoadMore={() => {}}
-      />
-    );
-    const tbody = container.querySelector('tbody')!;
-    expect(tbody.querySelectorAll('[role="status"], [aria-live]')).toHaveLength(
-      0
-    );
-    expect(within(tbody).getAllByRole('row')).toHaveLength(5);
-  });
-
-  it('announces loading more once via an sr-only loadingMoreLabel', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        paginationMode="infinite"
-        hasNextPage
-        isLoadingMore
-        loadingMoreRows={3}
-        onLoadMore={() => {}}
-      />
-    );
-    const labels = screen.getAllByText('Loading more rows…');
-    expect(labels).toHaveLength(1);
-    expect(labels[0]).toHaveClass('sr-only');
-  });
-
-  it('renders no skeletons and no label when loadingMoreRows is 0', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        paginationMode="infinite"
-        hasNextPage
-        isLoadingMore
-        loadingMoreRows={0}
-        onLoadMore={() => {}}
-      />
-    );
-    expect(container.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(
-      0
-    );
-    expect(screen.queryByText('Loading more rows…')).not.toBeInTheDocument();
-  });
-
-  it('lets loadingMoreLabel override the announcement text', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        paginationMode="infinite"
-        hasNextPage
-        isLoadingMore
-        loadingMoreLabel="Weitere Zeilen werden geladen…"
-        onLoadMore={() => {}}
-      />
-    );
-    expect(screen.getByText('Weitere Zeilen werden geladen…')).toHaveClass(
-      'sr-only'
-    );
-    expect(screen.queryByText('Loading more rows…')).not.toBeInTheDocument();
-  });
-});
-
-describe('getColumnSizeStyle', () => {
-  it('emits only floor/ceiling (no width) for a column with only minSize/maxSize', () => {
-    const { result } = renderHook(() =>
-      useReactTable<Row>({
-        data: [],
-        columns: [
-          { accessorKey: 'email', header: 'Email', minSize: 120, maxSize: 300 },
-        ],
-        getCoreRowModel: getCoreRowModel(),
-      })
-    );
-    const style = getColumnSizeStyle(result.current.getColumn('email')!, false);
-    expect(style).toEqual({ minWidth: 120, maxWidth: 300 });
-    expect(style).not.toHaveProperty('width');
-  });
-
-  it('strictly fixes a column with an explicit size', () => {
-    const { result } = renderHook(() =>
-      useReactTable<Row>({
-        data: [],
-        columns: [{ accessorKey: 'email', header: 'Email', size: 200 }],
-        getCoreRowModel: getCoreRowModel(),
-      })
-    );
-    expect(
-      getColumnSizeStyle(result.current.getColumn('email')!, false)
-    ).toEqual({ width: 200, minWidth: 200, maxWidth: 200 });
-  });
-
-  it('strictly fixes a column whose explicit size equals the TanStack default (150)', () => {
-    const { result } = renderHook(() =>
-      useReactTable<Row>({
-        data: [],
-        columns: [{ accessorKey: 'email', header: 'Email', size: 150 }],
-        defaultColumn: { size: undefined, minSize: undefined, maxSize: undefined },
-        getCoreRowModel: getCoreRowModel(),
-      })
-    );
-    const table = result.current;
-    expect(
-      getColumnSizeStyle(
-        table.getColumn('email')!,
-        false,
-        table._getDefaultColumnDef()
-      )
-    ).toEqual({ width: 150, minWidth: 150, maxWidth: 150 });
-  });
-});
-
-describe('getColumnSizeStyle / getCellStyle 2-arg form on the internal-table defaults', () => {
-  const internalDefaults = {
-    size: undefined,
-    minSize: undefined,
-    maxSize: undefined,
-  };
-  const buildTable = (column: ColumnDef<Row>) =>
-    renderHook(() =>
-      useReactTable<Row>({
-        data,
-        columns: [column],
-        defaultColumn: internalDefaults,
-        getCoreRowModel: getCoreRowModel(),
-      })
-    ).result.current;
-
-  const styles = (column: ColumnDef<Row>) => {
-    const table = buildTable(column);
-    const cell = table.getRowModel().rows[0].getVisibleCells()[0];
-    return {
-      size: getColumnSizeStyle(table.getColumn('email')!, false),
-      cell: getCellStyle(cell, false),
-    };
-  };
-
-  it('emits no size for an unsized column', () => {
-    const { size, cell } = styles({ accessorKey: 'email', header: 'Email' });
-    expect(size).toBeUndefined();
-    expect(cell).toBeUndefined();
-  });
-
-  it('emits only minWidth/maxWidth for minSize/maxSize', () => {
-    const { size, cell } = styles({
-      accessorKey: 'email',
-      header: 'Email',
-      minSize: 100,
-      maxSize: 300,
-    });
-    expect(size).toEqual({ minWidth: 100, maxWidth: 300 });
-    expect(cell).toEqual({ minWidth: 100, maxWidth: 300 });
-  });
-
-  it('strictly fixes an authored size of 200', () => {
-    const { size, cell } = styles({ accessorKey: 'email', header: 'Email', size: 200 });
-    const expected = { width: 200, minWidth: 200, maxWidth: 200 };
-    expect(size).toEqual(expected);
-    expect(cell).toEqual(expected);
-  });
-
-  it('getCellStyle(cell, false) fixes an authored size of 150; 2-arg getColumnSizeStyle cannot (no table access) but the 3-arg form can', () => {
-    const column: ColumnDef<Row> = { accessorKey: 'email', header: 'Email', size: 150 };
-    const table = buildTable(column);
-    const cell = table.getRowModel().rows[0].getVisibleCells()[0];
-    const expected = { width: 150, minWidth: 150, maxWidth: 150 };
-    expect(getCellStyle(cell, false)).toEqual(expected);
-    expect(
-      getColumnSizeStyle(table.getColumn('email')!, false, table._getDefaultColumnDef())
-    ).toEqual(expected);
-    expect(getColumnSizeStyle(table.getColumn('email')!, false)).toBeUndefined();
-  });
-
-  it('on an external table keeping TanStack defaults, authored size 150 is unstyled (known limitation), even with the defaults passed explicitly', () => {
-    const table = renderHook(() =>
-      useReactTable<Row>({
-        data,
-        columns: [{ accessorKey: 'email', header: 'Email', size: 150 }],
-        getCoreRowModel: getCoreRowModel(),
-      })
-    ).result.current;
-    const column = table.getColumn('email')!;
-    expect(getColumnSizeStyle(column, false)).toBeUndefined();
-    expect(
-      getColumnSizeStyle(column, false, table._getDefaultColumnDef())
-    ).toBeUndefined();
-  });
-
-  it('renderRow consumers get the right DOM styles from getCellStyle(cell, false)', () => {
-    const cols: ColumnDef<Row>[] = [
-      { accessorKey: 'email', header: 'Email' },
-      { accessorKey: 'amount', header: 'Amount', minSize: 100, maxSize: 300 },
-      { accessorKey: 'id', header: 'Id', size: 150 },
-    ];
-    render(
-      <DataTable
-        columns={cols}
-        data={data.slice(0, 1)}
-        renderRow={(row) => (
-          <tr key={row.id}>
-            {row.getVisibleCells().map((cell) => (
-              <td
-                key={cell.id}
-                data-testid={`cell-${cell.column.id}`}
-                style={getCellStyle(cell, false)}
-              />
-            ))}
-          </tr>
-        )}
-      />
-    );
-    const unsized = screen.getByTestId('cell-email');
-    expect(unsized.style.width).toBe('');
-    expect(unsized.style.minWidth).toBe('');
-    expect(unsized.style.maxWidth).toBe('');
-    const flexible = screen.getByTestId('cell-amount');
-    expect(flexible.style.width).toBe('');
-    expect(flexible.style.minWidth).toBe('100px');
-    expect(flexible.style.maxWidth).toBe('300px');
-    const fixed = screen.getByTestId('cell-id');
-    expect(fixed.style.width).toBe('150px');
-    expect(fixed.style.minWidth).toBe('150px');
-    expect(fixed.style.maxWidth).toBe('150px');
+    expect(container.querySelectorAll('.animate-pulse')).toHaveLength(1);
   });
 });
 
@@ -972,50 +642,6 @@ describe('DataTable column resizing', () => {
     expect(
       screen.getAllByRole('separator', { name: 'Resize column' })
     ).toHaveLength(columns.length);
-  });
-
-  it('honours a consumer-authored size: 150 on the select column', () => {
-    const selectColumns: ColumnDef<Row>[] = [
-      {
-        id: 'select',
-        size: 150,
-        header: () => <Checkbox aria-label="Select all" />,
-        cell: () => <Checkbox aria-label="Select row" />,
-        enableSorting: false,
-        enableHiding: false,
-      },
-      ...columns,
-    ];
-    render(<DataTable columns={selectColumns} data={data.slice(0, 2)} />);
-
-    const selectHeader = screen.getByLabelText('Select all').closest('th')!;
-    expect(selectHeader.style.width).toBe('150px');
-    expect(selectHeader.style.minWidth).toBe('150px');
-    expect(selectHeader.style.maxWidth).toBe('150px');
-  });
-
-  it('captures the pointer on the handle instead of flagging the document root', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnResizing
-      />
-    );
-    const handle = screen.getAllByRole('separator', {
-      name: 'Resize column',
-    })[0];
-    const setPointerCapture = vi.fn();
-    handle.setPointerCapture = setPointerCapture;
-
-    fireEvent.pointerDown(handle, { pointerId: 7 });
-    fireEvent.mouseDown(handle, { clientX: 100 });
-
-    expect(setPointerCapture).toHaveBeenCalledWith(7);
-    expect(document.documentElement).not.toHaveAttribute(
-      'data-ui-column-resizing'
-    );
-    fireEvent.mouseUp(document);
   });
 });
 
@@ -1154,7 +780,7 @@ describe('DataTable column reordering', () => {
     const dataTransfer = { effectAllowed: '', dropEffect: '' };
     fireEvent.dragStart(email, { dataTransfer });
 
-    expect(email).not.toHaveClass('opacity-50');
+    expect(email).toHaveClass('opacity-50');
     // The capability tooltip stays disabled while a drag is in flight.
     await user.hover(email);
     expect(screen.queryByText('Reorder column:')).not.toBeInTheDocument();
@@ -1165,124 +791,6 @@ describe('DataTable column reordering', () => {
     await user.unhover(email);
     await user.hover(email);
     expect(await screen.findByText('Reorder column:')).toBeInTheDocument();
-  });
-
-  it('marks the header under the pointer as the drop target during dragover', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    const [email, amount] = screen.getAllByRole('columnheader');
-    const dataTransfer = { effectAllowed: '', dropEffect: '' };
-    fireEvent.dragStart(amount, { dataTransfer });
-    fireEvent.dragOver(email, { dataTransfer });
-
-    expect(email).toHaveAttribute('data-reorder-target');
-  });
-
-  it('clears every drop-target marker on dragend without a drop', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    const [email, amount] = screen.getAllByRole('columnheader');
-    const dataTransfer = { effectAllowed: '', dropEffect: '' };
-    fireEvent.dragStart(amount, { dataTransfer });
-    fireEvent.dragOver(email, { dataTransfer });
-    fireEvent.dragOver(amount, { dataTransfer });
-    fireEvent.dragEnd(amount, { dataTransfer });
-
-    expect(document.querySelectorAll('[data-reorder-target]')).toHaveLength(0);
-  });
-
-  it('leaves no data-reorder-target on any table after dragend', () => {
-    const { container: first } = render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    const { container: second } = render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    const firstHead = first.querySelector('thead') as HTMLElement;
-    const secondHead = second.querySelector('thead') as HTMLElement;
-    const [email, amount] = within(firstHead).getAllByRole('columnheader');
-    const dataTransfer = { effectAllowed: '', dropEffect: '' };
-
-    fireEvent.dragStart(amount, { dataTransfer });
-    fireEvent.dragOver(email, { dataTransfer });
-    expect(email).toHaveAttribute('data-reorder-target');
-    fireEvent.dragEnd(amount, { dataTransfer });
-
-    // Shadow-root scoping of the sweep cannot be verified in jsdom; the
-    // `theadRef` approach is verified by code inspection and the comment in
-    // endColumnDrag.
-    expect(firstHead.querySelectorAll('[data-reorder-target]')).toHaveLength(0);
-    expect(secondHead.querySelectorAll('[data-reorder-target]')).toHaveLength(
-      0
-    );
-  });
-
-  it('does not mark a drop target for a drag that started elsewhere', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    const [email] = screen.getAllByRole('columnheader');
-    fireEvent.dragOver(email, {
-      dataTransfer: { effectAllowed: '', dropEffect: '' },
-    });
-
-    expect(email).not.toHaveAttribute('data-reorder-target');
-  });
-
-  it('clears every drop-target marker on drop', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    const [email, amount] = screen.getAllByRole('columnheader');
-    dragHeaderOnto(amount, email);
-
-    expect(document.querySelectorAll('[data-reorder-target]')).toHaveLength(0);
-  });
-
-  it('shows a grab cursor on reorderable headers', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        enableColumnReordering
-        hideActionColumn
-      />
-    );
-    for (const header of screen.getAllByRole('columnheader')) {
-      expect(header).toHaveClass('cursor-grab', 'active:cursor-grabbing');
-    }
   });
 
   it('treats enableColumnReordering as a no-op when an external table is passed', () => {
@@ -1395,94 +903,6 @@ describe('DataTable sticky (pinned) columns', () => {
         .closest('th')!;
       expect(settingsCell.style.position).toBe('sticky');
       expect(settingsCell.style.right).toBe('0px');
-    });
-  });
-
-  it('auto-pins the select column to the left, ignoring meta.pin', async () => {
-    const withSelect: ColumnDef<Row>[] = [
-      {
-        id: 'select',
-        header: () => <span>Select all</span>,
-        cell: () => <span>Select row</span>,
-        meta: { pin: 'right' },
-      },
-      ...columns,
-    ];
-    render(
-      <DataTable
-        columns={withSelect}
-        data={data.slice(0, 1)}
-        hideActionColumn
-      />
-    );
-    await waitFor(() => {
-      const headerCell = screen.getByText('Select all').closest('th')!;
-      expect(headerCell.style.position).toBe('sticky');
-      expect(headerCell.style.left).toBe('0px');
-      const bodyCell = screen.getByText('Select row').closest('td')!;
-      expect(bodyCell.style.position).toBe('sticky');
-      expect(bodyCell.style.left).toBe('0px');
-    });
-  });
-
-  it('gives a second left-pinned column the correct sticky offset after select', async () => {
-    const withSelectAndPin: ColumnDef<Row>[] = [
-      {
-        id: 'select',
-        header: () => <span>Select all</span>,
-        cell: () => <span>Select row</span>,
-      },
-      { accessorKey: 'email', header: 'Email', meta: { pin: 'left' } },
-      { accessorKey: 'amount', header: 'Amount' },
-    ];
-    render(
-      <DataTable
-        columns={withSelectAndPin}
-        data={data.slice(0, 1)}
-        hideActionColumn
-      />
-    );
-    await waitFor(() => {
-      const emailHeader = screen.getByText('Email').closest('th')!;
-      expect(emailHeader.style.position).toBe('sticky');
-      // select is 48px, so Email should be at left: 48px, not 150px (TanStack default)
-      expect(emailHeader.style.left).toBe('48px');
-    });
-  });
-
-  it('keeps a pinned column flush after an unsized select on an external table', async () => {
-    const cols: ColumnDef<Row>[] = [
-      {
-        id: 'select',
-        header: () => <span>Select all</span>,
-        cell: () => <span>Select row</span>,
-      },
-      { accessorKey: 'email', header: 'Email' },
-      { accessorKey: 'amount', header: 'Amount' },
-    ];
-    function Harness() {
-      const table = useReactTable({
-        data: data.slice(0, 1),
-        columns: cols,
-        state: { columnPinning: { left: ['select', 'email'] } },
-        getCoreRowModel: getCoreRowModel(),
-      });
-      return (
-        <DataTable
-          columns={cols}
-          data={data.slice(0, 1)}
-          table={table}
-          hideActionColumn
-        />
-      );
-    }
-    render(<Harness />);
-    await waitFor(() => {
-      const selectHeader = screen.getByText('Select all').closest('th')!;
-      const emailHeader = screen.getByText('Email').closest('th')!;
-      // Rendered select width and the next pinned column's sticky offset must
-      // both come from the external table's own getSize().
-      expect(emailHeader.style.left).toBe(selectHeader.style.width);
     });
   });
 
@@ -1661,96 +1081,36 @@ describe('DataTable action column', () => {
   });
 });
 
-describe('DataTable column overflow (meta.overflow)', () => {
-  const overflowColumns: ColumnDef<Row>[] = [
-    { accessorKey: 'email', header: 'Email' },
-    {
-      accessorKey: 'amount',
-      header: 'Amount',
-      meta: { overflow: 'wrap' },
-      cell: ({ row }) => <span>{row.original.amount}</span>,
-    },
-    {
-      accessorKey: 'id',
-      header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Identifier" />
-      ),
-      meta: { overflow: 'hidden' },
-      size: 120,
-    },
-  ];
+describe('DataTable wrapping (meta.wrap) columns', () => {
+  it('wraps a column flagged meta.wrap and drops the fixed row height', () => {
+    const wrapped: ColumnDef<Row>[] = [
+      { accessorKey: 'email', header: 'Email' },
+      {
+        accessorKey: 'amount',
+        header: 'Amount',
+        meta: { wrap: true },
+        cell: ({ row }) => <span>{row.original.amount}</span>,
+      },
+    ];
+    render(<DataTable columns={wrapped} data={data.slice(0, 1)} />);
 
-  it('wraps the header and cells of a column with meta.overflow "wrap"', () => {
-    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
-    expect(screen.getByText('100').closest('td')).toHaveClass(
-      'whitespace-normal'
+    // The wrap-flagged cell + header get `whitespace-normal` and lose the min-height token.
+    const wrapCell = screen.getByText('100').closest('td')!;
+    expect(wrapCell).toHaveClass('whitespace-normal');
+    expect(wrapCell).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
     );
-    expect(screen.getByText('Amount').closest('th')).toHaveClass(
-      'whitespace-normal'
+    const wrapHeader = screen.getByText('Amount').closest('th')!;
+    expect(wrapHeader).toHaveClass('whitespace-normal');
+    expect(wrapHeader).not.toHaveClass(
+      'h-[var(--ui-table-global-cell-min-height)]'
     );
-  });
 
-  it('clips the header and cells of a column with meta.overflow "hidden"', () => {
-    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
-    const cell = screen.getByText('r1').closest('td');
-    expect(cell).toHaveClass('max-w-0', 'overflow-hidden', 'whitespace-nowrap');
-    expect(cell).not.toHaveClass('whitespace-normal');
-    const header = screen.getByText('Identifier').closest('th');
-    expect(header).toHaveClass(
-      'max-w-0',
-      'overflow-hidden',
-      'whitespace-nowrap'
-    );
-  });
-
-  it("defaults a column without meta.overflow to 'truncate'", () => {
-    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
-    // Height comes from padding + line-height (no `h-*`, which Gecko/WebKit
-    // inflate by the row border in border-collapse tables).
-    const plainCell = screen.getByText('user1@example.com').closest('td');
-    const plainHeader = screen.getByText('Email').closest('th');
-    for (const el of [plainCell, plainHeader]) {
-      expect(el).not.toHaveClass('whitespace-normal');
-      expect(el).toHaveClass('overflow-hidden', 'whitespace-nowrap');
-      expect(el).not.toHaveClass('max-w-0');
-    }
-    expect(plainCell).toHaveClass(
-      'py-[var(--ui-table-global-cell-padding-y)]',
-      'leading-6'
-    );
+    // The unflagged column keeps the default fixed height without forcing
+    // overflow-hidden/nowrap, so native table auto-layout remains usable.
+    const plainCell = screen.getByText('user1@example.com').closest('td')!;
+    expect(plainCell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
     expect(plainCell).not.toHaveClass('truncate');
-  });
-
-  it('keeps the column-header sort button free of a fixed height and shrinkable', () => {
-    render(<DataTable columns={overflowColumns} data={data.slice(0, 1)} />);
-    const button = screen.getByRole('button', { name: 'Sort by Identifier' });
-    expect(button).not.toHaveClass('h-8');
-    expect(button).toHaveClass('min-w-0', 'max-w-full');
-    expect(within(button).getByText('Identifier')).toHaveClass(
-      'min-w-0',
-      'overflow-hidden'
-    );
-  });
-
-  describe('accessibility', () => {
-    it('keeps the clipped column header named and keyboard-sortable', async () => {
-      const user = userEvent.setup();
-      render(<DataTable columns={overflowColumns} data={data.slice(0, 3)} />);
-      const header = screen.getByRole('columnheader', { name: /Identifier/ });
-      const button = within(header).getByRole('button', {
-        name: 'Sort by Identifier',
-      });
-      expect(button).toHaveAttribute('type', 'button');
-      button.focus();
-      expect(button).toHaveFocus();
-      expect(button.querySelector('svg')).toHaveClass(
-        'text-[var(--ui-table-header-sort-icon-color-inactive)]'
-      );
-      await user.keyboard('{Enter}');
-      expect(button.querySelector('svg')).toHaveClass(
-        'text-[var(--ui-table-header-sort-icon-color-active)]'
-      );
-    });
   });
 });
 
@@ -1772,50 +1132,6 @@ describe('DataTable resize-handle focus treatment', () => {
     expect(handle).toHaveClass('focus-visible:ring-[3px]');
     expect(handle).toHaveClass('focus-visible:ring-[var(--ui-focus-primary)]');
     expect(handle).not.toHaveClass('focus-visible:outline-[3px]');
-  });
-});
-
-describe('DataTable resize active header state', () => {
-  it('sets data-resizing on the parent <th> while the pointer is captured', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        enableColumnResizing
-      />
-    );
-
-    const handle = screen.getAllByRole('separator', {
-      name: 'Resize column',
-    })[0];
-    const th = handle.closest('th')!;
-
-    fireEvent.pointerDown(handle, { pointerId: 1 });
-    expect(th).toHaveAttribute('data-resizing');
-
-    fireEvent.pointerUp(handle, { pointerId: 1 });
-    expect(th).not.toHaveAttribute('data-resizing');
-  });
-
-  it('removes data-resizing on pointercancel', () => {
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        enableColumnResizing
-      />
-    );
-
-    const handle = screen.getAllByRole('separator', {
-      name: 'Resize column',
-    })[0];
-    const th = handle.closest('th')!;
-
-    fireEvent.pointerDown(handle, { pointerId: 1 });
-    expect(th).toHaveAttribute('data-resizing');
-
-    fireEvent.pointerCancel(handle, { pointerId: 1 });
-    expect(th).not.toHaveAttribute('data-resizing');
   });
 });
 
@@ -1953,9 +1269,7 @@ describe('DataTable presentational features', () => {
     const { container } = render(
       <DataTable columns={columns} data={data.slice(0, 2)} bordered />
     );
-    const wrapper = container.querySelector(
-      '[data-slot="data-table"]'
-    ) as HTMLElement;
+    const wrapper = container.querySelector('div.rounded-md') as HTMLElement;
     expect(wrapper.className).toContain('[&_td:not(:last-child)]:border-e');
   });
 
@@ -1972,250 +1286,6 @@ describe('DataTable presentational features', () => {
     expect(screen.queryByText('user1@example.com')).not.toBeInTheDocument();
     // 3 rows × 2 columns of pulse bars
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(6);
-  });
-
-  it('renders the skeleton placeholders with the Skeleton component', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={data}
-        skeleton
-        skeletonRows={3}
-        hideActionColumn
-      />
-    );
-    expect(
-      container.querySelectorAll('tbody [data-slot="skeleton"]')
-    ).toHaveLength(6);
-  });
-
-  it('pads skeleton placeholders to the 24px line box so rows keep the 40px height', () => {
-    // Cells carry no fixed height (it inflates rows in Gecko/WebKit), so a bare
-    // h-4 block would collapse the row to 32px.
-    const { container } = render(
-      <DataTable columns={columns} data={data} skeleton skeletonRows={1} />
-    );
-    container
-      .querySelectorAll('tbody [data-slot="skeleton"]')
-      .forEach((el) => expect(el).toHaveClass('my-1', 'h-4'));
-  });
-
-  describe('renderSkeletonCell', () => {
-    const selectColumns: ColumnDef<Row>[] = [
-      {
-        id: 'select',
-        header: () => <Checkbox aria-label="Select all" />,
-        cell: () => <Checkbox aria-label="Select row" />,
-        enableSorting: false,
-        enableHiding: false,
-      },
-      ...columns,
-    ];
-
-    const collectCalls = (spy: ReturnType<typeof vi.fn>) =>
-      spy.mock.calls.map(([ctx]) => {
-        const { column, rowIndex } = ctx as {
-          column: { id: string };
-          rowIndex: number;
-        };
-        return `${column.id}:${rowIndex}`;
-      });
-
-    // DataTable commits more than once on mount (the `meta.pin` sync effect
-    // calls `column.pin()`, which updates state). A Profiler counts those
-    // commits independently of the spy, so the spy's total can be pinned
-    // exactly: one call per (row, column) pair per commit, in row-major order.
-    const renderCountingCommits = (ui: ReactElement) => {
-      let commits = 0;
-      render(
-        <Profiler id="data-table" onRender={() => (commits += 1)}>
-          {ui}
-        </Profiler>
-      );
-      return () => commits;
-    };
-
-    const expectOneCallPerCellPerCommit = (
-      spy: ReturnType<typeof vi.fn>,
-      expected: string[],
-      commits: number
-    ) => {
-      const calls = collectCalls(spy);
-      expect(commits).toBeGreaterThan(0);
-      expect(calls).toHaveLength(expected.length * commits);
-      for (let i = 0; i < commits; i++) {
-        expect(
-          calls.slice(i * expected.length, (i + 1) * expected.length)
-        ).toEqual(expected);
-      }
-    };
-
-    it('replaces the default Skeleton with the custom content in every skeleton cell', () => {
-      const { container } = render(
-        <DataTable
-          columns={columns}
-          data={data}
-          skeleton
-          skeletonRows={3}
-          hideActionColumn
-          renderSkeletonCell={() => (
-            <div data-testid="custom-skel" aria-hidden="true" />
-          )}
-        />
-      );
-      const cells = container.querySelectorAll('tbody td');
-      expect(cells).toHaveLength(6);
-      cells.forEach((td) =>
-        expect(
-          td.querySelector('[data-testid="custom-skel"]')
-        ).toBeInTheDocument()
-      );
-      expect(screen.getAllByTestId('custom-skel')).toHaveLength(6);
-      expect(
-        container.querySelectorAll('tbody [data-slot="skeleton"]')
-      ).toHaveLength(0);
-      expect(container.querySelectorAll('.animate-pulse')).toHaveLength(0);
-    });
-
-    it('is called once per visible leaf column per skeleton row, with a 0-based rowIndex', () => {
-      const spy = vi.fn(() => null);
-      const getCommits = renderCountingCommits(
-        <DataTable
-          columns={selectColumns}
-          data={data}
-          skeleton
-          skeletonRows={2}
-          renderSkeletonCell={spy}
-        />
-      );
-      const ids = ['select', 'email', 'amount', '__actions'];
-      const expected = [0, 1].flatMap((r) => ids.map((id) => `${id}:${r}`));
-      expectOneCallPerCellPerCommit(spy, expected, getCommits());
-    });
-
-    it('skips the __actions column when hideActionColumn is set', () => {
-      const spy = vi.fn(() => null);
-      const getCommits = renderCountingCommits(
-        <DataTable
-          columns={columns}
-          data={data}
-          skeleton
-          skeletonRows={2}
-          hideActionColumn
-          renderSkeletonCell={spy}
-        />
-      );
-      expectOneCallPerCellPerCommit(
-        spy,
-        ['email:0', 'amount:0', 'email:1', 'amount:1'],
-        getCommits()
-      );
-    });
-
-    it('is never called for a hidden column', () => {
-      const spy = vi.fn(() => null);
-      const getCommits = renderCountingCommits(
-        <DataTable
-          columns={columns}
-          data={data}
-          skeleton
-          skeletonRows={2}
-          hideActionColumn
-          columnVisibility={{ amount: false }}
-          renderSkeletonCell={spy}
-        />
-      );
-      expectOneCallPerCellPerCommit(spy, ['email:0', 'email:1'], getCommits());
-      expect(collectCalls(spy).some((c) => c.startsWith('amount:'))).toBe(
-        false
-      );
-    });
-
-    it('is not called when skeleton is not set, and data renders', () => {
-      const spy = vi.fn(() => null);
-      render(
-        <DataTable
-          columns={columns}
-          data={data.slice(0, 2)}
-          renderSkeletonCell={spy}
-        />
-      );
-      expect(spy).not.toHaveBeenCalled();
-      expect(screen.getByText('user1@example.com')).toBeInTheDocument();
-    });
-
-    it('leaves the cell empty when it returns null (no Skeleton fallback)', () => {
-      const { container } = render(
-        <DataTable
-          columns={columns}
-          data={data}
-          skeleton
-          skeletonRows={1}
-          hideActionColumn
-          renderSkeletonCell={() => null}
-        />
-      );
-      const cells = container.querySelectorAll('tbody td');
-      expect(cells).toHaveLength(2);
-      cells.forEach((td) => expect(td).toBeEmptyDOMElement());
-      expect(
-        container.querySelectorAll('tbody [data-slot="skeleton"]')
-      ).toHaveLength(0);
-    });
-
-    it("keeps the column's meta.overflow mode on its skeleton cell", () => {
-      const overflowColumns: ColumnDef<Row>[] = [
-        { accessorKey: 'email', header: 'Email', meta: { overflow: 'hidden' } },
-        { accessorKey: 'amount', header: 'Amount' },
-      ];
-      const { container } = render(
-        <DataTable
-          columns={overflowColumns}
-          data={data}
-          skeleton
-          skeletonRows={1}
-          hideActionColumn
-          renderSkeletonCell={() => <div aria-hidden="true" />}
-        />
-      );
-      const [emailCell, amountCell] = Array.from(
-        container.querySelectorAll('tbody td')
-      );
-      expect(emailCell).toHaveClass('max-w-0', 'overflow-hidden');
-      expect(amountCell).not.toHaveClass('max-w-0');
-    });
-  });
-
-  it('drops the bottom border on every header row but the last when headers are grouped', () => {
-    const grouped: ColumnDef<Row>[] = [
-      {
-        id: 'details',
-        header: 'Details',
-        columns: [
-          { accessorKey: 'email', header: 'Email' },
-          { accessorKey: 'amount', header: 'Amount' },
-        ],
-      },
-    ];
-    const { container } = render(
-      <DataTable columns={grouped} data={data.slice(0, 2)} hideActionColumn />
-    );
-    const headerRows = container.querySelectorAll('thead tr');
-    expect(headerRows.length).toBeGreaterThan(1);
-    const classes = (el: Element) => el.className.split(/\s+/);
-    expect(classes(headerRows[0])).toContain('border-b-0');
-    expect(classes(headerRows[headerRows.length - 1])).not.toContain(
-      'border-b-0'
-    );
-  });
-
-  it('keeps the bottom border on a flat (single-row) header', () => {
-    const { container } = render(
-      <DataTable columns={columns} data={data.slice(0, 2)} hideActionColumn />
-    );
-    const headerRows = container.querySelectorAll('thead tr');
-    expect(headerRows).toHaveLength(1);
-    expect(headerRows[0].className.split(/\s+/)).not.toContain('border-b-0');
   });
 
   it('highlights the clicked row when highlightCurrentRow', async () => {
@@ -2317,35 +1387,6 @@ describe('DataTable keyboard-focusable rows', () => {
     rowsEls.forEach((row) => {
       expect(row).not.toHaveAttribute('tabIndex');
     });
-  });
-
-  it('does not make custom skeleton rows focusable or announce their content', () => {
-    const { container } = render(
-      <DataTable
-        columns={columns}
-        data={data}
-        skeleton
-        skeletonRows={3}
-        renderSkeletonCell={() => (
-          <span aria-hidden="true">
-            <span role="img">Loading placeholder</span>
-          </span>
-        )}
-      />
-    );
-    const rowsEls = screen.getAllByRole('row').slice(1);
-    expect(rowsEls).toHaveLength(3);
-    rowsEls.forEach((row) => {
-      expect(row).not.toHaveAttribute('tabIndex');
-    });
-    const tbody = container.querySelector('tbody')!;
-    expect(tbody.querySelectorAll('[role="status"], [aria-live]')).toHaveLength(
-      0
-    );
-    expect(screen.queryByRole('img')).not.toBeInTheDocument();
-    expect(
-      within(tbody).queryByRole('img', { name: 'Loading placeholder' })
-    ).not.toBeInTheDocument();
   });
 
   it('does not make the empty-state row focusable', () => {
@@ -2453,303 +1494,6 @@ describe('DataTable keyboard-focusable rows', () => {
       await user.keyboard('{ArrowDown}');
       expect(rowsEls[1]).toHaveFocus();
     });
-  });
-});
-
-describe('DataTable onRowClick and onRowActivate', () => {
-  const columnsWithButton: ColumnDef<Row>[] = [
-    { accessorKey: 'email', header: 'Email' },
-    {
-      id: 'open',
-      header: 'Open',
-      cell: ({ row }) => <button type="button">Open {row.original.id}</button>,
-    },
-  ];
-
-  const bodyRow = (text: string) => screen.getByText(text).closest('tr')!;
-
-  it('onRowClick fires on row click with the clicked row', async () => {
-    const onRowClick = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        onRowClick={onRowClick}
-      />
-    );
-    await userEvent.click(screen.getByText('user2@example.com'));
-    expect(onRowClick).toHaveBeenCalledTimes(1);
-    const [row, event] = onRowClick.mock.calls[0];
-    expect(row.original.id).toBe('r2');
-    expect(event.type).toBe('click');
-  });
-
-  it('gives rows a pointer cursor only when onRowClick is set', () => {
-    const { rerender } = render(
-      <DataTable columns={columns} data={data.slice(0, 1)} />
-    );
-    const classes = () => bodyRow('user1@example.com').className.split(/\s+/);
-    expect(classes()).not.toContain('cursor-pointer');
-    rerender(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        onRowClick={vi.fn()}
-      />
-    );
-    expect(classes()).toContain('cursor-pointer');
-  });
-
-  it('onRowClick fires on the row only when the target is not an interactive descendant', async () => {
-    const onRowClick = vi.fn();
-    render(
-      <DataTable
-        columns={columnsWithButton}
-        data={data.slice(0, 2)}
-        onRowClick={onRowClick}
-        hideActionColumn
-      />
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Open r1' }));
-    expect(onRowClick).not.toHaveBeenCalled();
-
-    await userEvent.click(screen.getByText('user1@example.com'));
-    expect(onRowClick).toHaveBeenCalledTimes(1);
-    expect(onRowClick.mock.calls[0][0].original.id).toBe('r1');
-  });
-
-  it('onRowClick does not fire on the row actions trigger', async () => {
-    const onRowClick = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        onRowClick={onRowClick}
-        renderRowActions={() => <span>Edit</span>}
-      />
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Row actions' }));
-    expect(onRowClick).not.toHaveBeenCalled();
-  });
-
-  it('onRowClick does not fire when the click originates from a portaled element', async () => {
-    // A React portal renders its children outside the <tr> in the DOM, but the
-    // synthetic event still bubbles through the React tree to the row's onClick.
-    // The portal guard (!row.contains(target)) must catch this case.
-    const onRowClick = vi.fn();
-    // Render a portal button as a cell — it's in the React tree (inside the row)
-    // but its DOM node lands in document.body, outside the <tr>.
-    const PortalCell = () =>
-      createPortal(
-        <button data-testid="portal-btn">Portal action</button>,
-        document.body
-      );
-    const columnsWithPortal: ColumnDef<Row>[] = [
-      ...columns,
-      { id: 'portal-col', cell: () => <PortalCell />, header: 'Portal' },
-    ];
-    render(
-      <DataTable
-        columns={columnsWithPortal}
-        data={data.slice(0, 1)}
-        onRowClick={onRowClick}
-      />
-    );
-    await userEvent.click(screen.getByTestId('portal-btn'));
-    expect(onRowClick).not.toHaveBeenCalled();
-  });
-
-  it('onRowClick does not fire while text is selected', () => {
-    const onRowClick = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        onRowClick={onRowClick}
-      />
-    );
-    const getSelection = vi
-      .spyOn(window, 'getSelection')
-      .mockReturnValue({ toString: () => 'user1' } as Selection);
-    try {
-      fireEvent.click(screen.getByText('user1@example.com'));
-      expect(onRowClick).not.toHaveBeenCalled();
-    } finally {
-      getSelection.mockRestore();
-    }
-    fireEvent.click(screen.getByText('user1@example.com'));
-    expect(onRowClick).toHaveBeenCalledTimes(1);
-  });
-
-  it('onRowActivate fires on Enter on the focused row (via keyboard)', async () => {
-    const user = userEvent.setup();
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        onRowActivate={onRowActivate}
-      />
-    );
-    const rowEl = bodyRow('user2@example.com');
-    rowEl.focus();
-    await user.keyboard('{Enter}');
-    expect(onRowActivate).toHaveBeenCalledTimes(1);
-    const [row, details] = onRowActivate.mock.calls[0];
-    expect(row.original.id).toBe('r2');
-    expect(details.via).toBe('keyboard');
-    expect(details.event.type).toBe('keydown');
-    expect(details.event.key).toBe('Enter');
-  });
-
-  it('onRowActivate ignores a repeated (held) Enter', () => {
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        onRowActivate={onRowActivate}
-      />
-    );
-    fireEvent.keyDown(bodyRow('user1@example.com'), {
-      key: 'Enter',
-      repeat: true,
-    });
-    expect(onRowActivate).not.toHaveBeenCalled();
-  });
-
-  it('onRowActivate fires on double-click (via pointer)', async () => {
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 3)}
-        onRowActivate={onRowActivate}
-      />
-    );
-    // dblClick selects the word under the pointer (as browsers do), so this
-    // also covers activation not being blocked by the text-selection guard.
-    await userEvent.dblClick(screen.getByText('user3@example.com'));
-    expect(onRowActivate).toHaveBeenCalledTimes(1);
-    const [row, details] = onRowActivate.mock.calls[0];
-    expect(row.original.id).toBe('r3');
-    expect(details.via).toBe('pointer');
-    expect(details.event.type).toBe('dblclick');
-  });
-
-  it('onRowActivate does not fire on double-click of an interactive descendant', async () => {
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columnsWithButton}
-        data={data.slice(0, 1)}
-        onRowActivate={onRowActivate}
-        hideActionColumn
-      />
-    );
-    await userEvent.dblClick(screen.getByRole('button', { name: 'Open r1' }));
-    expect(onRowActivate).not.toHaveBeenCalled();
-  });
-
-  it('onRowActivate does not fire on Enter from an interactive descendant', () => {
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columnsWithButton}
-        data={data.slice(0, 1)}
-        onRowActivate={onRowActivate}
-        hideActionColumn
-      />
-    );
-    fireEvent.keyDown(screen.getByRole('button', { name: 'Open r1' }), {
-      key: 'Enter',
-    });
-    expect(onRowActivate).not.toHaveBeenCalled();
-  });
-
-  it('Space does not fire onRowActivate when rowSelection is enabled', async () => {
-    const user = userEvent.setup();
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        rowSelection={{}}
-        onRowActivate={onRowActivate}
-      />
-    );
-    bodyRow('user1@example.com').focus();
-    await user.keyboard(' ');
-    expect(onRowActivate).not.toHaveBeenCalled();
-  });
-
-  it('both callbacks fire alongside highlightCurrentRow', async () => {
-    const user = userEvent.setup();
-    const onRowClick = vi.fn();
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 2)}
-        highlightCurrentRow
-        onRowClick={onRowClick}
-        onRowActivate={onRowActivate}
-      />
-    );
-    const rowEl = bodyRow('user2@example.com');
-    await user.click(rowEl);
-    expect(onRowClick).toHaveBeenCalledTimes(1);
-    expect(rowEl.className.split(/\s+/)).toContain(
-      'bg-[var(--ui-table-data-row-color-active)]'
-    );
-
-    rowEl.focus();
-    await user.keyboard('{Enter}');
-    expect(onRowActivate).toHaveBeenCalledTimes(1);
-    expect(onRowActivate.mock.calls[0][1].via).toBe('keyboard');
-  });
-
-  it('keeps Arrow and Tab navigation working', async () => {
-    const user = userEvent.setup();
-    render(
-      <div>
-        <DataTable
-          columns={columns}
-          data={data.slice(0, 3)}
-          onRowClick={vi.fn()}
-          onRowActivate={vi.fn()}
-          hideActionColumn
-        />
-        <button>After</button>
-      </div>
-    );
-    const rowsEls = screen.getAllByRole('row').slice(1);
-    rowsEls[0].focus();
-    await user.keyboard('{ArrowDown}');
-    expect(rowsEls[1]).toHaveFocus();
-    await user.tab();
-    expect(screen.getByRole('button', { name: 'After' })).toHaveFocus();
-  });
-
-  it('ignores both callbacks when renderRow is set', async () => {
-    const onRowClick = vi.fn();
-    const onRowActivate = vi.fn();
-    render(
-      <DataTable
-        columns={columns}
-        data={data.slice(0, 1)}
-        onRowClick={onRowClick}
-        onRowActivate={onRowActivate}
-        renderRow={(row) => (
-          <tr key={row.id}>
-            <td>{row.original.email}</td>
-          </tr>
-        )}
-      />
-    );
-    await userEvent.dblClick(screen.getByText('user1@example.com'));
-    expect(onRowClick).not.toHaveBeenCalled();
-    expect(onRowActivate).not.toHaveBeenCalled();
   });
 });
 
@@ -3127,10 +1871,9 @@ describe('DataTable grouped headers', () => {
     const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
     expect(groupHeader).not.toHaveAttribute('draggable');
     // The leaf headers are still draggable.
-    expect(screen.getByRole('columnheader', { name: 'Email' })).toHaveAttribute(
-      'draggable',
-      'true'
-    );
+    expect(
+      screen.getByRole('columnheader', { name: 'Email' })
+    ).toHaveAttribute('draggable', 'true');
   });
 
   it('group header cells have no resize handle even with enableColumnResizing', () => {
