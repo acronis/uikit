@@ -660,6 +660,30 @@ export const CompactCurrencyAxis: Story = {
   },
 };
 
+const compactYAxisData = [
+  { month: 'Jan', runs: 1 },
+  { month: 'Feb', runs: 2 },
+  { month: 'Mar', runs: 3 },
+  { month: 'Apr', runs: 2 },
+  { month: 'May', runs: 1 },
+];
+
+const compactYAxisConfig = {
+  runs: { label: 'Runs' },
+} satisfies ChartConfig;
+
+// A narrow widget with one-character value ticks. The plot should use the
+// reclaimed left gutter instead of keeping recharts' fixed 60px axis width.
+export const AutoSizedYAxis: Story = {
+  args: {
+    config: compactYAxisConfig,
+    data: compactYAxisData,
+    dataKeys: ['runs'],
+    showLegend: false,
+    className: 'h-[220px] w-[288px]',
+  },
+};
+
 // Hide both axes with `showXAxis` / `showYAxis` for a compact sparkline — not
 // possible with a `unit` suffix at all.
 export const Sparkline: Story = {

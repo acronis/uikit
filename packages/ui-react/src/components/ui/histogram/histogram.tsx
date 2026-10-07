@@ -29,7 +29,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // A histogram bins a set of continuous samples into equal-width ranges and plots
 // the frequency of each as contiguous bars — distinct from BarChart, whose bars
@@ -232,7 +232,7 @@ const Histogram = React.forwardRef<HTMLDivElement, HistogramProps>(
               tickFormatter={yTickFormatter}
               tickCount={yAxisTickCount}
               domain={yDomain}
-              width={yAxisLabel ? 72 : undefined}
+              width={resolveYAxisWidth(bins.length > 0, yAxisLabel ? 72 : undefined)}
               label={yAxisTitle}
             />
             {showTooltip && (

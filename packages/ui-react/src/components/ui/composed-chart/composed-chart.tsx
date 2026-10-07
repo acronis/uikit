@@ -57,7 +57,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. A composed
 // chart's defining trait is that each series picks its own render type
@@ -444,6 +444,14 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
 
     const yDomain = resolveAxisDomain(yAxisDomain);
     const secondaryYDomain = resolveAxisDomain(secondaryYAxisDomain);
+    const yAxisWidth = resolveYAxisWidth(
+      data.length > 0,
+      yAxisLabel ? 72 : undefined
+    );
+    const secondaryYAxisWidth = resolveYAxisWidth(
+      data.length > 0,
+      secondaryYAxisLabel ? 72 : undefined
+    );
 
     // Which axis a series (or the grid, or a reference element) binds to. The
     // value axis is Y by default and X when horizontal; the primary one keeps
@@ -696,7 +704,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
           tickFormatter={yTickFormatter}
           tickCount={yAxisTickCount}
           domain={yDomain}
-          width={yAxisLabel ? 72 : undefined}
+          width={yAxisWidth}
           label={yAxisTitle}
         />
         {hasSecondaryValueAxis && (
@@ -711,7 +719,7 @@ const ComposedChart = React.forwardRef<HTMLDivElement, ComposedChartProps>(
             tickFormatter={secondaryYTickFormatter}
             tickCount={secondaryYAxisTickCount}
             domain={secondaryYDomain}
-            width={secondaryYAxisLabel ? 72 : undefined}
+            width={secondaryYAxisWidth}
             label={secondaryYAxisTitle}
           />
         )}

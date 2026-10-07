@@ -34,7 +34,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. Unlike the
 // other chart types, a scatter has no visual "mode" to model as a CVA variant —
@@ -162,6 +162,10 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
       series.flatMap(({ data }) => data.map((row) => row[xKey])),
       xTickFormatter
     );
+    const yAxisWidth = resolveYAxisWidth(
+      series.some(({ data }) => data.length > 0),
+      yAxisLabel ? 72 : undefined
+    );
     const chartContainerRef = React.useRef<HTMLDivElement>(null);
     const xAxisLayout = useXAxisLayout(
       chartContainerRef,
@@ -219,7 +223,7 @@ const ScatterChart = React.forwardRef<HTMLDivElement, ScatterChartProps>(
               tickFormatter={yTickFormatter}
               tickCount={yAxisTickCount}
               domain={yDomain}
-              width={yAxisLabel ? 72 : undefined}
+              width={yAxisWidth}
               label={yAxisTitle}
             />
             {zKey && (

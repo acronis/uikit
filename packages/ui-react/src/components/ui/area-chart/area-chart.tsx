@@ -57,7 +57,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
 // axes are the design's Area-chart variant set: `layout` (independent
@@ -563,7 +563,7 @@ const AreaChart = React.forwardRef<HTMLDivElement, AreaChartProps>(
               tickFormatter={yTickFormatter}
               tickCount={yAxisTickCount}
               domain={yDomain}
-              width={yAxisLabel ? 72 : undefined}
+              width={resolveYAxisWidth(data.length > 0, yAxisLabel ? 72 : undefined)}
               label={yAxisTitle}
             />
             {showTooltip && <ChartTooltip content={tooltipNode} />}

@@ -58,7 +58,7 @@ import {
   mergeXAxisLayoutMargin,
   useXAxisLayout,
 } from '../chart/use-x-axis-layout';
-import { resolveXAxisTickLabels } from '../chart/chart-format';
+import { resolveXAxisTickLabels, resolveYAxisWidth } from '../chart/chart-format';
 
 // A typed recharts composition over the shared `Chart` primitives. The two CVA
 // axes are the design's Line-chart variant set: `curve` (how the segments
@@ -636,7 +636,7 @@ const LineChart = React.forwardRef<HTMLDivElement, LineChartProps>(
               tickFormatter={yTickFormatter}
               tickCount={yAxisTickCount}
               domain={yDomain}
-              width={yAxisLabel ? 72 : undefined}
+              width={resolveYAxisWidth(data.length > 0, yAxisLabel ? 72 : undefined)}
               label={yAxisTitle}
             />
             {showTooltip && <ChartTooltip content={tooltipNode} />}

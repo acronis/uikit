@@ -37,6 +37,19 @@ export function resolveXAxisTickLabels(
 }
 
 /**
+ * Internal shared layout helper. Recharts measures an automatic Y axis from
+ * rendered tick nodes. Starting that process with no data can store a zero-width
+ * axis before any tick exists; keep the caller's existing fallback until data
+ * arrives, then let it measure.
+ */
+export function resolveYAxisWidth(
+  hasData: boolean,
+  fallbackWidth: number | undefined
+): 'auto' | number | undefined {
+  return hasData ? 'auto' : fallbackWidth;
+}
+
+/**
  * Props shared by every cartesian chart (Bar, Line, Area, Composed, Scatter,
  * ConfidenceCone, Histogram) — chrome toggles, axis titles/units, tick
  * formatting/visibility, and grid trim. All optional. `showLegend` and `xUnit`
