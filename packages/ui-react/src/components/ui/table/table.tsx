@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 // 4536-699 / TableSettings 3698-497 / TableActions 4536-414 / TableCheckbox
 // 3698-746). A `--ui-table-*` token tier already exists, so these parts theme
 // directly from it (imported in styles/index.css):
-//   • cell     -> --ui-table-global-cell-{padding-x,padding-y}
+//   • cell     -> --ui-table-global-cell-{padding-x,padding-y,min-height}
 //   • row      -> --ui-table-global-row-{border-color,border-width,border-style},
 //                 --ui-table-data-row-color-{idle,hover,active}  (active = selected)
 //   • head     -> --ui-table-header-{label-color,gap}, --ui-table-header-cell-color-{idle,hover,active}
@@ -33,14 +33,16 @@ const Table = React.forwardRef<
   HTMLTableElement,
   React.HTMLAttributes<HTMLTableElement>
 >(({ className, ...props }, ref) => (
-  <table
-    ref={ref}
-    className={cn(
-      'w-full caption-bottom border-collapse text-sm text-[var(--ui-table-data-value-color-idle)]',
-      className
-    )}
-    {...props}
-  />
+  <div className="relative w-full overflow-auto">
+    <table
+      ref={ref}
+      className={cn(
+        'w-full caption-bottom border-collapse text-sm text-[var(--ui-table-data-value-color-idle)]',
+        className
+      )}
+      {...props}
+    />
+  </div>
 ));
 Table.displayName = 'Table';
 
@@ -105,8 +107,6 @@ TableRow.displayName = 'TableRow';
 
 type SortDirection = 'asc' | 'desc' | false;
 
-export type TableOverflow = 'wrap' | 'hidden' | 'truncate';
-
 export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
   /** Render the column as sortable — adds a sort affordance and `aria-sort`. */
   sortable?: boolean;
@@ -115,15 +115,10 @@ export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElem
   /** Invoked when the user activates a sortable header (click / Enter / Space). */
   onSort?: () => void;
   /**
-   * Column overflow mode.
-   * - `'truncate'` — clips to the column's CSS width (`overflow-hidden whitespace-nowrap`).
-   *   Use a truncation component with a tooltip inside the cell renderer.
-   * - `'wrap'` — `whitespace-normal`; the cell grows to fit its content.
-   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; clips using the
-   *   `max-w-0` trick. Use when the cell renderer manages its own overflow UI.
-   * - Unset — browser default (wrapping).
+   * Allow the header to wrap onto multiple lines (`whitespace-normal`) and drop
+   * the fixed row height so the cell grows to fit its content.
    */
-  overflow?: TableOverflow;
+  wrap?: boolean;
 }
 
 function SortIcon({ direction }: { direction: SortDirection }) {
@@ -166,7 +161,7 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
       sortable,
       sortDirection = false,
       onSort,
-      overflow,
+      wrap,
       ...props
     },
     ref
@@ -183,13 +178,10 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
               : undefined
       }
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] data-[resizing]:bg-[var(--ui-table-header-cell-color-active)]',
-        // No `h-*` here: in border-collapse tables Gecko/WebKit add the row
-        // border on top of a cell's `height` (~49px vs 40px in Blink).
-        // py + leading-6 already yields the 40px row cross-engine.
-        overflow === 'truncate' && 'overflow-hidden whitespace-nowrap',
-        overflow === 'wrap' && 'whitespace-normal',
-        overflow === 'hidden' && 'max-w-0 overflow-hidden whitespace-nowrap',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] text-start align-middle text-sm font-semibold leading-6 text-[var(--ui-table-header-label-color)] bg-[var(--ui-table-header-cell-color-idle)] [&:has([role=checkbox])]:pe-0',
+        wrap
+          ? 'whitespace-normal'
+          : 'h-[var(--ui-table-global-cell-min-height)]',
         // Per the design, a sortable header tints the whole cell on hover/press
         // and draws the focus ring on the cell, not on the inner control.
         sortable &&
@@ -202,12 +194,10 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
         <button
           type="button"
           onClick={onSort}
-          className="flex min-w-0 w-full cursor-pointer items-center gap-[var(--ui-table-header-gap)] text-start outline-none"
+          className="flex w-full cursor-pointer items-center gap-[var(--ui-table-header-gap)] text-start outline-none"
         >
           {children}
-          <span className="shrink-0 flex items-center">
-            <SortIcon direction={sortDirection} />
-          </span>
+          <SortIcon direction={sortDirection} />
         </button>
       ) : (
         children
@@ -219,27 +209,21 @@ TableHead.displayName = 'TableHead';
 
 export interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   /**
-   * Column overflow mode.
-   * - `'truncate'` — clips to the column's CSS width (`overflow-hidden whitespace-nowrap`).
-   *   Use a truncation component with a tooltip inside the cell renderer.
-   * - `'wrap'` — `whitespace-normal`; the row grows to fit its content.
-   * - `'hidden'` — `max-w-0 overflow-hidden whitespace-nowrap`; clips using the
-   *   `max-w-0` trick. Use when the cell renderer manages its own overflow UI.
-   * - Unset — browser default (wrapping).
+   * Allow the cell to wrap onto multiple lines (`whitespace-normal`) and drop
+   * the fixed row height so the row grows to fit its content.
    */
-  overflow?: TableOverflow;
+  wrap?: boolean;
 }
 
 const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
-  ({ className, overflow, ...props }, ref) => (
+  ({ className, wrap, ...props }, ref) => (
     <td
       ref={ref}
       className={cn(
-        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors',
-        // See TableHead: height comes from py + leading-6, not `h-*`.
-        overflow === 'truncate' && 'overflow-hidden whitespace-nowrap',
-        overflow === 'wrap' && 'whitespace-normal',
-        overflow === 'hidden' && 'max-w-0 overflow-hidden whitespace-nowrap',
+        'px-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle text-sm leading-6 bg-[var(--ui-table-data-cell-color-idle)] transition-colors [&:has([role=checkbox])]:pe-0',
+        wrap
+          ? 'whitespace-normal'
+          : 'h-[var(--ui-table-global-cell-min-height)]',
         className
       )}
       {...props}
@@ -271,8 +255,7 @@ const TableSelectCell = React.forwardRef<
     <Comp
       ref={ref}
       className={cn(
-        'w-8 ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle transition-colors',
-        // See TableHead: no `h-*` (Gecko/WebKit inflate it by the row border).
+        'w-8 h-[var(--ui-table-global-cell-min-height)] ps-[var(--ui-table-global-cell-padding-x)] py-[var(--ui-table-global-cell-padding-y)] align-middle transition-colors',
         header
           ? 'bg-[var(--ui-table-header-cell-color-idle)]'
           : 'bg-[var(--ui-table-data-cell-color-idle)]',
@@ -308,10 +291,9 @@ const TableActionsCell = React.forwardRef<
   <td
     ref={ref}
     className={cn(
-      'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle bg-[var(--ui-table-data-cell-color-idle)]',
-      // See TableHead: no `h-*`; the row height comes from its data cells.
+      'w-12 h-[var(--ui-table-global-cell-min-height)] px-[var(--ui-table-global-cell-padding-x)] text-end align-middle bg-[var(--ui-table-data-cell-color-idle)]',
       !bulkSelectionActive &&
-        'transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+        'rounded-sm transition-colors hover:bg-[var(--ui-table-data-cell-color-hover)] active:bg-[var(--ui-table-data-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
       className
     )}
     {...props}
@@ -335,8 +317,7 @@ const TableSettingsCell = React.forwardRef<
   <th
     ref={ref}
     className={cn(
-      // See TableHead: no `h-*`; the row height comes from its header cells.
-      'w-12 px-[var(--ui-table-global-cell-padding-x)] text-end align-middle transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
+      'w-12 h-[var(--ui-table-global-cell-min-height)] px-[var(--ui-table-global-cell-padding-x)] text-end align-middle rounded-sm transition-colors bg-[var(--ui-table-header-cell-color-idle)] hover:bg-[var(--ui-table-header-cell-color-hover)] active:bg-[var(--ui-table-header-cell-color-active)] has-[:focus-visible]:ring-[3px] has-[:focus-visible]:ring-inset has-[:focus-visible]:ring-[var(--ui-focus-primary)]',
       className
     )}
     {...props}

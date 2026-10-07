@@ -1,8 +1,7 @@
 # Table
 
 Displays rows and columns of data. Composable from native table parts, with
-sortable column headers, a selected row state, per-column overflow modes
-(wrap, truncate, or clip), fixed-width
+sortable column headers, a selected row state, wrappable cells, fixed-width
 leading selection and trailing actions/settings cells, and — as
 TanStack-independent companions — a pagination bar and a show/hide-columns
 menu. Two headless hooks (`useSortState`, `useTableUrlState`) supply optional
@@ -37,13 +36,13 @@ sort and URL-synced state.
 
 | Part                | Element   | Purpose                                                                                                                                                                                   |
 | ------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Table`             | `table`   | The table, with no scroll wrapper. Add `overflow-auto` on a parent for horizontal scroll (DataTable does this).                                                                           |
+| `Table`             | `table`   | The table, in a horizontally scrollable container.                                                                                                                                        |
 | `TableHeader`       | `thead`   | Column-header section.                                                                                                                                                                    |
 | `TableBody`         | `tbody`   | Data rows section.                                                                                                                                                                        |
 | `TableFooter`       | `tfoot`   | Summary section with a top divider.                                                                                                                                                       |
 | `TableRow`          | `tr`      | A row; `selected` applies the active state.                                                                                                                                               |
-| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `overflow` (`'wrap'` / `'truncate'` / `'hidden'`).                                                                                |
-| `TableCell`         | `td`      | A data cell; `overflow='wrap'` grows it to fit multi-line content, `'truncate'` / `'hidden'` clip at the column width. Unset wraps (browser default).                                     |
+| `TableHead`         | `th`      | Column header; `sortable` + `sortDirection` + `onSort`; `wrap`.                                                                                                                           |
+| `TableCell`         | `td`      | A data cell; `wrap` lets it grow to fit multi-line content.                                                                                                                               |
 | `TableSelectCell`   | `td`/`th` | 32px leading selection cell for a `Checkbox`; `header` renders the select-all `th`.                                                                                                       |
 | `TableActionsCell`  | `td`      | 48px trailing cell for a row's overflow trigger; owns the hover/press tint and focus ring.                                                                                                |
 | `TableSettingsCell` | `th`      | 48px trailing header cell for the column-settings trigger.                                                                                                                                |
@@ -79,9 +78,6 @@ import {
   ButtonIcon,
   Checkbox,
   Tag,
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
 } from '@acronis-platform/ui-react';
 import { useSortState } from '@acronis-platform/ui-react'; // headless hook
 import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
@@ -97,26 +93,8 @@ const { sortedData, getSortDirection, toggleSort } = useSortState({ data });
   Name
 </TableHead>
 
-// Wrapping cell — whitespace-normal, so multi-line content grows the row
-<TableCell overflow="wrap">{longDescription}</TableCell>
-
-// Truncated column — overflow-hidden whitespace-nowrap, no max-w-0, so it never
-// collapses a column. The clip width holds under table-layout: fixed
-// (<Table className="table-fixed">, as DataTable renders it).
-<TableCell overflow="truncate">{path}</TableCell>
-
-// Clipped column — max-w-0 overflow-hidden whitespace-nowrap clips at the
-// column's CSS width, so the column needs one (here on the header). The kit only
-// clips: the ellipsis (`truncate`) and the tooltip belong to the cell content.
-<TableHead overflow="hidden" style={{ width: 200 }}>Path</TableHead>
-<TableCell overflow="hidden">
-  <Tooltip>
-    <TooltipTrigger render={<span className="block truncate" tabIndex={0} />}>
-      {path}
-    </TooltipTrigger>
-    <TooltipContent>{path}</TooltipContent>
-  </Tooltip>
-</TableCell>
+// Wrappable cell — drops the fixed row height and grows to fit multi-line content
+<TableCell wrap>{longDescription}</TableCell>
 
 // Header row — select-all cell leading, column-settings cell trailing
 <TableRow>

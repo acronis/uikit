@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { action } from 'storybook/actions';
 import { waitFor, within } from 'storybook/test';
 import {
   type ColumnDef,
@@ -9,12 +8,16 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { cn } from '@/lib/utils';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
+
 import { Button } from '../../button';
+import { ButtonIcon } from '../../button-icon';
 import { Checkbox } from '../../checkbox';
 import { DropdownMenuGroup, DropdownMenuItem } from '../../dropdown-menu';
 import { Tag } from '../../tag';
-import { TruncateText } from '../../truncate-text';
 import {
   DataTable,
   DataTableBulkActionsBar,
@@ -80,7 +83,6 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'status',
-    size: 120,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Status" />
     ),
@@ -92,14 +94,12 @@ const columns: ColumnDef<Payment>[] = [
   },
   {
     accessorKey: 'email',
-    minSize: 200,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Email" />
     ),
   },
   {
     accessorKey: 'amount',
-    size: 120,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Amount" />
     ),
@@ -122,11 +122,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// CI-43740 (outer frame): the wrapper div no longer has `rounded-md border` —
-// every story's baseline will shift (the outer border and radius are gone).
-// No story should remain unchanged. Regenerate all baselines (light + dark) in
-// Docker once at the end of the DataTable plan.
-
 export const Default: Story = {
   render: () => (
     <DataTable
@@ -138,93 +133,6 @@ export const Default: Story = {
           <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuGroup>
       )}
-    />
-  ),
-};
-
-export const LoadingSkeleton: Story = {
-  render: () => (
-    <DataTable
-      columns={columns}
-      data={payments}
-      skeleton
-      skeletonRows={5}
-      hideActionColumn
-    />
-  ),
-};
-
-// New story: its light/dark VR baselines don't exist yet and will be generated
-// in Docker at the end of the DataTable plan — no existing story's baseline
-// changes, since unset `renderSkeletonCell` keeps the default Skeleton bars.
-export const CustomSkeletonCells: Story = {
-  name: 'Custom skeleton cells',
-  render: () => (
-    <DataTable
-      columns={columns}
-      data={payments}
-      skeleton
-      skeletonRows={5}
-      renderSkeletonCell={({ column }) => {
-        if (column.id === '__actions') return null;
-        return (
-          <div
-            aria-hidden="true"
-            className={cn(
-              'rounded-[4px] bg-[var(--ui-background-surface-active)]',
-              column.id === 'select'
-                ? 'my-1 size-4'
-                : cn('my-0.5 h-5', column.id === 'status' ? 'w-16' : 'w-full')
-            )}
-          />
-        );
-      }}
-    />
-  ),
-};
-
-type OverflowDemoRow = { id: string; wrapped: string; truncated: string };
-
-const OVERFLOW_DEMO_TEXT =
-  'Runs scheduled batch jobs for nightly ETL pipelines and report generation across three regional data centers.';
-
-const overflowDemoRows: OverflowDemoRow[] = Array.from(
-  { length: 3 },
-  (_, i) => ({
-    id: `o${i + 1}`,
-    wrapped: OVERFLOW_DEMO_TEXT,
-    truncated: `/mnt/storage/backups/tenant-${1000 + i}/snapshots/2026-08-1${i}/full-backup.tar.zst`,
-  })
-);
-
-const overflowDemoColumns: ColumnDef<OverflowDemoRow>[] = [
-  {
-    accessorKey: 'wrapped',
-    header: "overflow: 'wrap'",
-    size: 240,
-    meta: { overflow: 'wrap' },
-  },
-  {
-    accessorKey: 'truncated',
-    header: "overflow: 'truncate'",
-    size: 240,
-    meta: { overflow: 'truncate' },
-    cell: ({ row }) => (
-      <TruncateText mode="middle">{row.original.truncated}</TruncateText>
-    ),
-  },
-];
-
-// New story: its light/dark VR baselines don't exist yet and must be generated
-// in Docker — no existing story's baseline changes.
-export const ColumnOverflowModes: Story = {
-  name: 'Column overflow modes (wrap vs truncate)',
-  render: () => (
-    <DataTable
-      columns={overflowDemoColumns}
-      data={overflowDemoRows}
-      enableSorting={false}
-      hideActionColumn
     />
   ),
 };
@@ -243,21 +151,10 @@ type Workload = {
   owner: string;
   lastBackup: string;
   status: 'success' | 'failed' | 'pending';
-  description: string;
-  notes: string;
 };
 
 const TOTAL_WORKLOADS = 24;
 const WORKLOADS_PAGE_SIZE = 6;
-
-const WORKLOAD_DESCRIPTIONS = [
-  'Hosts the primary database cluster and handles all transactional workloads for the production environment.',
-  'Runs scheduled batch jobs for nightly ETL pipelines and report generation across three regional data centers.',
-  'Dedicated build server for CI/CD pipelines; spins up ephemeral containers and archives artifacts to object storage.',
-  'Edge node serving static assets and terminating TLS for the customer-facing portal across EMEA regions.',
-  'Manages identity and access across the tenant; stores LDAP directory and issues SAML tokens.',
-  'Backup proxy routing incremental snapshots to the cloud vault and managing deduplication metadata locally.',
-];
 
 function makeWorkloads(count: number): Workload[] {
   return Array.from({ length: count }, (_, i) => ({
@@ -272,8 +169,6 @@ function makeWorkloads(count: number): Workload[] {
     owner: `owner${i + 1}@example.com`,
     lastBackup: `2026-08-${String(10 + (i % 20)).padStart(2, '0')} 04:15`,
     status: (['success', 'failed', 'pending'] as const)[i % 3],
-    description: WORKLOAD_DESCRIPTIONS[i % WORKLOAD_DESCRIPTIONS.length],
-    notes: `/mnt/storage/backups/tenant-${1000 + i}/snapshots/2026-08-${String(10 + (i % 20)).padStart(2, '0')}/full-backup-workstation-${i + 1}.tar.zst`,
   }));
 }
 
@@ -305,28 +200,6 @@ const workloadColumns: ColumnDef<Workload>[] = [
         aria-label="Select row"
       />
     ),
-  },
-  // `overflow: 'wrap'` — the cell grows vertically to accommodate its full content.
-  {
-    accessorKey: 'description',
-    meta: { label: 'Description', category: 'General', overflow: 'wrap' as const },
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Description" />
-    ),
-    size: 240,
-    enableSorting: false,
-  },
-  // `overflow: 'hidden'` — the cell clips to max-w-0; TruncateText manages its
-  // own ellipsis and shows the full path in a tooltip on hover/focus.
-  // Both header and cells use TruncateText: `hidden` gives no built-in ellipsis,
-  // so the renderer owns it at every row level, header included.
-  {
-    accessorKey: 'notes',
-    meta: { label: 'Backup path', category: 'Protection', overflow: 'hidden' as const },
-    header: () => <TruncateText>Backup path</TruncateText>,
-    size: 220,
-    enableSorting: false,
-    cell: ({ row }) => <TruncateText mode="middle">{row.original.notes}</TruncateText>,
   },
   {
     accessorKey: 'name',
@@ -441,7 +314,7 @@ function CoreCapabilitiesDemo() {
         )
       );
       setIsLoadingMore(false);
-    }, 1000);
+    }, 600);
   };
 
   // A second, minimal `useReactTable` instance driving only the actions bar —
@@ -468,13 +341,16 @@ function CoreCapabilitiesDemo() {
           Delete
         </Button>
       </DataTableBulkActionsBar>
-      {/* Fixed height + flex-col so DataTable's h-full fills this container and
-          its overflow-auto creates the scroll context for the infinite sentinel. */}
-      <div className="h-96 flex flex-col" data-testid="infinite-scroll-pane">
+      {/* Fixed height + overflow-auto gives the sentinel row somewhere to
+          scroll within — the IntersectionObserver still measures against the
+          viewport, but the row only reaches it once this pane is scrolled. */}
+      <div
+        className="max-h-96 overflow-auto"
+        data-testid="infinite-scroll-pane"
+      >
         <DataTable
           columns={workloadColumns}
           data={items}
-          stickyHeader
           enableColumnResizing
           enableColumnReordering
           rowSelection={rowSelection}
@@ -498,10 +374,9 @@ function CoreCapabilitiesDemo() {
 export const CoreCapabilities: Story = {
   render: () => <CoreCapabilitiesDemo />,
   // Visual regression needs a fixed frame, and this demo's height changes on
-  // every 1000ms infinite-load round. `play` drives it to its terminal state
+  // every 600ms infinite-load round. `play` drives it to its terminal state
   // (every page loaded, sentinel unmounted, no spinner row) and scrolls back to
   // the top; `animationDelay` leaves margin for that last render to paint.
-  // Timeout: 4 pages total, first is immediate, 3 × 1000ms = ~3s of load.
   parameters: { snapshot: { animationDelay: 600 } },
   play: async ({ canvasElement }) => {
     // `play` runs on every Storybook visit, including a human just opening
@@ -511,10 +386,7 @@ export const CoreCapabilities: Story = {
     // auto-load every page the moment it's opened.
     if (!navigator.webdriver) return;
     const canvas = within(canvasElement);
-    const wrapper = await canvas.findByTestId('infinite-scroll-pane');
-    // stickyHeader moves overflow-auto into the DataTable root div; scroll that.
-    const pane =
-      wrapper.querySelector<HTMLElement>('[data-slot="data-table"]') ?? wrapper;
+    const pane = await canvas.findByTestId('infinite-scroll-pane');
     // The sentinel only intersects once the pane is scrolled to the bottom, and
     // it moves down again after each appended page — so re-scroll on every poll
     // until the bulk-actions bar reports the full dataset as loaded.
@@ -529,6 +401,90 @@ export const CoreCapabilities: Story = {
     );
     pane.scrollTop = 0;
   },
+};
+
+/* -------------------------------------------- Core capabilities + pagination */
+
+function CoreCapabilitiesWithPaginationDemo() {
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  // The full dataset lives with the caller — DataTable only ever sees the
+  // current page's slice, and pages are turned with plain prev/next buttons
+  // (DataTablePagination binds to an externally-built `table`, which would
+  // disable this demo's resizing/reordering — see the component's docs).
+  const [allWorkloads] = useState<Workload[]>(() =>
+    makeWorkloads(TOTAL_WORKLOADS)
+  );
+  const [pageIndex, setPageIndex] = useState(0);
+  const pageCount = Math.ceil(allWorkloads.length / WORKLOADS_PAGE_SIZE);
+  const pageItems = allWorkloads.slice(
+    pageIndex * WORKLOADS_PAGE_SIZE,
+    pageIndex * WORKLOADS_PAGE_SIZE + WORKLOADS_PAGE_SIZE
+  );
+
+  // A second, minimal `useReactTable` instance driving only the actions bar,
+  // scoped to the full dataset so the selection summary/count survives
+  // paging — DataTable itself only renders the current page's slice.
+  const selectionTable = useReactTable({
+    data: allWorkloads,
+    columns: workloadColumns,
+    state: { rowSelection },
+    onRowSelectionChange: setRowSelection,
+    getCoreRowModel: getCoreRowModel(),
+  });
+
+  return (
+    <div className="max-w-3xl flex flex-col gap-4">
+      <DataTableBulkActionsBar
+        table={selectionTable}
+        loadedLabel={`${allWorkloads.length} items total`}
+      >
+        <Button variant="ghost" className="h-8">
+          Delete
+        </Button>
+      </DataTableBulkActionsBar>
+      <DataTable
+        columns={workloadColumns}
+        data={pageItems}
+        enableColumnResizing
+        enableColumnReordering
+        rowSelection={rowSelection}
+        onRowSelectionChange={setRowSelection}
+        renderRowActions={(row) => (
+          <DropdownMenuGroup>
+            <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </DropdownMenuGroup>
+        )}
+      />
+      <div className="flex items-center justify-end gap-2">
+        <span className="text-sm font-medium">
+          Page {pageIndex + 1} of {pageCount}
+        </span>
+        <ButtonIcon
+          variant="secondary"
+          aria-label="Go to previous page"
+          onClick={() => setPageIndex((current) => Math.max(0, current - 1))}
+          disabled={pageIndex === 0}
+        >
+          <ChevronLeftIcon />
+        </ButtonIcon>
+        <ButtonIcon
+          variant="secondary"
+          aria-label="Go to next page"
+          onClick={() =>
+            setPageIndex((current) => Math.min(pageCount - 1, current + 1))
+          }
+          disabled={pageIndex >= pageCount - 1}
+        >
+          <ChevronRightIcon />
+        </ButtonIcon>
+      </div>
+    </div>
+  );
+}
+
+export const CoreCapabilitiesWithPagination: Story = {
+  render: () => <CoreCapabilitiesWithPaginationDemo />,
 };
 
 /* ----------------------------------------- Core capabilities + grouped headers */
@@ -675,7 +631,7 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
         )
       );
       setIsLoadingMore(false);
-    }, 1000);
+    }, 600);
   };
 
   const selectionTable = useReactTable({
@@ -697,13 +653,12 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
         </Button>
       </DataTableBulkActionsBar>
       <div
-        className="h-96 flex flex-col"
+        className="max-h-96 overflow-auto"
         data-testid="infinite-scroll-pane-grouped"
       >
         <DataTable
           columns={workloadGroupedColumns}
           data={items}
-          stickyHeader
           enableColumnResizing
           enableColumnReordering
           rowSelection={rowSelection}
@@ -712,7 +667,6 @@ function CoreCapabilitiesWithGroupedHeadersDemo() {
           onLoadMore={handleLoadMore}
           hasNextPage={hasNextPage}
           isLoadingMore={isLoadingMore}
-          loadingMoreRows={3}
           renderRowActions={(row) => (
             <DropdownMenuGroup>
               <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
@@ -729,16 +683,14 @@ export const CoreCapabilitiesWithGroupedHeaders: Story = {
   render: () => <CoreCapabilitiesWithGroupedHeadersDemo />,
   // Same infinite-load race as `CoreCapabilities` above — the sentinel row
   // fires on mount (six rows don't fill the pane), so without this the
-  // screenshot lands on whichever 1000ms load cycle happens to be in flight.
+  // screenshot lands on whichever 600ms load cycle happens to be in flight.
   // `play` drives it to its terminal state before `animationDelay` lets the
-  // final render paint. Timeout: 4 pages total, first is immediate, 3 × 1000ms = ~3s.
+  // final render paint.
   parameters: { snapshot: { animationDelay: 600 } },
   play: async ({ canvasElement }) => {
     if (!navigator.webdriver) return;
     const canvas = within(canvasElement);
-    const wrapper = await canvas.findByTestId('infinite-scroll-pane-grouped');
-    const pane =
-      wrapper.querySelector<HTMLElement>('[data-slot="data-table"]') ?? wrapper;
+    const pane = await canvas.findByTestId('infinite-scroll-pane-grouped');
     await waitFor(
       () => {
         pane.scrollTop = pane.scrollHeight;
@@ -752,112 +704,23 @@ export const CoreCapabilitiesWithGroupedHeaders: Story = {
   },
 };
 
-// New story (CI-43741): its light/dark VR baselines don't exist yet and must be
-// generated in Docker — no existing story's baseline changes, since a row only
-// gets `cursor-pointer` when `onRowClick` is passed.
-function ClickableRowsDemo() {
-  const [lastEvent, setLastEvent] = useState('No row interaction yet.');
-  return (
-    <div className="space-y-3">
+/* ---- Compact grouped-header view (no scroll required) ---- */
+
+export const GroupedHeadersCompact: Story = {
+  render: () => (
+    <div className="max-w-3xl">
       <DataTable
-        columns={columns}
-        data={payments}
-        getRowId={(row) => row.id}
-        onRowClick={(row, event) => {
-          action('onRowClick')(row.original, event);
-          setLastEvent(`Clicked ${row.original.email}`);
-        }}
-        onRowActivate={(row, details) => {
-          action('onRowActivate')(row.original, details);
-          setLastEvent(`Activated ${row.original.email} via ${details.via}`);
-        }}
+        columns={workloadGroupedColumns}
+        data={makeWorkloads(5)}
+        enableColumnResizing
+        enableColumnReordering
         renderRowActions={(row) => (
           <DropdownMenuGroup>
-            <DropdownMenuItem>Edit {row.original.email}</DropdownMenuItem>
+            <DropdownMenuItem>Edit {row.original.name}</DropdownMenuItem>
             <DropdownMenuItem>Delete</DropdownMenuItem>
           </DropdownMenuGroup>
         )}
       />
-      <p className="text-sm text-muted-foreground" aria-live="polite">
-        {lastEvent}
-      </p>
     </div>
-  );
-}
-
-/**
- * `onRowClick` fires on a single click; `onRowActivate` on Enter (focused row)
- * or double-click. Clicks on the selection checkbox and the row-actions
- * trigger don't reach either callback.
- */
-export const ClickableRows: Story = {
-  render: () => <ClickableRowsDemo />,
-};
-
-/* ------------------------- External table + unsized select + pinned column */
-
-const externalPinnedColumns: ColumnDef<Payment>[] = [
-  // Deliberately unsized (columns[0] carries no `size`): an external table gets
-  // no injected 48px default, so the select renders at TanStack's default 150px
-  // and the pinned column after it must anchor at that same 150px.
-  columns[0],
-  {
-    accessorKey: 'email',
-    size: 200,
-    header: 'Email',
-  },
-  { accessorKey: 'status', size: 240, header: 'Status' },
-  { accessorKey: 'amount', size: 240, header: 'Amount' },
-];
-
-function ExternalTableUnsizedSelectPinnedDemo() {
-  const table = useReactTable({
-    data: payments,
-    columns: externalPinnedColumns,
-    state: { columnPinning: { left: ['select', 'email'] } },
-    getCoreRowModel: getCoreRowModel(),
-  });
-
-  return (
-    <div className="max-w-md" data-testid="external-pinned-pane">
-      <DataTable columns={externalPinnedColumns} data={payments} table={table} />
-    </div>
-  );
-}
-
-/**
- * Regression: an external `table` with a pinned `select` column. The
- * select cell's rendered width and the next left-pinned column's sticky `left`
- * must both come from the external table's `getSize()`; otherwise a gap opens
- * between them. The select column is unsized, so on an external table it renders
- * at TanStack's default 150px (the 48px default exists only for the internal
- * table); the story asserts both that width and the matching sticky offset.
- */
-export const ExternalTableUnsizedSelectPinned: Story = {
-  render: () => <ExternalTableUnsizedSelectPinnedDemo />,
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const pane = await canvas.findByTestId('external-pinned-pane');
-    const selectHeader = pane.querySelector<HTMLElement>(
-      'thead th:nth-child(1)'
-    );
-    const emailHeader = pane.querySelector<HTMLElement>(
-      'thead th:nth-child(2)'
-    );
-    if (!selectHeader || !emailHeader) {
-      throw new Error('Expected select and email header cells');
-    }
-    const selectWidth = selectHeader.getBoundingClientRect().width;
-    const stickyLeft = Number.parseFloat(emailHeader.style.left);
-    if (selectWidth !== 150) {
-      throw new Error(
-        `Unsized select should render at TanStack's default 150px, got ${selectWidth}px`
-      );
-    }
-    if (stickyLeft !== selectWidth) {
-      throw new Error(
-        `Pinned column sticky offset ${stickyLeft}px != select width ${selectWidth}px (gap ${stickyLeft - selectWidth}px)`
-      );
-    }
-  },
+  ),
 };

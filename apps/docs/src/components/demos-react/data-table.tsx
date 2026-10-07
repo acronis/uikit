@@ -193,7 +193,7 @@ const devices: Device[] = payments.slice(0, 6).map((payment, index) => ({
 }));
 
 // `meta.pin` pins a column to an edge (sticky while the grid scrolls
-// horizontally); `meta.overflow` controls per-column overflow ('wrap' or 'hidden').
+// horizontally); `meta.wrap` lets a long column wrap instead of clipping.
 // `enableColumnResizing` needs deterministic widths, hence the explicit `size`
 // on every column.
 const deviceColumns: ColumnDef<Device>[] = [
@@ -206,7 +206,7 @@ const deviceColumns: ColumnDef<Device>[] = [
   },
   // Placed early so its wrapped text stays readable before the right-pinned
   // Status column starts overlaying the columns scrolling under it.
-  { accessorKey: 'note', header: 'Note', meta: { overflow: 'wrap' }, size: 260 },
+  { accessorKey: 'note', header: 'Note', meta: { wrap: true }, size: 260 },
   { accessorKey: 'os', header: 'Operating system', size: 150 },
   { accessorKey: 'ip', header: 'IP address', size: 140 },
   { accessorKey: 'agent', header: 'Agent version', size: 140 },

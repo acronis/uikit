@@ -21,26 +21,7 @@
   and which row that is. Focusing a row by click syncs the roving index too,
   so the last-interacted row stays the Tab stop. The index is clamped against the
   live row count, so filtering or paging to fewer rows can't leave it pointing
-  past the end. Arrow keys only move focus while the row itself is focused; keys
-  pressed in a control inside a cell stay with that control.
-- **Row activation**: when `onRowActivate` is set, Enter on the focused row
-  calls `onRowActivate(row, { via: 'keyboard', event })`. Held-key repeats are
-  ignored. Space never activates a row: it stays reserved for row selection when
-  `rowSelection` is enabled. Enter pressed on a control inside a cell (a button,
-  checkbox, input, …) does not reach the row's activation handler, and a click
-  on such a control does not call `onRowClick` either, so in-cell controls keep
-  their own behavior.
-- Activation satisfies these WCAG criteria:
-  - **2.1.1 Keyboard**: Enter on the focused row calls `onRowActivate`, the
-    keyboard equivalent of the double-click path.
-  - **2.4.3 Focus order**: the roving tabindex still keeps exactly one row in
-    the Tab order. Activation does not change the order.
-  - **2.4.7 Focus visible**: the focus-visible ring on `TableRow` (from
-    `table.tsx`) marks the row that Enter will activate.
-- Screen readers do **not** announce a row as actionable. A `<tr>` with
-  `onRowClick`/`onRowActivate` has no role or state that signals it can be
-  activated. If assistive-technology users need to find the primary row action,
-  also offer it as a link or button inside a cell.
+  past the end.
 - The trailing action column's controls are labelled buttons: the header's
   column-visibility cog (`columnSettingsLabel`) and each row's overflow-actions
   ellipsis (`rowActionsLabel`), both overridable to localize.
@@ -49,21 +30,10 @@
   renders no tooltip.
 - Per-column filter fields live in a keyboard-navigable `FilterSearchFilters`
   popover; each applied-filter chip below the toolbar removes its own filter.
-- The infinite-scroll loading-more rows (`paginationMode="infinite"`,
-  `isLoadingMore`, count set by `loadingMoreRows`) are plain table rows. The
-  first cell of the first row holds `sr-only` `loadingMoreLabel` text (default
-  "Loading more rows…", overridable to localize); with `loadingMoreRows={0}`
-  neither the rows nor the text render. A screen reader reads the text when the
-  user navigates to that cell. The rows are **not** a live region, so the text
-  is not announced automatically when loading starts. A consumer that needs an automatic announcement can render its own
-  live region outside the table.
-- **Skeleton rows** (`skeleton`) are not focusable (no `tabIndex`, outside the
-  roving tabindex) and carry no live region: DataTable does not announce the
-  initial load, so conveying it (e.g. a `role="status"` message elsewhere on
-  the page) stays the consumer's job. Content returned by `renderSkeletonCell`
-  must be decorative: no text or interactive elements, and `aria-hidden` on
-  anything a screen reader could read. This includes static placeholder rows
-  under an empty-state overlay, where the overlay carries the readable content.
+- The infinite-scroll loading row (`paginationMode="infinite"`, `isLoadingMore`)
+  carries `role="status"`/`aria-live="polite"` with an `sr-only` "Loading more
+  rows…" text, so a screen-reader user is told a fetch is in flight without
+  having to notice the animated placeholder.
 
 ## Known limitations
 

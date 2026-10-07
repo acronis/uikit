@@ -13,7 +13,6 @@ export {
   type TableRowProps,
   type TableHeadProps,
   type TableCellProps,
-  type TableOverflow,
   type TableSelectCellProps,
   type TableActionsCellProps,
 } from './table';

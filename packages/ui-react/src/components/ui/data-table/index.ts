@@ -5,7 +5,7 @@ export {
   type DataTableProps,
   getCellStyle,
   getPinnedStyle,
-  getColumnSizeStyle,
+  getColumnWidth,
   reorderColumn,
 } from './data-table';
 export { DataTableBulkActionsBar } from './data-table-bulk-actions-bar';

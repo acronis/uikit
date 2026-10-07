@@ -23,10 +23,9 @@ export interface DataTableProps {
    * `getRowId`, `columnVisibility`, `onColumnVisibilityChange`,
    * `onColumnSizingChange`, `enableColumnResizing`, `enableColumnReordering`,
    * `columnOrder`, `onColumnOrderChange`, `getRowCanExpand`, `rowSelection`,
-   * `onRowSelectionChange`, `enableSorting`, `manualSorting`, `sorting`,
-   * `onSortingChange`, `paginationMode`, `onLoadMore`, `loadMoreRootMargin`,
-   * `hasNextPage`, `isLoadingMore`, `loadingMoreRows`, `loadingMoreLabel`.
-   * `meta.pin`-driven column pinning is also skipped —
+   * `onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
+   * `paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
+   * `isLoadingMore`. `meta.pin`-driven column pinning is also skipped —
    * pin/unpin the caller's own instance via TanStack's `column.pin()`.
    */
   table?: unknown;
@@ -50,17 +49,6 @@ export interface DataTableProps {
   skeleton?: boolean;
   /** Number of skeleton rows to render when `skeleton` is set (default 5). */
   skeletonRows?: number;
-  /**
-   * Custom content for each skeleton cell, called per visible leaf column in
-   * each skeleton row (`rowIndex` is 0-based). Replaces the cell content only;
-   * the row and cell chrome are kept. Unset renders the default `Skeleton` bar;
-   * returning `null` leaves the cell empty. Decorative only — mark it
-   * `aria-hidden`.
-   */
-  renderSkeletonCell?: (context: {
-    column: unknown;
-    rowIndex: number;
-  }) => ReactNode;
   /**
    * Opt in to interactive column resizing — renders a drag handle at the
    * trailing edge of each resizable header (TanStack's native `columnResizing`).
@@ -104,34 +92,6 @@ export interface DataTableProps {
   /** Passthrough for the `rowSelection` state; pairs with `rowSelection`. */
   onRowSelectionChange?: (updater: unknown) => void;
   /**
-   * Called on a single pointer click on a data row. Not called when the click
-   * lands on an interactive descendant (button, link, input, label,
-   * checkbox/switch/menuitem role, contenteditable, or a Tab stop), originates
-   * from a portaled element opened from the row (e.g. the row-actions menu), or
-   * ends a text-drag selection. Rows get a `cursor-pointer` while set. Composes
-   * with `highlightCurrentRow` (both run; `highlightCurrentRow` runs first).
-   * Silently ignored when `renderRow` is set.
-   */
-  onRowClick?: (row: unknown, event: unknown) => void;
-  /**
-   * Called when a data row is activated — Enter while the row itself has focus
-   * (`details.via: 'keyboard'`; key repeat ignored; Enter from a control inside
-   * the row does not count) or a double-click on the row (`details.via:
-   * 'pointer'`; same interactive-descendant and portal guards as `onRowClick`,
-   * but no text-selection guard). Double-click also dispatches two prior
-   * single-click events; avoid wiring navigation to `onRowClick` alongside this.
-   * Space never activates a row — it is reserved for row selection when
-   * `rowSelection` is in use. Silently ignored when `renderRow` is set.
-   */
-  onRowActivate?: (row: unknown, details: { via: 'keyboard' | 'pointer'; event: unknown }) => void;
-  /**
-   * Enable or disable column sorting globally (default `true`). Set to `false`
-   * to hide sort buttons and the "Sort column" tooltip hint on all header cells.
-   * Individual columns can also opt out via `enableSorting: false` on their
-   * `ColumnDef`. No-op when `table` is passed.
-   */
-  enableSorting?: boolean;
-  /**
    * Opt out of client-side sorting — pass already-sorted `data` and drive
    * sorting via `sorting`/`onSortingChange` (e.g. mapped to a server query by
    * the caller).
@@ -148,7 +108,7 @@ export interface DataTableProps {
    * Renders a full row, bypassing DataTable's default per-cell `flexRender`
    * path entirely. Use to swap in a custom, independently memoizable row
    * component — the caller owns the row's markup and equality semantics. Reuse
-   * the exported `getCellStyle`/`getPinnedStyle`/`getColumnSizeStyle` helpers to
+   * the exported `getCellStyle`/`getPinnedStyle`/`getColumnWidth` helpers to
    * match DataTable's default cell styling if desired. Also bypasses
    * `renderExpandedRow` — a row rendered via `renderRow` never gets an
    * expanded-content row appended.
@@ -185,23 +145,9 @@ export interface DataTableProps {
   hasNextPage?: boolean;
   /**
    * Whether a load is in flight — suppresses further `onLoadMore` calls and
-   * renders trailing skeleton rows. `paginationMode="infinite"` only.
+   * renders a trailing loading row. `paginationMode="infinite"` only.
    */
   isLoadingMore?: boolean;
-  /**
-   * Number of skeleton rows to render at the bottom of the table while
-   * `isLoadingMore` is set (default `1`). Set to `0` to suppress all loading
-   * UI — no skeleton rows and no `loadingMoreLabel`; supply your own indicator
-   * instead. `paginationMode="infinite"` only.
-   */
-  loadingMoreRows?: number;
-  /**
-   * Visually hidden text placed in the first loading-more row, readable by
-   * screen readers when navigating to that cell (not a live region, not
-   * auto-announced). Default `'Loading more rows…'`. Override to localize.
-   * `paginationMode="infinite"` only.
-   */
-  loadingMoreLabel?: string;
   /**
    * Hide the trailing sticky action column — the column-visibility cog in the
    * header and each row's overflow-actions ellipsis. Shown by default. A

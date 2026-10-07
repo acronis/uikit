@@ -13,9 +13,8 @@ tokens:
   - name: --ui-table-global-row-border-color
     affects: table
     description: >-
-      Column separator borders when the `bordered` prop is set (vertical
-      cell borders via the `bordered` variant). Also applied by the Table
-      primitives' per-row border-b.
+      Wrapper border — matches the Table cell borders; also the column resize
+      handle bar when enableColumnResizing is set.
   - name: --ui-table-data-row-color-idle
     affects: row
     description: >-
@@ -40,7 +39,7 @@ tokens:
     description: Muted pagination / toolbar meta text (text-muted-foreground).
   - name: --ui-background-surface-secondary
     affects: row
-    description: Striped row background.
+    description: Striped row background + skeleton placeholder bars.
   - name: --ui-table-data-row-color-active
     affects: row
     description: Current (last-clicked) row highlight — the active-row color.
@@ -73,6 +72,9 @@ tokens:
       Hover background mirrored onto a pinned (sticky) cell via the row's
       `group`, since the row's own `hover:` can't reach a cell that needs its
       own opaque background.
+  - name: --ui-table-global-cell-min-height
+    affects: row
+    description: Single-line row height — dropped by a column with meta.wrap set.
   - name: --ui-table-header-gap
     affects: column-header
     description: Gap between the header title and its sort-direction arrow.

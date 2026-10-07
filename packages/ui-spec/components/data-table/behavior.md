@@ -28,64 +28,6 @@ Scenario: Custom empty state
 ```
 
 ```gherkin
-Scenario: Skeleton rows
-  Given skeleton is set
-  Then skeletonRows placeholder rows (default 5) render instead of the data rows
-  And each visible leaf column gets one cell per row holding the default
-      Skeleton bar (my-1 h-4 w-full, so the row stays 40px)
-  And the rows show no hover tint and are not focusable
-  And each cell honors its column's meta.overflow mode
-  And no infinite-scroll sentinel or loading-more row renders
-```
-
-```gherkin
-Scenario: Custom skeleton cell content
-  Given skeleton is set and renderSkeletonCell is provided
-  Then renderSkeletonCell is called once per visible leaf column in each skeleton
-      row, with { column, rowIndex } (rowIndex is 0-based)
-  And columns hidden via columnVisibility are skipped
-  And it is also called for the kit-rendered __actions column and a consumer-declared
-      select column, so the caller branches on column.id
-  And its return value replaces only the cell content — DataTable keeps the row
-      (no hover tint, not focusable) and the cell (padding, borders, meta.overflow)
-  When it returns null or undefined for a column
-  Then that cell renders empty — the default Skeleton bar is not used as a fallback
-  # Return the exported Skeleton to keep the default for a column. Content should
-  # stay ~24px tall so the row stays 40px. Skeleton cells get the same pinned
-  # (sticky) and column-size styles as data cells.
-```
-
-```gherkin
-Scenario: renderSkeletonCell without skeleton
-  Given renderSkeletonCell is provided, skeleton is not set, and no loading-more
-      rows are rendering
-  Then renderSkeletonCell is never called and the data rows render as usual
-```
-
-```gherkin
-Scenario: Loading-more rows use renderSkeletonCell
-  Given paginationMode="infinite", isLoadingMore is true, and at least one data row
-  And skeleton is not set (loading-more rows never render while skeleton is set)
-  Then loadingMoreRows skeleton rows (default 1) render at the bottom of the body
-  And each visible leaf column gets one cell per row, with the column's pinned and
-      size styles and its meta.overflow mode (default 'truncate')
-  And each cell holds the default Skeleton bar, or renderSkeletonCell's content
-      when provided, called with { column, rowIndex } (rowIndex is 0-based within
-      the loading-more block)
-  And the first cell of the first loading row also holds a sr-only loadingMoreLabel
-      (default "Loading more rows…")
-  And the rows are not a live region — the label is read when a screen reader
-      reaches that cell, not announced automatically
-```
-
-```gherkin
-Scenario: Zero loading-more rows
-  Given paginationMode="infinite", isLoadingMore is true, and loadingMoreRows=0
-  Then no loading-more rows render
-  And no sr-only loadingMoreLabel renders
-```
-
-```gherkin
 Scenario: Render from an external table instance
   Given a `table` instance built by the caller with useReactTable
   When it is passed to DataTable's `table` prop
@@ -93,9 +35,8 @@ Scenario: Render from an external table instance
   And columnVisibility/onColumnVisibilityChange, onColumnSizingChange,
       enableColumnResizing, getRowCanExpand, manualSorting, sorting,
       onSortingChange, and paginationMode-related props are no-ops
-  And DataTable does not drive column pinning from meta.pin on that instance,
-      nor auto-pin a select column — the caller pins/unpins its own columns via
-      TanStack's column.pin()
+  And DataTable does not drive column pinning from meta.pin on that instance —
+      the caller pins/unpins its own columns via TanStack's column.pin()
 ```
 
 ```gherkin
@@ -113,135 +54,6 @@ Scenario: Custom row rendering
   And DataTable's own per-cell flexRender/pinning/styling path is skipped for that row
   And no expanded-content row is appended even if getRowCanExpand returns true for it —
       the caller must read row.getIsExpanded() and render it themselves inside renderRow
-  # Style helpers: getCellStyle(cell, r) is the recommended call; it and
-  # getColumnSizeStyle(column, r, defaults?) take an optional trailing defaults
-  # argument (table._getDefaultColumnDef()). getCellStyle derives it from the
-  # cell's table. The column-only getColumnSizeStyle(column, r) assumes TanStack's
-  # defaults, so it cannot honour an authored size of 150.
-```
-
-```gherkin
-Scenario: Keyboard row navigation
-  Given a DataTable with data rows
-  Then exactly one data row is a Tab stop (roving tabindex)
-  When the row itself has focus and the user presses Arrow Down / Arrow Up
-  Then focus moves to the next / previous row and that row becomes the Tab stop
-  When the row itself has focus, onRowActivate is set, and the user presses Enter
-  Then the row is activated (see "Activate a row with Enter" below)
-  # Keys pressed while a control inside a cell has focus are left to that control.
-```
-
-**Row click and activation.** `onRowClick` and `onRowActivate` are independent of each other and of
-`highlightCurrentRow`. Both apply only to DataTable's own row rendering.
-
-```gherkin
-Scenario: Click a row
-  Given onRowClick is set
-  Then every data row shows a pointer cursor
-  When the user clicks a data row once
-  Then onRowClick is called with that row and the native click event
-```
-
-```gherkin
-Scenario: Click on an interactive control inside a cell
-  Given onRowClick is set
-  And a cell renders a button, link, input, select, textarea, label,
-      contenteditable element, an element with role button/checkbox/switch/menuitem/link,
-      or any other Tab stop
-  When the user clicks that control
-  Then onRowClick is not called
-```
-
-```gherkin
-Scenario: Click inside a portaled element opened from the row
-  Given onRowClick is set and renderRowActions is provided
-  When the user opens the row-actions menu and clicks one of its items
-  Then onRowClick is not called
-  # React events bubble through portals, so the click reaches the row even though
-  # the menu's DOM node is outside it. DataTable ignores any click whose target
-  # is not inside the row's DOM.
-```
-
-```gherkin
-Scenario: Click that ends a text selection
-  Given onRowClick is set
-  When the user drags across cell text to select it and releases the pointer
-  Then onRowClick is not called while the selection is non-empty
-```
-
-```gherkin
-Scenario: Activate a row with Enter
-  Given onRowActivate is set
-  And the row itself has focus
-  When the user presses Enter
-  Then onRowActivate is called with that row and { via: 'keyboard', event }
-  And the key's default action is prevented
-```
-
-```gherkin
-Scenario: Enter from a control inside a cell
-  Given onRowActivate is set
-  And focus is on a control inside a cell (a button, checkbox, input, …)
-  When the user presses Enter
-  Then onRowActivate is not called — the control handles the key itself
-```
-
-```gherkin
-Scenario: Held Enter
-  Given onRowActivate is set and the row itself has focus
-  When the user holds Enter down so the key repeats
-  Then onRowActivate is called only for the first keydown — repeats are ignored
-```
-
-```gherkin
-Scenario: Activate a row with a double-click
-  Given onRowActivate is set
-  When the user double-clicks a data row outside any interactive control
-  Then onRowActivate is called with that row and { via: 'pointer', event }
-  And the text-selection guard does not apply — the browser selects the word
-      under the pointer on the second press, so a selection is always present
-  But a double-click on an interactive control or a portaled element is ignored,
-      as for onRowClick
-```
-
-```gherkin
-Scenario: Double-click with onRowClick also set
-  Given both onRowClick and onRowActivate are set
-  When the user double-clicks a data row
-  Then the browser dispatches two click events before the dblclick
-  And the first click calls onRowClick
-  And the second click normally does not, because the browser selected the word
-      under the pointer and the text-selection guard skips it
-  And then onRowActivate is called with { via: 'pointer' }
-  # Don't wire navigation to onRowClick alongside onRowActivate: the first click
-  # navigates before the double-click arrives.
-```
-
-```gherkin
-Scenario: Space does not activate a row
-  Given onRowActivate is set and the row itself has focus
-  When the user presses Space
-  Then onRowActivate is not called
-  # Space is reserved for row selection when rowSelection is in use.
-```
-
-```gherkin
-Scenario: Row callbacks with renderRow
-  Given renderRow is provided
-  And onRowClick and/or onRowActivate are set
-  When the user clicks, double-clicks, or presses Enter on a row
-  Then neither callback is called — the caller's renderRow owns that row's
-      markup and handlers
-```
-
-```gherkin
-Scenario: Row click with highlightCurrentRow
-  Given highlightCurrentRow and onRowClick are both set
-  When the user clicks a data row
-  Then the row becomes the current (highlighted) row first
-  And then onRowClick is called
-  And a click on an interactive control inside a cell still highlights the row
-      but does not call onRowClick
 ```
 
 ```gherkin
@@ -253,8 +65,7 @@ Scenario: Infinite scroll
   Then onLoadMore fires
   And no further onLoadMore calls fire while isLoadingMore is true
   When isLoadingMore is true
-  Then loadingMoreRows trailing loading rows (default 1) render below the sentinel
-      (see "Loading-more rows use renderSkeletonCell" above)
+  Then a trailing loading row renders below the sentinel
 ```
 
 ```gherkin
@@ -358,7 +169,6 @@ Scenario: Resize a column
   When the user drags the handle at a header's trailing edge
   Then that column's width changes live (columnResizeMode: "onChange")
   And onColumnSizingChange fires so a consumer can persist the widths
-  And the column header shows its active background until pointer release
 ```
 
 ```gherkin
@@ -367,13 +177,6 @@ Scenario: Reorder a column by dragging its header
   Then every non-pinned leaf header cell is draggable and shows the grab cursor
       (cursor-grab; cursor-grabbing while pressed)
   And group-label header cells (those spanning multiple leaf columns) are not draggable
-  When the user starts dragging a header
-  Then the dragged header cell is not dimmed — the browser's native drag image is the feedback
-  And during a column reorder drag, each header cell the drag passes over (dragover) gets a data-reorder-target attribute
-      (a foreign drag — files, text, another table's header — never sets it)
-  And no kit style is attached to data-reorder-target yet (the indicator look is pending design)
-  When the reorder drag ends, by a drop or by dragend without a drop
-  Then data-reorder-target is removed from every header cell
   When the user drags one header and drops it on another
   Then the dragged column moves to the drop target's position (headers and body cells alike)
   And onColumnOrderChange fires with the new order so a consumer can persist it
@@ -440,133 +243,12 @@ Scenario: Sticky (pinned) columns
   When the grid scrolls horizontally
   Then the pinned columns stay fixed at their edges (position: sticky)
   And their cells keep an opaque row background so scrolled cells don't show through
-  # The pinned cells stick to DataTable's root div, the horizontal scroll
-  # container (see "DataTable owns the scroll container" below).
 ```
 
 ```gherkin
-Scenario: Reserved select and __actions columns are always pinned
-  Given DataTable builds its own table instance
-  And columns include one with id "select", and the built-in __actions column renders
-  Then the select column is pinned left and __actions is pinned right
-  And meta.pin set on either of them is ignored
-  And the first visible data column after select gets no start padding (ps-0) in
-      its header, data, skeleton, and loading-more cells, so the checkbox and the
-      first value aren't separated by two paddings
-```
-
-```gherkin
-Scenario: Column sizing
-  Given DataTable builds its own table instance without enableColumnResizing
-  Then the table renders with table-layout: fixed and a <colgroup> with one <col>
-      per visible leaf column
-  And a column with size set is strictly fixed (width = minWidth = maxWidth = size;
-      minSize/maxSize are ignored) and its <col> carries that width
-  And a column without size has no width; an explicit minSize/maxSize becomes a
-      CSS min-width/max-width, and the column shares the remaining table width
-  And the select column defaults to 48px (overridable with size) and __actions is
-      48px, both strictly fixed
-  And an authored size of 150 is honoured as strictly fixed too, even though 150
-      is TanStack's default (the internal table clears TanStack's default
-      size/minSize/maxSize, so undefined means "not set")
-  And the <table> min-width is the sum of every visible column's min-width
-  When the columns are arranged in header groups
-  Then the same widths apply — the <col> elements carry them, so group-label
-      cells in the top header row don't affect leaf widths
-  # With enableColumnResizing every column gets width = minWidth = its current size.
-```
-
-```gherkin
-Scenario: Select column on an external table
-  Given an external table is passed and its columns include one with id "select"
-  And that ColumnDef sets no size
-  Then the 48px select default is not applied — the column renders at the table's
-      own default size (TanStack's 150px)
-  And its rendered width equals the size TanStack sums for the sticky offset of the
-      next left-pinned column, so the two cells sit flush with no gap
-  When the select ColumnDef sets size: 48
-  Then the column renders 48px wide and the pinned neighbour's offset is 48px
-  # Caveat: on an external table an authored size of 150 is indistinguishable from
-  # TanStack's default, so it is treated as unsized unless the table sets
-  # defaultColumn size/minSize/maxSize to undefined.
-```
-
-```gherkin
-Scenario: DataTable owns the scroll container
-  Given a DataTable rendering a wide table
-  Then the DataTable root div (data-slot="data-table") always has overflow-auto
-  And it scrolls horizontally within that container
-  And Table renders no overflow wrapper of its own — DataTable is the horizontal scroll context
-  # Vertical scrolling inside DataTable needs stickyHeader (h-full) plus a bounded
-  # height; then pinned columns and the sticky header both stick to this one container.
-```
-
-```gherkin
-Scenario: Sticky header requires a bounded height
-  Given stickyHeader is true
-  Then DataTable's root div gains h-full in addition to overflow-auto
-  And the header row (thead) gets sticky top-0 z-10 at the top of that container
-  And consumers must bound DataTable's height for the sticky header to work
-  When the consumer wraps DataTable in a fixed-height flex-col container
-    (e.g. <div className="h-96 flex flex-col">)
-  Then DataTable fills the wrapper (h-full) and overflow-auto creates the scroll context
-  And the header row stays visible while the user scrolls vertically through the body rows
-  # Without a bounded ancestor, h-full resolves to the content height, nothing
-  # scrolls inside DataTable, and the header has nothing to stick to.
-```
-
-```gherkin
-Scenario: Sticky header background
-  Given stickyHeader is true
-  Then the header row uses bg-background so it stays opaque while body rows scroll beneath it
-  And no CSS custom property controls it
-  And DataTable exposes no prop or className to change it
-```
-
-```gherkin
-Scenario: Sticky header off by default
-  Given stickyHeader is unset or false
-  Then the thead has no sticky classes and the root div has no h-full
-  And the root div still has overflow-auto
-```
-
-```gherkin
-Scenario: Wrapping column
-  Given a column with meta.overflow = 'wrap'
-  Then that column's header and cells receive overflow="wrap" and use whitespace-normal
-  And their content wraps onto multiple lines
-  And the row grows to fit the content
-```
-
-```gherkin
-Scenario: Truncated column
-  Given a column with meta.overflow = 'truncate'
-  Then that column's header and cells receive overflow="truncate"
-  And they apply overflow-hidden whitespace-nowrap (no max-w-0)
-  And content stays on one line, clipped at the column's CSS width
-  And a column without size still gets its share of the table-fixed layout, so it
-      does not collapse
-  And ellipsis and tooltip are the inner component's responsibility (the column's cell render)
-```
-
-```gherkin
-Scenario: Clipped column
-  Given a column with meta.overflow = 'hidden'
-  And the column has a CSS width (size on the column definition, or column resizing)
-  Then that column's header and cells receive overflow="hidden"
-  And they apply max-w-0 overflow-hidden whitespace-nowrap
-  And content is clipped at the column's CSS width
-  And ellipsis and tooltip are the inner component's responsibility (the column's cell render)
-  # Without a width source, max-w-0 collapses the column — size is required.
-```
-
-```gherkin
-Scenario: Default column (meta.overflow unset)
-  Given a column with no meta.overflow
-  Then DataTable passes overflow="truncate" to its header and cells
-  And they behave as in "Truncated column" above
-  # Unlike the bare Table primitives, where an unset overflow adds no class and
-  # the browser default (wrapping) applies. Set meta.overflow = 'wrap' to wrap.
+Scenario: Wrapping columns
+  Given a column with meta.wrap = true
+  Then that column's header and cell content drop the fixed row height and wrap onto multiple lines
 ```
 
 ```gherkin
