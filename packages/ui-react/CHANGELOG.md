@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 5.5.4
+
+### Patch Changes
+
+- [#762](https://github.com/acronis/uikit/pull/762) [`4105a78`](https://github.com/acronis/uikit/commit/4105a787cfe8ceaf57ffadaf2b97147e5a2114c2) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Fix Cartesian charts to size Y-axis gutters from their rendered labels.
+
 ## 5.5.3
 
 ### Patch Changes
