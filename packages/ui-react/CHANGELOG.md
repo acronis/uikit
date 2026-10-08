@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 5.5.5
+
+### Patch Changes
+
+- [#765](https://github.com/acronis/uikit/pull/765) [`472d2af`](https://github.com/acronis/uikit/commit/472d2af7ca3293dcb02248dabbdfd0de72dea915) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Correct rotated Cartesian X-axis label spacing and prevent stale margins after resize.
+
 ## 5.5.4
 
 ### Patch Changes
