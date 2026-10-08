@@ -20,6 +20,9 @@ type MeasuredXAxisLayout = {
 };
 
 const RECHARTS_DEFAULT_MARGIN = { top: 5, right: 5, bottom: 5, left: 5 } as const;
+// Keep rotated endpoint labels this far inside the chart surface. Signed
+// adjustments converge on this gap after each container resize.
+const X_AXIS_LABEL_CLEARANCE = 16;
 
 /**
  * Add the measured endpoint clearance without turning recharts' per-side
@@ -86,7 +89,11 @@ export function useXAxisLayout(
       const surfaceBounds = surface.getBoundingClientRect();
       if (!surfaceBounds.width || !surfaceBounds.height) return;
 
-      const tickBounds = ticks.map((tick) => tick.getBoundingClientRect());
+      const tickBounds = ticks
+        .map((tick) => tick.getBoundingClientRect())
+        .filter(({ width, height }) => width > 0 && height > 0);
+      if (!tickBounds.length) return;
+
       const left = Math.min(...tickBounds.map((bounds) => bounds.left));
       const right = Math.max(...tickBounds.map((bounds) => bounds.right));
       const bottom = Math.max(...tickBounds.map((bounds) => bounds.bottom));
@@ -103,17 +110,20 @@ export function useXAxisLayout(
       );
 
       setLayout((current) => {
-        const leftOverflow = Math.ceil(Math.max(0, surfaceBounds.left - left));
-        const rightOverflow = Math.ceil(Math.max(0, right - surfaceBounds.right));
+        const leftAdjustment = Math.ceil(
+          surfaceBounds.left - left + X_AXIS_LABEL_CLEARANCE
+        );
+        const rightAdjustment = Math.ceil(
+          right - surfaceBounds.right + X_AXIS_LABEL_CLEARANCE
+        );
+        const bottomAdjustment = Math.ceil(bottom - bottomBoundary);
         const nextLeft = Math.max(
           0,
-          (current.margin.left ?? 0) +
-            (leftOverflow ? leftOverflow + 16 : 0)
+          (current.margin.left ?? 0) + leftAdjustment
         );
         const nextRight = Math.max(
           0,
-          (current.margin.right ?? 0) +
-            (rightOverflow ? rightOverflow + 16 : 0)
+          (current.margin.right ?? 0) + rightAdjustment
         );
         // The bottom of the surface is the X-axis allocation boundary. The
         // measured distance tells us how much of the provisional height is
@@ -122,7 +132,7 @@ export function useXAxisLayout(
         const minimumHeight = fallbackHeight ?? 0;
         const nextHeight = Math.max(
           minimumHeight,
-          Math.ceil(current.height - (bottomBoundary - bottom))
+          current.height + bottomAdjustment
         );
         const nextMargin =
           nextLeft || nextRight
