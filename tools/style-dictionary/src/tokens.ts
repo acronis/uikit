@@ -29,7 +29,22 @@ import type { Config, TransformedToken } from 'style-dictionary/types';
 import { STATIC_HOOKS } from './hooks';
 import { isEmittableToken } from './hooks/filters/semantic-only';
 import { collectDecls, type Decls, serializeCss } from './hooks/formats/css-light-dark';
+import { STATIC_BORDER_WIDTH_CLASSES } from './hooks/formats/border-width-classes';
+import { spaceYUtilityClass, STATIC_DIVIDE_CLASSES } from './hooks/formats/child-spacing-classes';
+import { STATIC_FRACTION_CLASSES } from './hooks/formats/fraction-utility-classes';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from './hooks/formats/gap-utility-classes';
+import { STATIC_LAYOUT_CLASSES } from './hooks/formats/layout-utility-classes';
+import { STATIC_LIST_CURSOR_RESIZE_CLASSES } from './hooks/formats/list-cursor-resize-classes';
+import { STATIC_NAMED_MAX_WIDTH_CLASSES } from './hooks/formats/named-max-width-classes';
+import {
+  offsetUtilityClasses,
+  STATIC_OFFSET_CLASSES,
+  STATIC_POSITION_TYPE_CLASSES,
+} from './hooks/formats/position-utility-classes';
+import { semanticColorClasses } from './hooks/formats/semantic-color-classes';
+import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from './hooks/formats/sizing-utility-classes';
+import { STATIC_TEXT_DECORATION_CLASSES } from './hooks/formats/text-decoration-classes';
+import { withStateVariants } from './hooks/formats/variant-utility-classes';
 import { normalizeTree } from './hooks/preprocessors/acronis-dtcg';
 import { ACRONIS_CSS_GROUP } from './hooks/transforms';
 import {
@@ -360,12 +375,54 @@ export async function buildCss(filter: Filter): Promise<void> {
     const semantics = decls.get('semantics');
     if (semantics) {
       for (const [selector, block] of STATIC_GAP_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_SIZING_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_LAYOUT_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_FRACTION_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_NAMED_MAX_WIDTH_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_POSITION_TYPE_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_OFFSET_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_LIST_CURSOR_RESIZE_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_BORDER_WIDTH_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      for (const [selector, block] of STATIC_DIVIDE_CLASSES) semantics.classes.set(selector, block);
+      for (const [selector, block] of STATIC_TEXT_DECORATION_CLASSES) {
+        semantics.classes.set(selector, block);
+      }
+      // Brand-invariant: the class body only references the var name, so
+      // this produces identical classes across every brand and diffs to
+      // nothing for non-default brands, same as the other static injections.
+      const colorClasses = semanticColorClasses(semantics.vars);
+      for (const [selector, block] of colorClasses) {
+        semantics.classes.set(selector, block);
+      }
+      // State variants — a generic multiplier over the color classes above.
+      // Deriving from `colorClasses` (not a separate lookup) means a new
+      // color role automatically gets its hover/disabled/focus-visible/last
+      // forms with no change here.
+      for (const [selector, block] of withStateVariants(colorClasses)) {
+        semantics.classes.set(selector, block);
+      }
       for (const [sizeKey, pxValue] of gapTokens) {
         const varName = `ui-gap-${sizeKey}`;
         semantics.vars.set(varName, pxValue);
         for (const [selector, block] of gapUtilityClasses(varName, sizeKey)) {
           semantics.classes.set(selector, block);
         }
+        for (const [selector, block] of sizingUtilityClasses(varName, sizeKey)) {
+          semantics.classes.set(selector, block);
+        }
+        for (const [selector, block] of offsetUtilityClasses(varName, sizeKey)) {
+          semantics.classes.set(selector, block);
+        }
+        const [spaceYSelector, spaceYBlock] = spaceYUtilityClass(varName, sizeKey);
+        semantics.classes.set(spaceYSelector, spaceYBlock);
       }
     }
     perBrand.set(brand.name, decls);

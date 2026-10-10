@@ -1,0 +1,67 @@
+---
+title: Position
+description: Framework-agnostic .ui-* position-type and offset (top/right/bottom/left/inset) utility classes.
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+[`@acronis-platform/tokens-pd`](/packages/tokens-pd) ships position-type
+utility classes plus an offset grammar generated from the **same** spacing
+scale that backs [sizing](/styling-utilities/sizing) and
+[spacing](/styling-utilities/spacing), for non-Tailwind
+[`@acronis-platform/ui-react`](/getting-started) consumers.
+
+<Callout type="info">
+  Offsets are unusable without a position declaration, so both ship
+  together — an offset class alone (`ui-top-8` with no `ui-relative`/
+  `ui-absolute`/`ui-fixed`/`ui-sticky` on that element, or a positioned
+  ancestor) does nothing.
+</Callout>
+
+## Position type
+
+```tsx
+<div className="ui-relative">
+  <div className="ui-absolute ui-top-8 ui-right-8">Positioned</div>
+</div>
+```
+
+`ui-static`, `ui-relative`, `ui-absolute`, `ui-fixed`, `ui-sticky`.
+
+## Offsets
+
+Generated from the same 17-step spacing scale as sizing/spacing:
+
+```tsx
+<div className="ui-absolute ui-inset-4" />
+```
+
+| Prefix     | Property             |
+| ---------- | -------------------- |
+| `top`      | `top`                 |
+| `right`    | `right`               |
+| `bottom`   | `bottom`              |
+| `left`     | `left`                |
+| `start`    | `inset-inline-start`  |
+| `end`      | `inset-inline-end`    |
+| `inset`    | `inset`               |
+| `inset-x`  | `inset-inline`        |
+| `inset-y`  | `inset-block`         |
+
+<Callout type="warn">
+  Prefer the logical pair — `start`/`end` — over the physical `left`/`right`
+  ones. Logical properties mirror automatically under `dir="rtl"`; physical
+  ones don't. Same guidance as `ps`/`pe` vs `pl`/`pr` for spacing.
+</Callout>
+
+Each direction also has a static, non-scale `-full` (100%) variant:
+
+```tsx
+<div className="ui-absolute ui-bottom-full" />
+```
+
+<Callout type="warn">
+  All of the above is generated from `@acronis-platform/design-tokens` by the
+  `tools/style-dictionary` pipeline and committed to git. Never hand-edit
+  `css/default.css` directly.
+</Callout>

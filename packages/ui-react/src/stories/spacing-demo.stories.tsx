@@ -93,6 +93,10 @@ const meta: Meta<typeof SpacingDemo> = {
   component: SpacingDemo,
   parameters: {
     layout: 'fullscreen',
+    // 17 scale rows + the .ui-mx-auto section exceed the default viewport —
+    // capture the full page so nothing below the fold is missing from the
+    // visual regression baseline.
+    snapshot: { fullPage: true },
     docs: {
       description: {
         component:

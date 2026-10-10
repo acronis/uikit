@@ -7,8 +7,23 @@
 import type { TransformedToken } from 'style-dictionary/types';
 import { describe, expect, it } from 'vitest';
 
+import { STATIC_BORDER_WIDTH_CLASSES } from '../formats/border-width-classes';
+import { spaceYUtilityClass, STATIC_DIVIDE_CLASSES } from '../formats/child-spacing-classes';
 import { collectDecls, serializeCss } from '../formats/css-light-dark';
+import { STATIC_FRACTION_CLASSES } from '../formats/fraction-utility-classes';
 import { gapUtilityClasses, STATIC_GAP_CLASSES } from '../formats/gap-utility-classes';
+import { STATIC_LAYOUT_CLASSES } from '../formats/layout-utility-classes';
+import { STATIC_LIST_CURSOR_RESIZE_CLASSES } from '../formats/list-cursor-resize-classes';
+import { STATIC_NAMED_MAX_WIDTH_CLASSES } from '../formats/named-max-width-classes';
+import {
+  offsetUtilityClasses,
+  STATIC_OFFSET_CLASSES,
+  STATIC_POSITION_TYPE_CLASSES,
+} from '../formats/position-utility-classes';
+import { semanticColorClasses } from '../formats/semantic-color-classes';
+import { sizingUtilityClasses, STATIC_SIZING_CLASSES } from '../formats/sizing-utility-classes';
+import { STATIC_TEXT_DECORATION_CLASSES } from '../formats/text-decoration-classes';
+import { withStateVariants } from '../formats/variant-utility-classes';
 import { normalizeTree } from '../preprocessors/acronis-dtcg';
 import { diffDecls } from '../../tokens';
 
@@ -323,6 +338,310 @@ describe('gapUtilityClasses', () => {
     for (const [selector, property] of Object.entries(expected)) {
       expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
     }
+  });
+});
+
+describe('sizingUtilityClasses', () => {
+  it('returns one selector per width/height direction, all referencing the same var', () => {
+    const classes = sizingUtilityClasses('ui-gap-16', '16');
+    expect(classes.size).toBe(6); // w, h, min-w, min-h, max-w, max-h
+    for (const block of classes.values()) {
+      expect(block).toContain('var(--ui-gap-16)');
+    }
+  });
+
+  it('maps each selector to the correct CSS property', () => {
+    const classes = sizingUtilityClasses('ui-gap-16', '16');
+    const expected: Record<string, string> = {
+      '.ui-w-16': 'width',
+      '.ui-h-16': 'height',
+      '.ui-min-w-16': 'min-width',
+      '.ui-min-h-16': 'min-height',
+      '.ui-max-w-16': 'max-width',
+      '.ui-max-h-16': 'max-height',
+    };
+    for (const [selector, property] of Object.entries(expected)) {
+      expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
+    }
+  });
+});
+
+describe('STATIC_SIZING_CLASSES', () => {
+  it('renders .ui-max-w-full once', () => {
+    const { vars, classes } = collectDecls([token({ name: 'ui-x', $type: 'dimension', $value: '1px' })], new Map());
+    for (const [selector, block] of STATIC_SIZING_CLASSES) classes.set(selector, block);
+    const css = serializeCss({ brand: 'acronis', tier: 'semantics', isOverride: false, vars, classes });
+    expect(css.match(/\.ui-max-w-full/g)).toHaveLength(1);
+    expect(css).toContain('max-width: 100%;');
+  });
+
+  it('brand override omits the class when identical to the default (no diff)', () => {
+    const base = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_SIZING_CLASSES) base.classes.set(selector, block);
+
+    const brand = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_SIZING_CLASSES) brand.classes.set(selector, block);
+
+    const { classes } = diffDecls(base, brand);
+    expect(classes.size).toBe(0);
+  });
+});
+
+describe('STATIC_LAYOUT_CLASSES', () => {
+  it('emits the flex/grid/alignment/text-flow/display classes, no typographic ones', () => {
+    const classes = STATIC_LAYOUT_CLASSES;
+    expect(classes.get('.ui-flex')).toBe('display: flex;');
+    expect(classes.get('.ui-grid-cols-12')).toBe('grid-template-columns: repeat(12, minmax(0, 1fr));');
+    expect(classes.get('.ui-col-span-3')).toBe('grid-column: span 3 / span 3;');
+    expect(classes.get('.ui-items-center')).toBe('align-items: center;');
+    expect(classes.get('.ui-justify-between')).toBe('justify-content: space-between;');
+    expect(classes.get('.ui-text-left')).toBe('text-align: left;');
+    expect(classes.get('.ui-float-right')).toBe('float: right;');
+    expect(classes.get('.ui-whitespace-nowrap')).toBe('white-space: nowrap;');
+    expect(classes.get('.ui-truncate')).toBe(
+      'overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'
+    );
+    expect(classes.get('.ui-line-clamp-3')).toBe(
+      'overflow: hidden; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;'
+    );
+    expect(classes.get('.ui-hidden')).toBe('display: none;');
+
+    // Nothing typographic — that stays owned by .ui-typography-*.
+    for (const selector of classes.keys()) {
+      expect(selector).not.toMatch(/font|leading|tracking/);
+    }
+  });
+
+  it('does not exceed Tailwind-mirrored grid/line-clamp ceilings (12 cols, 6 rows, 6-line clamp)', () => {
+    const classes = STATIC_LAYOUT_CLASSES;
+    expect(classes.has('.ui-grid-cols-12')).toBe(true);
+    expect(classes.has('.ui-grid-cols-13')).toBe(false);
+    expect(classes.has('.ui-row-span-6')).toBe(true);
+    expect(classes.has('.ui-row-span-7')).toBe(false);
+    expect(classes.has('.ui-line-clamp-6')).toBe(true);
+    expect(classes.has('.ui-line-clamp-7')).toBe(false);
+  });
+
+  it('renders once and diffs to nothing across identical brands', () => {
+    const base = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_LAYOUT_CLASSES) base.classes.set(selector, block);
+    const brand = collectDecls([], new Map());
+    for (const [selector, block] of STATIC_LAYOUT_CLASSES) brand.classes.set(selector, block);
+    const { classes } = diffDecls(base, brand);
+    expect(classes.size).toBe(0);
+  });
+});
+
+describe('STATIC_FRACTION_CLASSES', () => {
+  it('emits width and height fraction classes with escaped selectors', () => {
+    const classes = STATIC_FRACTION_CLASSES;
+    expect(classes.get('.ui-w-1\\/2')).toBe('width: 50%;');
+    expect(classes.get('.ui-h-1\\/2')).toBe('height: 50%;');
+    expect(classes.get('.ui-w-1\\/3')).toBe('width: 33.333333%;');
+    expect(classes.get('.ui-w-11\\/12')).toBe('width: 91.666667%;');
+  });
+
+  it('keeps literal (unreduced) fraction labels distinct, matching Tailwind', () => {
+    // 2/4 and 1/2 both render 50% but stay separate selectors — Tailwind
+    // doesn't reduce fractions, and neither do we.
+    const classes = STATIC_FRACTION_CLASSES;
+    expect(classes.has('.ui-w-2\\/4')).toBe(true);
+    expect(classes.has('.ui-w-1\\/2')).toBe(true);
+    expect(classes.get('.ui-w-2\\/4')).toBe(classes.get('.ui-w-1\\/2'));
+  });
+
+  it('renders 26 fractions × 2 properties (width, height)', () => {
+    expect(STATIC_FRACTION_CLASSES.size).toBe(52);
+  });
+});
+
+describe('STATIC_NAMED_MAX_WIDTH_CLASSES', () => {
+  it('emits the xs..7xl named scale', () => {
+    const classes = STATIC_NAMED_MAX_WIDTH_CLASSES;
+    expect(classes.get('.ui-max-w-xs')).toBe('max-width: 320px;');
+    expect(classes.get('.ui-max-w-2xl')).toBe('max-width: 672px;');
+    expect(classes.get('.ui-max-w-7xl')).toBe('max-width: 1280px;');
+    expect(classes.size).toBe(11);
+  });
+});
+
+describe('offsetUtilityClasses', () => {
+  it('returns one selector per offset direction, all referencing the same var', () => {
+    const classes = offsetUtilityClasses('ui-gap-16', '16');
+    expect(classes.size).toBe(9); // top, right, bottom, left, start, end, inset, inset-x, inset-y
+    for (const block of classes.values()) {
+      expect(block).toContain('var(--ui-gap-16)');
+    }
+  });
+
+  it('maps each selector to the correct CSS property', () => {
+    const classes = offsetUtilityClasses('ui-gap-16', '16');
+    const expected: Record<string, string> = {
+      '.ui-top-16': 'top',
+      '.ui-right-16': 'right',
+      '.ui-bottom-16': 'bottom',
+      '.ui-left-16': 'left',
+      '.ui-start-16': 'inset-inline-start',
+      '.ui-end-16': 'inset-inline-end',
+      '.ui-inset-16': 'inset',
+      '.ui-inset-x-16': 'inset-inline',
+      '.ui-inset-y-16': 'inset-block',
+    };
+    for (const [selector, property] of Object.entries(expected)) {
+      expect(classes.get(selector)).toBe(`${property}: var(--ui-gap-16);`);
+    }
+  });
+});
+
+describe('STATIC_POSITION_TYPE_CLASSES', () => {
+  it('emits the five position-type classes', () => {
+    const classes = STATIC_POSITION_TYPE_CLASSES;
+    expect(classes.get('.ui-relative')).toBe('position: relative;');
+    expect(classes.get('.ui-absolute')).toBe('position: absolute;');
+    expect(classes.get('.ui-fixed')).toBe('position: fixed;');
+    expect(classes.get('.ui-sticky')).toBe('position: sticky;');
+    expect(classes.get('.ui-static')).toBe('position: static;');
+  });
+});
+
+describe('STATIC_OFFSET_CLASSES', () => {
+  it('emits a full (100%) variant for every offset direction', () => {
+    const classes = STATIC_OFFSET_CLASSES;
+    expect(classes.get('.ui-top-full')).toBe('top: 100%;');
+    expect(classes.get('.ui-right-full')).toBe('right: 100%;');
+    expect(classes.get('.ui-inset-full')).toBe('inset: 100%;');
+    expect(classes.size).toBe(9);
+  });
+});
+
+describe('STATIC_LIST_CURSOR_RESIZE_CLASSES', () => {
+  it('emits the ticket-cited list/cursor classes and their sibling values', () => {
+    const classes = STATIC_LIST_CURSOR_RESIZE_CLASSES;
+    expect(classes.get('.ui-list-disc')).toBe('list-style-type: disc;');
+    expect(classes.get('.ui-list-inside')).toBe('list-style-position: inside;');
+    expect(classes.get('.ui-list-none')).toBe('list-style-type: none;');
+    expect(classes.get('.ui-cursor-help')).toBe('cursor: help;');
+    expect(classes.get('.ui-cursor-move')).toBe('cursor: move;');
+    expect(classes.get('.ui-cursor-pointer')).toBe('cursor: pointer;');
+    expect(classes.get('.ui-cursor-not-allowed')).toBe('cursor: not-allowed;');
+    expect(classes.get('.ui-resize-none')).toBe('resize: none;');
+    expect(classes.get('.ui-resize')).toBe('resize: both;');
+  });
+});
+
+describe('STATIC_BORDER_WIDTH_CLASSES', () => {
+  it('emits the ticket-cited border-width classes plus the full per-side scale', () => {
+    const classes = STATIC_BORDER_WIDTH_CLASSES;
+    expect(classes.get('.ui-border-t-0')).toBe('border-top-width: 0px;');
+    expect(classes.get('.ui-border-x-0')).toBe('border-inline-width: 0px;');
+    expect(classes.get('.ui-border-y')).toBe('border-block-width: 1px;');
+    expect(classes.get('.ui-border')).toBe('border-width: 1px;');
+    expect(classes.get('.ui-border-4')).toBe('border-width: 4px;');
+    expect(classes.get('.ui-border-l-8')).toBe('border-left-width: 8px;');
+  });
+
+  it('renders 7 directions (all sides + 6 per-side) × 5 widths = 35 classes', () => {
+    expect(STATIC_BORDER_WIDTH_CLASSES.size).toBe(35);
+  });
+});
+
+describe('spaceYUtilityClass', () => {
+  it('targets the not-hidden sibling combinator, referencing the shared var', () => {
+    const [selector, block] = spaceYUtilityClass('ui-gap-16', '16');
+    expect(selector).toBe('.ui-space-y-16 > :not([hidden]) ~ :not([hidden])');
+    expect(block).toBe('margin-top: var(--ui-gap-16);');
+  });
+});
+
+describe('STATIC_DIVIDE_CLASSES', () => {
+  it('emits ui-divide-y using the established divider token', () => {
+    const classes = STATIC_DIVIDE_CLASSES;
+    const block = classes.get('.ui-divide-y > :not([hidden]) ~ :not([hidden])');
+    expect(block).toContain('border-top-width: 1px;');
+    expect(block).toContain('border-color: var(--ui-border-on-surface-divider);');
+  });
+});
+
+describe('STATIC_TEXT_DECORATION_CLASSES', () => {
+  it('emits ui-underline-offset-4', () => {
+    expect(STATIC_TEXT_DECORATION_CLASSES.get('.ui-underline-offset-4')).toBe(
+      'text-underline-offset: 4px;'
+    );
+  });
+});
+
+describe('semanticColorClasses', () => {
+  it('wraps every ui-text-*/ui-background-*/ui-border-* var, full path, no truncation', () => {
+    const vars = new Map<string, string>([
+      ['ui-text-on-surface-link-idle', 'light-dark(rgb(0 0 0), rgb(255 255 255))'],
+      ['ui-background-surface-primary', 'light-dark(rgb(255 255 255), rgb(0 0 0))'],
+      ['ui-border-on-surface-border', 'light-dark(rgb(200 200 200), rgb(50 50 50))'],
+    ]);
+    const classes = semanticColorClasses(vars);
+    expect(classes.get('.ui-text-on-surface-link-idle')).toBe(
+      'color: var(--ui-text-on-surface-link-idle);'
+    );
+    expect(classes.get('.ui-bg-surface-primary')).toBe(
+      'background-color: var(--ui-background-surface-primary);'
+    );
+    expect(classes.get('.ui-border-on-surface-border')).toBe(
+      'border-color: var(--ui-border-on-surface-border);'
+    );
+  });
+
+  it('ignores vars outside the text/background/border roots', () => {
+    const vars = new Map<string, string>([
+      ['ui-gap-16', '16px'],
+      ['ui-shadow-md', '0px 16px 32px 0px rgb(0 0 0 / 0.4)'],
+      ['ui-gradients-ai-idle', 'linear-gradient(180deg, rgb(0 0 0) 0%)'],
+    ]);
+    expect(semanticColorClasses(vars).size).toBe(0);
+  });
+
+  it('is brand-invariant: identical input names produce identical classes regardless of resolved value', () => {
+    const brandA = new Map([['ui-text-on-surface-primary', 'light-dark(rgb(0 0 0), rgb(255 255 255))']]);
+    const brandB = new Map([['ui-text-on-surface-primary', 'light-dark(rgb(10 10 10), rgb(245 245 245))']]);
+    expect(semanticColorClasses(brandA).get('.ui-text-on-surface-primary')).toBe(
+      semanticColorClasses(brandB).get('.ui-text-on-surface-primary')
+    );
+  });
+});
+
+describe('withStateVariants', () => {
+  it('multiplies a class by the fixed variant set, colon-escaped and pseudo-suffixed', () => {
+    const classes = new Map([['.ui-text-on-surface-primary', 'color: var(--ui-text-on-surface-primary);']]);
+    const variants = withStateVariants(classes);
+
+    expect(variants.get('.ui-hover\\:text-on-surface-primary:hover')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+    expect(variants.get('.ui-disabled\\:text-on-surface-primary:disabled')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+    expect(variants.get('.ui-focus-visible\\:text-on-surface-primary:focus-visible')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+    expect(variants.get('.ui-last\\:text-on-surface-primary:last-child')).toBe(
+      'color: var(--ui-text-on-surface-primary);'
+    );
+  });
+
+  it('produces 4 variants per input class', () => {
+    const classes = new Map([
+      ['.ui-text-a', 'color: var(--ui-text-a);'],
+      ['.ui-bg-b', 'background-color: var(--ui-background-b);'],
+    ]);
+    expect(withStateVariants(classes).size).toBe(8);
+  });
+
+  it('is generic — works for any `.ui-*` input, not just color classes by name', () => {
+    const classes = new Map([['.ui-whatever-role', 'opacity: 0.5;']]);
+    expect(withStateVariants(classes).get('.ui-hover\\:whatever-role:hover')).toBe('opacity: 0.5;');
+  });
+
+  it('skips a selector that is not `.ui-*`-prefixed', () => {
+    const classes = new Map([['.not-ui-prefixed', 'color: red;']]);
+    expect(withStateVariants(classes).size).toBe(0);
   });
 });
 
