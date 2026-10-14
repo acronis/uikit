@@ -50,12 +50,13 @@ import { Loading } from '../loading';
 // on top. Stacked-modal depth reads through relative layer contrast, so the
 // scrim is theme-split in approach, not just strength: in light the parent
 // dims (36% of the backdrop token reads clearly over the white container).
-// In dark the container (24 25 27) and the backdrop token (25 27 35) are
-// the same darkness, so no scrim percentage can separate the layers —
-// there the NESTED popup additionally rises one tonal step of the Dialog
-// tier instead (header surface 31 32 34 + the tier's 48 50 54 hairline),
-// the classic dark-theme "elevation = lighter + edge stroke" cue, while
-// the parent keeps the stronger 80% scrim mainly to fade its content.
+// In dark the container and the backdrop token are the same near-black, so
+// no scrim percentage can separate the layers — and repainting the nested
+// container with a lighter tier token would flatten its header/footer
+// chrome, whose surfaces share those very values. There the separation
+// comes from the Dialog tier's hairline border on the nested popup (an
+// edge stroke that follows each brand's dialog chrome), while the parent
+// keeps the stronger 80% scrim mainly to fade its content.
 // `size` has two values: `sm` (512px, the Figma
 // default, backed by `--ui-dialog-container-size-sm`) and `large` (832px) — the
 // latter predates the Figma node and has no token; it's kept as a plain
@@ -77,7 +78,7 @@ import { Loading } from '../loading';
 // enforce it here so every consumer keeps that margin, not just the frame
 // that surfaced it.
 const dialogContentVariants = cva(
-  'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)] dark:data-[nested]:bg-[var(--ui-dialog-header-color)]',
+  'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]',
   {
     variants: {
       size: {
