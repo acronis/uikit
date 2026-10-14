@@ -152,6 +152,7 @@ interface Component {
 
 function componentSource(
   component: string,
+  name: string,
   style: StyleUnit,
   id: string,
   asset: Asset
@@ -212,7 +213,7 @@ function componentSource(
     `${geomConsts.join('\n\n')}\n\n` +
     `const SIZES = {\n${sizeEntries}\n};\n\n` +
     `export function ${component}(props: IconProps) {\n` +
-    `  return <PackIcon ${rootProps} sizes={SIZES} defaultSize={${resolved.canonical}} {...props} />;\n}\n`;
+    `  return <PackIcon data-icon="${name}" ${rootProps} sizes={SIZES} defaultSize={${resolved.canonical}} {...props} />;\n}\n`;
   return { source, sizes: split.map((s) => s.spec.size) };
 }
 
@@ -238,7 +239,7 @@ async function generatePack(pack: PackConfig): Promise<number> {
     // No try/catch: componentSource's divergence guard is meant to fail loudly.
     // `src/packs` is gitignored, so a swallowed error would silently drop a
     // published icon with a fully green build and no reviewable diff.
-    const result = componentSource(component, style, id, asset);
+    const result = componentSource(component, name, style, id, asset);
     await writeFile(resolve(outDir, 'icons', `${name}.tsx`), result.source);
     result.sizes.forEach((s) => packSizes.add(s));
     components.push({ name, component, file: `./icons/${name}` });
