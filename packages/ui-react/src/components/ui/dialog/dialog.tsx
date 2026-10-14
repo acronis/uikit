@@ -32,7 +32,31 @@ import { Loading } from '../loading';
 //     var(--ui-button-icon-global-container-color-*), focus ring var(--ui-focus-primary)
 // Enter/exit animations use `tw-animate-css` (imported in styles/index.css),
 // keyed to Base UI's data-[open] / data-[closed] state attributes — overlay
-// fades, popup fades + zooms. `size` has two values: `sm` (512px, the Figma
+// fades, popup fades + zooms. Those keyframes only animate `transform`/
+// `opacity`, so the nested-dialog recede below can safely live on the CSS
+// `scale` property + an `::after` scrim without fighting them.
+//
+// Nested dialogs: Base UI flags a dialog as nested purely by React-tree
+// position (`Boolean(parentDialogRootContext)` in DialogRoot) and then
+// deliberately skips rendering that dialog's own backdrop, so stacked
+// dialogs don't darken progressively. To compensate, Base UI sets
+// `data-nested-dialog-open` (plus a `--nested-dialogs` count) on the PARENT
+// popup while a nested dialog is open, expecting the consuming library to
+// give the parent a "recede" treatment for a visible depth cue. That's what
+// the data-[nested-dialog-open] rules below do: the parent popup scales
+// down slightly and gets a token-tinted scrim (a reduced-opacity mix of the
+// same --ui-background-backdrop-screen the overlay uses, not a hardcoded
+// color) while the child — which keeps its own backdrop suppressed — sits
+// on top. Stacked-modal depth reads through relative layer contrast, so the
+// scrim is theme-split in approach, not just strength: in light the parent
+// dims (36% of the backdrop token reads clearly over the white container).
+// In dark the container (24 25 27) and the backdrop token (25 27 35) are
+// the same darkness, so no scrim percentage can separate the layers —
+// there the NESTED popup additionally rises one tonal step of the Dialog
+// tier instead (header surface 31 32 34 + the tier's 48 50 54 hairline),
+// the classic dark-theme "elevation = lighter + edge stroke" cue, while
+// the parent keeps the stronger 80% scrim mainly to fade its content.
+// `size` has two values: `sm` (512px, the Figma
 // default, backed by `--ui-dialog-container-size-sm`) and `large` (832px) — the
 // latter predates the Figma node and has no token; it's kept as a plain
 // arbitrary value solely for backward compatibility with existing call sites
@@ -53,7 +77,7 @@ import { Loading } from '../loading';
 // enforce it here so every consumer keeps that margin, not just the frame
 // that surfaced it.
 const dialogContentVariants = cva(
-  'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95',
+  'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)] dark:data-[nested]:bg-[var(--ui-dialog-header-color)]',
   {
     variants: {
       size: {
