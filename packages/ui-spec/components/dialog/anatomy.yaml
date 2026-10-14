@@ -147,6 +147,18 @@ states:
       affects: [root, container],
     }
   - {
+      id: nested-dialog-open,
+      trigger: "a nested (React-tree child) dialog is open (data-[nested-dialog-open]) — Base UI suppresses the nested dialog's own backdrop, so the parent popup recedes instead: slight scale-down + a token-tinted scrim (36% of the backdrop token in light, 80% in dark)",
+      kind: internal,
+      affects: [container],
+    }
+  - {
+      id: nested,
+      trigger: "this dialog is itself nested within another dialog (data-[nested]); in dark theme the popup rises one tonal step of the Dialog tier (header surface + the tier's hairline border) — the dark container sits at the black floor, so elevation there is expressed as lighter + edge stroke, not as more dimming",
+      kind: internal,
+      affects: [container],
+    }
+  - {
       id: focus-visible,
       trigger: keyboard focus on the close button,
       kind: pseudo,

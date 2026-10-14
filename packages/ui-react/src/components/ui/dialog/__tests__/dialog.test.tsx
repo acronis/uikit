@@ -472,3 +472,64 @@ describe('Dialog', () => {
     expect(screen.queryByText('Dialog title')).not.toBeInTheDocument();
   });
 });
+
+describe('nested dialogs', () => {
+  function NestedDialogs() {
+    return (
+      <DialogRoot open>
+        <DialogContent>
+          <DialogTitle>Parent</DialogTitle>
+          <DialogBodyRoot>
+            <DialogRoot>
+              <DialogTrigger>Open child</DialogTrigger>
+              <DialogContent>
+                <DialogTitle>Child</DialogTitle>
+                <DialogCloseButton />
+              </DialogContent>
+            </DialogRoot>
+          </DialogBodyRoot>
+        </DialogContent>
+      </DialogRoot>
+    );
+  }
+
+  it('marks only the parent popup data-nested-dialog-open while a nested dialog is open, and clears it on close', async () => {
+    const user = userEvent.setup();
+    render(<NestedDialogs />);
+    const parent = screen.getByRole('dialog', { name: 'Parent' });
+    expect(parent).not.toHaveAttribute('data-nested-dialog-open');
+
+    await user.click(screen.getByRole('button', { name: 'Open child' }));
+    const child = screen.getByRole('dialog', { name: 'Child' });
+    expect(parent).toHaveAttribute('data-nested-dialog-open');
+    expect(child).not.toHaveAttribute('data-nested-dialog-open');
+
+    await user.click(screen.getByRole('button', { name: 'Close' }));
+    expect(parent).not.toHaveAttribute('data-nested-dialog-open');
+  });
+
+  it('keeps a single backdrop for the whole stack (Base UI suppresses the nested one)', async () => {
+    const user = userEvent.setup();
+    render(<NestedDialogs />);
+    await user.click(screen.getByRole('button', { name: 'Open child' }));
+    expect(
+      document.querySelectorAll('[class*="bg-[var(--ui-background-backdrop-screen)]"]')
+    ).toHaveLength(1);
+  });
+
+  it('carries the recede treatment classes keyed to data-[nested-dialog-open] on the popup', () => {
+    render(<OpenDialog />);
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'data-[nested-dialog-open]:scale-[0.96]',
+      'data-[nested-dialog-open]:after:opacity-100'
+    );
+  });
+
+  it('rises the nested popup one tonal step of the Dialog tier in dark theme', () => {
+    render(<OpenDialog />);
+    expect(screen.getByRole('dialog')).toHaveClass(
+      'dark:data-[nested]:bg-[var(--ui-dialog-header-color)]',
+      'dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]'
+    );
+  });
+});

@@ -126,6 +126,32 @@ Scenario: The loading overlay adapts to a hidden header
   below a (non-existent) header
 ```
 
+## Nested dialogs
+
+```gherkin
+Scenario: A dialog opened from another dialog's content recedes the parent
+  Given an open Dialog whose content contains a second Dialog's trigger
+  When the user opens the nested dialog
+  Then the nested dialog renders without its own backdrop (Base UI
+  suppresses it for nested dialogs by design — no double-darkening)
+  And the parent popup is marked data-nested-dialog-open and visually
+  recedes: it scales down slightly and takes a dim scrim derived from the
+  backdrop token (36% in light, 80% in dark), so the two popups read as
+  stacked, not merged
+  And in dark theme the nested popup itself rises one tonal step of the
+  Dialog tier (header surface plus the tier's hairline border) — the dark
+  container sits at the black floor, so separation there comes from the
+  child reading lighter with a defined edge
+```
+
+```gherkin
+Scenario: The parent recovers when the nested dialog closes
+  Given an open Dialog with a nested dialog open on top of it
+  When the nested dialog closes
+  Then data-nested-dialog-open is cleared from the parent popup
+  And the parent returns to its normal scale with no scrim
+```
+
 ## Opening & closing
 
 ```gherkin
