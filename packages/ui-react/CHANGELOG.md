@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 5.5.6
+
+### Patch Changes
+
+- [#769](https://github.com/acronis/uikit/pull/769) [`85917d9`](https://github.com/acronis/uikit/commit/85917d9e8386ade28e598f9c957639f565f15589) Thanks [@mjollneer](https://github.com/mjollneer)! - Dialog: fix nested dialogs visually merging with their parent. A dialog opened from inside another dialog's content is flagged as "nested" by Base UI (by React-tree position) and deliberately renders without its own backdrop — ui-react previously added no compensating treatment, so the two popups sat flush against each other with no depth separation. Keyed to Base UI's `data-nested-dialog-open` attribute, the parent popup (`DialogContent` / `dialogContentVariants`) now recedes while a nested dialog is open: slight scale-down plus a dim scrim derived from the `--ui-background-backdrop-screen` token (36% in light, 80% in dark). In dark theme the nested popup additionally gains the Dialog tier's hairline border as an edge stroke, because the dark container sits at the black floor and no amount of dimming can separate it from another one.
+
 ## 5.5.5
 
 ### Patch Changes
