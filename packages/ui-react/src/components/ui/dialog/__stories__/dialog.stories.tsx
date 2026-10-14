@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ColumnDef } from '@tanstack/react-table';
 
@@ -394,30 +395,44 @@ export const WideDataTable: Story = {
 // the parent popup compensates while the nested one is open — it scales
 // down slightly and takes a token-tinted scrim via its
 // data-[nested-dialog-open] rules, giving a visible depth cue instead of
-// two popups sitting flush against each other.
+// two popups sitting flush against each other. Both dialogs open on mount
+// (for VR); the "Discard changes…" button reopens the nested one.
 export const Nested: Story = {
-  render: () => (
-    <Dialog
-      variant="wide"
-      size="large"
-      title="Edit step"
-      defaultOpen
-      footer={
-        <>
-          <DialogClose render={<Button variant="ghost">Cancel</Button>} />
-          <Button>Save</Button>
-        </>
-      }
-    >
-      <div className="flex flex-col gap-3">
-        <p className="text-sm leading-6 text-foreground">
-          This parent dialog stays visible but recedes while the nested
-          confirmation dialog is open on top of it.
-        </p>
-        <Dialog variant="discard changes" objectName="step 2" defaultOpen />
-      </div>
-    </Dialog>
-  ),
+  render: () => {
+    const [confirmOpen, setConfirmOpen] = useState(true);
+    return (
+      <Dialog
+        variant="default"
+        size="large"
+        title="Edit step"
+        defaultOpen
+        footer={
+          <>
+            <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+            <Button>Save</Button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-3">
+          <p className="text-sm leading-6 text-foreground">
+            This parent dialog stays visible but recedes while the nested
+            confirmation dialog is open on top of it.
+          </p>
+          <div>
+            <Button variant="secondary" onClick={() => setConfirmOpen(true)}>
+              Discard changes…
+            </Button>
+          </div>
+          <Dialog
+            variant="discard changes"
+            objectName="step 2"
+            open={confirmOpen}
+            onOpenChange={setConfirmOpen}
+          />
+        </div>
+      </Dialog>
+    );
+  },
 };
 
 // The `wide` variant is a legacy escape hatch with no canned preset — kept for

@@ -17,14 +17,11 @@ component: Dialog
 source: '@acronis-platform/tokens-pd'
 
 tokens:
-  - name: --ui-background-backdrop-screen
-    affects: overlay
-    description: >-
-      Scrim color behind the popup (via DialogContent overlay); also the
-      base of the recede scrim the parent popup takes while a nested dialog
-      is open — reduced via color-mix, stronger in dark theme (36% light /
-      80% dark) so the parent still reads as recessed over the dark
-      container
+  - {
+      name: --ui-background-backdrop-screen,
+      affects: overlay,
+      description: 'Scrim color behind the popup (via DialogContent overlay); also the base of the recede scrim the parent popup takes while a nested dialog is open — reduced via color-mix, stronger in dark theme (36% light / 80% dark)',
+    }
   - {
       name: --ui-dialog-container-color,
       affects: container,
@@ -40,17 +37,16 @@ tokens:
       affects: container,
       description: Popup container minimum width,
     }
-  - name: --ui-dialog-header-color
-    affects: header
-    description: >-
-      Header bar surface; in dark theme also the elevated surface of a
-      nested (data-[nested]) popup — one tonal step up from the
-      container's black-floor value
-  - name: --ui-dialog-header-border-color
-    affects: header
-    description: >-
-      Header bottom divider color; in dark theme also the hairline edge
-      stroke of a nested (data-[nested]) popup
+  - {
+      name: --ui-dialog-header-color,
+      affects: header,
+      description: Header bar surface,
+    }
+  - {
+      name: --ui-dialog-header-border-color,
+      affects: header,
+      description: 'Header bottom divider color; in dark theme also the hairline edge stroke of a nested (data-[nested]) popup',
+    }
   - {
       name: --ui-dialog-header-gap,
       affects: header,

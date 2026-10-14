@@ -501,7 +501,9 @@ describe('nested dialogs', () => {
 
     await user.click(screen.getByRole('button', { name: 'Open child' }));
     const child = screen.getByRole('dialog', { name: 'Child' });
+    expect(child).toHaveAttribute('data-nested');
     expect(parent).toHaveAttribute('data-nested-dialog-open');
+    expect(parent).not.toHaveAttribute('data-nested');
     expect(child).not.toHaveAttribute('data-nested-dialog-open');
 
     await user.click(screen.getByRole('button', { name: 'Close' }));
@@ -525,10 +527,10 @@ describe('nested dialogs', () => {
     );
   });
 
-  it('rises the nested popup one tonal step of the Dialog tier in dark theme', () => {
-    render(<OpenDialog />);
-    expect(screen.getByRole('dialog')).toHaveClass(
-      'dark:data-[nested]:bg-[var(--ui-dialog-header-color)]',
+  it('edges the nested popup with the Dialog tier hairline in dark theme', () => {
+    render(<NestedDialogs />);
+    expect(screen.getByRole('dialog', { name: 'Parent' })).toHaveClass(
+      'dark:data-[nested]:border',
       'dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]'
     );
   });

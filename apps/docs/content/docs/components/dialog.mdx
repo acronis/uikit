@@ -161,16 +161,22 @@ suppresses its backdrop, so stacked dialogs don't darken progressively; to
 compensate, the parent popup visually recedes while the nested one is open —
 it scales down slightly and takes a dim scrim derived from the backdrop
 token, giving the stack a visible depth cue instead of two popups sitting
-flush against each other. In dark theme the separation additionally comes
-from the nested popup itself: it rises one tonal step of the Dialog token
-tier (lighter surface plus a hairline edge), since dimming an already
-near-black container can't differentiate layers. No extra props are needed:
+flush against each other. In dark theme the nested popup additionally gains
+the Dialog tier's hairline border as an edge stroke, since the dark
+container sits at the black floor and dimming can't differentiate layers
+there. No extra props are needed:
 
 ```tsx
-<Dialog variant="wide" size="large" title="Edit step" open>
+<Dialog variant="default" size="large" title="Edit step" open>
   <div>
     <p>Parent content.</p>
-    <Dialog variant="discard changes" objectName="step 2" open={confirmOpen} />
+    <Button onClick={() => setConfirmOpen(true)}>Discard changes…</Button>
+    <Dialog
+      variant="discard changes"
+      objectName="step 2"
+      open={confirmOpen}
+      onOpenChange={setConfirmOpen}
+    />
   </div>
 </Dialog>
 ```

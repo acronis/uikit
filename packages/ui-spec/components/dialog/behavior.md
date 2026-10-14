@@ -138,10 +138,10 @@ Scenario: A dialog opened from another dialog's content recedes the parent
   recedes: it scales down slightly and takes a dim scrim derived from the
   backdrop token (36% in light, 80% in dark), so the two popups read as
   stacked, not merged
-  And in dark theme the nested popup itself rises one tonal step of the
-  Dialog tier (header surface plus the tier's hairline border) — the dark
-  container sits at the black floor, so separation there comes from the
-  child reading lighter with a defined edge
+  And in dark theme the nested popup (data-nested) gains the Dialog
+  tier's hairline border as its edge stroke — the dark container sits at
+  the black floor next to the backdrop token, so separation there comes
+  from a defined edge, not from dimming or repainting
 ```
 
 ```gherkin
