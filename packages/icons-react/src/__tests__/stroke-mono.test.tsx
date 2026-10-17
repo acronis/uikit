@@ -18,6 +18,14 @@ describe('stroke-mono icons', () => {
     expect(svg.querySelectorAll('path').length).toBeGreaterThan(0);
   });
 
+  it('names the icon in data-icon, and a consumer can override it', () => {
+    const { container, rerender } = render(<ChevronDownIcon />);
+    expect(svgOf(container)).toHaveAttribute('data-icon', 'chevron-down');
+
+    rerender(<ChevronDownIcon data-icon="custom" />);
+    expect(svgOf(container)).toHaveAttribute('data-icon', 'custom');
+  });
+
   it('defaults to size 24 and uses currentColor stroke (decorative)', () => {
     const { container } = render(<ChevronDownIcon />);
     const svg = svgOf(container);
