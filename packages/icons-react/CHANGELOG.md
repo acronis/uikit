@@ -1,5 +1,11 @@
 # @acronis-platform/icons-react
 
+## 2.1.0
+
+### Minor Changes
+
+- [#768](https://github.com/acronis/uikit/pull/768) [`6693bb5`](https://github.com/acronis/uikit/commit/6693bb56cb97c8a1101b7ee287bf66bd3e89ac2d) Thanks [@RomiC](https://github.com/RomiC)! - Every icon now renders its kebab-case name as `data-icon` on the `<svg>` (for example `data-icon="chevron-down"`), so tests can tell icons apart. A `data-icon` passed by the consumer still wins.
+
 ## 2.0.0
 
 ### Major Changes
