@@ -45,6 +45,18 @@ describe('Tooltip', () => {
     );
   });
 
+  it('lets long unbroken tokens wrap inside the popup (PLTFRM-96827)', () => {
+    render(
+      <Tooltip defaultOpen>
+        <TooltipTrigger>Hover me</TooltipTrigger>
+        <TooltipContent>
+          very.long.email.address.with.no.break.points@example-company-name.com
+        </TooltipContent>
+      </Tooltip>
+    );
+    expect(screen.getByText(/very\.long\.email/)).toHaveClass('break-words');
+  });
+
   it('opens on pointer hover', async () => {
     render(
       <TooltipProvider delay={0}>

@@ -194,6 +194,22 @@ export const ConstrainedWidth: Story = {
   ),
 };
 
+// A single unbroken token (email, URL, UUID) has no space to wrap at, so the
+// popup must break inside it rather than overflow its max-width (PLTFRM-96827).
+export const LongUnbrokenToken: Story = {
+  parameters: { snapshot: { fullPage: true, animationDelay: 400 } },
+  render: () => (
+    <div style={{ padding: '96px 240px' }}>
+      <Tooltip defaultOpen>
+        <TooltipTrigger render={<Button variant="secondary">Email</Button>} />
+        <TooltipContent>
+          very.long.email.address.with.no.break.points.at.all.for.the.tooltip@subdomain.example-company-name.com
+        </TooltipContent>
+      </Tooltip>
+    </div>
+  ),
+};
+
 export const LightAndDark: Story = {
   parameters: { snapshot: { fullPage: true, animationDelay: 400 } },
   render: () => (
