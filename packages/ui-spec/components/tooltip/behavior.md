@@ -34,6 +34,17 @@
 - **Given** only `default-open`
   **Then** the tooltip manages its own open state.
 
+## Long content
+
+- **Given** content wider than the popup's maximum width
+  **When** the popup opens
+  **Then** multi-word text wraps at spaces and the popup stays within its maximum
+  width.
+- **Given** content with no space to wrap at (a single email, URL or UUID)
+  **When** the popup opens
+  **Then** the token breaks across lines inside the popup — it never runs past the
+  popup's edge.
+
 ## Placement
 
 - **Given** a `side` on the content

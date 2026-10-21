@@ -27,7 +27,9 @@ parts:
     description: >-
       The floating bubble (`role="tooltip"`), portaled and positioned relative to
       the trigger. Dark, ~90%-opaque background (`--ui-tooltip-container-color`), 4px
-      radius, 12/8px padding, 48–256px wide. No arrow.
+      radius, 12/8px padding, 48–256px wide. Content with no natural break point
+      (an email, URL or UUID) breaks inside the popup instead of overflowing it.
+      No arrow.
     element: div
   - id: label
     description: >-
