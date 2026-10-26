@@ -137,6 +137,73 @@ export const Default: Story = {
   ),
 };
 
+type TruncatedSortableHeaderRow = {
+  asset: string;
+  device: string;
+  lastSeen: string;
+};
+
+const truncatedSortableHeaderRows: TruncatedSortableHeaderRow[] = [
+  {
+    asset: 'Endpoint agent',
+    device: 'DESKTOP-0A31',
+    lastSeen: 'Today, 09:41',
+  },
+  {
+    asset: 'Server workload',
+    device: 'SRV-PROD-42',
+    lastSeen: 'Yesterday, 18:20',
+  },
+  {
+    asset: 'Virtual machine',
+    device: 'analytics-worker-7',
+    lastSeen: 'Yesterday, 13:05',
+  },
+];
+
+const truncatedSortableHeaderColumns: ColumnDef<TruncatedSortableHeaderRow>[] =
+  [
+    {
+      accessorKey: 'asset',
+      header: ({ column }) => (
+        <DataTableColumnHeader
+          column={column}
+          title="Asset entrypoint sign verification status"
+        />
+      ),
+      meta: { wrap: true },
+      size: 140,
+    },
+    {
+      accessorKey: 'device',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Device" />
+      ),
+      size: 180,
+    },
+    {
+      accessorKey: 'lastSeen',
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Last seen" />
+      ),
+      size: 150,
+    },
+  ];
+
+// Keeps a narrow sortable label in a realistic table so visual regression
+// catches any header-height growth instead of the intended ellipsis.
+export const TruncatedSortableHeader: Story = {
+  render: () => (
+    <div className="w-[560px]">
+      <DataTable
+        columns={truncatedSortableHeaderColumns}
+        data={truncatedSortableHeaderRows}
+        hideActionColumn
+      />
+    </div>
+  ),
+};
+
 /* ------------------------------- Header capability hints + sticky actions */
 
 type Workload = {

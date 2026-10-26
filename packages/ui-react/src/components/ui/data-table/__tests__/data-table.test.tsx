@@ -329,7 +329,7 @@ describe('DataTable getRowId', () => {
     expect(screen.getByText('r2: off')).toBeInTheDocument();
   });
 
-  it('without it, a row\'s state stays with its array slot instead of following the data', async () => {
+  it("without it, a row's state stays with its array slot instead of following the data", async () => {
     const [r1, r2, r3] = data.slice(0, 3);
     const { rerender } = render(
       <DataTable columns={rowIdColumns} data={[r1, r2, r3]} hideActionColumn />
@@ -1094,23 +1094,76 @@ describe('DataTable wrapping (meta.wrap) columns', () => {
     ];
     render(<DataTable columns={wrapped} data={data.slice(0, 1)} />);
 
-    // The wrap-flagged cell + header get `whitespace-normal` and lose the min-height token.
+    // The wrap flag applies to data cells. Headers stay compact and truncate.
     const wrapCell = screen.getByText('100').closest('td')!;
     expect(wrapCell).toHaveClass('whitespace-normal');
     expect(wrapCell).not.toHaveClass(
       'h-[var(--ui-table-global-cell-min-height)]'
     );
     const wrapHeader = screen.getByText('Amount').closest('th')!;
-    expect(wrapHeader).toHaveClass('whitespace-normal');
-    expect(wrapHeader).not.toHaveClass(
+    expect(wrapHeader).toHaveClass(
       'h-[var(--ui-table-global-cell-min-height)]'
     );
+    expect(wrapHeader).not.toHaveClass('whitespace-normal');
 
     // The unflagged column keeps the default fixed height without forcing
     // overflow-hidden/nowrap, so native table auto-layout remains usable.
     const plainCell = screen.getByText('user1@example.com').closest('td')!;
     expect(plainCell).toHaveClass('h-[var(--ui-table-global-cell-min-height)]');
     expect(plainCell).not.toHaveClass('truncate');
+  });
+
+  it('truncates a sortable header without growing its fixed-height row', async () => {
+    const wrappedSortable: ColumnDef<Row>[] = [
+      {
+        accessorKey: 'amount',
+        header: ({ column }) => (
+          <DataTableColumnHeader
+            column={column}
+            title="Asset entrypoint sign verification status"
+          />
+        ),
+        meta: { wrap: true },
+        size: 120,
+      },
+    ];
+    const scrollWidth = vi
+      .spyOn(HTMLElement.prototype, 'scrollWidth', 'get')
+      .mockReturnValue(240);
+    const clientWidth = vi
+      .spyOn(HTMLElement.prototype, 'clientWidth', 'get')
+      .mockReturnValue(100);
+
+    try {
+      render(
+        <DataTable
+          columns={wrappedSortable}
+          data={data.slice(0, 1)}
+          hideActionColumn
+        />
+      );
+
+      const button = screen.getByRole('button', {
+        name: 'Sort by Asset entrypoint sign verification status',
+      });
+      expect(button).toHaveClass('inline-flex', 'h-8', 'max-w-full', 'min-w-0');
+      expect(within(button).getByText(/Asset entrypoint/)).toHaveClass(
+        'truncate'
+      );
+      expect(button.closest('th')).toHaveClass(
+        'h-[var(--ui-table-global-cell-min-height)]'
+      );
+
+      await userEvent.hover(within(button).getByText(/Asset entrypoint/));
+      await waitFor(() =>
+        expect(
+          screen.getAllByText('Asset entrypoint sign verification status')
+        ).toHaveLength(2)
+      );
+    } finally {
+      scrollWidth.mockRestore();
+      clientWidth.mockRestore();
+    }
   });
 });
 
@@ -1871,9 +1924,10 @@ describe('DataTable grouped headers', () => {
     const groupHeader = screen.getByRole('columnheader', { name: 'Group A' });
     expect(groupHeader).not.toHaveAttribute('draggable');
     // The leaf headers are still draggable.
-    expect(
-      screen.getByRole('columnheader', { name: 'Email' })
-    ).toHaveAttribute('draggable', 'true');
+    expect(screen.getByRole('columnheader', { name: 'Email' })).toHaveAttribute(
+      'draggable',
+      'true'
+    );
   });
 
   it('group header cells have no resize handle even with enableColumnResizing', () => {
