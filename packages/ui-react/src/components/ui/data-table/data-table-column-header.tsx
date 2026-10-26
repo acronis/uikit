@@ -7,9 +7,12 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
+import { TruncateText } from '../truncate-text';
 
-interface DataTableColumnHeaderProps<TData, TValue>
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface DataTableColumnHeaderProps<
+  TData,
+  TValue,
+> extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   column: Column<TData, TValue>;
   title: string;
   /**
@@ -35,7 +38,9 @@ export function DataTableColumnHeader<TData, TValue>({
   ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
   if (!column.getCanSort()) {
-    return <div className={cn(className)}>{title}</div>;
+    return (
+      <TruncateText className={cn('min-w-0', className)}>{title}</TruncateText>
+    );
   }
 
   const sorted = column.getIsSorted();
@@ -50,12 +55,12 @@ export function DataTableColumnHeader<TData, TValue>({
         // toggle a comfortable click target; the hover/press tint lives on the
         // `<th>` itself (see data-table.tsx), not this inner button, and uses
         // the kit-wide 3px focus ring (Figma stroke/width-3 + radius/radius-4).
-        '-ms-2 inline-flex h-8 cursor-pointer select-none items-center gap-[var(--ui-table-header-gap)] rounded-sm px-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
+        '-ms-2 inline-flex h-8 max-w-full min-w-0 cursor-pointer select-none items-center gap-[var(--ui-table-header-gap)] rounded-sm px-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
         className
       )}
       {...props}
     >
-      <span>{title}</span>
+      <TruncateText className="min-w-0">{title}</TruncateText>
       {sorted === 'asc' ? (
         <ArrowUpIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
       ) : sorted === 'desc' ? (

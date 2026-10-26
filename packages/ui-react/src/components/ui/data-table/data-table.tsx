@@ -60,6 +60,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../tooltip';
+import { TruncateText } from '../truncate-text';
 import { isBulkSelectionActive } from './data-table-selection';
 import { DataTableViewOptions } from './data-table-view-options';
 
@@ -99,8 +100,8 @@ declare module '@tanstack/react-table' {
     /** Pin the column to a table edge (sticky while the grid scrolls horizontally). */
     pin?: 'left' | 'right';
     /**
-     * Let the column's header + cells wrap onto multiple lines (drops the fixed
-     * row height); mirrors the `Table` primitives' `wrap` prop on TableHead/TableCell.
+     * Let the column's data cells wrap onto multiple lines (drops the fixed row
+     * height). Headers remain single-line and truncate with a tooltip.
      */
     wrap?: boolean;
     /** Label shown for this column in the visibility dropdown. */
@@ -927,10 +928,15 @@ export function DataTable<TData, TValue = unknown>({
                       </TableSettingsCell>
                     );
                   }
+                  const headerContent = header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      );
                   const headerCell = (
                     <TableHead
                       colSpan={header.colSpan}
-                      wrap={header.column.columnDef.meta?.wrap}
                       style={getHeaderStyle(header, resizingEnabled)}
                       draggable={
                         (canReorder && !isAnyColumnResizing) || undefined
@@ -976,12 +982,11 @@ export function DataTable<TData, TValue = unknown>({
                         isPinned && headerPinnedBg
                       )}
                     >
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                      {typeof headerContent === 'string' ? (
+                        <TruncateText>{headerContent}</TruncateText>
+                      ) : (
+                        headerContent
+                      )}
                       {canResize && (
                         <div
                           role="separator"
