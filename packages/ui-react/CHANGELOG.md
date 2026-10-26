@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 5.5.8
+
+### Patch Changes
+
+- [#774](https://github.com/acronis/uikit/pull/774) [`7e9563f`](https://github.com/acronis/uikit/commit/7e9563fb3ab527b7f68f2c42108fc02cda3184c2) Thanks [@sudheerjonna](https://github.com/sudheerjonna)! - Tooltip: `TooltipContent` now wraps long unbroken tokens (emails, URLs, UUIDs) inside its bounded popup instead of letting them run past the popup's edge. The popup sets `overflow-wrap: break-word` (`break-words`) alongside its max-width token (PLTFRM-96827).
+
 ## 5.5.7
 
 ### Patch Changes
