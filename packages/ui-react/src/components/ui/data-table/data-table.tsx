@@ -982,7 +982,8 @@ export function DataTable<TData, TValue = unknown>({
                         isPinned && headerPinnedBg
                       )}
                     >
-                      {typeof headerContent === 'string' ? (
+                      {typeof headerContent === 'string' &&
+                      header.column.columnDef.meta?.wrap ? (
                         <TruncateText>{headerContent}</TruncateText>
                       ) : (
                         headerContent
