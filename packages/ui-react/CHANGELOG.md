@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 5.5.9
+
+### Patch Changes
+
+- [#776](https://github.com/acronis/uikit/pull/776) [`3751535`](https://github.com/acronis/uikit/commit/37515354ed9f76eba5d8d3f3274804f84a638a5b) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Truncate long DataTable headers and reveal their full titles on hover.
+
 ## 5.5.8
 
 ### Patch Changes
