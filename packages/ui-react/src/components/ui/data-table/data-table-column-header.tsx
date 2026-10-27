@@ -59,7 +59,8 @@ export function DataTableColumnHeader<TData, TValue>({
         // toggle a comfortable click target; the hover/press tint lives on the
         // `<th>` itself (see data-table.tsx), not this inner button, and uses
         // the kit-wide 3px focus ring (Figma stroke/width-3 + radius/radius-4).
-        '-ms-2 inline-flex h-8 max-w-full min-w-0 cursor-pointer select-none items-center gap-[var(--ui-table-header-gap)] rounded-sm px-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
+        '-ms-2 inline-flex h-8 cursor-pointer select-none items-center gap-[var(--ui-table-header-gap)] rounded-sm px-2 text-sm font-semibold focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)] [&_svg]:size-[var(--ui-table-header-sort-icon-size)] [&_svg]:shrink-0',
+        truncatesTitle && 'max-w-full min-w-0',
         className
       )}
       {...props}
