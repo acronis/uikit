@@ -37,9 +37,13 @@ export function DataTableColumnHeader<TData, TValue>({
   className,
   ...props
 }: DataTableColumnHeaderProps<TData, TValue>) {
+  const truncatesTitle = column.columnDef.meta?.wrap === true;
+
   if (!column.getCanSort()) {
-    return (
+    return truncatesTitle ? (
       <TruncateText className={cn('min-w-0', className)}>{title}</TruncateText>
+    ) : (
+      <div className={cn(className)}>{title}</div>
     );
   }
 
@@ -60,7 +64,11 @@ export function DataTableColumnHeader<TData, TValue>({
       )}
       {...props}
     >
-      <TruncateText className="min-w-0">{title}</TruncateText>
+      {truncatesTitle ? (
+        <TruncateText className="min-w-0">{title}</TruncateText>
+      ) : (
+        <span>{title}</span>
+      )}
       {sorted === 'asc' ? (
         <ArrowUpIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
       ) : sorted === 'desc' ? (
