@@ -83,3 +83,23 @@ export const ThreeTabs: Story = {
     </Tabs>
   ),
 };
+
+export const DisabledTab: Story = {
+  render: () => (
+    <Tabs defaultValue="overview" className="w-[420px]">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="overview">Overview</TabsTrigger>
+        <TabsTrigger value="analytics" disabled>
+          Analytics
+        </TabsTrigger>
+        <TabsTrigger value="reports">Reports</TabsTrigger>
+      </TabsList>
+      <TabsContent value="overview">
+        <p className="text-sm text-muted-foreground">Workload overview.</p>
+      </TabsContent>
+      <TabsContent value="reports">
+        <p className="text-sm text-muted-foreground">Scheduled reports.</p>
+      </TabsContent>
+    </Tabs>
+  ),
+};
