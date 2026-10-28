@@ -67,4 +67,22 @@ describe('Tabs', () => {
     );
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
+
+  it('styles a disabled trigger via data-disabled (Base UI sets aria-disabled, not the native attribute)', () => {
+    render(
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="password" disabled>
+            Password
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    const disabled = screen.getByRole('tab', { name: 'Password' });
+    expect(disabled).toHaveAttribute('aria-disabled', 'true');
+    expect(disabled).toHaveAttribute('data-disabled');
+    expect(disabled).toHaveClass('data-[disabled]:opacity-50');
+    expect(disabled).toHaveClass('data-[disabled]:pointer-events-none');
+  });
 });
