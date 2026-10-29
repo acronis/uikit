@@ -97,6 +97,9 @@ export const DisabledTab: Story = {
       <TabsContent value="overview">
         <p className="text-sm text-muted-foreground">Workload overview.</p>
       </TabsContent>
+      <TabsContent value="analytics">
+        <p className="text-sm text-muted-foreground">Backup analytics.</p>
+      </TabsContent>
       <TabsContent value="reports">
         <p className="text-sm text-muted-foreground">Scheduled reports.</p>
       </TabsContent>
