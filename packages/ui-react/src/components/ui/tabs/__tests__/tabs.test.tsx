@@ -67,4 +67,32 @@ describe('Tabs', () => {
     );
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });
+
+  it('exposes a disabled trigger via aria-disabled/data-disabled and ignores clicks', async () => {
+    const user = userEvent.setup();
+    render(
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="account">Account</TabsTrigger>
+          <TabsTrigger value="password" disabled>
+            Password
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="account">Account panel</TabsContent>
+        <TabsContent value="password">Password panel</TabsContent>
+      </Tabs>
+    );
+    // Base UI keeps disabled tabs focusable, so it sets aria-disabled/data-disabled
+    // instead of the native attribute; styling must key off these.
+    const disabled = screen.getByRole('tab', { name: 'Password' });
+    expect(disabled).toHaveAttribute('aria-disabled', 'true');
+    expect(disabled).toHaveAttribute('data-disabled');
+    expect(disabled).not.toHaveAttribute('disabled');
+    await user.click(disabled);
+    expect(screen.getByRole('tab', { name: 'Account' })).toHaveAttribute(
+      'aria-selected',
+      'true'
+    );
+    expect(disabled).toHaveAttribute('aria-selected', 'false');
+  });
 });

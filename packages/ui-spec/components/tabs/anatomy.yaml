@@ -31,7 +31,8 @@ parts:
     description: >-
       A tab button (`role="tab"`). Idle = brand outline (`border-secondary` /
       `text-secondary`, the Button blue); active (`data-[active]`) = filled
-      `bg-secondary` with a pure-white `text-primary-foreground` label.
+      `bg-secondary` with a pure-white `text-primary-foreground` label;
+      disabled (`data-[disabled]`) = dimmed (`opacity-50`) and non-interactive.
       Identified by its `value`.
     element: button
   - id: content
@@ -76,6 +77,12 @@ states:
       trigger: "the trigger's value is selected (data-active)",
       kind: internal,
       affects: [trigger, content],
+    }
+  - {
+      id: disabled,
+      trigger: "the trigger's `disabled` flag is set (aria-disabled + data-disabled)",
+      kind: internal,
+      affects: [trigger],
     }
   - {
       id: focus-visible,
