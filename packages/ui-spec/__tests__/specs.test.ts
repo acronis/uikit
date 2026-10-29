@@ -441,7 +441,7 @@ describe('cva ↔ contract conformance', () => {
     expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
   });
 
-  it('Dialog: api.yaml size enum matches the cva keys in ui-react', () => {
+  it('Dialog: api.yaml size/verticalAlign enums match the cva keys in ui-react', () => {
     const source = readFileSync(
       resolve(HERE, '../../ui-react/src/components/ui/dialog/dialog.tsx'),
       'utf8'
@@ -449,9 +449,13 @@ describe('cva ↔ contract conformance', () => {
     const groups = extractCvaGroups(source);
     const api = loadSpec('dialog').api;
 
-    // `size` (the two width steps, `sm`/`large`) is the only cva axis.
-    expect(Object.keys(groups)).toEqual(['size']);
+    // `size` (the two width steps, `sm`/`large`) and `verticalAlign`
+    // (`center`/`top`) are the cva axes.
+    expect(Object.keys(groups).sort()).toEqual(['size', 'verticalAlign']);
     expect(groups.size.sort()).toEqual(enumMembers(api, 'size').sort());
+    expect(groups.verticalAlign.sort()).toEqual(
+      enumMembers(api, 'verticalAlign').sort()
+    );
   });
 
   it('Sheet: api.yaml side enum matches the cva keys in ui-react', () => {

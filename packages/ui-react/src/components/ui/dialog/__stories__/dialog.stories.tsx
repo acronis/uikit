@@ -73,6 +73,17 @@ const meta = {
         category: 'Appearance',
       },
     },
+    verticalAlign: {
+      control: 'select',
+      options: ['center', 'top'],
+      description:
+        'Vertical placement (forwarded to DialogContent). `top` pins the popup 48px from the top edge of the viewport instead of centering it.',
+      table: {
+        type: { summary: "'center' | 'top'" },
+        defaultValue: { summary: "'center'" },
+        category: 'Appearance',
+      },
+    },
     defaultOpen: {
       control: 'boolean',
       description: 'Open on mount, uncontrolled.',
@@ -283,6 +294,18 @@ export const TallContent: Story = {
           Bottom of the body — the popup itself never grows past its margin.
         </p>
       </div>
+    </Dialog>
+  ),
+};
+
+// `verticalAlign="top"` pins the popup 48px from the top of the viewport
+// instead of centering it; the rest of the viewport stays empty below.
+export const TopAligned: Story = {
+  render: () => (
+    <Dialog variant="default" verticalAlign="top" defaultOpen>
+      <p className="text-sm leading-6 text-foreground">
+        This dialog is aligned to the top of the viewport.
+      </p>
     </Dialog>
   ),
 };

@@ -7,7 +7,7 @@ schematic: |
   ─ when open ─────────────────────────────────────────────────
   overlay: full-screen scrim
   +===========================================================+
-  |  root: <div role="dialog"> (centered popup)               |
+  |  root: <div role="dialog"> (centered/top popup)           |
   |   +-----------------------------------------------------+ |
   |   | header:  title .................... close (×)       | |
   |   +-----------------------------------------------------+ |
@@ -18,7 +18,8 @@ schematic: |
   |   | footer:                    [Cancel] [Confirm]       | |
   |   +-----------------------------------------------------+ |
   +===========================================================+
-     root    -> --ui-dialog-container-* body + shadow, rounded
+     root    -> --ui-dialog-container-* body + shadow, rounded;
+                centered by default, or top-aligned via verticalAlign
      header / footer -> bg-background (surface-primary) bars, border-border (no Figma node yet)
      overlay -> var(--ui-background-backdrop-screen)
      close   -> times icon, --ui-button-icon-global-icon-color-idle (constant across states) → hover/active bg
@@ -27,7 +28,8 @@ root:
   element: div
   role: dialog
   description: >-
-    The modal popup (Base UI `Dialog.Popup`), centered and portaled. Carries
+    The modal popup (Base UI `Dialog.Popup`), portaled and centered by default,
+    or top-aligned via `DialogContent`'s `verticalAlign`. Carries
     `role="dialog"`/`aria-modal`, is labelled by the title and described by the
     description, traps focus, and locks scroll while open.
 

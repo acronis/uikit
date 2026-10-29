@@ -26,19 +26,19 @@ decision. Composable from parts; built on the Base UI Dialog primitive.
 
 ## Parts
 
-| Part                             | Element (default)  | Purpose                                           |
-| -------------------------------- | ------------------ | ------------------------------------------------- |
-| `DialogRoot`                     | —                  | Root; owns the open state (Base UI `Root`).       |
-| `DialogTrigger`                  | `button`           | Opens the dialog.                                 |
-| `DialogContent`                  | `div[role=dialog]` | The portaled, centered popup (+ overlay).         |
-| `DialogHeaderRoot`               | `div`              | Top bar; holds the title and close button.        |
-| `DialogTitle`                    | `h2`               | Accessible dialog name (`aria-labelledby`).       |
-| `DialogCloseButton`              | `button`           | Icon button that dismisses the dialog.            |
-| `DialogBodyRoot`                 | `div`              | Scrollable content region.                        |
-| `DialogDescription`              | `p`                | Supporting copy (`aria-describedby`).             |
-| `DialogFooterRoot`               | `div`              | Right-aligned action bar.                         |
-| `DialogClose`                    | `button`           | Closes the dialog; wrap a Button via `render`.    |
-| `DialogOverlay` / `DialogPortal` | —                  | Lower-level parts (`DialogContent` renders them). |
+| Part                             | Element (default)  | Purpose                                                                                  |
+| -------------------------------- | ------------------ | ---------------------------------------------------------------------------------------- |
+| `DialogRoot`                     | —                  | Root; owns the open state (Base UI `Root`).                                              |
+| `DialogTrigger`                  | `button`           | Opens the dialog.                                                                        |
+| `DialogContent`                  | `div[role=dialog]` | The portaled popup (+ overlay); centered by default, or top-aligned via `verticalAlign`. |
+| `DialogHeaderRoot`               | `div`              | Top bar; holds the title and close button.                                               |
+| `DialogTitle`                    | `h2`               | Accessible dialog name (`aria-labelledby`).                                              |
+| `DialogCloseButton`              | `button`           | Icon button that dismisses the dialog.                                                   |
+| `DialogBodyRoot`                 | `div`              | Scrollable content region.                                                               |
+| `DialogDescription`              | `p`                | Supporting copy (`aria-describedby`).                                                    |
+| `DialogFooterRoot`               | `div`              | Right-aligned action bar.                                                                |
+| `DialogClose`                    | `button`           | Closes the dialog; wrap a Button via `render`.                                           |
+| `DialogOverlay` / `DialogPortal` | —                  | Lower-level parts (`DialogContent` renders them).                                        |
 
 ## Sizes
 
@@ -46,6 +46,12 @@ decision. Composable from parts; built on the Base UI Dialog primitive.
 (512px, default) has a Figma-defined token (`--ui-dialog-container-size-sm`);
 `large` (832px) is a legacy backward-compatibility size with no design token,
 kept for existing call sites (see the public `Dialog` recipe's `wide` variant).
+
+## Placement
+
+`DialogContent` takes a `verticalAlign` prop: `center` (default) centers the
+popup in the viewport; `top` pins it 48px from the top edge, horizontally
+centered, keeping its content height (still capped at `100dvh - 96px`).
 
 ## Example (internal usage only)
 

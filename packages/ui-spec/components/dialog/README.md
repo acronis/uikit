@@ -55,7 +55,7 @@ name is `Dialog`.
 
 | Part              | Element (default)  | Purpose                                              |
 | ----------------- | ------------------ | ---------------------------------------------------- |
-| `container`       | `div[role=dialog]` | The portaled, centered popup card.                   |
+| `container`       | `div[role=dialog]` | The portaled popup card; centered (or top-aligned).  |
 | `header`          | `div`              | Top bar; title + close button.                       |
 | `title`           | `h2`               | Accessible dialog name (`aria-labelledby`).          |
 | `close-button`    | `button`           | Icon button that dismisses the dialog.               |
@@ -102,6 +102,11 @@ import { Dialog } from '@acronis-platform/ui-react';
 // Hide the header and/or footer chrome (beyond the Figma contract)
 <Dialog hasHeader={false} open>
   <p>Body-only content — no title bar, no close button.</p>
+</Dialog>;
+
+// Pin the popup 48px from the top of the viewport instead of centering it
+<Dialog variant="default" verticalAlign="top" open>
+  <p>Any custom body content.</p>
 </Dialog>;
 
 // Legacy wide variant — free-form footer, kept for backward compatibility

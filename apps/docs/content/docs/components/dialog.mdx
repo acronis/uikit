@@ -125,6 +125,18 @@ doesn't compete with the body's vertical scroll:
 </Dialog>
 ```
 
+By default the popup is centered in the viewport, both horizontally and
+vertically. Set `verticalAlign="top"` to pin it 48px from the top edge instead
+(the same 48px margin as above). It stays horizontally centered and keeps its
+content height, still capped at `calc(100dvh - 96px)`, and the viewport below
+it stays empty:
+
+```tsx
+<Dialog variant="default" verticalAlign="top" open onOpenChange={setOpen}>
+  <p>This dialog is aligned to the top of the viewport.</p>
+</Dialog>
+```
+
 When the dialog renders inside an isolated container (e.g. a shadow root), pass a
 `portalContainer` so the popup inherits that scope's styles:
 

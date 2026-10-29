@@ -5,7 +5,7 @@ schematic: |
   ─ when open ─────────────────────────────────────────────────
   overlay: full-screen scrim (from DialogContent)
   +===========================================================+
-  |  root/container: <div role="dialog"> (centered popup card) |
+  |  root/container: <div role="dialog"> (centered/top popup)  |
   |   +-----------------------------------------------------+ |
   |   | header (optional, hasHeader): title ....... close(×) | |
   |   +-----------------------------------------------------+ |
@@ -15,7 +15,8 @@ schematic: |
   |   +-----------------------------------------------------+ |
   |   | loading-overlay (only when hasLoading): Loading      | |
   +===========================================================+
-     container -> --ui-dialog-container-*, rounded, shadow
+     container -> --ui-dialog-container-*, rounded, shadow;
+                  centered by default, or top-aligned via verticalAlign
      header / footer -> --ui-dialog-header-* / --ui-footer-*
      title / body    -> text-foreground
      close-button    -> times icon, --ui-button-icon-global-icon-color-idle (constant across states) → hover/active bg
@@ -25,9 +26,10 @@ root:
   element: div
   role: dialog
   description: >-
-    The modal popup (Base UI `Dialog.Popup` via `DialogContent`), centered and
-    portaled. Carries `role="dialog"`/`aria-modal`, is labelled by the title,
-    traps focus, and locks scroll while open.
+    The modal popup (Base UI `Dialog.Popup` via `DialogContent`), portaled and
+    centered by default, or top-aligned via `verticalAlign`. Carries
+    `role="dialog"`/`aria-modal`, is labelled by the title, traps focus, and
+    locks scroll while open.
 
 parts:
   - id: container

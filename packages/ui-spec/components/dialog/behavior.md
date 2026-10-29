@@ -38,6 +38,25 @@ Scenario: The wide variant is a free-form escape hatch
   secondary/primary pair
 ```
 
+## Placement
+
+```gherkin
+Scenario: The popup is centered by default
+  Given a Dialog with no verticalAlign (or verticalAlign = "center")
+  When it opens
+  Then the popup is centered in the viewport, horizontally and vertically
+```
+
+```gherkin
+Scenario: verticalAlign = "top" pins the popup near the top edge
+  Given a Dialog with verticalAlign = "top"
+  When it opens
+  Then the popup's top edge sits 48px below the top of the viewport
+  And it stays horizontally centered
+  And it keeps its content height (still capped at 100dvh - 96px), leaving
+  the viewport below it empty
+```
+
 ## Body slot
 
 ```gherkin
