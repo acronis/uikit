@@ -126,6 +126,16 @@ contract:
         (512px, the Figma-defined size), or to `large` (832px) when `variant`
         is `wide`. `large` predates the Figma node and has no design token —
         a legacy backward-compatibility size, not a design-system width scale.
+    - name: verticalAlign
+      type: "'center' | 'top'"
+      required: false
+      default: "'center'"
+      description: >-
+        Vertical placement of the popup (forwarded to the underlying content).
+        `center` (the default) centers it in the viewport; `top` pins it 48px
+        from the top edge of the viewport instead, keeping its content height.
+        A ui-react-only extension beyond the Figma contract, like
+        `size="large"`.
     - name: portal
       type: boolean
       required: false

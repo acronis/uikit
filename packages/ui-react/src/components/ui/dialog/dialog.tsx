@@ -78,16 +78,21 @@ import { Loading } from '../loading';
 // enforce it here so every consumer keeps that margin, not just the frame
 // that surfaced it.
 const dialogContentVariants = cva(
-  'fixed left-1/2 top-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]',
+  'fixed left-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]',
   {
     variants: {
       size: {
         sm: 'max-w-[min(var(--ui-dialog-container-size-sm),calc(100dvw-96px))]',
         large: 'max-w-[min(832px,calc(100dvw-96px))]',
       },
+      verticalAlign: {
+        center: 'top-1/2 -translate-y-1/2',
+        top: 'top-[48px]',
+      },
     },
     defaultVariants: {
       size: 'sm',
+      verticalAlign: 'center',
     },
   }
 );
@@ -125,6 +130,12 @@ export interface DialogContentProps
    */
   size?: VariantProps<typeof dialogContentVariants>['size'];
   /**
+   * Vertical placement of the popup. `center` (default) centers it in the
+   * viewport; `top` pins it 48px from the top edge, leaving the rest of the
+   * viewport below it.
+   */
+  verticalAlign?: 'center' | 'top';
+  /**
    * Render the content inside a portal (default `true`). Base UI requires the
    * Popup to sit in a Portal for correct stacking; set `false` for inline usage
    * (e.g. when the caller supplies its own `DialogPortal`, or in tests).
@@ -148,6 +159,7 @@ const DialogContent = React.forwardRef<
       className,
       children,
       size,
+      verticalAlign,
       portal = true,
       portalContainer,
       keepMounted,
@@ -163,7 +175,10 @@ const DialogContent = React.forwardRef<
         <DialogOverlay />
         <DialogPrimitive.Popup
           ref={ref}
-          className={cn(dialogContentVariants({ size }), className)}
+          className={cn(
+            dialogContentVariants({ size, verticalAlign: verticalAlign ?? 'center' }),
+            className
+          )}
           {...props}
         >
           {children}
@@ -561,6 +576,8 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
    * `'large'` when `variant` is `'wide'`.
    */
   size?: DialogContentProps['size'];
+  /** Vertical placement: `'center'` (default) or `'top'` (forwarded to `DialogContent`). */
+  verticalAlign?: DialogContentProps['verticalAlign'];
   /** Render inside a portal (forwarded to `DialogContent`). Defaults to `true`. */
   portal?: boolean;
   /** Portal container (forwarded to `DialogContent`). */
@@ -589,6 +606,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
       footer,
       closeLabel,
       size,
+      verticalAlign,
       portal,
       portalContainer,
       keepMounted,
@@ -615,6 +633,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
         <DialogContent
           ref={ref}
           size={resolvedSize}
+          verticalAlign={verticalAlign}
           portal={portal}
           portalContainer={portalContainer}
           keepMounted={keepMounted}
