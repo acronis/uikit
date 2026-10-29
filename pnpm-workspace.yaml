@@ -28,8 +28,8 @@ catalog:
   # prerender). Verified fixed with rolldown@1.2.x — apps/docs prerenders all
   # chart pages with real recharts SVG output. @vitejs/plugin-react bumped to
   # 6.x alongside this (6.x requires vite ^8).
-  vite: 8.2.0
-  vitest: 4.1.10
+  vite: 8.2.4
+  vitest: 4.1.11
 
   # Cross-workspace runtime deps. Versions are anchored on
   # packages/ui-react (the published library) so its typecheck stays
@@ -62,25 +62,44 @@ catalog:
 
   # SVGO v4 — SVG optimizer shared by the icon tooling:
   # tools/style-dictionary, tools/figma-design-assets-sync.
-  svgo: 4.0.2
+  svgo: 4.1.0
+
+# Skip the wasm32-only bindings: they are never installed on real CPUs and
+# pull @emnapi/* and @napi-rs/wasm-runtime into the lockfile, which we must
+# not have. Names are the optional entry points (@img/sharp-wasm32 is a plain
+# dependency of the two sharp ones, so listing it would have no effect).
+ignoredOptionalDependencies:
+  - '@oxc-parser/binding-wasm32-wasi'
+  - '@oxc-resolver/binding-wasm32-wasi'
+  - '@unrs/resolver-binding-wasm32-wasi'
+  - '@img/sharp-freebsd-wasm32'
+  - '@img/sharp-webcontainers-wasm32'
+  - '@tailwindcss/oxide-wasm32-wasi'
 
 # Pin transitive deps that we don't want pnpm to bump.
 overrides:
-  axios: 1.18.0
+  axios: 1.20.0
   immutable: 5.1.8
-  joi: 17.13.4
+  joi: 17.13.8
   react-router: 7.18.2
-  sharp: 0.35.0
+  sharp: 0.35.5
   prismjs: 1.30.0
   postcss: 8.5.25
   fast-json-patch: 3.1.1
   form-data: 4.0.6
-  'brace-expansion@<3.0.0': 2.1.4
-  'brace-expansion@>=5.0.0 <6.0.0': 5.0.9
-  fast-uri: 3.1.5
+  'brace-expansion@<3.0.0': 2.1.7
+  'brace-expansion@>=5.0.0 <6.0.0': 5.0.12
+  fast-uri: 3.1.8
   nanoid: 3.3.18
-  undici: 7.29.0
+  undici: 7.30.0
+  browserslist: 4.29.3
+  baseline-browser-mapping: 2.11.27
+  follow-redirects: 1.16.1
+  qs: 6.16.0
+  napi-postinstall: 0.3.7
+  'ajv>require-from-string': '-'
   uuid: 14.0.1 # transitive-only (no direct usage); mirror caps here, exceeds the 11.1.1 advisory fix
-  'js-yaml@>=3.0.0 <4.0.0': 3.15.1
-  'js-yaml@>=4.0.0 <5.0.0': 4.3.1
+  'js-yaml@>=3.0.0 <4.0.0': 3.15.2
+  'js-yaml@>=4.0.0 <5.0.0': 4.3.2
   esbuild: 0.28.1
+  source-map-js: 1.2.2
