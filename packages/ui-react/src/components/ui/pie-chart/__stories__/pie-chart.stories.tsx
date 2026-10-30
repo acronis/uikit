@@ -1,9 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Cell, Pie, PieChart as RechartsPieChart } from 'recharts';
-import {
-  ChartPieIcon,
-  EllipsisIcon,
-} from '@acronis-platform/icons-react/stroke-mono';
+import { EllipsisIcon } from '@acronis-platform/icons-react/stroke-mono';
 
 import { PieChart, pieChartValuePercentTooltip } from '../pie-chart';
 import {
@@ -19,7 +16,6 @@ import {
 } from '../../chart';
 import { ButtonIcon } from '../../button-icon';
 import { ChartWidget } from '../../chart-widget';
-import { Metric } from '../../metric';
 
 // Slice colors are supplied by the caller via `config`, keyed by the slice's
 // nameKey value. There is no chart token tier yet, so these reference the shared
@@ -133,7 +129,7 @@ export const Donut: Story = {
   args: { shape: 'donut' },
 };
 
-// The list legend scrolls after eight complete rows (128px at xs); the plot
+// The list legend scrolls after eight complete rows (184px at xs); the plot
 // itself stays 120px tall.
 export const ManyLegendRows: Story = {
   args: {
@@ -143,12 +139,38 @@ export const ManyLegendRows: Story = {
   },
 };
 
-// Replication of the Figma design mockup: the chart widget inside a card with
-// a metric readout above the donut + legend. Rendered with a fixed composition
-// so it shows real consumer usage rather than the meta args playground.
-export const WidgetExample: Story = {
-  render: () => (
-    <div className="w-[480px]">
+// Figma's widget content is two equal columns: a centered 120px donut and a
+// vertically centered legend. These stories pin both reviewed widths without
+// prescribing how a dashboard arranges multiple widgets.
+const widgetData = [
+  { item: 'first', value: 125 },
+  { item: 'second', value: 100 },
+  { item: 'third', value: 75 },
+  { item: 'fourth', value: 60 },
+  { item: 'fifth', value: 50 },
+  { item: 'sixth', value: 30 },
+  { item: 'seventh', value: 25 },
+  { item: 'eighth', value: 10 },
+];
+
+const widgetConfig = {
+  first: { label: 'First Lorem ipsum dolor sit amet' },
+  second: { label: 'Second Lorem ipsum dolor sit amet' },
+  third: { label: 'Third:' },
+  fourth: { label: 'Fourth category' },
+  fifth: { label: 'Fifth category' },
+  sixth: { label: 'Sixth category' },
+  seventh: { label: 'Seventh category' },
+  eighth: { label: 'Eighth category' },
+} satisfies ChartConfig;
+
+function renderWidgetExample(
+  width: number,
+  rowCount = 4,
+  centerLabel?: { value: string; label: string }
+) {
+  return (
+    <div style={{ width }}>
       <ChartWidget
         header={{
           title: 'Title',
@@ -158,36 +180,31 @@ export const WidgetExample: Story = {
             </ButtonIcon>
           ),
         }}
-        metric={<Metric icon={<ChartPieIcon />} value="125" unit="Label" />}
       >
         <PieChart
-          data={[
-            { item: 'first', value: 10 },
-            { item: 'second', value: 10 },
-            { item: 'third', value: 10 },
-            { item: 'fourth', value: 10 },
-            { item: 'fifth', value: 10 },
-            { item: 'sixth', value: 10 },
-            { item: 'seventh', value: 10 },
-            { item: 'eighth', value: 10 },
-          ]}
-          config={{
-            first: { label: 'First Lorem ipsum dolor sit amet' },
-            second: { label: 'Second Lorem ipsum dolor sit:' },
-            third: { label: 'Third:' },
-            fourth: { label: 'Fourth:' },
-            fifth: { label: 'Fifth:' },
-            sixth: { label: 'Sixth:' },
-            seventh: { label: 'Seventh:' },
-            eighth: { label: 'Eighth:' },
-          }}
+          data={widgetData.slice(0, rowCount)}
+          config={widgetConfig}
           nameKey="item"
           dataKey="value"
           shape="donut"
+          centerLabel={centerLabel}
         />
       </ChartWidget>
     </div>
-  ),
+  );
+}
+
+export const WidgetExample: Story = {
+  render: () => renderWidgetExample(342),
+};
+
+export const WidgetExampleWide: Story = {
+  render: () => renderWidgetExample(684),
+};
+
+export const WidgetManyLegendRows: Story = {
+  render: () =>
+    renderWidgetExample(342, 8, { value: '835', label: 'Visitors' }),
 };
 
 // A filled pie.
@@ -197,7 +214,7 @@ export const Pie_: Story = {
 
 // Data labels (T15): each slice's value drawn on the arc.
 export const Labels: Story = {
-  args: { shape: 'pie', showLabels: true, className: 'w-[380px]' },
+  args: { shape: 'pie', showLabels: true, className: 'w-[500px]' },
 };
 
 // A donut with a custom center metric (here the total) + a caption.
@@ -340,7 +357,7 @@ export const LabelsNamePercent: Story = {
     shape: 'pie',
     showLabels: true,
     labelFormat: 'name-percent',
-    className: 'w-[380px]',
+    className: 'w-[500px]',
   },
 };
 

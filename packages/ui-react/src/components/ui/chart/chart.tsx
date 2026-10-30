@@ -268,11 +268,11 @@ const defaultLegendMaxHeightClass: Record<ChartLegendFontSize, string> = {
 };
 
 const listLegendMaxHeightClass: Record<ChartLegendFontSize, string> = {
-  xs: 'max-h-[128px]',
-  sm: 'max-h-[160px]',
-  base: 'max-h-[192px]',
-  lg: 'max-h-[224px]',
-  xl: 'max-h-[224px]',
+  xs: 'max-h-[184px]',
+  sm: 'max-h-[216px]',
+  base: 'max-h-[248px]',
+  lg: 'max-h-[280px]',
+  xl: 'max-h-[280px]',
 };
 
 export type ChartLegendContentProps = {
@@ -298,9 +298,9 @@ export type ChartLegendContentProps = {
   config?: ChartConfig;
   /**
    * `default` — horizontal wrapped chips; scrolls after three rows (76px at
-   * `xs`). `list` — vertical `[dot] [label flex-1] [value]` rows; scrolls after
-   * eight rows (128px at `xs`). Both caps scale with `fontSize`; `className` can
-   * override the cap.
+   * `xs`). `list` — vertical `[dot] [label flex-1] [value]` rows with an 8px
+   * gap; scrolls after eight rows (184px at `xs`). Both caps scale with
+   * `fontSize`; `className` can override the cap.
    */
   variant?: 'default' | 'list';
   /**
@@ -690,16 +690,18 @@ function ChartLegendListEntry({
   const label = itemConfig?.label ?? item.value;
 
   return (
-    <div className="flex w-full shrink-0 items-start gap-2 overflow-hidden">
-      <div className="flex min-w-0 flex-1 items-center gap-2">
-        {itemConfig?.icon ? (
-          <itemConfig.icon />
-        ) : (
-          <div
-            className="h-2.5 w-2.5 shrink-0 rounded-full"
-            style={{ backgroundColor: item.color }}
-          />
-        )}
+    <div className="flex w-full shrink-0 items-center gap-2 overflow-hidden">
+      <div className="flex min-w-0 flex-1 items-center gap-1">
+        <div className="grid size-4 shrink-0 place-items-center [&>svg]:h-4 [&>svg]:w-4">
+          {itemConfig?.icon ? (
+            <itemConfig.icon />
+          ) : (
+            <div
+              className="size-2 rounded-full"
+              style={{ backgroundColor: item.color }}
+            />
+          )}
+        </div>
         {typeof label === 'string' || typeof label === 'number' ? (
           <TruncateText
             className={cn(
@@ -853,7 +855,7 @@ function ChartLegendContent({
         aria-label={ariaLabel}
         tabIndex={isScrollable ? 0 : undefined}
         className={cn(
-          'flex flex-col overflow-y-auto focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
+          'flex flex-col gap-2 overflow-y-auto focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--ui-focus-primary)]',
           listLegendMaxHeightClass[fontSize],
           className
         )}

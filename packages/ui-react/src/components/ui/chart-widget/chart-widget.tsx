@@ -114,7 +114,7 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
         data-orientation={orientation}
         // `h-full` + a flex column is what lets the plot fill the card: the grid
         // sizes this, the header is `shrink-0`, and the body takes the rest.
-        className={cn('flex h-full w-full flex-col', className)}
+        className={cn('flex h-full w-full min-w-0 flex-col', className)}
         {...props}
       >
         {header ? <CardHeader {...header} /> : null}
@@ -122,7 +122,7 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
             four sides with a 16px gap between the metric row and the plot. */}
         <CardContent
           className={cn(
-            'min-h-0 flex-1 gap-4 pt-4',
+            'min-h-0 min-w-0 flex-1 gap-4 pt-4',
             // In horizontal mode override the default flex-col with flex-row so
             // the metric and the chart sit side by side, each taking half the body.
             isHorizontal && !state && 'flex-row items-stretch',
@@ -154,7 +154,7 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
                   content's height without it, so a chart can push past the grid cell. */}
               <div
                 className={cn(
-                  'min-h-0',
+                  'min-h-0 min-w-0',
                   isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'flex-1'
                 )}
                 data-slot="chart-widget-body"

@@ -129,11 +129,42 @@ describe('PieChart', () => {
     expect(container.textContent).toContain('Firefox');
   });
 
-  it('keeps the list legend scroll cap when the plot is expanded', () => {
+  it('centers the capped list legend when the plot is expanded', () => {
     const { container } = renderChart({ showLabels: true, labelLine: true });
     const legend = container.querySelector('[data-slot="chart-legend"]');
 
-    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+    expect(legend).toHaveClass('max-h-[184px]', 'overflow-y-auto');
+    expect(legend).toHaveClass('self-center');
+  });
+
+  it.each([
+    {
+      label: 'leader-line labels',
+      props: { showLabels: true, labelLine: true },
+      grid: 'grid-cols-[minmax(320px,1fr)_minmax(0,1fr)]',
+      plot: 'size-[320px]',
+    },
+    {
+      label: 'outside labels',
+      props: { showLabels: true },
+      grid: 'grid-cols-[minmax(320px,1fr)_minmax(0,1fr)]',
+      plot: 'size-[320px]',
+    },
+    {
+      label: 'inside labels',
+      props: { showLabels: true, labelPosition: 'insideStart' as const },
+      grid: 'grid-cols-[minmax(120px,1fr)_minmax(0,1fr)]',
+      plot: 'size-[120px]',
+    },
+  ])('reserves room for $label beside the legend', ({ props, grid, plot }) => {
+    const { container } = renderChart(props);
+    const root = container.firstElementChild;
+    const plotContainer = container.querySelector('[data-slot="chart"]')
+      ?.parentElement;
+
+    expect(root).toHaveClass(grid);
+    expect(plotContainer).toHaveClass(plot);
+    expect(plotContainer).not.toHaveClass('max-w-full');
   });
 
   it('sizes the legend text with legendFontSize', () => {
