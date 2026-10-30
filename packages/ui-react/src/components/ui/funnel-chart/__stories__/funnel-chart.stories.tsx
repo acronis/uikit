@@ -171,7 +171,7 @@ type Story = StoryObj<typeof meta>;
 // text, and the stage list beside the funnel. This is what the design draws.
 export const Default: Story = {};
 
-// The list legend scrolls after eight complete rows (128px at xs); the funnel
+// The list legend scrolls after eight complete rows (184px at xs); the funnel
 // plot itself stays 120px tall.
 export const ManyLegendRows: Story = {
   args: {

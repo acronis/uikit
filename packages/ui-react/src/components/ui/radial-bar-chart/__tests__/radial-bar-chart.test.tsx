@@ -209,7 +209,7 @@ describe('RadialBarChart', () => {
     });
     const legend = container.querySelector('[data-slot="chart-legend"]');
 
-    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+    expect(legend).toHaveClass('max-h-[184px]', 'overflow-y-auto');
   });
 
   it('keeps the list legend scroll cap when outside labels expand the chart', () => {
@@ -219,7 +219,7 @@ describe('RadialBarChart', () => {
     });
     const legend = container.querySelector('[data-slot="chart-legend"]');
 
-    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+    expect(legend).toHaveClass('max-h-[184px]', 'overflow-y-auto');
   });
 
   it('draws no arcs but still mounts on empty data', () => {
