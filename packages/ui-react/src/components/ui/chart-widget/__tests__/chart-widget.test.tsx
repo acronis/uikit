@@ -83,14 +83,19 @@ describe('ChartWidget', () => {
   });
 
   describe('state', () => {
-    it('swaps the plot for a placeholder, keeping the header', () => {
+    it('swaps the metric and plot for a placeholder, keeping the header', () => {
       render(
-        <ChartWidget header={{ title: 'Storage' }} state="empty">
+        <ChartWidget
+          header={{ title: 'Storage' }}
+          metric={<span data-testid="metric">125 GB</span>}
+          state="empty"
+        >
           {plot}
         </ChartWidget>
       );
 
       expect(screen.queryByTestId('plot')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('metric')).not.toBeInTheDocument();
       expect(screen.getByText('No data found')).toBeInTheDocument();
       expect(screen.getByText('Storage')).toBeInTheDocument();
     });
@@ -100,9 +105,16 @@ describe('ChartWidget', () => {
         <ChartWidget state="empty">{plot}</ChartWidget>
       );
 
-      expect(
-        container.querySelector('[data-slot="chart-widget-body"]')?.className
-      ).toContain('flex-1');
+      const placeholder = container.querySelector('[role="status"]');
+      expect(placeholder?.className).toContain('flex-1');
+      expect(placeholder?.className).toContain('min-h-0');
+    });
+
+    it('does not infer a state when the consumer leaves state unset', () => {
+      render(<ChartWidget metric={<span>0 GB</span>} />);
+
+      expect(screen.getByText('0 GB')).toBeInTheDocument();
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
     });
 
     it('overrides the placeholder description', () => {
@@ -116,33 +128,25 @@ describe('ChartWidget', () => {
       expect(screen.queryByText('No data found')).not.toBeInTheDocument();
     });
 
-    it('renders the error action', () => {
+    it('renders warning content through the shared placeholder', () => {
       render(
-        <ChartWidget
-          state="error"
-          stateAction={<button type="button">Try again</button>}
-        >
+        <ChartWidget state="warning" stateDescription="Partial results">
           {plot}
         </ChartWidget>
       );
 
-      expect(
-        screen.getByRole('button', { name: 'Try again' })
-      ).toBeInTheDocument();
+      expect(screen.getByText('Partial results')).toBeInTheDocument();
+      expect(screen.queryByTestId('plot')).not.toBeInTheDocument();
     });
 
-    it('gives the card its error border on state="error"', () => {
-      const { container } = render(
-        <ChartWidget state="error">{plot}</ChartWidget>
-      );
-
-      expect(
-        container.querySelector('[data-slot="chart-widget"]')?.className
-      ).toContain('border-[var(--ui-border-on-surface-border-error)]');
-    });
-
-    it('leaves the border alone for the other states', () => {
-      for (const state of ['loading', 'empty'] as const) {
+    it('keeps the same card border for every placeholder state', () => {
+      for (const state of [
+        'loading',
+        'empty',
+        'warning',
+        'error',
+        'number',
+      ] as const) {
         const { container } = render(
           <ChartWidget state={state}>{plot}</ChartWidget>
         );

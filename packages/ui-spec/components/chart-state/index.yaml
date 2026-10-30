@@ -4,12 +4,10 @@ name: chart-state
 status: draft
 category: data-display
 description: >-
-  A shared loading / empty / error placeholder for the chart types, rendered in
-  place of the chart inside the same sized slot. A compact status block — a
-  leading glyph over a centered label, with an optional retry action for the
-  error state. The `empty` state draws the silhouette the design defines for
-  each chart type (`variant`), plus an optional "Widget description" line;
-  `loading` and `error` share one treatment. Distinct from
-  `WidgetPlaceholder`, which is the composable skeleton for a widget that isn't
-  a chart — see behavior.md.
+  Shared loading / empty / warning / error / number visuals for a chart slot.
+  Empty, warning, and error use the Breakpoints visual treatment: a 64px status
+  circle with a 24px glyph and centered message. Number shows a centered KPI
+  value; loading uses the shared spinner. Consumers select the state and may
+  localize its content through `description`. Distinct from `WidgetPlaceholder`,
+  which is the composable skeleton for a non-chart widget.
 since: 0.58.0

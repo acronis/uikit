@@ -5,11 +5,7 @@ import { useRender } from '@base-ui/react/use-render';
 
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, type CardHeaderProps } from '../card';
-import {
-  ChartState,
-  type ChartStateProps,
-  type ChartStateVariant,
-} from '../chart-state';
+import { ChartState, type ChartStateProps } from '../chart-state';
 
 // A dashboard chart widget: the Card every chart mockup is wrapped in, plus the
 // one thing a Card doesn't know about — what the body shows while there is no
@@ -50,12 +46,6 @@ export interface ChartWidgetProps extends Omit<
    */
   render?: useRender.RenderProp;
   /**
-   * Which chart the widget holds. Only used while `state="empty"`, to pick the
-   * silhouette the design draws for that chart type — the widget itself needs
-   * no size, so this carries nothing else.
-   */
-  variant?: ChartStateVariant;
-  /**
    * The card header, forwarded verbatim to `CardHeader`. Everything that
    * component takes works here — `title`, `actions` (the ⋯ menu), `extras` (a
    * filter chip), `isDraggable`, `hasRename`, … Omit it for a header-less
@@ -75,28 +65,29 @@ export interface ChartWidgetProps extends Omit<
   orientation?: 'vertical' | 'horizontal';
   /**
    * The readout beside or above the plot — typically a `Metric`. Layout is
-   * controlled by `orientation`.
+   * controlled by `orientation`; it is replaced along with the plot while a
+   * state is active.
    */
   metric?: React.ReactNode;
   /**
-   * Show a placeholder instead of the plot, for a widget whose data isn't there
-   * yet. `error` also gives the card its error border.
+   * Explicitly show a state in place of the metric and plot. The consumer
+   * selects the state; this component does not infer it from chart data. The
+   * `number` state displays a KPI-style numeric readout. The card chrome stays
+   * the same for each state.
    */
   state?: ChartStateProps['state'];
   /**
-   * Text below the placeholder illustration or glyph — defaults to
-   * `"Data is loading…"` / `"No data found"` / `"Something went wrong"`.
+   * Text shown in the selected state, or the numeric readout for `number`.
+   * Defaults to `"Data is loading…"` / `"No data found"` / `"0"` / etc.
    */
   stateDescription?: ChartStateProps['description'];
-  /** Trailing action on the `error` placeholder — e.g. a "Try again" button. */
-  stateAction?: ChartStateProps['action'];
   /**
    * Class for the card body. Rarely needed — the body already fills the card.
    * Use it where nothing above gives a height and the content can't either, e.g.
    * a placeholder-only widget outside a sized grid cell.
    */
   bodyClassName?: string;
-  /** The chart. Replaced by the placeholder while `state` is set. */
+  /** The chart. Replaced with `ChartState` together with `metric` while `state` is set. */
   children?: React.ReactNode;
 }
 
@@ -104,13 +95,11 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
   (
     {
       className,
-      variant,
       header,
       orientation = 'vertical',
       metric,
       state,
       stateDescription,
-      stateAction,
       bodyClassName,
       children,
       ...props
@@ -121,9 +110,6 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
     return (
       <Card
         ref={ref}
-        // The error border belongs to Card, so a caller sets `state="error"` once
-        // rather than wiring the placeholder and the border separately.
-        hasError={state === 'error'}
         data-slot="chart-widget"
         data-orientation={orientation}
         // `h-full` + a flex column is what lets the plot fill the card: the grid
@@ -139,44 +125,44 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
             'min-h-0 flex-1 gap-4 pt-4',
             // In horizontal mode override the default flex-col with flex-row so
             // the metric and the chart sit side by side, each taking half the body.
-            isHorizontal && 'flex-row items-stretch',
+            isHorizontal && !state && 'flex-row items-stretch',
             bodyClassName
           )}
         >
-          {metric ? (
-            <div
-              className={cn(
-                // Vertical: takes natural height, full width.
-                // Horizontal: flex-[1_0_0] matches Figma — equal half-width,
-                // no shrink (flex: 1 0 0), min-w-0 allows text to truncate.
-                isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'shrink-0'
-              )}
-              data-slot="chart-widget-metric"
-            >
-              {metric}
-            </div>
-          ) : null}
-          {/* `min-h-0` matters: without it a flex child refuses to shrink below
-              its content's height, so a chart would push the card past the height
-              the grid gave it instead of fitting inside. */}
-          <div
-            className={cn(
-              'min-h-0',
-              isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'flex-1'
-            )}
-            data-slot="chart-widget-body"
-          >
-            {state ? (
-              <ChartState
-                state={state}
-                variant={variant}
-                description={stateDescription}
-                action={stateAction}
-              />
-            ) : (
-              children
-            )}
-          </div>
+          {state ? (
+            <ChartState
+              className="min-h-0 flex-1"
+              state={state}
+              description={stateDescription}
+            />
+          ) : (
+            <>
+              {metric ? (
+                <div
+                  className={cn(
+                    // Vertical: takes natural height, full width.
+                    // Horizontal: flex-[1_0_0] matches Figma — equal half-width,
+                    // no shrink (flex: 1 0 0), min-w-0 allows text to truncate.
+                    isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'shrink-0'
+                  )}
+                  data-slot="chart-widget-metric"
+                >
+                  {metric}
+                </div>
+              ) : null}
+              {/* `min-h-0` matters: a flex child refuses to shrink below its
+                  content's height without it, so a chart can push past the grid cell. */}
+              <div
+                className={cn(
+                  'min-h-0',
+                  isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'flex-1'
+                )}
+                data-slot="chart-widget-body"
+              >
+                {children}
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     );

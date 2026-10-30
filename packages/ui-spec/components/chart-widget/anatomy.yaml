@@ -2,7 +2,7 @@ spec_version: '1.0'
 component: ChartWidget
 
 schematic: |
-  root: Card (surface, radius, border — error border when state="error")
+  root: Card (surface, radius, standard border for every state)
     header: CardHeader — title · description · extras (filter chip) · actions (⋯)
             [drag handle · switch · avatar · rename · collapse trigger, all Card's]
             draws its own bottom divider
@@ -15,8 +15,8 @@ root:
   element: div
   description: >-
     A `Card`, laid out as a full-height flex column so the height the grid gives
-    it reaches the plot. `state="error"` maps to Card's `hasError`, so the error
-    border and the error placeholder come from one prop rather than two. Carries
+    it reaches the plot. The card chrome is consistent across states; state
+    visuals live in ChartState inside the body. Carries
     `data-slot="chart-widget"`.
 
 parts:
@@ -44,7 +44,8 @@ parts:
   - id: plot
     element: div
     description: >-
-      The chart, or `ChartState` while `state` is set. In `vertical` mode:
+      The chart while `state` is unset, or `ChartState` when the consumer sets
+      it. A selected state replaces both metric and plot. In `vertical` mode:
       `flex-1 min-h-0`, so it fills the height the metric row leaves. In
       `horizontal` mode: `flex-[1_0_0] min-w-0`, so it shares width equally with
       the metric slot. Either way a tall or wide chart shrinks inside the card
@@ -67,22 +68,34 @@ states:
     trigger: '`state` is unset — the plot renders'
     kind: prop
     prop: state
-    exclusive_with: [loading, empty, error]
+    exclusive_with: [loading, empty, warning, error, number]
   - id: loading
     trigger: 'state="loading"'
     kind: prop
     prop: state
-    affects: [plot]
-    exclusive_with: [default, empty, error]
+    affects: [body, metric, plot]
+    exclusive_with: [default, empty, warning, error, number]
   - id: empty
     trigger: 'state="empty"'
     kind: prop
     prop: state
-    affects: [plot]
-    exclusive_with: [default, loading, error]
-  - id: error
-    trigger: 'state="error" — also gives the root Card its error border'
+    affects: [body, metric, plot]
+    exclusive_with: [default, loading, warning, error, number]
+  - id: warning
+    trigger: 'state="warning"'
     kind: prop
     prop: state
-    affects: [root, plot]
-    exclusive_with: [default, loading, empty]
+    affects: [body, metric, plot]
+    exclusive_with: [default, loading, empty, error, number]
+  - id: error
+    trigger: 'state="error"'
+    kind: prop
+    prop: state
+    affects: [body, metric, plot]
+    exclusive_with: [default, loading, empty, warning, number]
+  - id: number
+    trigger: 'state="number"'
+    kind: prop
+    prop: state
+    affects: [body, metric, plot]
+    exclusive_with: [default, loading, empty, warning, error]

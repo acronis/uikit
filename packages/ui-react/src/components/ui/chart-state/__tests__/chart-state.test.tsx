@@ -5,14 +5,14 @@ import { describe, expect, it } from 'vitest';
 import { ChartState } from '../chart-state';
 
 describe('ChartState', () => {
-  it('renders the loading state as a single status region with the default label', () => {
+  it('renders loading as one polite status region with its default label', () => {
     render(<ChartState state="loading" />);
-    // The Spinner is aria-hidden, so the root is the only status region — no
-    // double announce.
+
     expect(screen.getByRole('status')).toHaveTextContent('Data is loading…');
+    expect(screen.getAllByRole('status')).toHaveLength(1);
   });
 
-  it('keeps the full state a11y contract when conflicting a11y props are passed', () => {
+  it('keeps the state live-region contract when conflicting props are passed', () => {
     render(
       <ChartState
         state="loading"
@@ -21,153 +21,66 @@ describe('ChartState', () => {
         data-testid="cs"
       />
     );
-    // The intrinsic live-region contract (role + aria-live) wins over the
-    // consumer props, and the region is never marked busy.
+
     const el = screen.getByTestId('cs');
     expect(el).toHaveAttribute('role', 'status');
     expect(el).toHaveAttribute('aria-live', 'polite');
     expect(el).not.toHaveAttribute('aria-busy');
   });
 
-  it('renders the empty state with its default label', () => {
-    render(<ChartState state="empty" />);
-    expect(screen.getByRole('status')).toHaveTextContent('No data found');
-  });
+  it.each([
+    ['empty', 'No data found', 'ui-background-status-neutral-hover'],
+    ['warning', 'Data may be incomplete', 'ui-background-status-warning'],
+    ['error', 'Something went wrong', 'ui-background-status-critical'],
+  ] as const)(
+    'renders the %s state with its shared circular icon treatment',
+    (state, message, backgroundToken) => {
+      const { container } = render(<ChartState state={state} />);
 
-  it('renders the error state as an alert', () => {
-    render(<ChartState state="error" />);
-    expect(screen.getByRole('alert')).toHaveTextContent('Something went wrong');
-  });
+      const region = screen.getByRole(state === 'error' ? 'alert' : 'status');
+      expect(region).toHaveTextContent(message);
+      expect(region).toHaveAttribute(
+        'aria-live',
+        state === 'error' ? 'assertive' : 'polite'
+      );
 
-  it('overrides the default description', () => {
-    render(<ChartState state="empty" description="Nothing to plot" />);
-    expect(screen.getByText('Nothing to plot')).toBeInTheDocument();
-  });
+      const iconContainer = container.querySelector('[aria-hidden="true"]');
+      expect(iconContainer?.className).toContain('size-16');
+      expect(iconContainer?.className).toContain(backgroundToken);
+      expect(iconContainer?.querySelector('svg')).toHaveAttribute(
+        'width',
+        '24'
+      );
+    }
+  );
 
-  it('shows the action only for the error state', () => {
-    const { rerender } = render(
-      <ChartState state="empty" action={<button>Try again</button>} />
-    );
+  it('overrides the default description for the selected state', () => {
+    render(<ChartState state="warning" description="Partial results" />);
+
+    expect(screen.getByText('Partial results')).toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: 'Try again' })
+      screen.queryByText('Data may be incomplete')
     ).not.toBeInTheDocument();
-
-    rerender(<ChartState state="error" action={<button>Try again</button>} />);
-    expect(
-      screen.getByRole('button', { name: 'Try again' })
-    ).toBeInTheDocument();
   });
 
-  it('does not mark the loading live region busy (would suppress the announcement)', () => {
-    render(<ChartState state="loading" data-testid="cs" />);
-    const el = screen.getByTestId('cs');
-    expect(el).toHaveAttribute('role', 'status');
-    expect(el).toHaveAttribute('aria-live', 'polite');
-    expect(el).not.toHaveAttribute('aria-busy');
+  it('renders the number state as a centered, disabled KPI value', () => {
+    const { container } = render(
+      <ChartState state="number" description="0 GB" />
+    );
+
+    const value = screen.getByText('0 GB');
+    expect(value.tagName).toBe('P');
+    expect(value.className).toContain('text-5xl');
+    expect(value.className).toContain(
+      'text-[var(--ui-text-on-surface-disabled)]'
+    );
+    expect(container.querySelector('[aria-hidden="true"]')).toBeNull();
   });
 
-  describe('per-type empty states', () => {
-    it('draws the type silhouette instead of the generic glyph', () => {
-      const { container } = render(
-        <ChartState state="empty" variant="donut" />
-      );
+  it('defaults the number state value to zero', () => {
+    render(<ChartState state="number" />);
 
-      const svg = container.querySelector('svg');
-      expect(svg).toBeInTheDocument();
-      // Decorative: the label carries the meaning, so the artwork is hidden.
-      expect(svg).toHaveAttribute('aria-hidden', 'true');
-      // One tone, set on the container — every path inside inherits it, which is
-      // what lets brand/theme overrides reach the artwork.
-      expect(
-        svg?.querySelectorAll('[fill="currentColor"]').length
-      ).toBeGreaterThan(0);
-    });
-
-    it('shows only text when no variant is given', () => {
-      const { container } = render(<ChartState state="empty" />);
-
-      // No illustration is mounted when there is no variant — just the label.
-      expect(
-        container.querySelector('[class*="ui-background-status-off"]')
-      ).toBeNull();
-    });
-
-    it('gives every variant its own artwork, with donut and radial sharing one', () => {
-      const seen = new Map<string, number>();
-
-      for (const variant of [
-        'area',
-        'bar',
-        'line',
-        'donut',
-        'radial',
-        'funnel',
-        'radar',
-        'sankey',
-        'scatter',
-        'treemap',
-        'table',
-        'text',
-      ] as const) {
-        const { container } = render(
-          <ChartState state="empty" variant={variant} />
-        );
-        const svg = container.querySelector('svg');
-        expect(svg, variant).toBeInTheDocument();
-        const key = svg?.outerHTML ?? '';
-        seen.set(key, (seen.get(key) ?? 0) + 1);
-      }
-
-      // 12 variants, 11 distinct silhouettes: the design draws one ring for both
-      // donut and radial.
-      expect(seen.size).toBe(11);
-      expect([...seen.values()].filter((n) => n === 2)).toHaveLength(1);
-    });
-
-    it('ignores the variant for loading and error, which share one treatment', () => {
-      for (const state of ['loading', 'error'] as const) {
-        const { container } = render(
-          <ChartState state={state} variant="treemap" />
-        );
-        expect(
-          container.querySelector('[class*="ui-background-status-off"]')
-        ).toBeNull();
-      }
-    });
-
-    it('makes the description the caption, replacing the status label', () => {
-      // The mockups draw the silhouette over "Widget description" and no status
-      // line: the artwork already says "no data", so the one useful sentence is
-      // what the widget would show.
-      render(
-        <ChartState
-          state="empty"
-          variant="area"
-          description="Sessions over the selected range"
-        />
-      );
-
-      expect(
-        screen.getByText('Sessions over the selected range')
-      ).toBeInTheDocument();
-      expect(screen.queryByText('No data found')).not.toBeInTheDocument();
-    });
-
-    it('falls back to the status label when there is no description', () => {
-      render(<ChartState state="empty" variant="area" />);
-
-      expect(screen.getByText('No data found')).toBeInTheDocument();
-    });
-
-    it('allows description to override the label for loading and error', () => {
-      for (const state of ['loading', 'error'] as const) {
-        const { unmount } = render(
-          <ChartState state={state} description="Custom text" />
-        );
-        expect(screen.getByText('Custom text')).toBeInTheDocument();
-        unmount();
-      }
-    });
+    expect(screen.getByText('0')).toBeInTheDocument();
   });
 
   it('contains a long unbroken error description within the container', () => {
@@ -177,23 +90,24 @@ describe('ChartState', () => {
       <ChartState state="error" description={longCtiPath} />
     );
     const root = container.firstElementChild as HTMLElement;
-    // The description text must be present (not clipped from the DOM).
+
     expect(screen.getByText(longCtiPath)).toBeInTheDocument();
-    // Error state allows vertical scroll for long text.
     expect(root.className).toContain('overflow-y-auto');
     expect(root.className).toContain('overflow-x-hidden');
-    // The <p> must have word-break so unbroken CTI paths wrap.
-    const p = root.querySelector('p');
-    expect(p?.className).toContain('break-words');
-    expect(p?.className).toContain('max-w-full');
-    // The icon must not shrink when the description is long.
-    const icon = root.querySelector('svg');
-    expect(icon?.closest('div[class*="my-auto"]')).toBeInTheDocument();
+    expect(root.className).not.toContain('justify-center');
+    expect(root).toHaveClass('min-w-0');
+    expect(root.querySelector('p')?.className).toContain('min-w-0');
+    expect(root.querySelector('p')?.className).toContain(
+      '[overflow-wrap:anywhere]'
+    );
+    expect(root.querySelector('div > span')?.className).toContain('shrink-0');
+    expect(root.querySelector('[aria-hidden="true"]')).toBeInTheDocument();
   });
 
   it('forwards the ref', () => {
     const ref = createRef<HTMLDivElement>();
     render(<ChartState state="empty" ref={ref} />);
+
     expect(ref.current).toBeInstanceOf(HTMLDivElement);
   });
 });
