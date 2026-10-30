@@ -267,7 +267,7 @@ describe('Chart', () => {
     );
     const legend = container.querySelector('[data-slot="chart-legend"]');
 
-    expect(legend).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+    expect(legend).toHaveClass('max-h-[184px]', 'overflow-y-auto');
     expect(legend).toHaveAttribute('role', 'group');
     expect(legend).toHaveAttribute('aria-label', 'Chart legend');
     expect(legend).toHaveAttribute('tabindex', '0');
@@ -353,8 +353,8 @@ describe('Chart', () => {
   );
 
   it.each([
-    { fontSize: 'sm' as const, maxHeight: 'max-h-[160px]' },
-    { fontSize: 'lg' as const, maxHeight: 'max-h-[224px]' },
+    { fontSize: 'sm' as const, maxHeight: 'max-h-[216px]' },
+    { fontSize: 'lg' as const, maxHeight: 'max-h-[280px]' },
   ])(
     'keeps eight complete list legend rows at font size $fontSize',
     ({ fontSize, maxHeight }) => {

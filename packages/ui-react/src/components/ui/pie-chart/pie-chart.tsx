@@ -461,6 +461,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         payload: row as Record<string, unknown>,
       }));
     }, [resolvedConfigForLegend, data, nameKey]);
+    const hasLegend = Boolean(showLegend && rightLegendPayload.length);
 
     // The denominator behind every percent — the labels' and the tooltip's — so
     // the two always agree. Non-numeric cells count as nothing rather than NaN.
@@ -596,34 +597,51 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
       </RechartsPieChart>
     );
 
-    // Grow the SVG container when labels need space outside the arc so they
-    // stay within the chart boundary instead of escaping into the layout.
-    const chartDivSize = showLabels
-      ? showLeaderLines
-        ? 'size-[320px]'
-        : pieLabelPosition === 'outside' || pieLabelPosition === 'end'
-          ? 'size-[200px]'
-          : 'size-[120px]'
-      : 'size-[120px]';
+    // Outside labels need the full 320px SVG canvas; constraining it to half of
+    // the widget clips labels at the SVG boundary. Inside labels fit the 120px
+    // plot canvas.
+    const chartAreaSize =
+      showLabels &&
+      (showLeaderLines ||
+        pieLabelPosition === 'outside' ||
+        pieLabelPosition === 'end')
+        ? 320
+        : 120;
+    const chartDivSize =
+      chartAreaSize === 320 ? 'size-[320px]' : 'size-[120px]';
+    const chartGridColumns =
+      chartAreaSize === 320
+        ? 'grid-cols-[minmax(320px,1fr)_minmax(0,1fr)]'
+        : 'grid-cols-[minmax(120px,1fr)_minmax(0,1fr)]';
 
     return (
       <div
         ref={ref}
         data-shape={shape}
         className={cn(
-          'flex flex-row items-center gap-4',
-          !showLegend && 'justify-center',
+          'w-full min-w-0 gap-4',
+          hasLegend
+            ? cn('grid items-stretch', chartGridColumns)
+            : 'flex flex-row items-center justify-center',
           pieChartVariants({ shape }),
           className
         )}
         {...props}
       >
-        <div className={cn(chartDivSize, 'shrink-0')}>
-          <ChartContainer config={config} palette={palette} className="size-full">
-            {pieChartContent}
-          </ChartContainer>
+        <div
+          className={cn(hasLegend && 'flex min-w-0 items-center justify-center')}
+        >
+          <div className={chartDivSize}>
+            <ChartContainer
+              config={config}
+              palette={palette}
+              className="size-full"
+            >
+              {pieChartContent}
+            </ChartContainer>
+          </div>
         </div>
-        {showLegend && resolvedConfigForLegend && (
+        {hasLegend && resolvedConfigForLegend && (
           <ChartLegendContent
             variant="list"
             payload={rightLegendPayload}
@@ -633,7 +651,8 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
             ariaLabel={legendAriaLabel}
             valueKey={dataKey}
             valueFormatter={legendValueFormatter}
-            className="min-w-0 flex-1"
+            valueClassName="text-[var(--ui-text-on-surface-primary)]"
+            className="w-full min-w-0 self-center justify-center-safe"
           />
         )}
       </div>
