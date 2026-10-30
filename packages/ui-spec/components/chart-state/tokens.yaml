@@ -1,30 +1,25 @@
 spec_version: '1.0'
 component: ChartState
 
-# References only. Values live in @acronis-platform/tokens-pd. No `--ui-chart-*`
-# tier exists yet; ChartState themes from existing semantic tokens directly
-# (same icon tokens as the shipped InputSelectStatus sibling). The loading glyph
-# is the shared Spinner, which owns its own color token.
+# References only. Values live in @acronis-platform/tokens-pd.
 source: '@acronis-platform/tokens-pd'
 
 tokens:
   - name: --ui-text-on-surface-primary
-    affects: label
-    description: The state label text (bridged as `text-foreground`).
-  - name: --ui-glyph-on-status-warning
-    affects: glyph
-    description: Error-state warning glyph color.
+    affects: message
+    description: The state message text.
+  - name: --ui-text-on-surface-disabled
+    affects: numeric-value
+    description: Disabled-style KPI value in the number state.
+  - name: --ui-background-status-neutral-hover
+    affects: state-icon
+    description: Background circle for the empty state glyph.
+  - name: --ui-background-status-warning
+    affects: state-icon
+    description: Background circle for the warning state glyph.
+  - name: --ui-background-status-critical
+    affects: state-icon
+    description: Background circle for the error state glyph.
   - name: --ui-background-brand-secondary
-    affects: glyph
-    description: >-
-      Loading-state spinner ring color — inherited from the shared `Spinner`
-      (via `text-secondary`), listed here for completeness.
-  - name: --ui-background-status-off
-    affects: glyph
-    description: >-
-      The per-type empty-state artwork. Set once on the illustration's container
-      and inherited through `currentColor`, so brand and theme overrides reach
-      every path. Figma binds the artwork to `components/Avatar/color/blue`; this
-      is the semantic token with the identical light/dark pair, and "status off"
-      is what an empty widget is — a chart referencing Avatar's component tier
-      would be a coupling with nothing behind it.
+    affects: loading-spinner
+    description: Loading spinner color inherited from the shared Spinner.

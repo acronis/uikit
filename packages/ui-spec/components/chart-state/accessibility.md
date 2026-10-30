@@ -1,31 +1,22 @@
 # ChartState — accessibility
 
-- The root is a **live region** so a screen reader announces the state change
-  when a chart swaps its content in:
-  - `loading` / `empty` → `role="status"` with `aria-live="polite"`.
-  - `error` → `role="alert"` with `aria-live="assertive"`.
-- On `loading` the shared `Spinner` is rendered `aria-hidden` so the root's own
-  live region (with the label) announces once, rather than the Spinner's
-  `role="status"` + sr-only "Loading…" nesting inside it and double-announcing.
-- The root does **not** carry `aria-busy`. It is itself the live region, and some
-  screen readers defer announcing a busy region's content until `aria-busy`
-  clears; because this placeholder is unmounted (swapped for the chart) rather
-  than un-busied, a busy flag would risk swallowing the "Data is loading…"
-  announcement. Put `aria-busy` on the chart-slot **container** instead if a busy
-  signal is needed (same guidance as `Skeleton`).
-- The live-region attributes (`role` / `aria-live`) are applied after the prop
-  spread, so the state's a11y contract is not clobbered by a consumer-passed
-  attribute.
-- The label text is a real `<p>`, so the state message is always in the
-  accessible tree — the glyph is decorative and does not need its own label.
-- **Do not rely on the glyph color alone** to convey the state — the label
-  carries the meaning. Icon colors (`--ui-glyph-on-status-info` /
-  `--ui-glyph-on-status-warning`) and the label (`--ui-text-on-surface-primary`)
-  resolve to semantic tokens that meet contrast in both themes.
-- If the error state offers a retry, pass an actual interactive control as
-  `action` (a `Button`) so it is focusable and keyboard-operable.
+- The root is the live region: loading, empty, warning, and number use
+  `role="status"` with `aria-live="polite"`; error uses `role="alert"` with
+  `aria-live="assertive"`.
+- The root live-region attributes are applied after the prop spread, so the
+  selected state's announcement semantics cannot be overwritten by consumer
+  props.
+- The loading Spinner and state glyphs are decorative. The displayed content
+  supplies the state meaning independently of icon color.
+- The root does not carry `aria-busy`. This placeholder is unmounted when the
+  chart replaces it, and some screen readers defer announcements inside a busy
+  region. Put `aria-busy` on the chart-slot container if a busy signal is needed.
+- Long error text can scroll vertically, and long unbroken strings wrap within
+  the available width.
 
 ## Contrast
 
-Label and glyph colors resolve to semantic `--ui-*` tokens that meet contrast on
-the surface in both light and dark themes.
+Message text uses `--ui-text-on-surface-primary`. The state glyphs are the
+multi-color design assets, placed on semantic neutral, warning, and critical
+background tokens. The textual message communicates meaning without relying on
+color.

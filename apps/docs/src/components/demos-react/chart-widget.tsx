@@ -45,7 +45,7 @@ export function ChartWidgetDemo() {
           className="size-full"
         />
       </ChartWidget>
-      <ChartWidget header={{ title: 'Sessions', actions }} state="empty" variant="area" />
+      <ChartWidget header={{ title: 'Sessions', actions }} state="empty" />
     </div>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
-import { Button, ChartState } from '@acronis-platform/ui-react';
+import { ChartState } from '@acronis-platform/ui-react';
 
-const states = ['loading', 'empty', 'error'] as const;
+const states = ['loading', 'empty', 'warning', 'error', 'number'] as const;
 
 export function ChartStateDemo() {
   return (
@@ -15,10 +15,12 @@ export function ChartStateDemo() {
         >
           <ChartState
             state={state}
-            action={
-              state === 'error' ? (
-                <Button variant="ghost">Try again</Button>
-              ) : undefined
+            description={
+              state === 'warning'
+                ? 'Data may be incomplete'
+                : state === 'number'
+                  ? '0 GB'
+                  : undefined
             }
           />
         </div>

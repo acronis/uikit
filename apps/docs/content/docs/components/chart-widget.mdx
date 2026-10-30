@@ -1,6 +1,6 @@
 ---
 title: ChartWidget
-description: The dashboard card a chart sits in — header, optional metric readout, and the body's empty/loading/error state.
+description: The dashboard card a chart sits in — header, optional metric readout, and the body's selected state.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -11,8 +11,17 @@ import { ChartWidgetDemo } from '@/components/demos-react/chart-widget';
 ```tsx
 import { ChartWidget } from '@acronis-platform/ui-react';
 
-<ChartWidget header={{ title: 'Sessions', actions: <WidgetMenu /> }} className="h-[300px] w-[592px]">
-  <AreaChart config={config} data={data} dataKeys={['sessions']} xKey="month" className="size-full" />
+<ChartWidget
+  header={{ title: 'Sessions', actions: <WidgetMenu /> }}
+  className="h-[300px] w-[592px]"
+>
+  <AreaChart
+    config={config}
+    data={data}
+    dataKeys={['sessions']}
+    xKey="month"
+    className="size-full"
+  />
 </ChartWidget>;
 ```
 
@@ -27,8 +36,9 @@ then the plot. `ChartWidget` is that composition — and only that.
 ## What it adds
 
 One thing a [`Card`](/docs/components/card) legitimately doesn't know about:
-**what the body shows while there's no plot.** `state` renders a placeholder in
-place of the chart.
+**what the body shows for a selected state.** The consumer passes `state`
+explicitly; `ChartWidget` does not infer state from the chart or its data. The
+state replaces the metric and plot in the body.
 
 Everything else is `Card`'s.
 
@@ -104,32 +114,40 @@ to the widget. The `orientation` prop controls how metric and chart are arranged
 
 ## State
 
-`state` swaps the plot for [`ChartState`](/docs/components/chart-state), keeping
-the header. The placeholder fills the same body the plot would, so the card keeps
-its size.
+When the consumer passes `state`, [`ChartState`](/docs/components/chart-state)
+replaces the metric and plot while keeping the header. It fills the same body,
+so the card keeps its size. The card chrome stays the same for all states.
 
 ```tsx
 <ChartWidget header={{ title: 'Severity' }} state="loading" />
 
-<ChartWidget header={{ title: 'Sessions' }} state="empty" variant="area" />
+<ChartWidget header={{ title: 'Sessions' }} state="empty" />
+
+<ChartWidget header={{ title: 'Disk usage' }} state="number" stateDescription="0 GB" />
+
+<ChartWidget
+  header={{ title: 'Sessions' }}
+  state="warning"
+  stateDescription="Some results could not be loaded"
+/>
 
 <ChartWidget
   header={{ title: 'Sessions' }}
   state="error"
-  stateAction={<Button variant="ghost" onClick={refetch}>Try again</Button>}
+  stateDescription="We couldn't load these results"
 />
 ```
 
-`state="error"` also gives the card its error border, so the border and the
-placeholder come from one prop rather than two. `stateDescription` overrides the
-default text.
+`stateDescription` overrides the fallback content with localized or
+context-specific text. For `number`, pass the numeric value and unit. The
+consumer decides which state fits the widget's data and behavior.
 
 ## It takes no `size` — the grid does
 
 The Figma sets carry a `size` axis of `sm` / `md` / `lg`, but it only changes the
 frame **width** — 288 / 592 / 896. The height is the dashboard's business.
 
-So the widget declares no size; it *passes one down*. The card is a full-height
+So the widget declares no size; it _passes one down_. The card is a full-height
 flex column, the header takes what it needs, and the body takes the rest — so a
 chart given `size-full` fills the whole remaining card.
 
@@ -148,7 +166,11 @@ Dropped into a parent with no definite height, the card hugs its content instead
 sized cell, where neither the grid nor the content can give a height.
 
 ```tsx
-<ChartWidget header={{ title: 'Severity' }} state="empty" variant="bar" bodyClassName="h-[252px]" />
+<ChartWidget
+  header={{ title: 'Severity' }}
+  state="empty"
+  bodyClassName="h-[252px]"
+/>
 ```
 
 ## Accessibility
@@ -158,18 +180,22 @@ lives in what it holds. To make each widget a landmark, use `render`, which is
 forwarded to `Card`:
 
 ```tsx
-<ChartWidget render={<section aria-label="Sessions" />} header={{ title: 'Sessions' }}>
+<ChartWidget
+  render={<section aria-label="Sessions" />}
+  header={{ title: 'Sessions' }}
+>
   {chart}
 </ChartWidget>
 ```
 
 The accessible name has to come from you: the header's `title` is visible text
-*inside* the region, not a name for it, so a landmark without an `aria-label`
+_inside_ the region, not a name for it, so a landmark without an `aria-label`
 (or an `aria-labelledby` pointing at the title) is an unnamed region.
 
 The header's `title` is the widget's visible name, so a chart inside shouldn't
 repeat it in its own accessible name. While `state` is set, `ChartState` is the
-live region (`role="status"`, or `role="alert"` for errors).
+live region (`role="status"` for loading, empty, warning, and number, or
+`role="alert"` for errors).
 
 An icon-only control in `actions` needs its own `aria-label` — the ⋯ menu has no
 visible text.

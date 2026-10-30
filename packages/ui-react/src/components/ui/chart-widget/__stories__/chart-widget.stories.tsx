@@ -1,8 +1,15 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { ColumnDef } from '@tanstack/react-table';
-import { ChartPieIcon, EllipsisIcon, TagIcon } from '@acronis-platform/icons-react/stroke-mono';
-import { DotBlueIcon, DotGreenIcon } from '@acronis-platform/icons-react/stroke-multi';
+import {
+  ChartPieIcon,
+  EllipsisIcon,
+  TagIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
+import {
+  DotBlueIcon,
+  DotGreenIcon,
+} from '@acronis-platform/icons-react/stroke-multi';
 
 import { ChartWidget } from '../chart-widget';
 import { AreaChart } from '../../area-chart';
@@ -32,7 +39,7 @@ const meta = {
   argTypes: {
     state: {
       control: { type: 'inline-radio' },
-      options: [undefined, 'loading', 'empty', 'error'],
+      options: [undefined, 'loading', 'empty', 'warning', 'error', 'number'],
     },
   },
 } satisfies Meta<typeof ChartWidget>;
@@ -192,31 +199,31 @@ export const Widths: Story = {
 };
 
 /**
- * `loading` / `empty` / `error` replace the plot. `error` also gives the Card its
- * error border — one prop, not two. The placeholder fills the same body the plot
- * would, so the card keeps its size.
+ * `loading` / `empty` / `warning` / `error` / `number` replace the body. The shared
+ * placeholder fills the same body the plot would, so the card keeps its size.
  */
 export const States: Story = {
   args: { children: area },
   parameters: { snapshot: { fullPage: true } },
   render: (args) => (
     <Dashboard cols={2} className="w-[608px]">
-      {(['loading', 'empty', 'error'] as const).map((state) => (
-        <ChartWidget
-          {...args}
-          key={state}
-          state={state}
-          variant="area"
-          header={{ title: state, actions: <MoreActions /> }}
-          stateAction={
-            state === 'error' ? (
-              <button type="button" className="text-sm underline">
-                Try again
-              </button>
-            ) : undefined
-          }
-        />
-      ))}
+      {(['loading', 'empty', 'warning', 'error', 'number'] as const).map(
+        (state) => (
+          <ChartWidget
+            {...args}
+            key={state}
+            state={state}
+            header={{ title: state, actions: <MoreActions /> }}
+            stateDescription={
+              state === 'warning'
+                ? 'The data may be incomplete.'
+                : state === 'number'
+                  ? '0 GB'
+                  : undefined
+            }
+          />
+        )
+      )}
     </Dashboard>
   ),
 };
@@ -276,9 +283,9 @@ export const ChartTypes: Story = {
 
 /**
  * Long unbroken CTI error paths (API error messages, URLs) stay contained
- * within the card. The text wraps at any character boundary, and when the
- * message is taller than the card body the user can scroll vertically. The
- * icon stays anchored at the top so it's always visible.
+ * within the card. It uses the full padded content width and wraps at any
+ * character boundary. When the message is taller than the card body the user
+ * can scroll vertically. The icon stays anchored at the top so it's always visible.
  *
  * Two sizes: a KPI-sized widget (200px tall, 300px wide — matching the bug
  * report) and a standard dashboard cell (300px tall, 592px wide).
@@ -292,11 +299,6 @@ export const ErrorLongDescription: Story = {
         header={{ title: 'My widget' }}
         state="error"
         stateDescription="failed to execute 'cti.a.p.dts.func.v1.0~a.ax_core.query.v1.0~a.ax_core.widget.v1.0~a.ax_core.daily_activity_table.v1.0': failed to execute node 'func': failed to build return: failed to execute expression '$func[cti.a.p.dts.func.v1.0~a.ax_core.platform.daily_activity_table.v1.0](query=$.params.query)': failed to execute module function 'Platform.GetDailyActivityTableQuery': failed to query daily_activity_table: unmarshaling error"
-        stateAction={
-          <button type="button" className="text-sm underline">
-            Try again
-          </button>
-        }
         className="h-[200px] w-[300px]"
       />
       <Dashboard className="w-[592px]">
@@ -304,11 +306,6 @@ export const ErrorLongDescription: Story = {
           header={{ title: 'Daily Activity', actions: <MoreActions /> }}
           state="error"
           stateDescription="failed to execute 'cti.a.p.dts.func.v1.0~a.ax_core.query.v1.0~a.ax_core.widget.v1.0~a.ax_core.daily_activity_table.v1.0': failed to execute node 'func': failed to build return: failed to execute expression '$func[cti.a.p.dts.func.v1.0~a.ax_core.platform.daily_activity_table.v1.0](query=$.params.query)': failed to execute module function 'Platform.GetDailyActivityTableQuery': failed to query daily_activity_table: unmarshaling error"
-          stateAction={
-            <button type="button" className="text-sm underline">
-              Try again
-            </button>
-          }
         />
       </Dashboard>
     </div>
@@ -336,7 +333,9 @@ const successRateData = [
   { month: 'Jun', rate: 90 },
   { month: 'Dec', rate: 95 },
 ];
-const successRateConfig = { rate: { label: 'Success rate' } } satisfies ChartConfig;
+const successRateConfig = {
+  rate: { label: 'Success rate' },
+} satisfies ChartConfig;
 
 /**
  * `orientation="vertical"` (default): metric above the plot, full width. Use
@@ -347,13 +346,7 @@ export const MetricVertical: Story = {
     <Dashboard className="w-[592px]">
       <ChartWidget
         header={{ title: 'Backup success rate', actions: <MoreActions /> }}
-        metric={
-          <Metric
-            icon={<ChartPieIcon />}
-            value="95"
-            unit="%"
-          />
-        }
+        metric={<Metric icon={<ChartPieIcon />} value="95" unit="%" />}
       >
         <AreaChart
           data={successRateData}
@@ -450,7 +443,9 @@ const widgetTableData: WidgetTableRow[] = [
   },
 ];
 
-const tableHeader = () => <span className="whitespace-nowrap">Table header</span>;
+const tableHeader = () => (
+  <span className="whitespace-nowrap">Table header</span>
+);
 
 const widgetTableColumns: ColumnDef<WidgetTableRow>[] = [
   {
@@ -464,7 +459,11 @@ const widgetTableColumns: ColumnDef<WidgetTableRow>[] = [
     cell: ({ row }) => (
       <div className="flex min-w-0 gap-2 overflow-hidden">
         {row.original.tags.map(({ label, variant }) => (
-          <Tag key={label} variant={variant} icon={variant === 'info' ? <TagIcon /> : undefined}>
+          <Tag
+            key={label}
+            variant={variant}
+            icon={variant === 'info' ? <TagIcon /> : undefined}
+          >
             {label}
           </Tag>
         ))}

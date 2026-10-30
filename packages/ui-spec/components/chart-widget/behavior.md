@@ -45,18 +45,20 @@ design constraint, and hard-coding them would have fought the grid.
 
 ## State
 
-`state` renders `ChartState` **instead of** `children`. The header stays.
+The consumer selects `state` explicitly; the widget does not infer it from chart
+data. When set, `ChartState` replaces both the `metric` and `children`. The
+header stays. The `number` state shows a centered numeric KPI value.
 
-`state="error"` also maps to `Card`'s `hasError`, so the error border and the
-error placeholder come from one prop. A caller can't get one without the other,
-which is what the mockups draw.
+The card surface and border remain the same for loading, empty, warning, error,
+and number. State-specific visuals are contained within `ChartState` in the
+body.
 
-`ChartState` owns the live-region contract (`role="status"` for loading/empty,
-`role="alert"` for error), so the announcement follows the placeholder rather
-than being re-declared on the widget.
+`ChartState` owns the live-region contract (`role="status"` for loading, empty,
+warning, and number; `role="alert"` for error), so the announcement follows
+the state rather than being re-declared on the widget.
 
 ## Localization
 
-Every string is the caller's: the header's `title` / `description`, the metric's
-own labels, `stateDescription`, and the label inside `stateAction`. The only
-literals are `ChartState`'s per-state defaults, which `stateDescription` overrides.
+The header's `title` / `description`, the metric's labels, and
+`stateDescription` can be supplied by the consumer. The `stateDescription`
+prop lets applications localize or contextualize the state content.

@@ -8,10 +8,11 @@ readout, then the plot. `ChartWidget` is that composition — and only that.
 
 ## What it adds
 
-One thing a `Card` legitimately doesn't know about: **what the body shows while
-there is no plot.** `state="loading" | "empty" | "error"` renders `ChartState` in
-place of the chart, and `error` also gives the Card its error border — one prop,
-not two.
+One thing a `Card` legitimately doesn't know about: **what the body shows for
+an explicitly selected state.** `state="loading" | "empty" | "warning" |
+"error" | "number"` renders `ChartState` in place of the metric and chart. The
+consumer chooses the state; the widget does not infer it from data. Card chrome
+remains consistent for each state.
 
 ## What it doesn't add
 
@@ -36,7 +37,7 @@ the rest of the card. See `behavior.md`.
 | ------------------ | ------------------------------------------------------------------ |
 | `index.yaml`       | Identity, category, status, `since`.                               |
 | `api.yaml`         | The prop contract and the per-framework adapters.                  |
-| `anatomy.yaml`     | Parts, the schematic, and the four body states.                    |
+| `anatomy.yaml`     | Parts, the schematic, and the five widget states.                  |
 | `behavior.md`      | Composition, how the height reaches the plot, state, localization. |
 | `accessibility.md` | Roles, the placeholder's live region, header controls.             |
 | `tokens.yaml`      | The `--ui-*` tokens the widget references.                         |

@@ -1,57 +1,25 @@
 # ChartState
 
-A shared loading / empty / error placeholder for the chart types. Render it in
-place of a chart — inside the same sized slot — while data is loading, when
-there is nothing to plot, or when the fetch failed.
+A shared visual state for one chart slot. Use it while chart data is loading,
+missing, incomplete, or has failed, or when a KPI should show its numeric empty
+value. Empty, warning, and error share the Breakpoints state circles; number
+uses the centered disabled-style KPI value; loading uses the shared spinner.
 
-> **Design-pending v1.** Ported from the Figma InputSelect dropdown states (the
-> reference node for this task) and kept visually in step with the shipped
-> `InputSelectStatus`. There is no `--ui-chart-*` token tier yet, so it themes
-> from existing semantic tokens directly.
-
-## When to use
-
-- A chart cannot render yet (data in flight), has no data to plot, or failed to
-  load — swap the chart for the matching `ChartState`.
-- You want the same placeholder across every chart type, rather than each chart
-  hand-rolling its own.
-
-## When not to use
-
-- A full-page empty state (illustration, title, description, primary action) —
-  use the larger `Empty` component instead.
-- A bare loading indicator with no surrounding message — use `Spinner` directly.
-
-## Example
+Consumers select the semantic state and pass localized or context-specific
+content through `description`. `ChartState` does not infer the state from data.
 
 ```tsx
-import { ChartState, ChartContainer, Button } from '@acronis-platform/ui-react';
+import { ChartState } from '@acronis-platform/ui-react';
 
-function Sales({ status, data, config, refetch }) {
-  if (status === 'loading') return <ChartState state="loading" />;
-  if (status === 'error')
-    return (
-      <ChartState
-        state="error"
-        action={
-          <Button variant="ghost" onClick={refetch}>
-            Try again
-          </Button>
-        }
-      />
-    );
-  if (!data.length) return <ChartState state="empty" />;
-
-  return (
-    <ChartContainer config={config} className="h-[300px] w-[500px]">
-      {/* …the chart… */}
-    </ChartContainer>
-  );
-}
+if (status === 'loading') return <ChartState state="loading" />;
+if (status === 'warning')
+  return <ChartState state="warning" description={t('chart.partialData')} />;
+if (status === 'error')
+  return <ChartState state="error" description={t('chart.loadError')} />;
+if (isEmptyKpi) return <ChartState state="number" description="0 GB" />;
+if (!data.length)
+  return <ChartState state="empty" description={t('chart.noData')} />;
 ```
 
-The three states share one compact layout: a leading glyph (spinner / inbox /
-warning) over a centered label. Pass `description` to override a state's default
-label, and `action` to add a retry affordance to the error state. Long unbroken
-error descriptions (CTI paths, API URLs) wrap at word boundaries and scroll
-vertically when they exceed the slot height.
+`ChartState` fills the chart's slot. It does not own the containing widget card
+or dashboard composition; see `ChartWidget` for a single chart card.
