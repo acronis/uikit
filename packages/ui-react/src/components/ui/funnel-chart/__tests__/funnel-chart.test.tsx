@@ -987,7 +987,7 @@ describe('FunnelChart legend', () => {
   it('renders a two-column list with config labels and primary text values', () => {
     const { container } = renderChart({ showLegend: true });
     const legendElement = legend(container);
-    expect(legendElement).toHaveClass('max-h-[128px]', 'overflow-y-auto');
+    expect(legendElement).toHaveClass('max-h-[184px]', 'overflow-y-auto');
     expect(legendElement).toHaveTextContent('Visits5000');
     expect(legendElement).toHaveTextContent('Purchases620');
     expect(
