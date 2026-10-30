@@ -15,11 +15,6 @@ tokens:
   - name: --ui-border-on-surface-border
     affects: root
     description: The card border, from `Card`.
-  - name: --ui-border-on-surface-border-error
-    affects: root
-    description: >-
-      The card border while `state="error"` — mapped from that one prop onto
-      Card's `hasError`.
   - name: --ui-border-on-surface-divider
     affects: header
     description: >-

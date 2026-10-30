@@ -1,6 +1,6 @@
 ---
 title: ChartState
-description: A shared loading / empty / error placeholder for the chart types.
+description: Shared loading, empty, warning, error, and numeric states for chart slots.
 ---
 
 import { DemoReact } from '@/components/DemoReact';
@@ -12,86 +12,42 @@ import { ChartStateDemo } from '@/components/demos-react/chart-state';
 import { ChartState } from '@acronis-platform/ui-react';
 ```
 
-`ChartState` is the shared placeholder the [chart](/components/chart) types show
-in place of the chart itself — while data is loading, when there is nothing to
-plot, or when the fetch failed. It's a compact status block: a leading glyph or silhouette over a centered
-label, sized to fill the same slot a chart would occupy.
+`ChartState` provides the visual states for a chart slot. The consumer selects
+the state explicitly; the component does not infer it from chart data. Loading
+uses the shared spinner. Empty, warning, and error share the 64px circle and
+24px glyph treatment from the Breakpoints widget-state designs. Number shows a
+centered, disabled-style KPI value.
 
-Drive it with the required `state` prop (`loading` | `empty` | `error`). Each
-state carries a default description (`"Data is loading…"` / `"No data found"` /
-`"Something went wrong"`); pass `description` to override it. The error state also
-takes an optional `action` (e.g. a retry button).
+```tsx
+<ChartState state="loading" />
+<ChartState state="empty" description="No activity for this period" />
+<ChartState state="warning" description="Some results could not be loaded" />
+<ChartState state="error" description="We couldn't load this chart" />
+<ChartState state="number" description="0 GB" />
+```
 
-> **Design-pending v1**, ported from the Figma InputSelect dropdown states and
-> kept visually in step with the shipped `InputSelectStatus`. There is no chart
-> token tier yet, so it themes from existing semantic tokens directly (the label
-> from `--ui-text-on-surface-primary`, the glyphs from `--ui-glyph-on-status-*`,
-> and the loading spinner from the shared `Spinner`).
-
-## Examples
+The `state` prop is required. Each state has fallback content; pass
+`description` to provide localized or context-specific copy. For `number`, the
+description is the numeric value and unit; it defaults to `0`.
 
 <DemoReact>
   <ChartStateDemo />
 </DemoReact>
 
-Swap the chart for the matching state:
-
-```tsx
-function Sales({ status, data, config, refetch }) {
-  if (status === 'loading') return <ChartState state="loading" />;
-  if (status === 'error')
-    return (
-      <ChartState
-        state="error"
-        action={
-          <Button variant="ghost" onClick={refetch}>
-            Try again
-          </Button>
-        }
-      />
-    );
-  if (!data.length) return <ChartState state="empty" />;
-
-  return <LineChart config={config} data={data} dataKeys={['sales']} xKey="month" />;
-}
-```
-
-Override the default description:
-
-```tsx
-<ChartState state="empty" variant="bar" description="No results for the selected range" />
-```
-
 ## Accessibility
 
-The root **is** the live region, and which one depends on the state: `loading`
-and `empty` render `role="status"` with `aria-live="polite"`, `error` renders
-`role="alert"` with `aria-live="assertive"` — a failed fetch interrupts, a
-pending one waits its turn. Both are applied after the prop spread, so the
-contract can't be overwritten by an `aria-live` passed in from outside.
+The root is the live region: loading, empty, warning, and number use
+`role="status"` with `aria-live="polite"`; error uses `role="alert"` with
+`aria-live="assertive"`. These state semantics override conflicting role and
+live-region props. Icons are decorative, and the displayed content supplies
+the meaning.
 
-The message is a real `<p>`, so the state is text in the accessible tree rather
-than a colored glyph. The glyphs are decorative: the `loading` `Spinner` is
-explicitly `aria-hidden` (it carries its own `role="status"` and hidden label,
-which would double-announce nested inside this one), and the empty/error icons
-are `aria-hidden` by default the way every `icons-react` icon is until given a
-`title`.
+The component does not set `aria-busy`: this placeholder is unmounted when the
+chart replaces it. If needed, put `aria-busy` on the chart-slot container.
 
-There is deliberately no `aria-busy`. Some screen readers defer announcing a
-busy region's content until the flag clears, and this placeholder is _unmounted_
-— swapped for the chart — rather than un-busied, so the flag would risk
-swallowing the "Data is loading…" announcement entirely. Put `aria-busy` on the
-chart-slot container instead when you need a busy signal.
-
-Pass a real control as `action` (a `Button`): it sits inside the alert region,
-which announces but does not move focus, so the retry has to be reachable on its
-own.
-
-## Direction (RTL)
-
-A centered column of a glyph and text, with no physical directional utilities,
-so it mirrors under `dir="rtl"` with nothing to configure. The message and the
-`action` follow the text direction, and neither glyph (spinner, warning) carries a direction, so neither flips.
+The error state can scroll long descriptions vertically. Unbroken strings wrap
+within the available width, keeping diagnostic messages accessible without
+changing the widget's outer layout.
 
 ## API Reference
 
@@ -100,46 +56,12 @@ so it mirrors under `dir="rtl"` with nothing to configure. The message and the
   name="ChartStateProps"
 />
 
-## Per-type empty states
-
-`empty` is the one state the design draws per chart type. Pass `variant` and the
-placeholder shows that type's silhouette instead of a generic glyph, so an empty
-widget still says what it *would* have shown:
-
-```tsx
-<ChartState state="empty" variant="donut" />
-<ChartState state="empty" variant="funnel" description="Conversion by stage" />
-```
-
-Twelve variants — `area` · `bar` · `line` · `donut` · `radial` · `funnel` ·
-`radar` · `sankey` · `scatter` · `treemap` · `table` · `text`. `donut` and
-`radial` share a ring: a radial-bar widget with no data has nothing to tell it
-apart.
-
-The caption is one line in one style for all states — `body/default`,
-`text/onSurface/primary`, not muted. For the `empty` state the mockups place it
-under the silhouette as "Widget description": the artwork already says "no data",
-so the useful sentence is what the widget would show once it has data. Without a
-`description` it defaults to `"No data found"`, identical to `loading` and `error`
-falling back to their own defaults.
-
-Without a `variant` the `empty` state shows no artwork — just the text.
-`loading` and `error` share one treatment and ignore `variant`.
-
-The artwork is one colour, set on its container and inherited through
-`currentColor`, so brand and theme overrides reach every path.
-
 ## Not `WidgetPlaceholder`
 
-Two components, two jobs:
-
-- **`ChartState`** goes *inside* a chart's slot — it fills the slot and renders
-  one of three states. This is what [`ChartWidget`](/components/chart-widget)
-  swaps in for its plot.
+- **`ChartState`** goes inside a chart slot and shows the state selected by the
+  consuming application.
 - **[`WidgetPlaceholder`](/components/widget-placeholder)** is a composable
-  skeleton for a whole tile: its own header, footer and action parts, plus an
-  `interactive` affordance. For a dashboard widget that isn't a chart, or one
-  still being set up.
+  skeleton for a whole tile that is not a chart or is still being set up.
 
-Reach for `ChartState` when a chart has no data; for `WidgetPlaceholder` when the
-widget itself isn't there yet.
+Reach for `ChartState` when a chart has no usable data; use `WidgetPlaceholder`
+when the widget itself is not ready.

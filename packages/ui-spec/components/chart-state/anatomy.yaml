@@ -2,51 +2,47 @@ spec_version: '1.0'
 component: ChartState
 
 schematic: |
-  root: <div role="status|alert"> (flex column, fills the chart slot)
-    loading/empty: centered via `justify-center`
-      glyph: Spinner (lg) or variant silhouette
-      label: <p>
-    error: scrollable via `overflow-y: auto`
-      error-content: <div class="my-auto"> (centers when fits, top-aligns on overflow)
-        glyph: CircleWarningIcon (shrink-0)
-        label: <p class="break-words"> (wraps long unbroken strings)
-        action: optional trailing node (e.g. a "Try again" button)
+  root: <div role="status|alert"> (fills the chart slot)
+    loading-spinner: Spinner (lg) + message, centered
+    empty/warning/error: centered group
+      state-icon: 64px status-colored circle
+        glyph: 24px multi-color icon
+      message: <p> (14px / 24px, centered)
+    numeric-value: centered disabled-style value for number state (48px / 64px)
 
 root:
   element: div
   role: status
   description: >-
-    Flex column that fills its slot (`size-full`, `min-h-32`). Loading/empty
-    center their content via `justify-center`. Error uses `overflow-y: auto` +
-    `overflow-x: hidden`, with content wrapped in a `my-auto` div that centers
-    short messages yet collapses to top-aligned when the description overflows.
-    Announces as a live region — `role="status"` (`aria-live="polite"`) for
-    loading/empty and `role="alert"` (`aria-live="assertive"`) for error. No
-    `aria-busy` on the region itself — it would risk suppressing the loading
-    announcement.
+    Fills the chart slot and centers its state content. Loading, empty, warning,
+    and number announce through role="status" with aria-live="polite". Error
+    announces through role="alert" with aria-live="assertive" and scrolls
+    vertically when its diagnostic message exceeds the slot height. It has no
+    fixed minimum height, so the component fits the card body Figma specifies.
 
 parts:
-  - id: glyph
-    element: svg | div
+  - id: state-icon
+    element: span
     description: >-
-      The leading state glyph — the shared `Spinner` (lg) for loading, the
-      `CircleWarningIcon` for error, and for empty either the `variant`'s
-      silhouette (geometry exported from the Figma empty-state instances, every
-      path `currentColor`) or nothing when no variant is given.
-  - id: label
+      For empty, warning, and error, a 64px circle containing the matching 24px
+      multi-color status glyph. The circle background uses the neutral-hover,
+      warning, or critical semantic background token. Decorative to assistive
+      technology; the message carries the state meaning.
+  - id: message
     element: p
     description: >-
-      One line of text, in one style whichever it is — Figma's `body/default` on
-      `text/onSurface/primary` (14/24, centred), which the root already sets. The
-      `description` prop overrides the default for any state; otherwise the
-      per-state default is used ("Data is loading…" / "No data found" /
-      "Something went wrong").
-
-  - id: action
-    element: slot
+      Centered 14px / 24px text in the primary on-surface color. The consumer
+      can provide localized or context-specific content through `description`.
+  - id: loading-spinner
+    element: div
     description: >-
-      Optional trailing action, rendered for the error state only (e.g. a "Try
-      again" button).
+      The shared large Spinner, hidden from assistive technology because the
+      root live region announces the message.
+  - id: numeric-value
+    element: p
+    description: >-
+      Centered 48px / 64px KPI value in the disabled on-surface text color.
+      Defaults to `0`; consumers can pass a value and unit in `description`.
 
 states:
   - {
@@ -54,19 +50,33 @@ states:
       trigger: "state === 'loading'",
       kind: prop,
       prop: state,
-      affects: [root, glyph, label],
+      affects: [root, loading-spinner, message],
     }
   - {
       id: empty,
       trigger: "state === 'empty'",
       kind: prop,
       prop: state,
-      affects: [root, glyph, label],
+      affects: [root, state-icon, message],
+    }
+  - {
+      id: warning,
+      trigger: "state === 'warning'",
+      kind: prop,
+      prop: state,
+      affects: [root, state-icon, message],
     }
   - {
       id: error,
       trigger: "state === 'error'",
       kind: prop,
       prop: state,
-      affects: [root, glyph, label, action],
+      affects: [root, state-icon, message],
+    }
+  - {
+      id: number,
+      trigger: "state === 'number'",
+      kind: prop,
+      prop: state,
+      affects: [root, numeric-value],
     }
