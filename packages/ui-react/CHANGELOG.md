@@ -1,5 +1,24 @@
 # @acronis-platform/ui-react
 
+## 6.0.0
+
+### Major Changes
+
+- [#783](https://github.com/acronis/uikit/pull/783) [`d65c80b`](https://github.com/acronis/uikit/commit/d65c80bfdf994cc4055e18edc89799967d46466b) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Align ChartState empty, warning, and error visuals with Breakpoints, add the warning state, keep ChartWidget chrome consistent, and remove per-chart empty-state variants.
+
+### Minor Changes
+
+- [#781](https://github.com/acronis/uikit/pull/781) [`b99f654`](https://github.com/acronis/uikit/commit/b99f654ced635de48481f076ed4fb933dd8d2b49) Thanks [@madjorr](https://github.com/madjorr)! - Dialog / DialogContent: new `verticalAlign` prop (`'center'` default | `'top'`). `top` pins the popup 48px from the top edge of the viewport instead of centering it, so it keeps a stable top edge while its content height changes (still capped at the viewport height minus 96px). Omitting the prop keeps the existing centered placement.
+
+### Patch Changes
+
+- [#782](https://github.com/acronis/uikit/pull/782) [`076cf38`](https://github.com/acronis/uikit/commit/076cf38ebef083e3d46b8b073011355eb39d3c91) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Keep PieChart labels within the plot while centering its plot and legend in responsive columns; let ChartWidget contents shrink within the card, and update list legend spacing and value styling to match the reviewed design.
+
+- [#779](https://github.com/acronis/uikit/pull/779) [`9da63ef`](https://github.com/acronis/uikit/commit/9da63ef6eeac668e13123ded167a6f8100dbf2ca) Thanks [@madjorr](https://github.com/madjorr)! - Bump dev and build dependencies (storybook, vite, vitest, sharp, svgo and others) to resolve npm security alerts. No change to the published API.
+
+- Updated dependencies [[`9da63ef`](https://github.com/acronis/uikit/commit/9da63ef6eeac668e13123ded167a6f8100dbf2ca)]:
+  - @acronis-platform/icons-react@2.1.1
+
 ## 5.5.9
 
 ### Patch Changes

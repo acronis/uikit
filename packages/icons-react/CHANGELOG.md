@@ -1,5 +1,11 @@
 # @acronis-platform/icons-react
 
+## 2.1.1
+
+### Patch Changes
+
+- [#779](https://github.com/acronis/uikit/pull/779) [`9da63ef`](https://github.com/acronis/uikit/commit/9da63ef6eeac668e13123ded167a6f8100dbf2ca) Thanks [@madjorr](https://github.com/madjorr)! - Bump dev and build dependencies (storybook, vite, vitest, sharp, svgo and others) to resolve npm security alerts. No change to the published API.
+
 ## 2.1.0
 
 ### Minor Changes
