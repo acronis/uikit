@@ -608,28 +608,31 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
         ? 320
         : 120;
     const chartDivSize =
-      chartAreaSize === 320 ? 'size-[320px]' : 'size-[120px]';
-    const chartGridColumns =
       chartAreaSize === 320
-        ? 'grid-cols-[minmax(320px,1fr)_minmax(0,1fr)]'
-        : 'grid-cols-[minmax(120px,1fr)_minmax(0,1fr)]';
+        ? 'aspect-square w-full max-w-[320px]'
+        : 'size-[120px]';
+    const chartColumnSize =
+      chartAreaSize === 320
+        ? 'max-w-[320px] flex-[1_1_320px]'
+        : 'flex-1 basis-[120px]';
 
     return (
       <div
         ref={ref}
         data-shape={shape}
         className={cn(
-          'w-full min-w-0 gap-4',
-          hasLegend
-            ? cn('grid items-stretch', chartGridColumns)
-            : 'flex flex-row items-center justify-center',
+          'flex w-full min-w-0 gap-4',
+          hasLegend ? 'flex-wrap items-stretch' : 'items-center justify-center',
           pieChartVariants({ shape }),
           className
         )}
         {...props}
       >
         <div
-          className={cn(hasLegend && 'flex min-w-0 items-center justify-center')}
+          className={cn(
+            'flex min-w-0 items-center justify-center',
+            hasLegend ? chartColumnSize : 'w-full'
+          )}
         >
           <div className={chartDivSize}>
             <ChartContainer
@@ -652,7 +655,7 @@ const PieChart = React.forwardRef<HTMLDivElement, PieChartProps>(
             valueKey={dataKey}
             valueFormatter={legendValueFormatter}
             valueClassName="text-[var(--ui-text-on-surface-primary)]"
-            className="w-full min-w-0 self-center justify-center-safe"
+            className="min-w-0 flex-1 basis-[120px] self-center"
           />
         )}
       </div>

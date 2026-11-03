@@ -7,7 +7,9 @@ import {
   pieChartLabelText,
   pieChartValuePercentRow,
 } from '../pie-chart';
-import { ChartTooltipContent, type ChartConfig,
+import {
+  ChartTooltipContent,
+  type ChartConfig,
   resolveAnimation,
 } from '../../chart';
 import { giveEveryChartASize } from '../../chart/__tests__/chart-layout';
@@ -114,10 +116,25 @@ describe('PieChart', () => {
       shape: 'donut',
       showTooltip: false,
       showLegend: false,
+      showLabels: true,
       paddingAngle: 2,
     });
+    const root = container.firstElementChild;
+
     expect(container.querySelector('.recharts-legend-wrapper')).toBeNull();
+    expect(container.querySelector('[data-slot="chart-legend"]')).toBeNull();
+    expect(root).toHaveClass('flex', 'items-center', 'justify-center');
+    expect(root).not.toHaveClass('flex-wrap', 'grid');
     expect(slicesOf(container)).toHaveLength(3);
+  });
+
+  it('keeps an empty chart centered without mounting an empty legend', () => {
+    const { container } = renderChart({ data: [], showLabels: true });
+    const root = container.firstElementChild;
+
+    expect(container.querySelector('[data-slot="chart-legend"]')).toBeNull();
+    expect(root).toHaveClass('flex', 'items-center', 'justify-center');
+    expect(root).not.toHaveClass('flex-wrap', 'grid');
   });
 
   it('labels the legend from config', () => {
@@ -141,31 +158,48 @@ describe('PieChart', () => {
     {
       label: 'leader-line labels',
       props: { showLabels: true, labelLine: true },
-      grid: 'grid-cols-[minmax(320px,1fr)_minmax(0,1fr)]',
-      plot: 'size-[320px]',
+      plotColumn: 'max-w-[320px] flex-[1_1_320px]',
+      plotClass: 'aspect-square w-full max-w-[320px]',
     },
     {
       label: 'outside labels',
       props: { showLabels: true },
-      grid: 'grid-cols-[minmax(320px,1fr)_minmax(0,1fr)]',
-      plot: 'size-[320px]',
+      plotColumn: 'max-w-[320px] flex-[1_1_320px]',
+      plotClass: 'aspect-square w-full max-w-[320px]',
+    },
+    {
+      label: 'end labels',
+      props: { showLabels: true, labelPosition: 'end' as const },
+      plotColumn: 'max-w-[320px] flex-[1_1_320px]',
+      plotClass: 'aspect-square w-full max-w-[320px]',
     },
     {
       label: 'inside labels',
       props: { showLabels: true, labelPosition: 'insideStart' as const },
-      grid: 'grid-cols-[minmax(120px,1fr)_minmax(0,1fr)]',
-      plot: 'size-[120px]',
+      plotColumn: 'flex-1 basis-[120px]',
+      plotClass: 'size-[120px]',
     },
-  ])('reserves room for $label beside the legend', ({ props, grid, plot }) => {
-    const { container } = renderChart(props);
-    const root = container.firstElementChild;
-    const plotContainer = container.querySelector('[data-slot="chart"]')
-      ?.parentElement;
+  ])(
+    'uses a wrapping layout and correct canvas for $label',
+    ({ props, plotColumn, plotClass }) => {
+      const { container } = renderChart(props);
+      const root = container.firstElementChild;
+      const chartContainer = container.querySelector('[data-slot="chart"]');
+      const plotElement = chartContainer?.parentElement;
+      const plotColumnElement = plotElement?.parentElement;
+      const legend = container.querySelector('[data-slot="chart-legend"]');
 
-    expect(root).toHaveClass(grid);
-    expect(plotContainer).toHaveClass(plot);
-    expect(plotContainer).not.toHaveClass('max-w-full');
-  });
+      expect(root).toHaveClass('flex', 'flex-wrap', 'gap-4');
+      expect(root).not.toHaveClass('grid');
+      expect(plotColumnElement).toHaveClass(
+        ...plotColumn.split(' '),
+        'min-w-0'
+      );
+      expect(plotElement).toHaveClass(...plotClass.split(' '));
+      expect(legend).toHaveClass('basis-[120px]', 'flex-1', 'self-center');
+      expect(legend).not.toHaveClass('justify-center-safe');
+    }
+  );
 
   it('sizes the legend text with legendFontSize', () => {
     const { container } = renderChart({ legendFontSize: 'lg' });
