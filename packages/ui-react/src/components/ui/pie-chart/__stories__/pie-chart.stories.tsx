@@ -167,7 +167,8 @@ const widgetConfig = {
 function renderWidgetExample(
   width: number,
   rowCount = 4,
-  centerLabel?: { value: string; label: string }
+  centerLabel?: { value: string; label: string },
+  showLabels = false
 ) {
   return (
     <div style={{ width }}>
@@ -188,6 +189,8 @@ function renderWidgetExample(
           dataKey="value"
           shape="donut"
           centerLabel={centerLabel}
+          showLabels={showLabels}
+          labelFormat="name-value"
         />
       </ChartWidget>
     </div>
@@ -196,6 +199,12 @@ function renderWidgetExample(
 
 export const WidgetExample: Story = {
   render: () => renderWidgetExample(342),
+};
+
+// Outside labels keep the plot responsive and move the legend below it when
+// the widget's content is too narrow for both columns.
+export const WidgetExampleNarrowOutsideLabels: Story = {
+  render: () => renderWidgetExample(342, 4, undefined, true),
 };
 
 export const WidgetExampleWide: Story = {

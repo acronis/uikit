@@ -155,7 +155,7 @@ const ChartWidget = React.forwardRef<HTMLDivElement, ChartWidgetProps>(
               <div
                 className={cn(
                   'min-h-0 min-w-0',
-                  isHorizontal ? 'min-w-0 flex-[1_0_0]' : 'flex-1'
+                  isHorizontal ? 'flex-[1_0_0]' : 'flex-1'
                 )}
                 data-slot="chart-widget-body"
               >
