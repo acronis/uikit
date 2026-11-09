@@ -24,6 +24,7 @@ const meta = {
   component: DropdownMenu,
   parameters: { layout: 'centered' },
   tags: ['autodocs'],
+  args: { modal: false },
   argTypes: {
     defaultOpen: {
       control: 'boolean',
@@ -34,6 +35,16 @@ const meta = {
       control: 'boolean',
       description: 'Controlled open state. Pair with `onOpenChange`.',
       table: { type: { summary: 'boolean' }, category: 'State' },
+    },
+    modal: {
+      control: 'boolean',
+      description:
+        'Block interaction outside the menu and lock page scroll. Defaults to false.',
+      table: {
+        type: { summary: 'boolean' },
+        category: 'Behavior',
+        defaultValue: { summary: 'false' },
+      },
     },
     onOpenChange: {
       control: false,
@@ -53,8 +64,8 @@ type Story = StoryObj<typeof meta>;
 
 /** Single section with items — ButtonMenu trigger + Figma Section(firstSection=true). */
 export const Default: Story = {
-  render: () => (
-    <DropdownMenu defaultOpen>
+  render: ({ modal }) => (
+    <DropdownMenu defaultOpen modal={modal}>
       <DropdownMenuTrigger render={<ButtonMenu variant="secondary">Actions</ButtonMenu>} />
       <DropdownMenuContent>
         <DropdownMenuGroup>
@@ -75,8 +86,8 @@ export const Default: Story = {
 
 /** Multiple sections — non-first sections get an auto top-border separator (Figma firstSection=false). */
 export const MultipleSections: Story = {
-  render: () => (
-    <DropdownMenu defaultOpen>
+  render: ({ modal }) => (
+    <DropdownMenu defaultOpen modal={modal}>
       <DropdownMenuTrigger render={<ButtonMenu variant="secondary">Actions</ButtonMenu>} />
       <DropdownMenuContent>
         <DropdownMenuGroup>
@@ -99,8 +110,8 @@ export const MultipleSections: Story = {
 
 /** Cascade submenu — Item with ItemExtras(variant=cascade) opens a nested dropdown. */
 export const WithSubmenu: Story = {
-  render: () => (
-    <DropdownMenu defaultOpen>
+  render: ({ modal }) => (
+    <DropdownMenu defaultOpen modal={modal}>
       <DropdownMenuTrigger render={<ButtonMenu variant="primary">Actions</ButtonMenu>} />
       <DropdownMenuContent>
         <DropdownMenuGroup>
@@ -133,12 +144,12 @@ export const WithSubmenu: Story = {
  * after the indicator slot.
  */
 export const WithCheckboxItems: Story = {
-  render: () => {
+  render: ({ modal }) => {
     const [showStatusBar, setShowStatusBar] = React.useState(true);
     const [showActivityBar, setShowActivityBar] = React.useState(false);
     const [showPanel, setShowPanel] = React.useState(false);
     return (
-      <DropdownMenu defaultOpen>
+      <DropdownMenu defaultOpen modal={modal}>
         <DropdownMenuTrigger render={<ButtonMenu variant="secondary">View</ButtonMenu>} />
         <DropdownMenuContent>
           <DropdownMenuGroup>
@@ -173,10 +184,10 @@ export const WithCheckboxItems: Story = {
  * Label is `inset` to align with the radio item labels.
  */
 export const WithRadioItems: Story = {
-  render: () => {
+  render: ({ modal }) => {
     const [position, setPosition] = React.useState('bottom');
     return (
-      <DropdownMenu defaultOpen>
+      <DropdownMenu defaultOpen modal={modal}>
         <DropdownMenuTrigger render={<ButtonMenu variant="secondary">Position</ButtonMenu>} />
         <DropdownMenuContent>
           <DropdownMenuGroup>

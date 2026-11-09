@@ -38,6 +38,15 @@ Themed by the `--ui-button-menu-dropdown-*` token tier from
 `DropdownMenuItem`s — with optional labels, separators, checkbox/radio items,
 shortcuts, and nested submenus.
 
+`modal` defaults to `false`, so opening a menu leaves the rest of the page
+interactive and scrollable. Set `modal` to enable modal behavior when needed:
+
+```tsx
+<DropdownMenu modal>
+  {/* trigger and content */}
+</DropdownMenu>
+```
+
 ## Examples
 
 <DemoReact>

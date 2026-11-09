@@ -6,6 +6,20 @@ state (or the consumer controls it via `open`).
 ## Opening & closing
 
 ```gherkin
+Scenario: The menu is non-modal by default
+  Given a menu without an explicit modal setting
+  When the menu opens
+  Then page scrolling and interaction outside the menu remain available
+```
+
+```gherkin
+Scenario: Opting into modal behavior
+  Given a menu configured with modal=true
+  When the menu opens
+  Then page scrolling and interaction outside the menu are blocked
+```
+
+```gherkin
 Scenario: Opening from the trigger
   Given a closed menu
   When the user activates the trigger (click / Enter / Space / Arrow)
