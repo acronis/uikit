@@ -47,7 +47,15 @@ Scenario: Roving navigation and typeahead
   Given an open menu
   When the user presses Arrow keys
   Then highlight moves between items (data-[highlighted])
-  And typing characters jumps to the matching item
+  And typing characters jumps to a matching item
+```
+
+```gherkin
+Scenario: Explaining a disabled action
+  Given an open menu with a disabled item and an explanatory tooltip
+  When the pointer hovers its tooltip trigger or keyboard focus reaches it
+  Then the tooltip opens
+  And the item remains disabled and its action does not run
 ```
 
 ## Submenus
