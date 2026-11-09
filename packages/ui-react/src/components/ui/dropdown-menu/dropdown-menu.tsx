@@ -11,7 +11,24 @@ import { usePortalContainer } from '@/lib/portal-container';
 // @acronis-platform/tokens-pd (ButtonMenu/default.css). Enter/exit animations
 // use `tw-animate-css` keyed to data-[open]/[closed]/[side].
 
-const DropdownMenu = MenuPrimitive.Root;
+export type DropdownMenuProps<Payload = unknown> = Omit<
+  MenuPrimitive.Root.Props<Payload>,
+  'modal'
+> & {
+  /**
+   * Whether opening the menu blocks outside interaction and locks page scroll.
+   * Defaults to `false`.
+   */
+  modal?: boolean;
+};
+
+function DropdownMenu<Payload = unknown>({
+  modal = false,
+  ...props
+}: DropdownMenuProps<Payload>) {
+  return <MenuPrimitive.Root<Payload> modal={modal} {...props} />;
+}
+
 const DropdownMenuTrigger = MenuPrimitive.Trigger;
 const DropdownMenuGroup = React.forwardRef<
   React.ElementRef<typeof MenuPrimitive.Group>,

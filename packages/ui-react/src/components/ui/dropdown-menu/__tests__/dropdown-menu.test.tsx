@@ -1,5 +1,5 @@
 import { createRef } from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -22,21 +22,26 @@ import {
 
 function DemoMenu(props: {
   defaultOpen?: boolean;
+  modal?: boolean;
   onItemClick?: () => void;
+  onOutsideClick?: () => void;
 }) {
   return (
-    <DropdownMenu defaultOpen={props.defaultOpen}>
-      <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuGroup>
-          <DropdownMenuItem onClick={props.onItemClick}>
-            Profile
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-        </DropdownMenuGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      <DropdownMenu defaultOpen={props.defaultOpen} modal={props.modal}>
+        <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuGroup>
+            <DropdownMenuItem onClick={props.onItemClick}>
+              Profile
+              <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+            </DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+      <button onClick={props.onOutsideClick}>Outside action</button>
+    </>
   );
 }
 
@@ -55,6 +60,29 @@ describe('DropdownMenu', () => {
     expect(screen.getByRole('menu')).toBeInTheDocument();
     expect(screen.getByRole('menuitem', { name: /Profile/ })).toBeInTheDocument();
     expect(screen.getByRole('menuitem', { name: 'Settings' })).toBeInTheDocument();
+  });
+
+  it('keeps outside content interactive by default', async () => {
+    const user = userEvent.setup();
+    const onOutsideClick = vi.fn();
+    render(<DemoMenu defaultOpen onOutsideClick={onOutsideClick} />);
+
+    await user.click(screen.getByRole('button', { name: 'Outside action' }));
+
+    expect(onOutsideClick).toHaveBeenCalledOnce();
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+    expect(document.body.style.overflowY).not.toBe('hidden');
+    expect(document.documentElement.style.overflowY).not.toBe('hidden');
+  });
+
+  it('allows opting into modal behavior', async () => {
+    render(<DemoMenu defaultOpen modal />);
+    await waitFor(() => {
+      expect(
+        document.body.style.overflowY === 'hidden' ||
+          document.documentElement.style.overflowY === 'hidden'
+      ).toBe(true);
+    });
   });
 
   it('themes the popup from the --ui-button-menu-dropdown tokens', () => {

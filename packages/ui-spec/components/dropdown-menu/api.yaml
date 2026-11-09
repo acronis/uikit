@@ -16,6 +16,13 @@ contract:
       required: false
       default: false
       description: Initial open state when uncontrolled.
+    - name: modal
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        Whether opening the menu blocks interaction outside it and locks page
+        scrolling. Defaults to non-modal behavior.
     - name: side
       type: "'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end'"
       required: false

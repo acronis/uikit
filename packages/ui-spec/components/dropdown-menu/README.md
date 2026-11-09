@@ -9,6 +9,9 @@ token tier from `@acronis-platform/tokens-pd`.
 
 - A compact list of **actions** triggered from a `ButtonMenu` (row actions,
   account menu, "more" overflow).
+- The menu is non-modal by default, so the rest of the page remains scrollable
+  and interactive. Set `modal` to `true` when the page should be blocked while
+  the menu is open.
 
 ## When not to use
 
