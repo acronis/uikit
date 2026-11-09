@@ -526,6 +526,11 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
     );
     expect(MockIntersectionObserver.instances).toHaveLength(0);
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(1);
+    const loadingSkeleton = container.querySelector('[data-slot="skeleton"]');
+    expect(loadingSkeleton?.className).toContain(
+      'bg-[var(--ui-background-surface-active)]'
+    );
+    expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
   });
 });
 
@@ -1339,6 +1344,15 @@ describe('DataTable presentational features', () => {
     expect(screen.queryByText('user1@example.com')).not.toBeInTheDocument();
     // 3 rows × 2 columns of pulse bars
     expect(container.querySelectorAll('.animate-pulse')).toHaveLength(6);
+    const loadingSkeletons = Array.from(
+      container.querySelectorAll('[data-slot="skeleton"]')
+    );
+    expect(loadingSkeletons).toHaveLength(6);
+    for (const loadingSkeleton of loadingSkeletons) {
+      expect(loadingSkeleton.className).toContain(
+        'bg-[var(--ui-background-surface-active)]'
+      );
+    }
   });
 
   it('highlights the clicked row when highlightCurrentRow', async () => {

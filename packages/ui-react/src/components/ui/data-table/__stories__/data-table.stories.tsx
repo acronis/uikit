@@ -137,6 +137,32 @@ export const Default: Story = {
   ),
 };
 
+export const SkeletonLoading: Story = {
+  render: () => (
+    <DataTable
+      columns={columns}
+      data={[]}
+      skeleton
+      skeletonRows={5}
+      hideActionColumn
+    />
+  ),
+};
+
+export const InfiniteLoading: Story = {
+  render: () => (
+    <DataTable
+      columns={columns}
+      data={payments.slice(0, 3)}
+      hideActionColumn
+      paginationMode="infinite"
+      onLoadMore={() => {}}
+      hasNextPage
+      isLoadingMore
+    />
+  ),
+};
+
 type TruncatedSortableHeaderRow = {
   asset: string;
   device: string;
