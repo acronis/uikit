@@ -45,7 +45,7 @@ export interface DataTableProps {
   bordered?: boolean;
   /** Highlight the row the user last clicked (the "current" row). */
   highlightCurrentRow?: boolean;
-  /** Render placeholder skeleton rows instead of data (loading state). */
+  /** Render shared Skeleton placeholders instead of data (loading state). */
   skeleton?: boolean;
   /** Number of skeleton rows to render when `skeleton` is set (default 5). */
   skeletonRows?: number;

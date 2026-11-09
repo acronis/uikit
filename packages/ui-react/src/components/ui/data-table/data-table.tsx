@@ -44,6 +44,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from '../dropdown-menu';
+import { Skeleton } from '../skeleton';
 import {
   Table,
   TableActionsCell,
@@ -303,9 +304,9 @@ interface DataTableOwnProps<TData> {
   bordered?: boolean;
   /** Highlight the row the user last clicked (the "current" row). */
   highlightCurrentRow?: boolean;
-  /** Render placeholder skeleton rows instead of data (loading state). */
+  /** Render shared Skeleton placeholders instead of data (loading state). */
   skeleton?: boolean;
-  /** Number of skeleton rows to render when `skeleton` is set. */
+  /** Number of skeleton rows to render when `skeleton` is set (default 5). */
   skeletonRows?: number;
   /**
    * Opt in to interactive column resizing. Renders a drag handle at the trailing
@@ -1061,7 +1062,7 @@ export function DataTable<TData, TValue = unknown>({
               >
                 {table.getVisibleLeafColumns().map((column) => (
                   <TableCell key={column.id}>
-                    <div className="h-4 w-full animate-pulse rounded bg-[var(--ui-background-surface-secondary)]" />
+                    <Skeleton className="h-4 w-full" />
                   </TableCell>
                 ))}
               </TableRow>
@@ -1238,13 +1239,13 @@ export function DataTable<TData, TValue = unknown>({
             isLoadingMore && (
               <TableRow className="hover:bg-transparent">
                 <TableCell colSpan={table.getVisibleLeafColumns().length}>
-                  <div
+                  <Skeleton
                     role="status"
                     aria-live="polite"
-                    className="h-4 w-full animate-pulse rounded bg-[var(--ui-background-surface-secondary)]"
+                    className="h-4 w-full"
                   >
                     <span className="sr-only">Loading more rows…</span>
-                  </div>
+                  </Skeleton>
                 </TableCell>
               </TableRow>
             )}

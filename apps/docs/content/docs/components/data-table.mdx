@@ -161,6 +161,11 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 <DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
 ```
 
+Skeleton rows use the shared `Skeleton` treatment, including its `surface-active`
+fill. This keeps the loading bars visible on `surface-secondary` (or `muted`)
+surfaces. `skeletonRows` defaults to five; the header remains visible while the
+row data is replaced by placeholders.
+
 ### Sorting
 
 Sorting is client-side by default. For a non-alphabetic order, give the column a
@@ -511,6 +516,9 @@ calls are suppressed and a trailing loading row renders (`role="status"` +
   isLoadingMore={isLoadingMore}
 />
 ```
+
+The trailing loading row uses the same `Skeleton` fill as the initial loading
+rows, so it remains visible on secondary surfaces too.
 
 - Fetching, cursor/offset tracking, dedup and accumulating `data` stay yours.
 - The sentinel needs at least one rendered row, so it **cannot drive the first
