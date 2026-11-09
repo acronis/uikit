@@ -59,3 +59,29 @@ import {
   </DropdownMenuContent>
 </DropdownMenu>;
 ```
+
+## Explain a disabled action
+
+Attach the tooltip trigger to the disabled menu item itself. The row stays the
+menu's single keyboard focus target, while pointer hover and menu focus can open
+the tooltip. Include the reason in the item's accessible name or description;
+the visual tooltip is supplemental.
+
+```tsx
+import {
+  DropdownMenuItem,
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@acronis-platform/ui-react';
+
+<Tooltip>
+  <TooltipTrigger
+    aria-label="Export report is unavailable. Requires administrator access."
+    render={<DropdownMenuItem disabled>Export report</DropdownMenuItem>}
+  />
+  <TooltipContent>
+    Export report is unavailable. Requires administrator access.
+  </TooltipContent>
+</Tooltip>;
+```

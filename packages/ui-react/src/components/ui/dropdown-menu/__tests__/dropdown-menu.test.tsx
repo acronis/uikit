@@ -4,6 +4,12 @@ import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../tooltip';
+import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -174,6 +180,94 @@ describe('DropdownMenu', () => {
       </DropdownMenu>
     );
     expect(ref.current).toBeInstanceOf(HTMLElement);
+  });
+});
+
+describe('DropdownMenuItem disabled tooltips', () => {
+  it('lets a nested tooltip trigger receive focus without enabling the item', async () => {
+    const user = userEvent.setup();
+    const onItemClick = vi.fn();
+
+    render(
+      <TooltipProvider delay={0}>
+        <DropdownMenu defaultOpen>
+          <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem disabled onClick={onItemClick}>
+              Archive
+              <Tooltip>
+                <TooltipTrigger aria-label="Archive is unavailable. Requires administrator access.">
+                  Info
+                </TooltipTrigger>
+                <TooltipContent>
+                  Archive is unavailable. Requires administrator access.
+                </TooltipContent>
+              </Tooltip>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TooltipProvider>
+    );
+
+    const item = screen.getByRole('menuitem', { name: /Archive/ });
+    const trigger = screen.getByRole('button', {
+      name: 'Archive is unavailable. Requires administrator access.',
+    });
+
+    expect(item).toHaveAttribute('aria-disabled', 'true');
+    // Tailwind classes are not applied in the DOM test environment, so assert
+    // that the disabled style does not suppress pointer events on descendants.
+    expect(item).not.toHaveClass('data-[disabled]:pointer-events-none');
+
+    trigger.focus();
+    expect(
+      await screen.findByText(
+        'Archive is unavailable. Requires administrator access.'
+      )
+    ).toBeInTheDocument();
+
+    await user.click(item);
+    expect(onItemClick).not.toHaveBeenCalled();
+  });
+
+  it('opens a tooltip when the disabled menu item itself receives focus', async () => {
+    const onItemClick = vi.fn();
+
+    render(
+      <TooltipProvider delay={0}>
+        <DropdownMenu defaultOpen>
+          <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <Tooltip>
+              <TooltipTrigger
+                aria-label="Export report is unavailable. Requires administrator access."
+                render={
+                  <DropdownMenuItem disabled onClick={onItemClick}>
+                    Export report
+                  </DropdownMenuItem>
+                }
+              />
+              <TooltipContent>
+                Export report is unavailable. Requires administrator access.
+              </TooltipContent>
+            </Tooltip>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </TooltipProvider>
+    );
+
+    const item = screen.getByRole('menuitem', { name: /Export report/ });
+    item.focus();
+
+    expect(item).toHaveAttribute('aria-disabled', 'true');
+    expect(
+      await screen.findByText(
+        'Export report is unavailable. Requires administrator access.'
+      )
+    ).toBeInTheDocument();
+
+    await userEvent.click(item);
+    expect(onItemClick).not.toHaveBeenCalled();
   });
 });
 

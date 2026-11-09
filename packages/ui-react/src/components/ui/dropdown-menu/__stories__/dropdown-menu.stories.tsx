@@ -1,7 +1,14 @@
 import * as React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { userEvent, within } from 'storybook/test';
 
 import { ButtonMenu } from '../../button-menu';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../tooltip';
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -82,6 +89,44 @@ export const Default: Story = {
       </DropdownMenuContent>
     </DropdownMenu>
   ),
+};
+
+/** Tooltip anchored to the disabled menu item keeps the item as the sole menu focus target. */
+export const DisabledItemTooltip: Story = {
+  render: ({ modal }) => (
+    <TooltipProvider delay={0}>
+      <DropdownMenu defaultOpen modal={modal}>
+        <DropdownMenuTrigger
+          render={<ButtonMenu variant="secondary">Actions</ButtonMenu>}
+        />
+        <DropdownMenuContent className="min-w-[20rem]">
+          <DropdownMenuGroup>
+            <Tooltip>
+              <TooltipTrigger
+                aria-label="Export report is unavailable. Requires administrator access."
+                render={
+                  <DropdownMenuItem disabled>Export report</DropdownMenuItem>
+                }
+              />
+              <TooltipContent>
+                Export report is unavailable. Requires administrator access.
+              </TooltipContent>
+            </Tooltip>
+            <DropdownMenuItem>View report</DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </TooltipProvider>
+  ),
+  play: async () => {
+    const item = await within(document.body).findByRole('menuitem', {
+      name: /Export report/,
+    });
+    await userEvent.hover(item);
+    await within(document.body).findByText(
+      'Export report is unavailable. Requires administrator access.'
+    );
+  },
 };
 
 /** Multiple sections — non-first sections get an auto top-border separator (Figma firstSection=false). */

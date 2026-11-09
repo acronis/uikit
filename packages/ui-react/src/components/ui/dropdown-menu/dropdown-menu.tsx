@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { CheckSmallIcon, ChevronRightIcon } from '@acronis-platform/icons-react/stroke-mono';
+import {
+  CheckSmallIcon,
+  ChevronRightIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
 import { usePortalContainer } from '@/lib/portal-container';
@@ -50,8 +53,10 @@ const DropdownMenuSub = MenuPrimitive.SubmenuRoot;
 const popupClassName =
   'z-50 min-w-[8rem] overflow-y-auto overflow-x-hidden flex flex-col gap-[var(--ui-button-menu-dropdown-container-gap)] bg-[var(--ui-button-menu-dropdown-container-color)] border-solid border-[length:var(--ui-button-menu-dropdown-container-border-width)] border-[var(--ui-button-menu-dropdown-container-border-color)] rounded-[var(--ui-button-menu-dropdown-container-border-radius)] px-[var(--ui-button-menu-dropdown-container-padding-x)] py-[var(--ui-button-menu-dropdown-container-padding-y)] shadow-md outline-none duration-200 data-[open]:animate-in data-[closed]:animate-out data-[open]:fade-in-0 data-[closed]:fade-out-0 data-[open]:zoom-in-95 data-[closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2';
 
+// Keep pointer events enabled so nested Tooltip triggers work on disabled items;
+// MenuPrimitive.Item still owns the disabled semantics and prevents activation.
 const itemClassName =
-  'relative flex w-full shrink-0 cursor-default select-none items-start gap-[var(--ui-button-menu-dropdown-item-container-gap)] min-h-[var(--ui-button-menu-dropdown-item-container-height)] px-[var(--ui-button-menu-dropdown-item-container-padding-x)] py-[var(--ui-button-menu-dropdown-item-container-padding-y)] text-sm font-semibold leading-6 outline-none transition-colors bg-[var(--ui-button-menu-dropdown-item-container-color-idle)] text-[var(--ui-button-menu-dropdown-item-label-color)] [&_svg]:text-[var(--ui-button-menu-dropdown-item-icon-color)] data-[highlighted]:bg-[var(--ui-button-menu-dropdown-item-container-color-hover)] data-[highlighted]:active:bg-[var(--ui-button-menu-dropdown-item-container-color-active)] [&:focus-visible:not(:hover)]:rounded-[3px] [&:focus-visible:not(:hover)]:ring-[3px] [&:focus-visible:not(:hover)]:ring-inset [&:focus-visible:not(:hover)]:ring-[var(--ui-focus-primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0';
+  'relative flex w-full shrink-0 cursor-default select-none items-start gap-[var(--ui-button-menu-dropdown-item-container-gap)] min-h-[var(--ui-button-menu-dropdown-item-container-height)] px-[var(--ui-button-menu-dropdown-item-container-padding-x)] py-[var(--ui-button-menu-dropdown-item-container-padding-y)] text-sm font-semibold leading-6 outline-none transition-colors bg-[var(--ui-button-menu-dropdown-item-container-color-idle)] text-[var(--ui-button-menu-dropdown-item-label-color)] [&_svg]:text-[var(--ui-button-menu-dropdown-item-icon-color)] data-[highlighted]:bg-[var(--ui-button-menu-dropdown-item-container-color-hover)] data-[highlighted]:active:bg-[var(--ui-button-menu-dropdown-item-container-color-active)] [&:focus-visible:not(:hover)]:rounded-[3px] [&:focus-visible:not(:hover)]:ring-[3px] [&:focus-visible:not(:hover)]:ring-inset [&:focus-visible:not(:hover)]:ring-[var(--ui-focus-primary)] data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0';
 
 // A checkbox/radio indicator lives in the same in-flow leading slot a menu-item
 // icon would occupy, so its label lands on the item gap grid (padding-x + 16px
@@ -65,8 +70,9 @@ const indicatorSlotClassName =
 const indicatorInsetClassName =
   'ps-[calc(var(--ui-button-menu-dropdown-item-container-padding-x)+1rem+var(--ui-button-menu-dropdown-item-container-gap))]';
 
-export interface DropdownMenuContentProps
-  extends React.ComponentPropsWithoutRef<typeof MenuPrimitive.Popup> {
+export interface DropdownMenuContentProps extends React.ComponentPropsWithoutRef<
+  typeof MenuPrimitive.Popup
+> {
   side?: MenuPrimitive.Positioner.Props['side'];
   align?: MenuPrimitive.Positioner.Props['align'];
   sideOffset?: number;
@@ -112,7 +118,10 @@ const DropdownMenuContent = React.forwardRef<
       </MenuPrimitive.Positioner>
     );
     return portal ? (
-      <MenuPrimitive.Portal container={resolvedContainer} keepMounted={keepMounted}>
+      <MenuPrimitive.Portal
+        container={resolvedContainer}
+        keepMounted={keepMounted}
+      >
         {positioner}
       </MenuPrimitive.Portal>
     ) : (
@@ -140,7 +149,9 @@ DropdownMenuSubContent.displayName = 'DropdownMenuSubContent';
 
 const DropdownMenuItem = React.forwardRef<
   React.ElementRef<typeof MenuPrimitive.Item>,
-  React.ComponentPropsWithoutRef<typeof MenuPrimitive.Item> & { inset?: boolean }
+  React.ComponentPropsWithoutRef<typeof MenuPrimitive.Item> & {
+    inset?: boolean;
+  }
 >(({ className, inset, ...props }, ref) => (
   <MenuPrimitive.Item
     ref={ref}
@@ -172,14 +183,16 @@ const DropdownMenuSubTrigger = React.forwardRef<
 ));
 DropdownMenuSubTrigger.displayName = 'DropdownMenuSubTrigger';
 
-
 function DropdownMenuShortcut({
   className,
   ...props
 }: React.HTMLAttributes<HTMLSpanElement>) {
   return (
     <span
-      className={cn('ms-auto shrink-0 text-sm font-normal leading-6 text-[var(--ui-button-menu-dropdown-extras-shortcut-label-color)]', className)}
+      className={cn(
+        'ms-auto shrink-0 text-sm font-normal leading-6 text-[var(--ui-button-menu-dropdown-extras-shortcut-label-color)]',
+        className
+      )}
       {...props}
     />
   );

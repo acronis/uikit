@@ -23,6 +23,13 @@ contract:
       description: >-
         Whether opening the menu blocks interaction outside it and locks page
         scrolling. Defaults to non-modal behavior.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On an item — prevents the action from running while preserving disabled
+        menuitem semantics and keyboard focus.
     - name: side
       type: "'top' | 'bottom' | 'left' | 'right' | 'inline-start' | 'inline-end'"
       required: false
