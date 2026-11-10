@@ -4,7 +4,8 @@ component: Dialog
 # Framework-agnostic contract for the Dialog recipe. It composes the
 # DialogRoot primitive parts, so the open-state / modality / portal props
 # mirror DialogRoot; `variant`, `hasLoading`, `footer` and the body slot are
-# the recipe-specific API.
+# the recipe-specific API. `bodyClassName` styles the recipe's internal body
+# wrapper without exposing the composable parts themselves.
 contract:
   properties:
     - name: variant
@@ -53,6 +54,14 @@ contract:
         (all seven canned variants always show the footer) — a ui-react-only
         extension, like `wide`/`size="large"`. When `false`, `footer` is not
         rendered either.
+    - name: bodyClassName
+      type: string
+      required: false
+      description: >-
+        Adds classes to the Dialog body wrapper (React: `bodyClassName`) so a
+        caller can adjust its padding, alignment, flex sizing, and overflow for
+        full-bleed or fixed-height layouts. Classes merge with the defaults;
+        `className` continues to style the popup container.
     - name: title
       type: string
       required: false
@@ -189,6 +198,25 @@ adapters:
       {/* Override the body slot */}
       <Dialog variant="default" defaultOpen>
         <p>Any custom content.</p>
+      </Dialog>
+
+      {/* Full-height body with independent scroll panes */}
+      <Dialog
+        variant="wide"
+        size="large"
+        title="Add a widget"
+        className="h-[90vh] max-w-[min(71rem,calc(100dvw-96px))]"
+        bodyClassName="flex-1 min-h-0 p-0 justify-start overflow-hidden"
+        defaultOpen
+      >
+        <div className="flex min-h-0 min-w-0 flex-1">
+          <aside className="w-28 shrink-0 overflow-y-auto border-e border-border sm:w-60">
+            Categories
+          </aside>
+          <section className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+            Widget cards
+          </section>
+        </div>
       </Dialog>
 
       {/* Interpolate the real object name into the canned title/body */}

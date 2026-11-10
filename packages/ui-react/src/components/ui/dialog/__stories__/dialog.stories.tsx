@@ -116,6 +116,11 @@ const meta = {
       description: "Overrides the variant's default body content.",
       table: { type: { summary: 'ReactNode' }, category: 'Content' },
     },
+    bodyClassName: {
+      control: 'text',
+      description: 'Extra classes merged onto the body slot.',
+      table: { type: { summary: 'string' }, category: 'Appearance' },
+    },
     title: {
       control: 'text',
       description: "Overrides the variant's default title.",
@@ -345,6 +350,124 @@ export const OverflowXY: Story = {
           </p>
         ))}
       </div>
+    </Dialog>
+  ),
+};
+
+const WIDGET_PICKER_CATEGORIES = [
+  'All widgets',
+  'Favorites',
+  'Analytics',
+  'Applications',
+  'Cloud services',
+  'Compliance',
+  'Infrastructure',
+  'Network',
+  'Operations',
+  'Security',
+  'Storage',
+  'Users',
+  'Virtualization',
+  'Workloads',
+  'Protection plans',
+  'Reports',
+];
+
+const WIDGET_PICKER_CARDS = [
+  'Activity overview',
+  'Alerts by severity',
+  'Backup status',
+  'Cloud spend',
+  'Devices by platform',
+  'Incident timeline',
+  'Protected workloads',
+  'Recent activity',
+  'Storage capacity',
+  'Threat detections',
+  'User activity',
+  'Workload health',
+  'Backup trends',
+  'Network traffic',
+  'Compliance status',
+  'Resource utilization',
+];
+
+function WidgetPickerBodyContent() {
+  return (
+    <div className="flex min-h-0 min-w-0 flex-1 text-sm text-foreground">
+      <aside
+        aria-label="Widget categories"
+        className="w-28 shrink-0 overflow-y-auto border-e border-border bg-muted/30 p-4 sm:w-60"
+      >
+        <p className="mb-3 font-semibold">Categories</p>
+        <ul className="flex flex-col gap-1">
+          {WIDGET_PICKER_CATEGORIES.map((category, index) => (
+            <li key={category}>
+              <span
+                aria-current={index === 0 ? 'true' : undefined}
+                className={`block rounded-md px-3 py-2 ${
+                  index === 0
+                    ? 'bg-background font-medium'
+                    : 'text-muted-foreground'
+                }`}
+              >
+                {category}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </aside>
+
+      <section
+        aria-label="Available widgets"
+        className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4"
+      >
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {WIDGET_PICKER_CARDS.map((name) => (
+            <article
+              key={name}
+              className="rounded-lg border border-border bg-background p-3"
+            >
+              <h3 className="font-medium">{name}</h3>
+              <p className="mt-1 text-muted-foreground">
+                Add this widget to your dashboard.
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
+// PLTFRM-92927: bodyClassName lets a fixed-height Dialog give the body the
+// remaining space and remove its default padding, so each picker pane can
+// reach the popup edges and scroll independently.
+export const FullHeightPickerBody: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          'Full-height picker layout using bodyClassName: the sidebar reaches the popup edge, each pane scrolls independently, and the footer stays at the bottom.',
+      },
+    },
+  },
+  render: () => (
+    <Dialog
+      variant="wide"
+      size="large"
+      title="Add a widget"
+      defaultOpen
+      className="h-[90vh] max-w-[min(71rem,calc(100dvw-96px))]"
+      bodyClassName="flex-1 min-h-0 p-0 justify-start overflow-hidden"
+      footer={
+        <>
+          <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+          <Button>Add widget</Button>
+        </>
+      }
+    >
+      <WidgetPickerBodyContent />
     </Dialog>
   ),
 };

@@ -78,7 +78,7 @@ import { Loading } from '../loading';
 // enforce it here so every consumer keeps that margin, not just the frame
 // that surfaced it.
 const dialogContentVariants = cva(
-  'fixed left-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[var(--ui-dialog-container-width-min)] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]',
+  'fixed left-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[min(var(--ui-dialog-container-width-min),calc(100dvw-96px))] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]',
   {
     variants: {
       size: {
@@ -308,15 +308,19 @@ function DialogHeader({ title, closeLabel }: DialogHeaderProps) {
 // `DialogBodyRoot` composable primitive above.
 interface DialogBodyProps {
   children: React.ReactNode;
+  className?: string;
   /** Makes the body unfocusable/unclickable while the loading overlay is shown. */
   inert?: boolean;
 }
 
-function DialogBody({ children, inert }: DialogBodyProps) {
+function DialogBody({ children, className, inert }: DialogBodyProps) {
   return (
     <div
       inert={inert}
-      className="flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center-safe gap-[var(--ui-dialog-body-gap)] overflow-y-auto px-4 py-[var(--ui-dialog-body-padding-y)]"
+      className={cn(
+        'flex min-h-[var(--ui-dialog-body-height-min)] flex-col justify-center-safe gap-[var(--ui-dialog-body-gap)] overflow-y-auto px-4 py-[var(--ui-dialog-body-padding-y)]',
+        className
+      )}
     >
       {typeof children === 'string' ? (
         <p className="text-sm leading-6 text-foreground">{children}</p>
@@ -584,6 +588,8 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
   portalContainer?: DialogContentProps['portalContainer'];
   /** Keep the content mounted while closed (forwarded to `DialogContent`). */
   keepMounted?: DialogContentProps['keepMounted'];
+  /** Extra classes merged onto the body wrapper to adjust its layout or overflow. */
+  bodyClassName?: string;
   /** Extra classes merged onto the popup container. */
   className?: string;
 }
@@ -605,6 +611,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
       onPrimaryAction,
       footer,
       closeLabel,
+      bodyClassName,
       size,
       verticalAlign,
       portal,
@@ -647,7 +654,9 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
             <DialogTitle className="sr-only">{titleText}</DialogTitle>
           )}
 
-          <DialogBody inert={hasLoading}>{bodyContent}</DialogBody>
+          <DialogBody className={bodyClassName} inert={hasLoading}>
+            {bodyContent}
+          </DialogBody>
 
           {hasFooter && (
             <DialogFooterDefault inert={hasLoading}>

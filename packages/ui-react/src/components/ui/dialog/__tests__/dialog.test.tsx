@@ -157,6 +157,7 @@ describe('DialogRoot', () => {
   it('clamps the popup to the viewport-margin bound and lets it scroll internally', () => {
     render(<OpenDialog />);
     expect(screen.getByRole('dialog')).toHaveClass(
+      'min-w-[min(var(--ui-dialog-container-width-min),calc(100dvw-96px))]',
       'max-h-[calc(100dvh-96px)]',
       'overflow-hidden'
     );
@@ -280,6 +281,34 @@ describe('Dialog', () => {
         'You have unsaved changes. Do you want to save them before leaving?'
       )
     ).not.toBeInTheDocument();
+  });
+
+  it('merges bodyClassName onto the body slot and lets caller utilities override defaults', () => {
+    render(
+      <Dialog
+        open
+        className="h-[90vh]"
+        bodyClassName="flex-1 min-h-0 p-0 justify-start overflow-hidden"
+      >
+        <p>Custom body content</p>
+      </Dialog>
+    );
+
+    const body = screen.getByText('Custom body content').closest('div');
+    expect(body).toHaveClass(
+      'flex-1',
+      'min-h-0',
+      'p-0',
+      'justify-start',
+      'overflow-hidden'
+    );
+    expect(body).not.toHaveClass(
+      'px-4',
+      'py-[var(--ui-dialog-body-padding-y)]',
+      'justify-center-safe',
+      'overflow-y-auto'
+    );
+    expect(screen.getByRole('dialog')).toHaveClass('h-[90vh]');
   });
 
   it('lets title/secondaryLabel/primaryLabel/closeLabel override the variant defaults', () => {

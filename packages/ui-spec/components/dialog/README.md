@@ -21,16 +21,19 @@ name is `Dialog`.
 - You have a legacy call site that needs a wider popup and fully custom footer
   buttons — use `variant="wide"` (see below). This is a backward-compatibility
   escape hatch, not a recommended pattern for new work.
+- You need a full-bleed or fixed-height body while keeping the recipe's header
+  and footer — use `bodyClassName` to adjust the body wrapper and compose the
+  panes inside `children`.
 - You need a body-only dialog with no title bar and/or no action bar — set
   `hasHeader`/`hasFooter` to `false`. Both default to `true`; this is beyond
   the strict Figma contract (all seven canned variants always show both).
 
 ## When not to use
 
-- You need a bespoke layout or extra parts none of the seven variants (or the
-  `wide` escape hatch) cover — this is a gap to raise with the design system
-  team (the underlying `DialogRoot` primitive is internal-only, not a public
-  escape hatch).
+- You need a completely bespoke dialog structure or extra parts the recipe
+  cannot express — this is a gap to raise with the design system team (the
+  underlying `DialogRoot` primitive is internal-only, not a public escape
+  hatch).
 - For transient, non-blocking feedback — use a toast.
 - For contextual hints anchored to an element — use a tooltip or popover.
 
@@ -53,15 +56,15 @@ name is `Dialog`.
 
 ## Parts
 
-| Part              | Element (default)  | Purpose                                              |
-| ----------------- | ------------------ | ---------------------------------------------------- |
-| `container`       | `div[role=dialog]` | The portaled popup card; centered (or top-aligned).  |
-| `header`          | `div`              | Top bar; title + close button.                       |
-| `title`           | `h2`               | Accessible dialog name (`aria-labelledby`).          |
-| `close-button`    | `button`           | Icon button that dismisses the dialog.               |
-| `body`            | `div`              | Variant copy or the `children` override.             |
-| `footer`          | `div`              | Right-aligned action bar; or the free-form `footer`. |
-| `loading-overlay` | `div`              | Spinner scrim shown while `hasLoading`.              |
+| Part              | Element (default)  | Purpose                                                 |
+| ----------------- | ------------------ | ------------------------------------------------------- |
+| `container`       | `div[role=dialog]` | The portaled popup card; centered (or top-aligned).     |
+| `header`          | `div`              | Top bar; title + close button.                          |
+| `title`           | `h2`               | Accessible dialog name (`aria-labelledby`).             |
+| `close-button`    | `button`           | Icon button that dismisses the dialog.                  |
+| `body`            | `div`              | Variant copy or `children`; styled via `bodyClassName`. |
+| `footer`          | `div`              | Right-aligned action bar; or the free-form `footer`.    |
+| `loading-overlay` | `div`              | Spinner scrim shown while `hasLoading`.                 |
 
 ## Example
 
@@ -74,6 +77,25 @@ import { Dialog } from '@acronis-platform/ui-react';
 // Override the body slot (header + footer chrome preserved)
 <Dialog variant="default" defaultOpen>
   <p>Any custom body content.</p>
+</Dialog>;
+
+// Full-bleed, fixed-height body with independent scroll panes
+<Dialog
+  variant="wide"
+  size="large"
+  title="Add a widget"
+  open
+  className="h-[90vh] max-w-[min(71rem,calc(100dvw-96px))]"
+  bodyClassName="flex-1 min-h-0 p-0 justify-start overflow-hidden"
+>
+  <div className="flex min-h-0 min-w-0 flex-1">
+    <aside className="w-28 shrink-0 overflow-y-auto border-e border-border sm:w-60">
+      Categories
+    </aside>
+    <section className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+      Widget cards
+    </section>
+  </div>
 </Dialog>;
 
 // Busy state
