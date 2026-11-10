@@ -63,6 +63,8 @@ export interface DialogProps {
   hasFooter?: boolean;
   /** Overrides the variant's default body content. */
   children?: React.ReactNode;
+  /** Extra classes merged onto the body wrapper to adjust its layout or overflow. */
+  bodyClassName?: string;
   /** Overrides the variant's default title. */
   title?: string;
   /**

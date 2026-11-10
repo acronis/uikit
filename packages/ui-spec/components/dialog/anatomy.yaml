@@ -35,8 +35,10 @@ parts:
   - id: container
     description: >-
       The rounded surface card (the popup) that holds the header, body and
-      footer. `--ui-dialog-container-color` fill with a shadow; min-width
-      `--ui-dialog-container-width-min` (256px). `size` controls the max-width:
+      footer. `--ui-dialog-container-color` fill with a shadow; minimum width
+      `--ui-dialog-container-width-min` (256px) when the viewport allows it,
+      clamped to the available viewport width minus 96px on narrower screens.
+      `size` controls the max-width:
       `sm` (512px, the Figma default) or `large` (832px, a legacy backward-
       compatibility size with no design token).
     element: div
@@ -72,7 +74,9 @@ parts:
       copy (or the `rename` text field) unless `children` is provided.
       `rename`/`discard changes` interpolate `objectName` into their canned
       body (the field's prefilled value, or the bolded object name) when no
-      `children` override is given.
+      `children` override is given. `bodyClassName` styles this wrapper
+      independently of the popup, including its padding, alignment, flex sizing,
+      and overflow.
     element: div
   - id: footer
     description: >-

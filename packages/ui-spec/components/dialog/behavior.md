@@ -57,6 +57,14 @@ Scenario: verticalAlign = "top" pins the popup near the top edge
   the viewport below it empty
 ```
 
+```gherkin
+Scenario: A narrow viewport keeps the popup's 48px edge margin
+  Given a viewport narrower than the Dialog's 256px minimum width plus 96px
+  When the Dialog opens
+  Then its minimum width shrinks to the available viewport width minus 96px
+  And the popup keeps at least 48px between each horizontal edge and viewport edge
+```
+
 ## Body slot
 
 ```gherkin
@@ -65,6 +73,16 @@ Scenario: Children override the canned body
   When it opens
   Then the body renders the children instead of the variant's default copy
   And the header title and footer buttons are unchanged
+```
+
+```gherkin
+Scenario: bodyClassName styles the body wrapper independently of the popup
+  Given an open Dialog with a fixed popup height
+  And bodyClassName sets flex-1, min-h-0, zero padding, and start alignment
+  When it opens
+  Then those classes apply to the body wrapper while className stays on the popup
+  And the body fills the space between the header and footer
+  And the caller can give its body panes independent overflow behavior
 ```
 
 ## Object name interpolation
