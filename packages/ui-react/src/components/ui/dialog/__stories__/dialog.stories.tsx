@@ -398,6 +398,7 @@ function WidgetPickerBodyContent() {
       <aside
         aria-label="Widget categories"
         className="w-28 shrink-0 overflow-y-auto border-e border-border bg-muted/30 p-4 sm:w-60"
+        tabIndex={0}
       >
         <p className="mb-3 font-semibold">Categories</p>
         <ul className="flex flex-col gap-1">
@@ -421,6 +422,7 @@ function WidgetPickerBodyContent() {
       <section
         aria-label="Available widgets"
         className="min-h-0 min-w-0 flex-1 overflow-y-auto p-4"
+        tabIndex={0}
       >
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {WIDGET_PICKER_CARDS.map((name) => (
