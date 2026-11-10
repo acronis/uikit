@@ -78,10 +78,13 @@ and the individual panes their own overflow when they need independent scroll:
   bodyClassName="flex-1 min-h-0 p-0 justify-start overflow-hidden"
 >
   <div className="flex min-h-0 min-w-0 flex-1">
-    <aside className="w-28 shrink-0 overflow-y-auto border-e border-border sm:w-60">
+    <aside
+      tabIndex={0}
+      className="w-28 shrink-0 overflow-y-auto border-e border-border sm:w-60"
+    >
       Categories
     </aside>
-    <section className="min-h-0 min-w-0 flex-1 overflow-y-auto">
+    <section tabIndex={0} className="min-h-0 min-w-0 flex-1 overflow-y-auto">
       Widget cards
     </section>
   </div>
