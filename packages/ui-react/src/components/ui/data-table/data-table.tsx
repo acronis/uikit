@@ -277,7 +277,8 @@ type DataTableDataSourceProps<TData, TValue> =
        * `enableColumnReordering`, `columnOrder`, `onColumnOrderChange`,
        * `getRowCanExpand`, `rowSelection`, `onRowSelectionChange`,
        * `manualSorting`, `sorting`, `onSortingChange`, `paginationMode`,
-       * `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`, `isLoadingMore`.
+       * `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`, `isLoadingMore`,
+       * `loadingMoreLabel`.
        * `meta.pin`-driven column pinning is also skipped — pin/unpin the
        * caller's own instance via TanStack's `column.pin()` directly.
        */
@@ -425,9 +426,14 @@ interface DataTableOwnProps<TData> {
   emptyLabel?: string;
   /**
    * Whether a load is in flight — suppresses further `onLoadMore` calls and
-   * renders a trailing loading row. `paginationMode="infinite"` only.
+   * renders a trailing status row. `paginationMode="infinite"` only.
    */
   isLoadingMore?: boolean;
+  /**
+   * Text in the trailing status row (default `'Loading more data...'`).
+   * Override to localize. `paginationMode="infinite"` only.
+   */
+  loadingMoreLabel?: string;
   /**
    * Hide the trailing sticky action column — the column-visibility cog in the
    * header and each row's overflow-actions ellipsis. Shown by default. A
@@ -501,6 +507,7 @@ export function DataTable<TData, TValue = unknown>({
   resizeColumnLabel = 'Resize column',
   emptyLabel = 'No results.',
   isLoadingMore = false,
+  loadingMoreLabel = 'Loading more data...',
   hideActionColumn = false,
   renderRowActions,
   rowActionsLabel = 'Row actions',
@@ -1053,7 +1060,13 @@ export function DataTable<TData, TValue = unknown>({
             ))}
           </TableHeader>
         </TooltipProvider>
-        <TableBody>
+        <TableBody
+          className={
+            isInfiniteScroll && !skeleton && rows.length > 0 && isLoadingMore
+              ? '[&_tr:last-child]:border-b-[length:var(--ui-table-global-row-border-width)]'
+              : undefined
+          }
+        >
           {skeleton ? (
             Array.from({ length: skeletonRows }).map((_, rowIndex) => (
               <TableRow
@@ -1221,31 +1234,36 @@ export function DataTable<TData, TValue = unknown>({
               </TableCell>
             </TableRow>
           )}
-          {isInfiniteScroll && !skeleton && rows.length > 0 && hasNextPage && (
-            <TableRow
-              ref={sentinelRef}
-              aria-hidden
-              className="hover:bg-transparent"
-            >
-              <TableCell
-                colSpan={table.getVisibleLeafColumns().length}
-                className="h-1 p-0"
-              />
-            </TableRow>
-          )}
+          {/* Don't keep the 1px observer row beside the loading status row;
+              its border would create a second separator above the status. */}
+          {isInfiniteScroll &&
+            !skeleton &&
+            rows.length > 0 &&
+            hasNextPage &&
+            !isLoadingMore && (
+              <TableRow
+                ref={sentinelRef}
+                aria-hidden
+                className="hover:bg-transparent"
+              >
+                <TableCell
+                  colSpan={table.getVisibleLeafColumns().length}
+                  className="h-1 p-0"
+                />
+              </TableRow>
+            )}
           {isInfiniteScroll &&
             !skeleton &&
             rows.length > 0 &&
             isLoadingMore && (
               <TableRow className="hover:bg-transparent">
-                <TableCell colSpan={table.getVisibleLeafColumns().length}>
-                  <Skeleton
-                    role="status"
-                    aria-live="polite"
-                    className="h-4 w-full"
-                  >
-                    <span className="sr-only">Loading more rows…</span>
-                  </Skeleton>
+                <TableCell
+                  colSpan={table.getVisibleLeafColumns().length}
+                  className="text-center text-[var(--ui-text-on-surface-secondary)]"
+                >
+                  <span role="status" aria-live="polite">
+                    {loadingMoreLabel}
+                  </span>
                 </TableCell>
               </TableRow>
             )}

@@ -25,8 +25,9 @@ export interface DataTableProps {
    * `columnOrder`, `onColumnOrderChange`, `getRowCanExpand`, `rowSelection`,
    * `onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
    * `paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
-   * `isLoadingMore`. `meta.pin`-driven column pinning is also skipped —
-   * pin/unpin the caller's own instance via TanStack's `column.pin()`.
+   * `isLoadingMore`, `loadingMoreLabel`. `meta.pin`-driven column pinning is
+   * also skipped — pin/unpin the caller's own instance via TanStack's
+   * `column.pin()`.
    */
   table?: unknown;
   /**
@@ -145,9 +146,14 @@ export interface DataTableProps {
   hasNextPage?: boolean;
   /**
    * Whether a load is in flight — suppresses further `onLoadMore` calls and
-   * renders a trailing loading row. `paginationMode="infinite"` only.
+   * renders a trailing status row. `paginationMode="infinite"` only.
    */
   isLoadingMore?: boolean;
+  /**
+   * Text in the trailing status row (default `'Loading more data...'`).
+   * Override to localize. `paginationMode="infinite"` only.
+   */
+  loadingMoreLabel?: string;
   /**
    * Hide the trailing sticky action column — the column-visibility cog in the
    * header and each row's overflow-actions ellipsis. Shown by default. A
