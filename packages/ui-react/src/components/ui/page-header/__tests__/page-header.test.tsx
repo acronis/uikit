@@ -90,6 +90,28 @@ describe('PageHeader', () => {
     );
   });
 
+  it('allows an embedded header without adding a second banner landmark', () => {
+    render(
+      <div>
+        <PageHeader>
+          <PageHeaderRow>
+            <PageHeaderTitle>Workspace</PageHeaderTitle>
+          </PageHeaderRow>
+        </PageHeader>
+        <PageHeader role="none">
+          <PageHeaderRow>
+            <PageHeaderTitle as="h2">Activity</PageHeaderTitle>
+          </PageHeaderRow>
+        </PageHeader>
+      </div>
+    );
+
+    expect(screen.getAllByRole('banner')).toHaveLength(1);
+    expect(
+      screen.getByRole('heading', { level: 2, name: 'Activity' })
+    ).toBeInTheDocument();
+  });
+
   it('renders a title-only header without tags, actions, or a description', () => {
     render(
       <PageHeader>
@@ -99,6 +121,24 @@ describe('PageHeader', () => {
       </PageHeader>
     );
     expect(screen.getByRole('heading', { level: 1, name: 'Reports' })).toBeInTheDocument();
+  });
+
+  it('renders an H2 title with the same visual style as the default H1', () => {
+    const { rerender } = render(<PageHeaderTitle>Reports</PageHeaderTitle>);
+    const defaultTitle = screen.getByRole('heading', {
+      level: 1,
+      name: 'Reports',
+    });
+    const defaultClassName = defaultTitle.className;
+
+    rerender(<PageHeaderTitle as="h2">Details</PageHeaderTitle>);
+
+    const nestedTitle = screen.getByRole('heading', {
+      level: 2,
+      name: 'Details',
+    });
+    expect(nestedTitle.tagName).toBe('H2');
+    expect(nestedTitle.className).toBe(defaultClassName);
   });
 
   it('renders an edit button as a sibling of the title', () => {

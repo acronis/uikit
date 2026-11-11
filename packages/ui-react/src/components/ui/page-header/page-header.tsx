@@ -87,11 +87,15 @@ const PageHeaderRow = React.forwardRef<
 ));
 PageHeaderRow.displayName = 'PageHeaderRow';
 
+type PageHeaderTitleProps = React.HTMLAttributes<HTMLHeadingElement> & {
+  as?: 'h1' | 'h2';
+};
+
 const PageHeaderTitle = React.forwardRef<
   HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h1
+  PageHeaderTitleProps
+>(({ as: Heading = 'h1', className, ...props }, ref) => (
+  <Heading
     ref={ref}
     data-slot="page-header-title"
     className={cn(

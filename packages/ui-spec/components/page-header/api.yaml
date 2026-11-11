@@ -1,9 +1,26 @@
 spec_version: '1.0'
 component: PageHeader
 
-# Markup-only; parts take native element attributes. No component-specific props.
+# Parts take native element attributes. PageHeaderTitle also exposes a heading level.
 contract:
-  properties: []
+  properties:
+    - name: PageHeader.role
+      type: string
+      required: false
+      default: banner
+      description: >-
+        Native role override for the root div. PageHeader is a banner landmark
+        by default. Set role="none" when composing an embedded PageHeader
+        beneath an existing page-level banner to avoid adding a second banner
+        landmark; this does not change the heading semantics of its contents.
+    - name: PageHeaderTitle.as
+      type: "'h1' | 'h2'"
+      required: false
+      default: h1
+      description: >-
+        The heading element used for PageHeaderTitle. Use h1 for a page's primary
+        title and h2 when the title is nested under an existing page title, such
+        as an embedded view. Both levels share the same visual style.
   events: []
   methods: []
 
