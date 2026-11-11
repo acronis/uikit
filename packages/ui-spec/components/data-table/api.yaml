@@ -78,7 +78,7 @@ contract:
         columnVisibility, onColumnVisibilityChange, onColumnSizingChange,
         enableColumnResizing, getRowCanExpand, manualSorting, sorting,
         onSortingChange, paginationMode, onLoadMore, loadMoreRootMargin,
-        hasNextPage, isLoadingMore. meta.pin-driven column pinning is also
+        hasNextPage, isLoadingMore, loadingMoreLabel. meta.pin-driven column pinning is also
         skipped — pin/unpin the external instance directly via TanStack's
         `column.pin()`.
     - name: getRowCanExpand
@@ -108,7 +108,9 @@ contract:
       type: boolean
       required: false
       default: 'false'
-      description: Render placeholder skeleton rows instead of data (loading state).
+      description: >-
+        Render shared Skeleton placeholders for initial loading, replacing the
+        data rows while keeping the header visible.
     - name: skeletonRows
       type: number
       required: false
@@ -353,7 +355,7 @@ contract:
         Expands the sentinel's `IntersectionObserver` root margin (native CSS
         margin syntax, e.g. "400px") so `onLoadMore` fires before the
         sentinel is literally visible, reducing how often the trailing
-        loading row is seen. `paginationMode="infinite"` only; no-op when
+        loading status row is seen. `paginationMode="infinite"` only; no-op when
         `table` is passed. How far this actually prefetches also depends on
         page size — a large margin with small pages can trigger several
         `onLoadMore` calls back-to-back as the user scrolls normally, which
@@ -371,7 +373,16 @@ contract:
       default: 'false'
       description: >-
         Whether a load is in flight — suppresses further `onLoadMore` calls
-        and renders a trailing loading row. `paginationMode="infinite"` only.
+        and renders a centered status row with `loadingMoreLabel`. The observer
+        sentinel is omitted while loading. `paginationMode="infinite"` only;
+        no-op when `table` is passed.
+    - name: loadingMoreLabel
+      type: string
+      required: false
+      default: "'Loading more data...'"
+      description: >-
+        Visible text in the infinite-scroll loading status row. Override to
+        localize. `paginationMode="infinite"` only; no-op when `table` is passed.
   events:
     - name: onColumnOrderChange
       payload: 'ColumnOrderState (TanStack OnChangeFn)'

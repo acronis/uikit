@@ -60,12 +60,18 @@ Scenario: Custom row rendering
 Scenario: Infinite scroll
   Given paginationMode="infinite" and hasNextPage is true
   And at least one row is already rendered
-  Then a sentinel row renders as the last row of the body
+  And isLoadingMore is false
+  Then an aria-hidden sentinel row renders after the loaded rows
   When the sentinel scrolls into view and isLoadingMore is false
   Then onLoadMore fires
   And no further onLoadMore calls fire while isLoadingMore is true
   When isLoadingMore is true
-  Then a trailing loading row renders below the sentinel
+  Then the sentinel is omitted
+  And a centered status row renders after the loaded rows
+  And the status row shows loadingMoreLabel (default "Loading more data...")
+  And the status row carries role="status" and aria-live="polite"
+  When isLoadingMore becomes false and hasNextPage is still true
+  Then the sentinel renders again
 ```
 
 ```gherkin

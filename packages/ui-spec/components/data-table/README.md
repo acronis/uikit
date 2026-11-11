@@ -56,10 +56,12 @@ from it too (see **Server-driven usage** below).
 - **Infinite scroll** — set `paginationMode="infinite"` and pass the full
   accumulated `data`, `hasNextPage`, `isLoadingMore`, and an `onLoadMore`
   callback. DataTable renders a sentinel row that calls `onLoadMore` once it
-  scrolls into view, and a trailing loading row while `isLoadingMore` is true.
-  The sentinel needs at least one row already rendered — it can't drive an
-  empty table's very first fetch, so seed the first page yourself (e.g. on
-  mount). Pass `loadMoreRootMargin` (e.g. `'400px'`) to fire `onLoadMore`
+  scrolls into view. While `isLoadingMore` is true, it hides the sentinel and
+  shows a centered status row with "Loading more data..."; override
+  `loadingMoreLabel` to localize it. Loaded rows stay visible. The `skeleton`
+  prop remains the initial-load treatment. The sentinel needs at least one row
+  already rendered — it can't drive an empty table's very first fetch, so seed
+  the first page yourself (e.g. on mount). Pass `loadMoreRootMargin` (e.g. `'400px'`) to fire `onLoadMore`
   before the sentinel is literally visible, so the fetch has a head start on
   the user's scroll — tune it relative to your page size, since a large
   margin with small pages can trigger several `onLoadMore` calls back-to-back
