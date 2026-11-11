@@ -118,8 +118,8 @@ props it would otherwise use to configure its own become no-ops (`getRowId`,
 `onRowSelectionChange`, `manualSorting`, `sorting`, `onSortingChange`,
 `columnVisibility`, `onColumnVisibilityChange`, `onColumnSizingChange`,
 `paginationMode`, `onLoadMore`, `loadMoreRootMargin`, `hasNextPage`,
-`isLoadingMore`), and `meta.pin` pinning is skipped too — set the
-equivalents on your own instance (pin via TanStack's `column.pin()`). The
+`isLoadingMore`, `loadingMoreLabel`), and `meta.pin` pinning is skipped too —
+set the equivalents on your own instance (pin via TanStack's `column.pin()`). The
 trailing settings column is dropped as well, which is why the cog above is
 rendered next to the toolbar instead.
 
@@ -161,10 +161,10 @@ Borrowed from the Vue `AvTable`, these are pure visual props on `DataTable`:
 <DataTable columns={columns} data={[]} skeleton skeletonRows={5} /> {/* loading */}
 ```
 
-Skeleton rows use the shared `Skeleton` treatment, including its `surface-active`
-fill. This keeps the loading bars visible on `surface-secondary` (or `muted`)
-surfaces. `skeletonRows` defaults to five; the header remains visible while the
-row data is replaced by placeholders.
+For the initial load, `skeleton` keeps the header visible and replaces the data
+rows with shared `Skeleton` placeholders. `skeletonRows` defaults to five.
+Infinite-scroll fetches keep loaded rows in place and show a separate status row
+while the next page is loading.
 
 ### Sorting
 
@@ -502,8 +502,10 @@ the whole row and receives `hasFilters`, so you can tell "no data at all" from
 `paginationMode="infinite"` drops the paginated row model — `data` is the full
 accumulated array you append to — and renders a sentinel row that calls
 `onLoadMore` as it scrolls into view. While `isLoadingMore` is true, further
-calls are suppressed and a trailing loading row renders (`role="status"` +
-`aria-live="polite"`, with screen-reader-only "Loading more rows…" text):
+calls are suppressed and a centered status row appears after the loaded rows.
+It displays “Loading more data...” by default; pass `loadingMoreLabel` to
+localize the message. This does not replace loaded rows with skeletons:
+`skeleton` remains the initial-load treatment.
 
 ```tsx
 <DataTable
@@ -516,9 +518,6 @@ calls are suppressed and a trailing loading row renders (`role="status"` +
   isLoadingMore={isLoadingMore}
 />
 ```
-
-The trailing loading row uses the same `Skeleton` fill as the initial loading
-rows, so it remains visible on secondary surfaces too.
 
 - Fetching, cursor/offset tracking, dedup and accumulating `data` stay yours.
 - The sentinel needs at least one rendered row, so it **cannot drive the first

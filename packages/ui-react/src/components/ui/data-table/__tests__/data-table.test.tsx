@@ -513,7 +513,7 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
     expect(observer.options?.rootMargin).toBe('400px');
   });
 
-  it('does not observe while isLoadingMore, and renders a loading row', () => {
+  it('does not observe while isLoadingMore, and renders a centered status row', () => {
     const { container } = render(
       <DataTable
         columns={columns}
@@ -525,12 +525,38 @@ describe('DataTable infinite scroll (paginationMode="infinite")', () => {
       />
     );
     expect(MockIntersectionObserver.instances).toHaveLength(0);
-    expect(container.querySelectorAll('.animate-pulse')).toHaveLength(1);
-    const loadingSkeleton = container.querySelector('[data-slot="skeleton"]');
-    expect(loadingSkeleton?.className).toContain(
-      'bg-[var(--ui-background-surface-active)]'
+    expect(container.querySelector('tbody > tr[aria-hidden]')).toBeNull();
+    expect(container.querySelectorAll('[data-slot="skeleton"]')).toHaveLength(
+      0
+    );
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Loading more data...'
     );
     expect(screen.getByRole('status')).toHaveAttribute('aria-live', 'polite');
+    expect(screen.getByRole('status').closest('td')?.className).toContain(
+      'text-center'
+    );
+    expect(screen.getByRole('status').closest('td')?.className).toContain(
+      'text-[var(--ui-text-on-surface-secondary)]'
+    );
+  });
+
+  it('lets loadingMoreLabel override the default status text', () => {
+    render(
+      <DataTable
+        columns={columns}
+        data={data.slice(0, 3)}
+        paginationMode="infinite"
+        hasNextPage
+        isLoadingMore
+        loadingMoreLabel="Cargando más datos..."
+        onLoadMore={() => {}}
+      />
+    );
+
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Cargando más datos...'
+    );
   });
 });
 

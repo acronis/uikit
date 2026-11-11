@@ -1,6 +1,6 @@
 ---
-'@acronis-platform/ui-react': patch
+'@acronis-platform/ui-react': minor
 ---
 
-Use the shared Skeleton fill for DataTable's initial and infinite-scroll loading
-rows so they stay visible on secondary surfaces.
+Keep initial DataTable loading skeletons, and show a centered status row while
+infinite scrolling loads additional data.
