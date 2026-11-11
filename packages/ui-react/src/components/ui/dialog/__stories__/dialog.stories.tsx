@@ -77,10 +77,10 @@ const meta = {
       control: 'select',
       options: ['center', 'top'],
       description:
-        'Vertical placement (forwarded to DialogContent). `top` pins the popup 48px from the top edge of the viewport instead of centering it.',
+        'Vertical placement (forwarded to DialogContent). `top` is the default and pins the popup 48px from the viewport top; `center` centers it vertically.',
       table: {
         type: { summary: "'center' | 'top'" },
-        defaultValue: { summary: "'center'" },
+        defaultValue: { summary: "'top'" },
         category: 'Appearance',
       },
     },
@@ -303,13 +303,22 @@ export const TallContent: Story = {
   ),
 };
 
-// `verticalAlign="top"` pins the popup 48px from the top of the viewport
-// instead of centering it; the rest of the viewport stays empty below.
+// The default top placement follows the full-screen product mockups.
 export const TopAligned: Story = {
   render: () => (
-    <Dialog variant="default" verticalAlign="top" defaultOpen>
+    <Dialog variant="default" defaultOpen>
       <p className="text-sm leading-6 text-foreground">
         This dialog is aligned to the top of the viewport.
+      </p>
+    </Dialog>
+  ),
+};
+
+export const CenterAligned: Story = {
+  render: () => (
+    <Dialog variant="default" verticalAlign="center" defaultOpen>
+      <p className="text-sm leading-6 text-foreground">
+        Center alignment is available for flows that call for it.
       </p>
     </Dialog>
   ),

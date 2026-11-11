@@ -71,12 +71,8 @@ import { Loading } from '../loading';
 // parts internally. (In Figma the matching component set is named
 // "DialogDefault"; the code-facing name stays `Dialog` — see dialog.figma.tsx.)
 
-// Figma's "DialogWelcome" frame (variant=carousel, node 6353:6164) wraps its
-// popup preview in a `p-[48px]` ancestor — the minimum margin the popup must
-// keep from the viewport edge on any screen size. `max-w`/`max-h` (not
-// padding, since the popup itself is centered via `fixed` + transform)
-// enforce it here so every consumer keeps that margin, not just the frame
-// that surfaced it.
+// Product mockups place dialogs 48px below the viewport top. The max-width
+// and max-height also preserve 48px margins at the other viewport edges.
 const dialogContentVariants = cva(
   'fixed left-1/2 z-50 flex max-h-[calc(100dvh-96px)] w-full min-w-[min(var(--ui-dialog-container-width-min),calc(100dvw-96px))] -translate-x-1/2 flex-col overflow-hidden rounded-[var(--ui-dialog-container-border-radius)] bg-[var(--ui-dialog-container-color)] text-foreground shadow-lg duration-200 transition-[scale] after:pointer-events-none after:absolute after:inset-0 after:rounded-[inherit] after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_36%,transparent)] dark:after:bg-[color-mix(in_oklab,var(--ui-background-backdrop-screen)_80%,transparent)] after:opacity-0 after:transition-opacity after:duration-200 after:content-[""] data-[open]:animate-in data-[open]:fade-in-0 data-[open]:zoom-in-95 data-[closed]:animate-out data-[closed]:fade-out-0 data-[closed]:zoom-out-95 data-[nested-dialog-open]:scale-[0.96] data-[nested-dialog-open]:after:opacity-100 dark:data-[nested]:border dark:data-[nested]:border-[var(--ui-dialog-header-border-color)]',
   {
@@ -92,7 +88,7 @@ const dialogContentVariants = cva(
     },
     defaultVariants: {
       size: 'sm',
-      verticalAlign: 'center',
+      verticalAlign: 'top',
     },
   }
 );
@@ -130,9 +126,8 @@ export interface DialogContentProps
    */
   size?: VariantProps<typeof dialogContentVariants>['size'];
   /**
-   * Vertical placement of the popup. `center` (default) centers it in the
-   * viewport; `top` pins it 48px from the top edge, leaving the rest of the
-   * viewport below it.
+   * Vertical placement of the popup. `top` (default) pins it 48px from the
+   * viewport top; `center` centers it vertically in the viewport.
    */
   verticalAlign?: 'center' | 'top';
   /**
@@ -176,7 +171,7 @@ const DialogContent = React.forwardRef<
         <DialogPrimitive.Popup
           ref={ref}
           className={cn(
-            dialogContentVariants({ size, verticalAlign: verticalAlign ?? 'center' }),
+            dialogContentVariants({ size, verticalAlign: verticalAlign ?? 'top' }),
             className
           )}
           {...props}
@@ -580,7 +575,7 @@ export interface DialogProps extends Omit<DialogRootProps, 'children'> {
    * `'large'` when `variant` is `'wide'`.
    */
   size?: DialogContentProps['size'];
-  /** Vertical placement: `'center'` (default) or `'top'` (forwarded to `DialogContent`). */
+  /** Vertical placement: `'top'` (default, 48px from viewport top) or `'center'` (forwarded to `DialogContent`). */
   verticalAlign?: DialogContentProps['verticalAlign'];
   /** Render inside a portal (forwarded to `DialogContent`). Defaults to `true`. */
   portal?: boolean;

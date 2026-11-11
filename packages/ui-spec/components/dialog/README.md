@@ -7,6 +7,10 @@ same `DialogRoot` + `DialogHeader` + `DialogFooter` boilerplate each time. In
 Figma the matching component set is named "DialogDefault"; the code-facing
 name is `Dialog`.
 
+The popup is horizontally centered and top-aligned 48px from the viewport edge
+by default, matching the full-screen product mockups. Set
+`verticalAlign="center"` for flows that need vertical centering.
+
 > **Status: draft.** Container/header/footer geometry and color resolve to the
 > `--ui-dialog-*`/`--ui-footer-*` token tier (reconciled against the Figma
 > "DialogDefault" node). `size="large"` (832px) is the one exception — a legacy
@@ -129,8 +133,8 @@ import { Dialog } from '@acronis-platform/ui-react';
   <p>Body-only content — no title bar, no close button.</p>
 </Dialog>;
 
-// Pin the popup 48px from the top of the viewport instead of centering it
-<Dialog variant="default" verticalAlign="top" open>
+// Opt into vertical centering when a flow calls for it
+<Dialog variant="default" verticalAlign="center" open>
   <p>Any custom body content.</p>
 </Dialog>;
 
