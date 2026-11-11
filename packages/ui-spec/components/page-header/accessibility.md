@@ -1,7 +1,30 @@
 # PageHeader — accessibility
 
-- The region is a `banner` landmark and the title is an `<h1>` — one page title per
-  page; ensure it fits the document outline.
+- By default, the root is a `banner` landmark and the title renders as `<h1>`.
+  Keep these defaults for a page-level header. When composing an embedded view
+  beneath an existing page-level banner, set `role="none"` on its PageHeader root
+  to suppress the extra landmark, and set the title to `<h2>` to reflect the
+  surrounding document hierarchy. The role override does not remove the `<h2>`
+  heading semantics; both heading levels share the same visual style.
+
+  ```tsx
+  <>
+    <PageHeader>
+      <PageHeaderRow>
+        <PageHeaderTitle>Reports</PageHeaderTitle>
+      </PageHeaderRow>
+    </PageHeader>
+
+    <section>
+      <PageHeader role="none">
+        <PageHeaderRow>
+          <PageHeaderTitle as="h2">Recent reports</PageHeaderTitle>
+        </PageHeaderRow>
+      </PageHeader>
+    </section>
+  </>
+  ```
+
 - If a breadcrumb is composed above PageHeader, it's a separate `Breadcrumb` with
   its own `<nav aria-label="breadcrumb">` — not a PageHeader part, so it carries
   its own accessibility contract (see the Breadcrumb spec).

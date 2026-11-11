@@ -18,15 +18,15 @@ a tags slot, an actions slot) and an optional description row, capped at
 
 ## Parts
 
-| Export                     | Element | Purpose                                                                                                                                                         |
-| -------------------------- | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `PageHeader`               | `div`   | The banner region.                                                                                                                                              |
-| `PageHeaderRow`            | `div`   | Title row: title, optional edit button, tags, actions.                                                                                                          |
-| `PageHeaderTitle`          | `h1`    | The page title.                                                                                                                                                 |
-| `PageHeaderTags`           | `div`   | Optional tags slot (e.g. `Tag` chips). Collapses to the first tag + a "+#" tag (hover tooltip lists the hidden labels) when the full set doesn't fit.           |
-| `PageHeaderActions`        | `div`   | Trailing action buttons. Secondary-variant buttons collapse under a "More" `ButtonIcon` dropdown when the full set doesn't fit; primary buttons never collapse. |
-| `PageHeaderDescriptionRow` | `div`   | Optional description row (max 512px).                                                                                                                           |
-| `PageHeaderDescription`    | `p`     | Muted supporting text.                                                                                                                                          |
+| Export                     | Element         | Purpose                                                                                                                                                         |
+| -------------------------- | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `PageHeader`               | `div`           | The `banner` landmark by default; accepts a native `role` override.                                                                                             |
+| `PageHeaderRow`            | `div`           | Title row: title, optional edit button, tags, actions.                                                                                                          |
+| `PageHeaderTitle`          | `h1` by default | The page title; use `as="h2"` for an embedded section under an existing page title.                                                                             |
+| `PageHeaderTags`           | `div`           | Optional tags slot (e.g. `Tag` chips). Collapses to the first tag + a "+#" tag (hover tooltip lists the hidden labels) when the full set doesn't fit.           |
+| `PageHeaderActions`        | `div`           | Trailing action buttons. Secondary-variant buttons collapse under a "More" `ButtonIcon` dropdown when the full set doesn't fit; primary buttons never collapse. |
+| `PageHeaderDescriptionRow` | `div`           | Optional description row (max 512px).                                                                                                                           |
+| `PageHeaderDescription`    | `p`             | Muted supporting text.                                                                                                                                          |
 
 ## Example
 
@@ -45,6 +45,33 @@ a tags slot, an actions slot) and an optional description row, capped at
     <PageHeaderDescription>All scheduled reports.</PageHeaderDescription>
   </PageHeaderDescriptionRow>
 </PageHeader>
+```
+
+## Page-level and embedded headers
+
+Keep both defaults for a page-level header: the root is a `banner` landmark and
+`PageHeaderTitle` renders as `<h1>`. For a header inside an existing page-level
+banner, set `role="none"` on the embedded root to avoid adding a second banner,
+and use `<h2>` for the embedded title. `role="none"` suppresses the extra
+landmark while the `<h2>` remains a heading. Choose the heading level from the
+surrounding document hierarchy; both levels keep the same visual style.
+
+```tsx
+<>
+  <PageHeader>
+    <PageHeaderRow>
+      <PageHeaderTitle>Reports</PageHeaderTitle>
+    </PageHeaderRow>
+  </PageHeader>
+
+  <section>
+    <PageHeader role="none">
+      <PageHeaderRow>
+        <PageHeaderTitle as="h2">Recent reports</PageHeaderTitle>
+      </PageHeaderRow>
+    </PageHeader>
+  </section>
+</>
 ```
 
 ### Editable title/description (full-page wizards)

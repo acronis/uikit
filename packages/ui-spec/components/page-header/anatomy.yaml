@@ -2,9 +2,9 @@ spec_version: '1.0'
 component: PageHeader
 
 schematic: |
-  page-header: <div role="banner"> vertical block
+  page-header: <div role="banner"> by default; role may be overridden for embedded composition
     page-header-row:              title row
-      page-header-title:            <h1> page title
+      page-header-title:            <h1> page title by default; <h2> when selected
       (edit ButtonIcon)              optional, consumer-placed sibling
       page-header-tags:             optional tags slot
         page-header-tags-overflow-indicator: "+#" tag standing in for hidden tags, on overflow
@@ -17,15 +17,24 @@ schematic: |
 root:
   element: div
   role: banner
-  description: The page header region; stacks the title row and an optional description row. A breadcrumb, when used, is a separate sibling rendered above PageHeader — not one of its parts.
+  description: >-
+    The page header region; stacks the title row and an optional description
+    row. The root is a banner landmark by default. Set its native role to
+    "none" when composing an embedded header beneath an existing page-level
+    banner to avoid adding a second banner landmark; child heading semantics
+    remain unchanged. A breadcrumb, when used, is a separate sibling rendered
+    above PageHeader — not one of its parts.
 
 parts:
   - id: page-header-row
     element: div
     description: The title row (title, an optional edit button, a tags slot, and an actions slot).
   - id: page-header-title
-    element: h1
-    description: The page title.
+    element: h1 (default), h2 when as="h2"
+    description: >-
+      The page title; renders as h1 by default and as h2 when requested for a
+      section beneath an existing page title. Both heading levels share the
+      same visual style.
   - id: page-header-tags
     element: div
     description: Optional tags slot (typically `Tag` chips); shares the row's remaining width with the actions slot. Collapses to the first tag plus an overflow "+#" `Tag` when the full set doesn't fit.

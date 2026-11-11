@@ -51,6 +51,25 @@ export const Default: Story = {
   ),
 };
 
+export const H2Title: Story = {
+  name: 'H2 title (embedded view)',
+  tags: ['h2-title-visual'],
+  render: () => (
+    <div className="space-y-6">
+      <PageHeader>
+        <PageHeaderRow>
+          <PageHeaderTitle>Workspace</PageHeaderTitle>
+        </PageHeaderRow>
+      </PageHeader>
+      <PageHeader role="none">
+        <PageHeaderRow>
+          <PageHeaderTitle as="h2">Activity</PageHeaderTitle>
+        </PageHeaderRow>
+      </PageHeader>
+    </div>
+  ),
+};
+
 export const WithTags: Story = {
   render: () => (
     <PageHeader>

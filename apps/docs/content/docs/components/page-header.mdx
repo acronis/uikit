@@ -28,7 +28,8 @@ an actions slot) and an optional description row, capped at 512px. A breadcrumb,
 you need one, is a separate [`Breadcrumb`](/components/breadcrumb) rendered as a
 sibling above `PageHeader` — it's not one of its parts. Mapped to the
 [Page Header Figma](https://www.figma.com/design/lrU3ydIyvPYQNE6ixdsKtJ/ui-react?node-id=2905-7678)
-"PageHeader" master component.
+"PageHeader" master component. A page-level `PageHeader` uses its default
+`banner` landmark and its title defaults to `<h1>`.
 
 ## Examples
 
@@ -66,14 +67,43 @@ sibling above `PageHeader` — it's not one of its parts. Mapped to the
 
 ## Parts
 
-| Export                     | Element | Purpose                                                |
-| -------------------------- | ------- | ------------------------------------------------------ |
-| `PageHeader`               | `div`   | The banner region.                                     |
-| `PageHeaderRow`            | `div`   | Title row: title, optional edit button, tags, actions. |
-| `PageHeaderTitle`          | `h1`    | The page title.                                        |
-| `PageHeaderTags`           | `div`   | Optional tags slot (e.g. `Tag` chips).                 |
-| `PageHeaderActions`        | `div`   | Trailing action buttons.                               |
-| `PageHeaderDescriptionRow` | `div`   | Optional description row (max 512px).                  |
-| `PageHeaderDescription`    | `p`     | Muted supporting text.                                 |
+| Export                     | Element         | Purpose                                                                          |
+| -------------------------- | --------------- | -------------------------------------------------------------------------------- |
+| `PageHeader`               | `div`           | The `banner` landmark by default; accepts a native `role` override.              |
+| `PageHeaderRow`            | `div`           | Title row: title, optional edit button, tags, actions.                           |
+| `PageHeaderTitle`          | `h1` by default | The page title. Use `as="h2"` when it is a section under an existing page title. |
+| `PageHeaderTags`           | `div`           | Optional tags slot (e.g. `Tag` chips).                                           |
+| `PageHeaderActions`        | `div`           | Trailing action buttons.                                                         |
+| `PageHeaderDescriptionRow` | `div`           | Optional description row (max 512px).                                            |
+| `PageHeaderDescription`    | `p`             | Muted supporting text.                                                           |
 
 All parts accept their native element attributes plus `className`.
+
+## Accessibility
+
+Keep both defaults for a page-level header: its root is a `banner` landmark and
+`PageHeaderTitle` renders an `<h1>`. When composing a header for an embedded view
+beneath that existing page-level banner, use `role="none"` on the embedded root
+to avoid adding a second banner, and set the title to `<h2>` to follow the
+document hierarchy. The role override suppresses the extra landmark; the `<h2>`
+remains a heading.
+
+```tsx
+<>
+  <PageHeader>
+    <PageHeaderRow>
+      <PageHeaderTitle>Reports</PageHeaderTitle>
+    </PageHeaderRow>
+  </PageHeader>
+
+  <section>
+    <PageHeader role="none">
+      <PageHeaderRow>
+        <PageHeaderTitle as="h2">Recent reports</PageHeaderTitle>
+      </PageHeaderRow>
+    </PageHeader>
+  </section>
+</>
+```
+
+The heading level changes the HTML semantics while keeping the same visual style.
