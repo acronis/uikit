@@ -1234,7 +1234,7 @@ export function DataTable<TData, TValue = unknown>({
               </TableCell>
             </TableRow>
           )}
-          {/* Don't keep the 1px observer row beside the loading status row;
+          {/* Don't keep the small observer row beside the loading status row;
               its border would create a second separator above the status. */}
           {isInfiniteScroll &&
             !skeleton &&

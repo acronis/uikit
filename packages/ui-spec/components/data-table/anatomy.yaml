@@ -15,8 +15,8 @@ schematic: |
     expand-trigger: chevron toggle inside a cell → toggles the row's expansion
     expanded-row:  optional detail row under an expanded row
     empty-state:   "No results." row when there is no data
-    sentinel:      aria-hidden row that triggers onLoadMore on scroll (infinite mode)
-    loading-row:   trailing "loading more" row (role=status) while isLoadingMore
+    sentinel:      aria-hidden observer row that triggers onLoadMore (infinite mode)
+    loading-row:   centered visible status row while isLoadingMore
     action-column: trailing sticky 48px column — settings cog (⚙) in the header,
                    per-row overflow-actions ellipsis (⋯) in each row
       view-options: [ ⚙ ] ▾ column-visibility menu opened from that header cog
@@ -140,16 +140,17 @@ parts:
   - id: sentinel
     element: tr
     description: >-
-      An `aria-hidden` zero-height row (`paginationMode="infinite"`) whose
+      A small `aria-hidden` observer row (`paginationMode="infinite"`) whose
       intersection with the viewport calls `onLoadMore`. Rendered only once
-      there is at least one row and `hasNextPage` is true.
+      there is at least one row, `hasNextPage` is true, and `isLoadingMore` is
+      false; omitted while the loading status row is shown.
     optional: true
   - id: loading-row
     element: tr
     description: >-
-      A trailing animated-placeholder row shown while `isLoadingMore` is true
-      (`paginationMode="infinite"`); carries `role="status"`/`aria-live="polite"`
-      with an `sr-only` text so the in-flight fetch is announced.
+      A centered visible status row shown while `isLoadingMore` is true
+      (`paginationMode="infinite"`). Displays `loadingMoreLabel` (default
+      "Loading more data...") and carries `role="status"`/`aria-live="polite"`.
     optional: true
   - id: toolbar
     element: div
@@ -280,7 +281,7 @@ states:
     trigger: isLoadingMore is set (paginationMode="infinite")
     kind: prop
     prop: isLoadingMore
-    affects: [loading-row]
+    affects: [loading-row, sentinel]
   - id: custom-empty-state
     trigger: renderEmptyState is provided and there are no rows
     kind: prop

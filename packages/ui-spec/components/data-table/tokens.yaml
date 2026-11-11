@@ -35,14 +35,14 @@ tokens:
     affects: empty-state
     description: Muted "No results." text — matches disabled table values.
   - name: --ui-text-on-surface-secondary
-    affects: pagination
-    description: Muted pagination / toolbar meta text (text-muted-foreground).
+    affects: pagination, loading-row
+    description: Muted pagination / toolbar meta text and infinite-scroll status text.
   - name: --ui-background-surface-secondary
     affects: row
     description: Striped row background.
   - name: --ui-background-surface-active
     affects: skeleton
-    description: Shared Skeleton fill for initial and infinite-loading placeholders.
+    description: Shared Skeleton fill for initial-loading placeholders.
   - name: --ui-table-data-row-color-active
     affects: row
     description: Current (last-clicked) row highlight — the active-row color.
