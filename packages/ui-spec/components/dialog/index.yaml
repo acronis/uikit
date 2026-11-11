@@ -11,7 +11,9 @@ description: >-
   legacy `wide` escape hatch (no Figma preset, free-form footer via the
   `footer` prop) kept for backward compatibility with pre-Figma call sites.
   `children` overrides the body slot, `bodyClassName` styles its wrapper, and
-  `hasLoading` shows a `Loading` overlay. Colors, typography, and
+  `hasLoading` shows a `Loading` overlay. The popup is top-aligned 48px from
+  the viewport edge by default; `verticalAlign="center"` opts into vertical
+  centering. Colors, typography, and
   container/header/footer geometry resolve to the
   `--ui-dialog-*`/`--ui-footer-*` token tier (see tokens.yaml). In Figma the
   matching component set is named "DialogDefault"; the code-facing name is

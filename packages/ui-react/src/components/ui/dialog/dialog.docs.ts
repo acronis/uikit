@@ -7,11 +7,11 @@ import type * as React from 'react';
 // `DialogContentProps` is internal (DialogRoot isn't exported from the package
 // root) but stays documented here for engineers reading Dialog's source.
 
-/** Props for `DialogContent` — the portaled dialog popup (centered by default, or top-aligned). */
+/** Props for `DialogContent` — the portaled dialog popup (top-aligned by default, or vertically centered). */
 export interface DialogContentProps {
   /** Popup max-width. `sm` (512px, default) is the Figma-defined size; `large` (832px) is a legacy backward-compatibility size. */
   size?: 'sm' | 'large';
-  /** Vertical placement. `center` (default) centers the popup; `top` pins it 48px from the top edge of the viewport. */
+  /** Vertical placement. `top` (default) pins the popup 48px from the viewport top; `center` centers it vertically. */
   verticalAlign?: 'center' | 'top';
   /**
    * Render the content inside a portal (default `true`). Disable only when you
@@ -103,7 +103,7 @@ export interface DialogProps {
   closeLabel?: string;
   /** Popup max-width. Defaults to `'sm'`, or to `'large'` when `variant` is `'wide'`. */
   size?: 'sm' | 'large';
-  /** Vertical placement. `center` (default) centers the popup; `top` pins it 48px from the top edge of the viewport. */
+  /** Vertical placement. `top` (default) pins the popup 48px from the viewport top; `center` centers it vertically. */
   verticalAlign?: 'center' | 'top';
   /** Render inside a portal (default `true`). */
   portal?: boolean;

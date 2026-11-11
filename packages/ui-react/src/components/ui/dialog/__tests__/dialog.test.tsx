@@ -98,11 +98,12 @@ describe('DialogRoot', () => {
     );
   });
 
-  it('centers the popup vertically by default', () => {
+  it('pins the popup 48px from the viewport top by default', () => {
     render(<OpenDialog />);
     const dialog = screen.getByRole('dialog');
-    expect(dialog).toHaveClass('top-1/2', '-translate-y-1/2');
-    expect(dialog).not.toHaveClass('top-[48px]');
+    expect(dialog).toHaveClass('top-[48px]');
+    expect(dialog).not.toHaveClass('top-1/2');
+    expect(dialog).not.toHaveClass('-translate-y-1/2');
   });
 
   it('pins the popup 48px from the viewport top with verticalAlign="top"', () => {
@@ -119,13 +120,10 @@ describe('DialogRoot', () => {
     expect(dialog).not.toHaveClass('-translate-y-1/2');
   });
 
-  it.each([
-    ['null', null as never],
-    ['undefined', undefined],
-  ])('falls back to centered when verticalAlign is %s', (_, verticalAlign) => {
+  it('centers the popup vertically with verticalAlign="center"', () => {
     render(
       <DialogRoot open>
-        <DialogContent verticalAlign={verticalAlign}>
+        <DialogContent verticalAlign="center">
           <DialogTitle>Title</DialogTitle>
         </DialogContent>
       </DialogRoot>
@@ -135,11 +133,35 @@ describe('DialogRoot', () => {
     expect(dialog).not.toHaveClass('top-[48px]');
   });
 
-  it('forwards verticalAlign from the Dialog preset to the popup', () => {
-    render(<Dialog open verticalAlign="top" />);
+  it.each([
+    ['null', null as never],
+    ['undefined', undefined],
+  ])('falls back to top-aligned when verticalAlign is %s', (_, verticalAlign) => {
+    render(
+      <DialogRoot open>
+        <DialogContent verticalAlign={verticalAlign}>
+          <DialogTitle>Title</DialogTitle>
+        </DialogContent>
+      </DialogRoot>
+    );
     const dialog = screen.getByRole('dialog');
     expect(dialog).toHaveClass('top-[48px]');
     expect(dialog).not.toHaveClass('top-1/2');
+    expect(dialog).not.toHaveClass('-translate-y-1/2');
+  });
+
+  it('defaults the Dialog preset to top alignment', () => {
+    render(<Dialog open />);
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveClass('top-[48px]');
+    expect(dialog).not.toHaveClass('top-1/2');
+  });
+
+  it('forwards verticalAlign="center" from the Dialog preset to the popup', () => {
+    render(<Dialog open verticalAlign="center" />);
+    const dialog = screen.getByRole('dialog');
+    expect(dialog).toHaveClass('top-1/2', '-translate-y-1/2');
+    expect(dialog).not.toHaveClass('top-[48px]');
   });
 
   it('forwards the ref to the popup element', () => {
