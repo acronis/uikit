@@ -1,5 +1,34 @@
 # @acronis-platform/ui-react
 
+## 7.0.0
+
+### Major Changes
+
+- [#786](https://github.com/acronis/uikit/pull/786) [`4e62757`](https://github.com/acronis/uikit/commit/4e62757b67e60db9c72acea85c921d92198de5e8) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Default `DropdownMenu` to non-modal behavior while keeping the `modal` prop configurable.
+
+- [#791](https://github.com/acronis/uikit/pull/791) [`43adee9`](https://github.com/acronis/uikit/commit/43adee937d8219ec43ef807198b603ea58d459c2) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Default Dialog popup placement to 48px from the viewport top. Set
+  `verticalAlign="center"` to preserve vertically centered placement.
+
+### Minor Changes
+
+- [#789](https://github.com/acronis/uikit/pull/789) [`5f71b81`](https://github.com/acronis/uikit/commit/5f71b819dbb336b15c2900583cb558bf02a6ab26) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Add the Dialog `bodyClassName` prop for custom body layouts.
+
+- [#790](https://github.com/acronis/uikit/pull/790) [`18f9fea`](https://github.com/acronis/uikit/commit/18f9fea1813d6bf3eb6f68a9bff3b34fdffd719f) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Allow PageHeaderTitle to render as an h2 while keeping h1 as the default.
+
+- [#787](https://github.com/acronis/uikit/pull/787) [`c401d39`](https://github.com/acronis/uikit/commit/c401d39671a1fb132060f67ea1ed68e24500debe) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Keep initial DataTable loading skeletons, and show a centered status row while
+  infinite scrolling loads additional data.
+
+### Patch Changes
+
+- [#788](https://github.com/acronis/uikit/pull/788) [`1d29e3a`](https://github.com/acronis/uikit/commit/1d29e3abf5e7e0f6f5fd00aa568535c80f712f3d) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - Allow tooltip triggers inside disabled dropdown menu items to receive pointer hover while keeping the menu item disabled.
+
+- [#792](https://github.com/acronis/uikit/pull/792) [`8937c90`](https://github.com/acronis/uikit/commit/8937c90bf41d5f4cb6834fb5b04f5c7b3e539816) Thanks [@marta-sampedro](https://github.com/marta-sampedro)! - docs(stepper-item): clarify typography overrides and align examples
+
+  The StepperItem label uses the generated typography tier. Ordinary Tailwind
+  typography utilities passed through `className` do not override it; use `style`
+  for an intentional one-off override. The canonical React example and generated
+  story fallback now match the avatar styling guidance.
+
 ## 6.0.0
 
 ### Major Changes
