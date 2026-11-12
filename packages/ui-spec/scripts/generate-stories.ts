@@ -28,7 +28,7 @@ import type { AnatomySpec, ApiSpec } from '../types';
 const PKG_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const UI_REACT_UI = resolve(PKG_ROOT, '../ui-react/src/components/ui');
 
-interface RenderHint {
+export interface RenderHint {
   sample?: string;
   extraImports?: string[];
   ariaLabel?: string;
@@ -849,7 +849,7 @@ const RENDER: Record<string, RenderHint> = {
     // or every generated instance renders an empty, unlabelled box.
     extraImports: ["import { Avatar, AvatarFallback } from '../../avatar';"],
     props:
-      'label="Step name" avatar={<Avatar color="blue"><AvatarFallback>1</AvatarFallback></Avatar>}',
+      'label="Step name" avatar={<Avatar color="blue" className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"><AvatarFallback>1</AvatarFallback></Avatar>}',
     // The avatar is a filled container inside the step, so its own ring is
     // suppressed; `current`/`future` additionally inherit the step's label color
     // so the fallback initial matches the variant. Built per variant so the
@@ -956,7 +956,7 @@ const arr = (values: string[]): string =>
 
 const cap = (s: string): string => s.charAt(0).toUpperCase() + s.slice(1);
 
-function buildStories(
+export function buildStories(
   comp: string,
   api: ApiSpec,
   anatomy: AnatomySpec,
@@ -1128,12 +1128,16 @@ export const ${cap(t.id)}: Story = {
   return { body: parts.join('\n\n'), needsPlay };
 }
 
+export function getRenderHint(name: string): RenderHint {
+  return RENDER[name] ?? {};
+}
+
 function generate(name: string): boolean {
   if (!existsSync(join(UI_REACT_UI, name))) {
     console.warn(`skip ${name}: no @acronis-platform/ui-react component`);
     return false;
   }
-  const hint = RENDER[name] ?? {};
+  const hint = getRenderHint(name);
   if (hint.skip) {
     console.log(`skip ${name}: imperative component (no generated story)`);
     return false;
@@ -1170,6 +1174,11 @@ ${body}
   return true;
 }
 
-let count = 0;
-for (const name of listComponentNames()) if (generate(name)) count += 1;
-console.log(`\n${count} story file(s) generated.`);
+if (
+  process.argv[1] &&
+  resolve(process.argv[1]) === fileURLToPath(import.meta.url)
+) {
+  let count = 0;
+  for (const name of listComponentNames()) if (generate(name)) count += 1;
+  console.log(`\n${count} story file(s) generated.`);
+}

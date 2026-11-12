@@ -611,12 +611,22 @@ describe('cva ↔ contract conformance', () => {
     const groups = extractCvaGroups(source);
     const api = loadSpec('stepper-item').api;
 
-    // Two axes: the step's role in the sequence, and its interaction look
-    // (idle/hover/active/focus, per the dedicated `--ui-stepper-item-*` tier).
-    // Only six of their twelve combinations are drawn in Figma, but both are
-    // real props, so both enums are pinned here.
+    // Both axes are real props. Figma exposes three top-level `type` variants;
+    // its nested Completed instance exposes only `state=idle`, while the React
+    // API and token tier support all four completed interaction states.
     expect(Object.keys(groups)).toEqual(['variant', 'state']);
     expect(groups.variant.sort()).toEqual(enumMembers(api, 'variant'));
     expect(groups.state.sort()).toEqual(enumMembers(api, 'state'));
+  });
+
+  it('StepperItem React example applies the required avatar styling', () => {
+    const example = loadSpec('stepper-item').api.adapters.react.example;
+
+    expect(example).toContain(
+      'avatar={<Avatar color="green" className="[box-shadow:none]"><CheckIcon'
+    );
+    expect(example).toContain(
+      'className="[box-shadow:none] text-[var(--ui-stepper-item-current-label-color)]"'
+    );
   });
 });

@@ -1,13 +1,10 @@
 // Figma Code Connect — status: COMPLETE
-// Re-checked 2026-08-24: the Figma component set exposes `label` (TEXT) plus one
-// top-level VARIANT property, `type` (Current/Completed/Future) — renamed from
-// `variant` in an earlier revision, hence the `figma.enum('type', ...)` below.
-// The nested `Completed` sub-component's `state` property only enumerates
-// `idle` as a selectable variant (hover/active/focus are Figma interactive
-// states layered on top, not separate variant symbols), so it stays unmapped
-// here — but the synced `--ui-stepper-item-completed-container-color-*` tokens
-// in @acronis-platform/tokens-pd confirm all four looks are real design colors,
-// which is why `StepperItem`'s own `state` prop still covers all four.
+// The Figma component set exposes one top-level VARIANT property, `type`
+// (Current/Completed/Future), so the React `variant` prop maps to `type` below.
+// The `label` text property lives inside each variant. The nested Completed
+// instance exposes only `state=idle`; hover/active/focus are React/token states,
+// not variant symbols or prototype interactions in this Figma component set, so
+// Code Connect leaves `state` unmapped.
 // The avatar is consumer-supplied, so the mapping picks the representative one
 // for each `type` — matching the stories and the docs demo: a blue numbered
 // avatar for `current`, a green check for `completed`, a gray numbered avatar
