@@ -19,7 +19,10 @@ the user is), `completed` (already passed), `future` (not reachable yet) — and
 drives the container fill, border, and the label color. `state` is the
 interaction look, and it only changes anything on a `completed` step: `current`
 is always highlighted with a border and `future` is always disabled, which is
-exactly the six `variant`/`state` combinations the Figma component set draws.
+independent of Figma's component variants. Figma draws three top-level `type`
+variants (`current`, `completed`, `future`); its nested Completed instance
+exposes only `idle`. The other completed states are supported by the React API
+and token tier, but are not drawn as Figma variant symbols.
 Only `current` paints a visible border, but every variant reserves the same
 border box, so all three measure the same and a row of steps keeps its markers
 and names aligned.
@@ -44,6 +47,12 @@ step renders it verbatim without sizing, tinting, or recoloring it.
   `completed`'s hover/active fills. Switch it off yourself with
   `className="[box-shadow:none]"` on the composed `Avatar`, as the examples
   below do.
+</Callout>
+
+<Callout>
+  The label uses the Stepper typography tier applied to the root. Ordinary
+  Tailwind typography utilities on `StepperItem`'s `className` do not override
+  that tier; use the root `style` prop for an intentional one-off override.
 </Callout>
 
 Compose the steps inside [`Stepper`](/components/stepper), which lays them out in

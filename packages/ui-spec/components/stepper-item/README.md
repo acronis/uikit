@@ -79,10 +79,13 @@ two caveats the caller applies via `className`, both shown above:
   as an unwanted halo on `current`'s blue fill and on `completed`'s
   hover/active fills. See "Design status" below.
 
-Only six `variant` x `state` combinations exist in the design, and the
-component reproduces exactly that: `current` is always highlighted with a
-border, `future` is always disabled, and only `completed` reads `state`
-(`idle`, `hover`, `active`, `focus`).
+The label uses the Stepper typography treatment.
+
+The Figma component set draws three top-level `type` variants: `current`,
+`completed`, and `future`. The React API also has a four-value `state` prop, but
+only `completed` responds to it. Figma's nested Completed instance exposes only
+`idle`; the other completed states are token-backed implementation states, not
+drawn variant symbols.
 
 `current` is the only variant that paints a visible border, but every variant
 reserves the same border box (transparent on `completed` and `future`), so the
