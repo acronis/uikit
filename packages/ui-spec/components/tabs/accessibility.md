@@ -36,3 +36,6 @@ selection state, roving focus, and keyboard navigation.
   `--ui-focus-primary` ring on keyboard focus — all meeting WCAG AA in light and
   dark. Re-verify against the final palette once a `--ui-tabs-*` tier and Figma
   reference exist (the filled-vs-tinted active treatment is provisional).
+  A disabled trigger is dimmed with a blanket `opacity-50` (disabled controls are
+  exempt from WCAG contrast); it is provisional until a `--ui-tabs-*` disabled
+  token exists.
