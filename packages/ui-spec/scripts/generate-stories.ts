@@ -56,6 +56,10 @@ interface RenderHint {
    *  called, so a generated "All States" story is a blank snapshot). Such
    *  components rely on their hand-written stories for VR. */
   skip?: boolean;
+  /** The spec's `disabled` prop lives on a child part (e.g. a Tabs trigger),
+   *  not the root — so the generated States story must not render
+   *  `<Root disabled>`. Such parts rely on hand-written stories for VR. */
+  partDisabled?: boolean;
   /** Object-literal body for `meta.args`, for a component with a **required**
    *  prop (e.g. Timer's `value`). Every generated story supplies its own props
    *  through `render`, so these args are never read — but Storybook's types
@@ -176,6 +180,7 @@ const RENDER: Record<string, RenderHint> = {
     ].join('\n'),
   },
   tabs: {
+    partDisabled: true,
     props: 'defaultValue="account"',
     extraImports: [
       "import { TabsList, TabsTrigger, TabsContent } from '../tabs';",
@@ -1075,9 +1080,10 @@ export const Matrix: Story = {
   } else {
     // Only show a disabled instance when the component actually has a
     // `disabled` prop — composable components (e.g. breadcrumb) do not.
-    const disabledInst = hasProp(api, 'disabled')
-      ? `\n      ${inst(`${label} disabled`)}`
-      : '';
+    const disabledInst =
+      hasProp(api, 'disabled') && !hint.partDisabled
+        ? `\n      ${inst(`${label} disabled`)}`
+        : '';
     parts.push(`export const States: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
