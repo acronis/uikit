@@ -24,8 +24,15 @@ contract:
       required: true
       description: >-
         On a trigger and its content — the identifier that links them and is
-        emitted on selection. A trigger also accepts a `disabled` flag
-        (pass-through to the underlying tab) to prevent selecting it.
+        emitted on selection.
+    - name: disabled
+      type: boolean
+      required: false
+      default: false
+      description: >-
+        On a trigger — prevents selecting it. The trigger stays focusable and
+        is exposed as `aria-disabled` (React: `data-disabled`), not a native
+        `disabled` attribute.
 
   events:
     - name: value-change

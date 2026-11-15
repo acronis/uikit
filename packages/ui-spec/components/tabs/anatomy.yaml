@@ -80,8 +80,9 @@ states:
     }
   - {
       id: disabled,
-      trigger: "the trigger's `disabled` flag is set (aria-disabled + data-disabled)",
-      kind: internal,
+      trigger: 'disabled === true (on a trigger)',
+      kind: prop,
+      prop: disabled,
       affects: [trigger],
     }
   - {
