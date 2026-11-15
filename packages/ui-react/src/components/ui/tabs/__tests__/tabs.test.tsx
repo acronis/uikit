@@ -95,4 +95,24 @@ describe('Tabs', () => {
     );
     expect(disabled).toHaveAttribute('aria-selected', 'false');
   });
+
+  it('keys disabled styling off data-disabled, never the native :disabled variant', () => {
+    // Base UI never sets the native `disabled` attribute on a tab (it stays
+    // focusable), so a `disabled:` utility can never match. jsdom doesn't load
+    // Tailwind, so the class contract is the only unit-level guard; the
+    // `ui-tabs--disabled-tab` VR baseline covers the rendered result.
+    render(
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="account" disabled>
+            Account
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
+    );
+    const classes = screen.getByRole('tab', { name: 'Account' }).className.split(/\s+/);
+    expect(classes).toContain('data-[disabled]:opacity-50');
+    expect(classes).toContain('data-[disabled]:pointer-events-none');
+    expect(classes.filter((c) => c.startsWith('disabled:'))).toEqual([]);
+  });
 });
