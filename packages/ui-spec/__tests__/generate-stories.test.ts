@@ -34,6 +34,14 @@ describe('generated StepperItem stories', () => {
 });
 
 describe('partDisabled render hint', () => {
+  it('keeps disabled stories for components with a root disabled prop', () => {
+    const { api, anatomy } = loadSpec('button');
+    const { body } = buildStories('Button', api, anatomy, getRenderHint('button'));
+
+    expect(body).toContain('export const Disabled: Story =');
+    expect(body).toContain('variant={v} disabled');
+  });
+
   it('omits the root disabled prop from variant and size stories', () => {
     const { api, anatomy } = loadSpec('button');
     const apiWithSize = {
