@@ -57,8 +57,8 @@ internal_state:
     controlled_default: default-value
     emits: value-change
     changed_by: >-
-      click / Enter / Space on a trigger activates it; arrow keys move focus
-      (manual activation)
+      click / Enter / Space on an enabled trigger activates it; arrow keys move
+      focus (manual activation)
     description: The selected tab value; reflected to aria-selected + data-active.
 
 transitions:
@@ -66,6 +66,7 @@ transitions:
     state: active-tab
     on: click / Enter / Space on a trigger
     to: that trigger's value
+    guard: trigger is not disabled
     effect: emits value-change(value)
     when_controlled: >-
       internal value does NOT change; the component emits value-change and the

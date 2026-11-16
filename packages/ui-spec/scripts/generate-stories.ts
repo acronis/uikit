@@ -976,6 +976,7 @@ export function buildStories(
   const inst = (props: string) =>
     children ? `<${comp}${props}>${children}</${comp}>` : `<${comp}${props} />`;
   const base = inst(label + (hint.baseProps ? ` ${hint.baseProps}` : ''));
+  const supportsRootDisabled = hasProp(api, 'disabled') && !hint.partDisabled;
 
   const parts: string[] = [];
 
@@ -1009,9 +1010,9 @@ export const Matrix: Story = {
     </div>
   ),
 };`);
-    // Only emit the all-variants Disabled grid when the component actually has a
-    // `disabled` prop (e.g. Button does; Tag doesn't).
-    if (hasProp(api, 'disabled')) {
+    // Only emit the all-variants Disabled grid when `disabled` applies to the
+    // root component (e.g. Button does; Tag and Tabs do not).
+    if (supportsRootDisabled) {
       parts.push(`export const Disabled: Story = {
   render: () => (
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
@@ -1050,7 +1051,7 @@ export const Matrix: Story = {
     </div>
   ),
 };`);
-    if (hasProp(api, 'disabled')) {
+    if (supportsRootDisabled) {
       const disabledItems = variantProps
         ? variants
             .map((v) =>
@@ -1072,18 +1073,17 @@ export const Matrix: Story = {
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
       <${comp} aria-label="Off" />
       <${comp} aria-label="On" defaultChecked />
-      <${comp} aria-label="Disabled off" disabled />
-      <${comp} aria-label="Disabled on" disabled defaultChecked />
+      ${supportsRootDisabled ? `<${comp} aria-label="Disabled off" disabled />
+      <${comp} aria-label="Disabled on" disabled defaultChecked />` : ''}
     </div>
   ),
 };`);
   } else {
-    // Only show a disabled instance when the component actually has a
-    // `disabled` prop — composable components (e.g. breadcrumb) do not.
-    const disabledInst =
-      hasProp(api, 'disabled') && !hint.partDisabled
-        ? `\n      ${inst(`${label} disabled`)}`
-        : '';
+    // Only show a disabled instance when `disabled` applies to the root
+    // component — composable components (e.g. breadcrumb and Tabs) do not.
+    const disabledInst = supportsRootDisabled
+      ? `\n      ${inst(`${label} disabled`)}`
+      : '';
     parts.push(`export const States: Story = {
   render: () => (
     <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>

@@ -18,14 +18,16 @@ selection state, roving focus, and keyboard navigation.
   active panel.
 - **Arrow keys** (Left/Right when horizontal, Up/Down when vertical) move focus
   between triggers **without** activating them (manual activation).
-- **Enter / Space** activates the focused trigger.
+- **Enter / Space** activates the focused trigger when it is enabled. A disabled
+  trigger remains focusable and exposes `aria-disabled="true"` (React:
+  `data-disabled`), but Enter / Space leave the selected tab unchanged.
 - **Home / End** move to the first / last trigger.
 
 ## Screen reader
 
 - Entering the tablist announces the tab role, the selected state, and the
-  position ("tab 1 of 2"). Activating a tab announces the newly selected tab and
-  its panel.
+  position ("tab 1 of 2"). Changing the selected tab announces the newly
+  selected tab and its panel.
 
 ## Contrast
 

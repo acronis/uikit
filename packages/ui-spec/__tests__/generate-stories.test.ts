@@ -32,3 +32,61 @@ describe('generated StepperItem stories', () => {
     );
   });
 });
+
+describe('partDisabled render hint', () => {
+  it('omits the root disabled prop from variant and size stories', () => {
+    const { api, anatomy } = loadSpec('button');
+    const apiWithSize = {
+      ...api,
+      contract: {
+        ...api.contract,
+        properties: [
+          ...api.contract.properties,
+          {
+            name: 'size',
+            type: "'small' | 'large'",
+            required: false,
+            description: 'Synthetic size axis for generator coverage.',
+          },
+        ],
+      },
+    };
+
+    const { body } = buildStories('Button', apiWithSize, anatomy, {
+      ...getRenderHint('button'),
+      partDisabled: true,
+    });
+
+    expect(body).not.toMatch(/\sdisabled(?:\s|\/?>)/);
+  });
+
+  it('omits the root disabled prop from variant-only stories', () => {
+    const { api, anatomy } = loadSpec('button');
+    const { body } = buildStories('Button', api, anatomy, {
+      ...getRenderHint('button'),
+      partDisabled: true,
+    });
+
+    expect(body).not.toMatch(/\sdisabled(?:\s|\/?>)/);
+  });
+
+  it('omits root disabled instances from checked-state stories', () => {
+    const { api, anatomy } = loadSpec('switch');
+    const { body } = buildStories('Switch', api, anatomy, {
+      ...getRenderHint('switch'),
+      partDisabled: true,
+    });
+
+    expect(body).not.toMatch(/\sdisabled(?:\s|\/?>)/);
+  });
+
+  it('omits the root disabled prop from single-instance states', () => {
+    const { api, anatomy } = loadSpec('tabs');
+    const { body } = buildStories('Tabs', api, anatomy, {
+      ...getRenderHint('tabs'),
+      partDisabled: true,
+    });
+
+    expect(body).not.toMatch(/\sdisabled(?:\s|\/?>)/);
+  });
+});
