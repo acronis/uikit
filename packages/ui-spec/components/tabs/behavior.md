@@ -19,7 +19,15 @@ Scenario: Keyboard navigation (manual activation)
   Given focus is on the active trigger
   When the user presses Arrow keys (per orientation)
   Then focus moves between triggers without changing the selection
-  And pressing Enter or Space activates the focused trigger
+  And pressing Enter or Space activates the focused trigger when it is enabled
+```
+
+```gherkin
+Scenario: Disabled trigger cannot be selected
+  Given the first tab is selected and another trigger is disabled
+  When the user clicks the disabled trigger or activates it with Enter or Space
+  Then the first tab remains selected and its panel stays visible
+  And value-change does not fire
 ```
 
 ## Controlled vs uncontrolled
