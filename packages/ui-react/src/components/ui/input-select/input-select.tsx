@@ -10,7 +10,10 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
-import { usePortalContainer } from '@/lib/portal-container';
+import {
+  usePortalContainer,
+  usePortalContainerPositionMethod,
+} from '@/lib/portal-container';
 
 // The next-gen select, themed by the dedicated `--ui-input-select-*` tier (global /
 // normal / error / dropdown). It composes Base UI `Select` and adds the field
@@ -251,6 +254,7 @@ const InputSelectContent = React.forwardRef<
   ) => {
     const ctxContainer = usePortalContainer();
     const resolvedContainer = portalContainer ?? ctxContainer;
+    const positionMethod = usePortalContainerPositionMethod(resolvedContainer);
 
     return (
     <SelectPrimitive.Portal container={resolvedContainer}>
@@ -261,6 +265,7 @@ const InputSelectContent = React.forwardRef<
         alignOffset={alignOffset}
         collisionAvoidance={collisionAvoidance}
         anchor={anchor}
+          positionMethod={positionMethod}
         alignItemWithTrigger={false}
         className="z-50 outline-none"
       >

@@ -51,3 +51,20 @@
   **When** the popup opens
   **Then** it is placed on that side of the trigger, flipping to stay in view
   when there isn't room.
+
+## Portal container positioning
+
+```gherkin
+Scenario: Staying visible in a resolved portal container
+  Given a tooltip portaled into a resolved portal-container inside a scrolling,
+    overflow-clipped panel
+  When the panel scrolls while the tooltip is open
+  Then fixed positioning keeps the tooltip visible and aligned to its trigger
+```
+
+```gherkin
+Scenario: Keeping the platform default without a resolved target
+  Given no portal-container prop and no PortalContainerProvider
+  When the tooltip opens in its default portal
+  Then it uses the platform default positioning
+```

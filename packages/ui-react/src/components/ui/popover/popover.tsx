@@ -2,7 +2,10 @@ import * as React from 'react';
 import { Popover as PopoverPrimitive } from '@base-ui/react/popover';
 
 import { cn } from '@/lib/utils';
-import { usePortalContainer } from '@/lib/portal-container';
+import {
+  usePortalContainer,
+  usePortalContainerPositionMethod,
+} from '@/lib/portal-container';
 
 // Ported from `@acronis-platform/shadcn-uikit`'s `popover`
 // (packages/ui-legacy/src/components/ui/popover.tsx). A floating panel anchored
@@ -23,42 +26,6 @@ const Popover = PopoverPrimitive.Root;
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
 const PopoverPortal = PopoverPrimitive.Portal;
-
-// Mirrors Base UI's own container resolution (FloatingPortal): a `container`
-// prop may be the node itself or a ref object wrapping it. A ref object is
-// always truthy, so a raw `Boolean(container)` would treat `ref.current ===
-// null` as a resolved container when Base UI actually falls back to
-// `document.body`.
-function resolvePortalContainerNode(
-  container: PopoverPrimitive.Portal.Props['container']
-): HTMLElement | ShadowRoot | null {
-  if (container == null) return null;
-  return 'current' in container ? container.current : container;
-}
-
-// Base UI resolves the same `container` prop inside a layout effect (see
-// FloatingPortal's useFloatingPortalNode), because a ref pointing at a node
-// rendered in the same commit isn't populated until after commit — React
-// attaches every ref in a commit before running any layout effect in it.
-// Resolving inline during render (as a plain expression) would race that:
-// on the ref's first commit `current` is still null, and since nothing
-// re-renders on a ref mutation, a wrong 'absolute' default could stick
-// indefinitely. Mirroring Base UI's own two-phase timing here — a state
-// value corrected by a layout effect — picks up a same-commit ref
-// correctly, same as Base UI does for its own portaling.
-function useResolvedPortalContainerNode(
-  container: PopoverPrimitive.Portal.Props['container']
-): HTMLElement | ShadowRoot | null {
-  const [node, setNode] = React.useState(() =>
-    resolvePortalContainerNode(container)
-  );
-
-  React.useLayoutEffect(() => {
-    setNode(resolvePortalContainerNode(container));
-  }, [container]);
-
-  return node;
-}
 
 export interface PopoverContentProps extends React.ComponentPropsWithoutRef<
   typeof PopoverPrimitive.Popup
@@ -133,15 +100,16 @@ const PopoverContent = React.forwardRef<
   ) => {
     const ctxContainer = usePortalContainer();
     const resolvedContainer = portalContainer ?? ctxContainer;
-    const resolvedContainerNode =
-      useResolvedPortalContainerNode(resolvedContainer);
     // Gated on this component's own `portal` prop, not on whether the popup
     // actually ends up inside a constrained containing block: `portal={false}`
     // opts out of the viewport-escape defaults so inline content keeps its
     // intended scroll-with-content behavior. A consumer who wraps this in
     // their own ancestor Portal targeting the same constrained container can
     // still get clipped — pass `positionMethod` explicitly in that case.
-    const appliesContainerDefaults = portal && resolvedContainerNode != null;
+    const containerPositionMethod = usePortalContainerPositionMethod(
+      resolvedContainer,
+      portal
+    );
     // 'absolute' (Base UI's default) shares its portal container's
     // containing block, so a container that constrains overflow (e.g.
     // `overflow: hidden` on a Shadow DOM host) clips the popup at its own
@@ -152,8 +120,7 @@ const PopoverContent = React.forwardRef<
     // default collision boundary ('clipping-ancestors') already resolves to
     // the real (scroll-independent) viewport without needing an explicit
     // `collisionBoundary` override here.
-    const resolvedPositionMethod =
-      positionMethod ?? (appliesContainerDefaults ? 'fixed' : undefined);
+    const resolvedPositionMethod = positionMethod ?? containerPositionMethod;
 
     const positioner = (
       <PopoverPrimitive.Positioner

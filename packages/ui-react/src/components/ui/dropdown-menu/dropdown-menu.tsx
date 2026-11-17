@@ -6,7 +6,10 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
-import { usePortalContainer } from '@/lib/portal-container';
+import {
+  usePortalContainer,
+  usePortalContainerPositionMethod,
+} from '@/lib/portal-container';
 
 // A menu of actions anchored to a trigger, built on the Base UI Menu primitive
 // (positioning, focus management, typeahead, outside-press / Esc dismissal,
@@ -102,12 +105,17 @@ const DropdownMenuContent = React.forwardRef<
   ) => {
     const ctxContainer = usePortalContainer();
     const resolvedContainer = portalContainer ?? ctxContainer;
+    const positionMethod = usePortalContainerPositionMethod(
+      resolvedContainer,
+      portal
+    );
 
     const positioner = (
       <MenuPrimitive.Positioner
         side={side}
         align={align}
         sideOffset={sideOffset}
+        positionMethod={positionMethod}
         className="z-50"
       >
         <MenuPrimitive.Popup

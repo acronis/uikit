@@ -64,6 +64,13 @@ action).
 
 ## Popup placement and chrome
 
+**Given** the content has a resolved `portal-container` (directly or through a
+`PortalContainerProvider`) inside a scrolling, overflow-clipped panel
+**When** the panel scrolls while the popup is open
+**Then** fixed positioning keeps the popup visible and aligned to the trigger
+(or its explicit `anchor`). Without a resolved portal target, the popup keeps
+the platform default positioning.
+
 **Given** no positioning props on the content
 **When** the popup opens
 **Then** it is placed against the **trigger**, below it and aligned to its start

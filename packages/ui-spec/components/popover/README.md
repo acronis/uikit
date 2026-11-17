@@ -73,4 +73,7 @@ For an isolated container (e.g. a shadow root), pass `portalContainer` so the
 popup inherits that scope's styles. When portaled into a resolved
 `portalContainer`, `PopoverContent` also defaults `positionMethod` to `'fixed'`
 so the popup escapes a plain overflow-clipping ancestor (e.g. a Shadow DOM host
-with `overflow: hidden`) instead of being clipped at the container's edge.
+with `overflow: hidden`) instead of being clipped at the container's edge, and
+stays aligned to its trigger as that container scrolls. Tooltip, DropdownMenu,
+InputSelect, and Combobox use the same default when their portal container
+resolves.

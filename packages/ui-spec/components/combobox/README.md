@@ -61,3 +61,9 @@ const frameworks = [
   </ComboboxContent>
 </Combobox>;
 ```
+
+`ComboboxContent` can set `portalContainer` directly or inherit one from a
+`PortalContainerProvider`. If the target resolves, the dropdown uses fixed
+positioning so a scrolling, overflow-clipped container does not clip it or
+break its alignment with the input. Without a resolved target, it keeps the
+platform positioning default.

@@ -43,6 +43,15 @@ contract:
       type: string
       required: false
       description: Identifies the field when a form is submitted.
+    - name: portal-container
+      type: Element | ShadowRoot | null | RefObject<Element | ShadowRoot | null>
+      required: false
+      default: 'nearest PortalContainerProvider, or document.body'
+      description: >-
+        On the content — container to portal the dropdown into. When this
+        resolves to a target, the popup uses fixed positioning to avoid plain
+        overflow clipping and remain aligned while the container scrolls.
+        Without a resolved target, it keeps the platform default positioning.
   events:
     - name: onValueChange
       payload: '(value: Value | Value[] | null, eventDetails) => void'
