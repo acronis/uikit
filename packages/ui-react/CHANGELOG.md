@@ -1,5 +1,11 @@
 # @acronis-platform/ui-react
 
+## 7.0.1
+
+### Patch Changes
+
+- [#780](https://github.com/acronis/uikit/pull/780) [`11c0eb3`](https://github.com/acronis/uikit/commit/11c0eb369e36e1e37f52824a4b0c73789ac09fd7) Thanks [@sudheerjonna](https://github.com/sudheerjonna)! - Tabs: a disabled `TabsTrigger` now looks disabled (dimmed, non-interactive). Base UI exposes disabled via `aria-disabled`/`data-disabled` rather than the native attribute, so the `disabled:` variants never matched.
+
 ## 7.0.0
 
 ### Major Changes
