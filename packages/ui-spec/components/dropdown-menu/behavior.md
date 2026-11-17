@@ -66,3 +66,28 @@ Scenario: Opening a submenu
   When the user highlights it (hover or ArrowRight)
   Then the submenu (data-[popup-open]) opens beside it
 ```
+
+## Portal container positioning
+
+```gherkin
+Scenario: Staying visible in a resolved portal container
+  Given a portaled menu in a resolved portal-container inside a scrolling,
+    overflow-clipped panel
+  When the panel scrolls while the menu is open
+  Then fixed positioning keeps the menu and its open submenu visible and
+    aligned to their triggers
+```
+
+```gherkin
+Scenario: Keeping the platform default without a resolved target
+  Given no portal-container prop and no PortalContainerProvider
+  When the menu opens in its default portal
+  Then it uses the platform default positioning
+```
+
+```gherkin
+Scenario: Keeping inline content unchanged
+  Given DropdownMenuContent with portal=false
+  When the menu opens
+  Then it uses the platform default positioning
+```

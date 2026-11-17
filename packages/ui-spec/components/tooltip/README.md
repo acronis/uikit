@@ -46,3 +46,8 @@ import { Button } from '@acronis-platform/ui-react';
 
 `TooltipContent` accepts `side` / `align` / `sideOffset` to control placement. No
 arrow is rendered, matching the design.
+
+Set `portalContainer` on `TooltipContent` (or provide a
+`PortalContainerProvider`) to mount the tooltip in an isolated container. When
+that target resolves, it uses fixed positioning so scrolling the container
+does not clip the tooltip or separate it from its trigger.

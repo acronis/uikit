@@ -51,6 +51,16 @@ const config: TestRunnerConfig = {
       const html = document.documentElement;
       html.dataset.theme = mode;
       html.style.colorScheme = mode;
+
+      // Theme selectors cannot cross a Shadow DOM boundary. ShadowRoot stories
+      // opt in with `data-shadow-host`; mirror the visual-run mode onto that
+      // host so its adopted token styles resolve the same color scheme as the
+      // surrounding Storybook document.
+      for (const host of document.querySelectorAll<HTMLElement>(
+        '[data-shadow-host]'
+      )) {
+        host.dataset.theme = mode;
+      }
     }, colorMode);
     await page.waitForTimeout(50);
 

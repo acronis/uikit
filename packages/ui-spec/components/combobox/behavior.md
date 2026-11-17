@@ -38,3 +38,18 @@ Scenario: Clear
   When the user activates the clear (✕) button
   Then the value is cleared
 ```
+
+```gherkin
+Scenario: Staying visible in a resolved portal container
+  Given a dropdown in a resolved portal-container inside a scrolling,
+    overflow-clipped panel
+  When the panel scrolls while the dropdown is open
+  Then fixed positioning keeps the dropdown visible and aligned to the input
+```
+
+```gherkin
+Scenario: Keeping the platform default without a resolved target
+  Given no portal-container prop and no PortalContainerProvider
+  When the dropdown opens in its default portal
+  Then it uses the platform default positioning
+```

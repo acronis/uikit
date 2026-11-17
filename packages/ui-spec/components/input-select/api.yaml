@@ -106,7 +106,10 @@ contract:
       description: >-
         On the content — container to portal the dropdown into. Pass an
         element to scope the portal (e.g. a shadow root, so the popup
-        inherits styles defined there).
+        inherits styles defined there). When this resolves to a target, the
+        popup uses fixed positioning to avoid plain overflow clipping and
+        remain aligned while the container scrolls. Without a resolved target,
+        it keeps the platform default positioning.
     - name: is-popover-styled
       type: boolean
       required: false

@@ -55,10 +55,18 @@ Scenario: Escaping a constrained portal container's clipping
   Given a PopoverContent portaled (default) into a resolved portal-container
     that constrains overflow (e.g. a small or offset MFE/Shadow DOM mount)
   When it opens
-  Then it uses 'fixed' positioning by default, with collision-boundary left at
+  Then fixed positioning is used by default, with collision-boundary left at
     the platform default ('clipping-ancestors')
   And it is not clipped at the portal container's own edge, since 'fixed'
     already drops that overflow-clipping ancestor from its clipping chain
+  And it stays aligned to the trigger as the portal container scrolls
+```
+
+```gherkin
+Scenario: Keeping the platform default without a resolved target
+  Given no portal-container prop and no PortalContainerProvider
+  When the PopoverContent opens in its default portal
+  Then it uses the platform default positioning
 ```
 
 ```gherkin

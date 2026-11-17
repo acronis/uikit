@@ -60,6 +60,13 @@ import {
 </DropdownMenu>;
 ```
 
+`DropdownMenuContent` can set `portalContainer` directly or inherit one from a
+`PortalContainerProvider`. If the target resolves, the portaled menu uses fixed
+positioning so a scrolling, overflow-clipped container does not clip it or
+break its alignment with the trigger. Set `portal={false}` for inline content;
+inline content keeps the platform positioning default. Nested
+`DropdownMenuSubContent` uses the same positioning behavior as its parent menu.
+
 ## Explain a disabled action
 
 Attach the tooltip trigger to the disabled menu item itself. The row stays the

@@ -44,6 +44,23 @@ contract:
       required: false
       default: 4
       description: On the content — distance in px from the trigger.
+    - name: portal
+      type: boolean
+      required: false
+      default: true
+      description: >-
+        On the content — render the menu in a portal. Set false for inline
+        usage; inline content keeps the platform default positioning.
+    - name: portal-container
+      type: Element | ShadowRoot | null | RefObject<Element | ShadowRoot | null>
+      required: false
+      default: 'nearest PortalContainerProvider, or document.body'
+      description: >-
+        On the content — container to portal the menu into. When this resolves
+        to a target and portal is enabled, the popup uses fixed positioning to
+        avoid plain overflow clipping and remain aligned while the container
+        scrolls; nested submenu content uses the same positioning. Without a
+        resolved target, it keeps the platform default positioning.
     - name: inset
       type: boolean
       required: false

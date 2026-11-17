@@ -4,6 +4,47 @@ import * as React from 'react';
 
 const PortalContainerContext = React.createContext<HTMLElement | null | undefined>(undefined);
 
+type PortalContainerTarget =
+  | HTMLElement
+  | ShadowRoot
+  | React.RefObject<HTMLElement | ShadowRoot | null>
+  | null
+  | undefined;
+
+function resolvePortalContainerNode(
+  container: PortalContainerTarget
+): HTMLElement | ShadowRoot | null {
+  if (container == null) return null;
+  return 'current' in container ? container.current : container;
+}
+
+function useResolvedPortalContainerNode(
+  container: PortalContainerTarget
+): HTMLElement | ShadowRoot | null {
+  const [node, setNode] = React.useState(() =>
+    resolvePortalContainerNode(container)
+  );
+
+  React.useLayoutEffect(() => {
+    setNode(resolvePortalContainerNode(container));
+  }, [container]);
+
+  return node;
+}
+
+/**
+ * Use fixed positioning for a popup that portals into a resolved container.
+ * This lets it escape plain overflow-clipping ancestors while retaining the
+ * default positioning when there is no portal target (or the popup is inline).
+ */
+export function usePortalContainerPositionMethod(
+  container: PortalContainerTarget,
+  isPortaled = true
+): 'fixed' | undefined {
+  const node = useResolvedPortalContainerNode(container);
+  return isPortaled && node !== null ? 'fixed' : undefined;
+}
+
 export interface PortalContainerProviderProps {
   /**
    * The DOM element portaled content should render into (e.g. a `<div>` inside

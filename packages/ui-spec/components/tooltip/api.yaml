@@ -25,6 +25,15 @@ contract:
       required: false
       default: top
       description: Which side of the trigger the popup is placed on (on the content).
+    - name: portal-container
+      type: Element | ShadowRoot | null | RefObject<Element | ShadowRoot | null>
+      required: false
+      default: 'nearest PortalContainerProvider, or document.body'
+      description: >-
+        On the content — container to portal the tooltip into. When this
+        resolves to a target, the popup uses fixed positioning to avoid plain
+        overflow clipping and remain aligned while the container scrolls.
+        Without a resolved target, it keeps the platform default positioning.
     - name: delay
       type: number
       required: false

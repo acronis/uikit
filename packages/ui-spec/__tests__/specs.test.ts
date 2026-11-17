@@ -44,6 +44,27 @@ describe('every component spec validates against its schema', () => {
   }
 });
 
+describe('portal-backed popup positioning stays documented', () => {
+  for (const name of [
+    'popover',
+    'tooltip',
+    'dropdown-menu',
+    'input-select',
+    'combobox',
+  ]) {
+    it(`${name}: documents resolved-target, scroll, and fallback behavior`, () => {
+      const behavior = readFileSync(
+        resolve(HERE, `../components/${name}/behavior.md`),
+        'utf8'
+      );
+      expect(behavior).toMatch(/resolved.{0,10}portal-container/i);
+      expect(behavior).toMatch(/fixed positioning/i);
+      expect(behavior).toMatch(/scroll/i);
+      expect(behavior).toMatch(/platform default positioning/i);
+    });
+  }
+});
+
 describe('anatomy schematic depicts every declared part', () => {
   for (const name of componentNames) {
     it(`${name}/anatomy.yaml schematic`, () => {

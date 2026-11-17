@@ -6,7 +6,10 @@ import {
 } from '@acronis-platform/icons-react/stroke-mono';
 
 import { cn } from '@/lib/utils';
-import { usePortalContainer } from '@/lib/portal-container';
+import {
+  usePortalContainer,
+  usePortalContainerPositionMethod,
+} from '@/lib/portal-container';
 
 // A menu of actions anchored to a trigger, built on the Base UI Menu primitive
 // (positioning, focus management, typeahead, outside-press / Esc dismissal,
@@ -49,6 +52,10 @@ const DropdownMenuGroup = React.forwardRef<
 DropdownMenuGroup.displayName = 'DropdownMenuGroup';
 const DropdownMenuPortal = MenuPrimitive.Portal;
 const DropdownMenuSub = MenuPrimitive.SubmenuRoot;
+
+const DropdownMenuPositionMethodContext = React.createContext<
+  'fixed' | undefined
+>(undefined);
 
 const popupClassName =
   'z-50 min-w-[8rem] overflow-y-auto overflow-x-hidden flex flex-col gap-[var(--ui-button-menu-dropdown-container-gap)] bg-[var(--ui-button-menu-dropdown-container-color)] border-solid border-[length:var(--ui-button-menu-dropdown-container-border-width)] border-[var(--ui-button-menu-dropdown-container-border-color)] rounded-[var(--ui-button-menu-dropdown-container-border-radius)] px-[var(--ui-button-menu-dropdown-container-padding-x)] py-[var(--ui-button-menu-dropdown-container-padding-y)] shadow-md outline-none duration-200 data-[open]:animate-in data-[closed]:animate-out data-[open]:fade-in-0 data-[closed]:fade-out-0 data-[open]:zoom-in-95 data-[closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2';
@@ -102,20 +109,27 @@ const DropdownMenuContent = React.forwardRef<
   ) => {
     const ctxContainer = usePortalContainer();
     const resolvedContainer = portalContainer ?? ctxContainer;
+    const positionMethod = usePortalContainerPositionMethod(
+      resolvedContainer,
+      portal
+    );
 
     const positioner = (
-      <MenuPrimitive.Positioner
-        side={side}
-        align={align}
-        sideOffset={sideOffset}
-        className="z-50"
-      >
-        <MenuPrimitive.Popup
-          ref={ref}
-          className={cn(popupClassName, className)}
-          {...props}
-        />
-      </MenuPrimitive.Positioner>
+      <DropdownMenuPositionMethodContext.Provider value={positionMethod}>
+        <MenuPrimitive.Positioner
+          side={side}
+          align={align}
+          sideOffset={sideOffset}
+          positionMethod={positionMethod}
+          className="z-50"
+        >
+          <MenuPrimitive.Popup
+            ref={ref}
+            className={cn(popupClassName, className)}
+            {...props}
+          />
+        </MenuPrimitive.Positioner>
+      </DropdownMenuPositionMethodContext.Provider>
     );
     return portal ? (
       <MenuPrimitive.Portal
@@ -136,15 +150,23 @@ const DropdownMenuSubContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof MenuPrimitive.Popup> & {
     sideOffset?: number;
   }
->(({ className, sideOffset = 4, ...props }, ref) => (
-  <MenuPrimitive.Positioner sideOffset={sideOffset} className="z-50">
-    <MenuPrimitive.Popup
-      ref={ref}
-      className={cn(popupClassName, className)}
-      {...props}
-    />
-  </MenuPrimitive.Positioner>
-));
+>(({ className, sideOffset = 4, ...props }, ref) => {
+  const positionMethod = React.useContext(DropdownMenuPositionMethodContext);
+
+  return (
+    <MenuPrimitive.Positioner
+      sideOffset={sideOffset}
+      positionMethod={positionMethod}
+      className="z-50"
+    >
+      <MenuPrimitive.Popup
+        ref={ref}
+        className={cn(popupClassName, className)}
+        {...props}
+      />
+    </MenuPrimitive.Positioner>
+  );
+});
 DropdownMenuSubContent.displayName = 'DropdownMenuSubContent';
 
 const DropdownMenuItem = React.forwardRef<
