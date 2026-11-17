@@ -14,6 +14,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
@@ -176,3 +179,31 @@ describe.each(popupCases)(
     });
   }
 );
+
+describe('DropdownMenu submenu portal positioning', () => {
+  it('uses fixed positioning inside the resolved portal container', () => {
+    const portalContainer = document.createElement('div');
+    document.body.appendChild(portalContainer);
+
+    const view = render(
+      <DropdownMenu defaultOpen>
+        <DropdownMenuTrigger>Open menu</DropdownMenuTrigger>
+        <DropdownMenuContent portalContainer={portalContainer}>
+          <DropdownMenuSub defaultOpen>
+            <DropdownMenuSubTrigger>More actions</DropdownMenuSubTrigger>
+            <DropdownMenuSubContent data-testid="submenu">
+              <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            </DropdownMenuSubContent>
+          </DropdownMenuSub>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+
+    const submenu = portalContainer.querySelector('[data-testid="submenu"]');
+    expect(submenu).not.toBeNull();
+    expect(submenu?.parentElement).toHaveStyle({ position: 'fixed' });
+
+    view.unmount();
+    portalContainer.remove();
+  });
+});

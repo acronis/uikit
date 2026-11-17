@@ -15,6 +15,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '../../dropdown-menu';
 import {
@@ -60,9 +63,18 @@ function PopupExample({ kind }: { kind: PopupKind }) {
           <PopoverTrigger
             render={<Button variant="secondary">Manage access</Button>}
           />
-          <PopoverContent data-testid="positioned-popup" style={{ width: 280 }}>
+          <PopoverContent
+            aria-labelledby="workspace-access-title"
+            data-testid="positioned-popup"
+            style={{ width: 280 }}
+          >
             <PopoverBody>
-              <h4 className="font-medium leading-none">Workspace access</h4>
+              <h4
+                id="workspace-access-title"
+                className="font-medium leading-none"
+              >
+                Workspace access
+              </h4>
               <p className="text-sm text-muted-foreground">
                 Invite a teammate to this workspace.
               </p>
@@ -94,6 +106,12 @@ function PopupExample({ kind }: { kind: PopupKind }) {
           <DropdownMenuContent data-testid="positioned-popup">
             <DropdownMenuItem>Open settings</DropdownMenuItem>
             <DropdownMenuItem>Copy workspace link</DropdownMenuItem>
+            <DropdownMenuSub defaultOpen>
+              <DropdownMenuSubTrigger>More actions</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent data-testid="positioned-submenu">
+                <DropdownMenuItem>Duplicate workspace</DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -289,8 +307,24 @@ function storyFor(kind: PopupKind): Story {
       expect(trigger).not.toBeNull();
       expect(positioner).not.toBeNull();
       expect(window.getComputedStyle(positioner).position).toBe('fixed');
+      const submenu =
+        kind === 'DropdownMenu'
+          ? await waitFor(() => {
+              const element = shadowRoot.querySelector<HTMLElement>(
+                '[data-testid="positioned-submenu"]'
+              );
+              expect(element).not.toBeNull();
+              return element as HTMLElement;
+            })
+          : null;
+      if (submenu) {
+        expect(window.getComputedStyle(submenu!.parentElement!).position).toBe(
+          'fixed'
+        );
+      }
 
       const initialPopupTop = popup.getBoundingClientRect().top;
+      const initialSubmenuTop = submenu?.getBoundingClientRect().top;
       const initialTriggerTop = trigger.getBoundingClientRect().top;
       host!.scrollTop = 12;
       await new Promise<void>((resolve) => {
@@ -302,6 +336,11 @@ function storyFor(kind: PopupKind): Story {
         initialTriggerTop
       );
       expect(popup.getBoundingClientRect().top).toBeLessThan(initialPopupTop);
+      if (submenu && initialSubmenuTop !== undefined) {
+        expect(submenu.getBoundingClientRect().top).toBeLessThan(
+          initialSubmenuTop
+        );
+      }
     },
   };
 }

@@ -59,8 +59,8 @@ contract:
         On the content — container to portal the menu into. When this resolves
         to a target and portal is enabled, the popup uses fixed positioning to
         avoid plain overflow clipping and remain aligned while the container
-        scrolls. Without a resolved target, it keeps the platform default
-        positioning.
+        scrolls; nested submenu content uses the same positioning. Without a
+        resolved target, it keeps the platform default positioning.
     - name: inset
       type: boolean
       required: false

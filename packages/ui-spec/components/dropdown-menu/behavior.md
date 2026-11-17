@@ -74,7 +74,8 @@ Scenario: Staying visible in a resolved portal container
   Given a portaled menu in a resolved portal-container inside a scrolling,
     overflow-clipped panel
   When the panel scrolls while the menu is open
-  Then fixed positioning keeps the menu visible and aligned to its trigger
+  Then fixed positioning keeps the menu and its open submenu visible and
+    aligned to their triggers
 ```
 
 ```gherkin
