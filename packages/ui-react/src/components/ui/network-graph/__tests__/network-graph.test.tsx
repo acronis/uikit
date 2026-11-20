@@ -1253,4 +1253,292 @@ describe('NetworkGraph', () => {
     expect(onZoomChange.mock.lastCall![0]).toBeLessThan(initialScale);
     expect(card.getAttribute('x')).toBe(movedX);
   });
+
+  it('preserves view, moved positions, and uncontrolled selection for equivalent new data', () => {
+    const controls = React.createRef<NetworkGraphViewportHandle>();
+    const { container, rerender } = renderGraph(baseData, {
+      nodeDraggable: true,
+      viewportRef: controls,
+    });
+    const root = container.querySelector('[data-network-node="root"]')!;
+    fireEvent.pointerDown(root, {
+      button: 0,
+      pointerId: 11,
+      clientX: 100,
+      clientY: 100,
+    });
+    fireEvent.pointerMove(root, { pointerId: 11, clientX: 180, clientY: 120 });
+    fireEvent.pointerUp(root, { pointerId: 11, clientX: 180, clientY: 120 });
+    fireEvent.keyDown(root, { key: 'Enter' });
+    act(() => controls.current!.setZoom(1.5));
+    const position = root.querySelector('foreignObject')!.getAttribute('x');
+    const transform = graphTransform(container);
+    expect(root).toHaveAttribute('aria-pressed', 'true');
+
+    const equivalent = {
+      roots: [...baseData.roots],
+      nodes: baseData.nodes.map((node) => ({ ...node })),
+      edges: baseData.edges.map((edge) => ({ ...edge })),
+    };
+    rerender(
+      <NetworkGraph
+        graphData={equivalent}
+        nodeDraggable
+        viewportRef={controls}
+      />
+    );
+    expect(root.querySelector('foreignObject')).toHaveAttribute('x', position);
+    expect(root).toHaveAttribute('aria-pressed', 'true');
+    expect(graphTransform(container)).toBe(transform);
+
+    rerender(
+      <NetworkGraph
+        graphData={{
+          ...equivalent,
+          nodes: [...equivalent.nodes, { id: 'new' }],
+        }}
+        nodeDraggable
+        viewportRef={controls}
+      />
+    );
+    expect(root).toHaveAttribute('aria-pressed', 'false');
+    expect(graphTransform(container)).not.toBe(transform);
+  });
+
+  it.each(['unknown', 'constructor', '__proto__', 'toString'])(
+    'safely ignores unknown icon %s',
+    (icon) => {
+      const { container } = renderGraph({
+        roots: ['root'],
+        nodes: [{ id: 'root', title: 'Root', icon }],
+        edges: [],
+      });
+      expect(screen.getByRole('button', { name: 'Root' })).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-network-node] foreignObject svg')
+      ).toBeNull();
+    }
+  );
+
+  it('keeps circular content inside its footprint and reserves room for all three card lines', () => {
+    const data: NetworkGraphData = {
+      roots: ['circle', 'device'],
+      nodes: [
+        {
+          id: 'circle',
+          title: 'Circle',
+          subtitle: 'Address',
+          caption: 'Online',
+          icon: 'router',
+          shape: 'circle',
+        },
+        {
+          id: 'device',
+          title: 'Device',
+          subtitle: 'Address',
+          caption: 'Online',
+          icon: 'router',
+        },
+      ],
+      edges: [],
+    };
+    const { container } = renderGraph(data);
+    const circleNode = container.querySelector('[data-network-node="circle"]')!;
+    const circle = circleNode.querySelector('circle')!;
+    const content = circleNode.querySelector('foreignObject')!;
+    const radius = Number(circle.getAttribute('r'));
+    expect(Number(content.getAttribute('width'))).toBeLessThanOrEqual(
+      radius * 2
+    );
+    expect(Number(content.getAttribute('height'))).toBeLessThanOrEqual(
+      radius * 2
+    );
+    expect(content.firstElementChild).toHaveStyle({
+      clipPath: 'circle(50% at center)',
+    });
+    const device = container.querySelector(
+      '[data-network-node="device"] foreignObject'
+    )!;
+    expect(Number(device.getAttribute('height'))).toBeGreaterThanOrEqual(74);
+    expect(
+      layoutNetworkGraph(data.nodes, data.edges, data.roots).nodeSizes.get(
+        'device'
+      )!.height
+    ).toBeGreaterThanOrEqual(74);
+  });
+
+  it('keeps a single-child edge attached when either endpoint moves horizontally', () => {
+    const data: NetworkGraphData = {
+      roots: ['parent'],
+      nodes: [{ id: 'parent' }, { id: 'child' }],
+      edges: [{ source: 'parent', target: 'child' }],
+    };
+    const { container } = renderGraph(data, { nodeDraggable: true });
+    const path = container.querySelector('[data-network-edge="0"]')!;
+    for (const [index, id] of ['child', 'parent'].entries()) {
+      const node = container.querySelector(`[data-network-node="${id}"]`)!;
+      fireEvent.pointerDown(node, {
+        button: 0,
+        pointerId: 20 + index,
+        clientX: 0,
+        clientY: 0,
+      });
+      fireEvent.pointerMove(node, {
+        pointerId: 20 + index,
+        clientX: 60,
+        clientY: 0,
+      });
+      fireEvent.pointerUp(node, {
+        pointerId: 20 + index,
+        clientX: 60,
+        clientY: 0,
+      });
+      const source = container.querySelector(
+        '[data-network-node="parent"] foreignObject'
+      )!;
+      const target = container.querySelector(
+        '[data-network-node="child"] foreignObject'
+      )!;
+      const sourceX =
+        Number(source.getAttribute('x')) +
+        Number(source.getAttribute('width')) / 2;
+      const targetX =
+        Number(target.getAttribute('x')) +
+        Number(target.getAttribute('width')) / 2;
+      expect(path.getAttribute('d')).toMatch(new RegExp(`^M ${sourceX} `));
+      if (sourceX !== targetX)
+        expect(path.getAttribute('d')).toMatch(
+          new RegExp(`(?:H ${targetX} V|Q ${targetX} [-\\d.]+ ${targetX} )`)
+        );
+      else expect(path.getAttribute('d')).not.toContain(' H ');
+    }
+  });
+
+  it('activates nodes and edges by keyboard after panning while suppressing the drag click', () => {
+    const onNodeClick = vi.fn();
+    const onEdgeClick = vi.fn();
+    const { container } = renderGraph(baseData, {
+      graphDraggable: true,
+      onNodeClick,
+      onEdgeClick,
+    });
+    const region = screen.getByRole('region', { name: 'Network topology' });
+    const node = container.querySelector('[data-network-node="root"]')!;
+    const edge = container.querySelector('[data-network-edge="0"]')!;
+    const pan = (id: number) => {
+      fireEvent.pointerDown(region, {
+        button: 0,
+        pointerId: id,
+        clientX: 0,
+        clientY: 0,
+      });
+      fireEvent.pointerMove(region, { pointerId: id, clientX: 30, clientY: 0 });
+      fireEvent.pointerUp(region, { pointerId: id, clientX: 30, clientY: 0 });
+    };
+    pan(30);
+    fireEvent.keyDown(node, { key: 'Enter' });
+    expect(onNodeClick).toHaveBeenCalledTimes(1);
+    pan(31);
+    fireEvent.keyDown(edge, { key: ' ' });
+    expect(onEdgeClick).toHaveBeenCalledTimes(1);
+    pan(32);
+    fireEvent.click(node);
+    expect(onNodeClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('allows edge labels to be localized using complete endpoint data', () => {
+    const getEdgeLabel = vi.fn(
+      (edge, source, target) =>
+        `${source.title} hacia ${target.title}: ${edge.type}`
+    );
+    renderGraph(baseData, { getEdgeLabel });
+    expect(
+      screen.getByRole('button', {
+        name: 'Root network hacia Office subnet: layer1',
+      })
+    ).toBeInTheDocument();
+    expect(getEdgeLabel).toHaveBeenCalledWith(
+      baseData.edges[0],
+      baseData.nodes[0],
+      baseData.nodes[1]
+    );
+  });
+
+  it('uses logical text alignment and preserves disabled and error colors when selected', () => {
+    const data: NetworkGraphData = {
+      roots: ['disabled', 'error'],
+      nodes: [
+        {
+          id: 'disabled',
+          title: 'Disabled',
+          subtitle: 'Address',
+          state: 'disabled',
+        },
+        { id: 'error', title: 'Error', subtitle: 'Address', state: 'error' },
+      ],
+      edges: [],
+    };
+    const { container } = renderGraph(data, {
+      selectedNodeIds: ['disabled', 'error'],
+      dir: 'rtl',
+    });
+    const disabled = container.querySelector('[data-network-node="disabled"]')!;
+    const error = container.querySelector('[data-network-node="error"]')!;
+    expect(
+      disabled.querySelector('[data-network-card]')!.getAttribute('style')
+    ).toContain('border-color: var(--ui-border-on-status-neutral)');
+    expect(
+      error.querySelector('[data-network-card]')!.getAttribute('style')
+    ).toContain('border-color: var(--ui-border-on-status-danger)');
+    expect(disabled.querySelector('.text-start')).toBeInTheDocument();
+    expect(error.querySelector('.text-start')).toBeInTheDocument();
+    expect(
+      error.querySelector('.text-start')!.firstElementChild!.className
+    ).toContain('text-[var(--ui-text-on-surface-destructive)]');
+  });
+
+  it('fits dragged positions when a branch expands', () => {
+    const data: NetworkGraphData = {
+      roots: ['root'],
+      nodes: [
+        { id: 'root', title: 'Root', expandable: true },
+        { id: 'child', title: 'Child' },
+      ],
+      edges: [{ source: 'root', target: 'child' }],
+    };
+    const { container } = renderGraph(data, {
+      width: 400,
+      height: 400,
+      nodeDraggable: true,
+      defaultCollapsedNodeIds: ['root'],
+    });
+    const root = container.querySelector('[data-network-node="root"]')!;
+    fireEvent.pointerDown(root, {
+      button: 0,
+      pointerId: 40,
+      clientX: 0,
+      clientY: 0,
+    });
+    fireEvent.pointerMove(root, { pointerId: 40, clientX: 1000, clientY: 0 });
+    fireEvent.pointerUp(root, { pointerId: 40, clientX: 1000, clientY: 0 });
+    fireEvent.click(screen.getByRole('button', { name: 'Expand Root' }));
+    const match = graphTransform(container)!.match(
+      /translate\(([-\d.]+)[, ]+([-\d.]+)\) scale\(([-\d.]+)\)/
+    )!;
+    const [, x, y, scale] = match.map(Number);
+    for (const card of container.querySelectorAll(
+      '[data-network-node] > foreignObject'
+    )) {
+      const left = Number(card.getAttribute('x'));
+      const top = Number(card.getAttribute('y'));
+      expect(x + left * scale).toBeGreaterThanOrEqual(15.99);
+      expect(y + top * scale).toBeGreaterThanOrEqual(15.99);
+      expect(
+        x + (left + Number(card.getAttribute('width'))) * scale
+      ).toBeLessThanOrEqual(384.01);
+      expect(
+        y + (top + Number(card.getAttribute('height'))) * scale
+      ).toBeLessThanOrEqual(384.01);
+    }
+  });
 });

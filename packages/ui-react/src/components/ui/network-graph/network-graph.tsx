@@ -32,6 +32,7 @@ import {
   getNetworkGraphIndicatorsHeight,
   layoutNetworkGraph,
   type NetworkGraphPosition,
+  type NetworkGraphLayout,
   type NetworkGraphNodeVariant,
 } from './network-graph-layout';
 
@@ -158,6 +159,12 @@ export interface NetworkGraphProps extends Omit<
   showZoomControls?: boolean;
   /** Localized accessible name for each branch toggle. */
   getBranchToggleLabel?: (node: NetworkGraphNode, expanded: boolean) => string;
+  /** Localized accessible name for a connection and its endpoints. */
+  getEdgeLabel?: (
+    edge: NetworkGraphEdge,
+    source: NetworkGraphNode,
+    target: NetworkGraphNode
+  ) => string;
 }
 
 interface GraphTransform {
@@ -259,7 +266,9 @@ function fitGraph(
 function resolveNodeIcon(icon: NetworkGraphNode['icon']): React.ReactNode {
   if (React.isValidElement(icon)) return icon;
   if (typeof icon !== 'string') return null;
-  const Icon = NETWORK_ICONS[icon];
+  const Icon = Object.prototype.hasOwnProperty.call(NETWORK_ICONS, icon)
+    ? NETWORK_ICONS[icon]
+    : null;
   return Icon ? <Icon size={24} /> : null;
 }
 
@@ -282,11 +291,10 @@ function getNodeAccessibleName(node: NetworkGraphNode): string {
 
 function getEdgeAccessibleName(
   edge: NetworkGraphEdge,
-  nodesById: ReadonlyMap<string, NetworkGraphNode>
+  source: NetworkGraphNode,
+  target: NetworkGraphNode
 ): string {
-  const source = nodesById.get(edge.source);
-  const target = nodesById.get(edge.target);
-  return `${source ? getNodeAccessibleName(source) : edge.source} to ${target ? getNodeAccessibleName(target) : edge.target}`;
+  return `${getNodeAccessibleName(source) || edge.source} to ${getNodeAccessibleName(target) || edge.target}`;
 }
 
 function nodePosition(
@@ -298,6 +306,44 @@ function nodePosition(
   if (moved) return moved;
   const position = positions.get(nodeId);
   return position ? { x: position.x, y: position.y } : { x: 0, y: 0 };
+}
+
+function graphBounds(
+  layout: NetworkGraphLayout<NetworkGraphNode, NetworkGraphEdge>,
+  movedPositions: ReadonlyMap<string, { x: number; y: number }>
+) {
+  if (!layout.nodes.length || !movedPositions.size) {
+    return { minX: 0, minY: 0, maxX: layout.width, maxY: layout.height };
+  }
+  let minX = Infinity,
+    minY = Infinity,
+    maxX = -Infinity,
+    maxY = -Infinity;
+  for (const node of layout.nodes) {
+    const point = nodePosition(node.id, layout.positions, movedPositions);
+    const size = layout.nodeSizes.get(node.id)!;
+    minX = Math.min(minX, point.x - size.width / 2);
+    minY = Math.min(minY, point.y - size.height / 2);
+    maxX = Math.max(maxX, point.x + size.width / 2);
+    maxY = Math.max(maxY, point.y + size.height / 2);
+  }
+  return { minX, minY, maxX, maxY };
+}
+
+function fitBounds(
+  bounds: ReturnType<typeof graphBounds>,
+  viewport: ViewportSize
+) {
+  const fitted = fitGraph(
+    bounds.maxX - bounds.minX,
+    bounds.maxY - bounds.minY,
+    viewport
+  );
+  return {
+    ...fitted,
+    x: fitted.x - bounds.minX * fitted.scale,
+    y: fitted.y - bounds.minY * fitted.scale,
+  };
 }
 
 const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
@@ -327,6 +373,7 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
       showZoomControls = true,
       getBranchToggleLabel = (node, expanded) =>
         `${expanded ? 'Collapse' : 'Expand'} ${getNodeAccessibleName(node)}`,
+      getEdgeLabel = getEdgeAccessibleName,
       className,
       style,
       ...props
@@ -365,6 +412,25 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
           horizontalGap
         ),
       [graphData, horizontalGap]
+    );
+    const fullLayoutKey = React.useMemo(
+      () =>
+        JSON.stringify({
+          nodes: fullLayout.nodes.map(({ id }) => [
+            id,
+            fullLayout.positions.get(id),
+            fullLayout.nodeSizes.get(id),
+          ]),
+          edges: fullLayout.validEdges.map(({ edge, index }) => [
+            index,
+            edge.source,
+            edge.target,
+          ]),
+          tree: fullLayout.treeEdges.map(({ index }) => index),
+          width: fullLayout.width,
+          height: fullLayout.height,
+        }),
+      [fullLayout]
     );
     const treeChildren = React.useMemo(() => {
       const children = new Map<string, string[]>();
@@ -457,10 +523,15 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
 
       const measure = () => {
         const bounds = element.getBoundingClientRect();
-        setViewportSize({
+        const next = {
           width: bounds.width || getNumericDimension(width, DEFAULT_WIDTH),
           height: bounds.height || getNumericDimension(height, DEFAULT_HEIGHT),
-        });
+        };
+        setViewportSize((current) =>
+          current.width === next.width && current.height === next.height
+            ? current
+            : next
+        );
       };
       measure();
 
@@ -482,27 +553,26 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
       setActiveNodeId(null);
       setActiveEdgeIndex(null);
       gestureRef.current = null;
-    }, [fullLayout, viewportSize]);
+    }, [fullLayoutKey, viewportSize]);
 
     const previousCollapsedRef = React.useRef(collapsedIds);
     React.useEffect(() => {
       const previous = previousCollapsedRef.current;
       previousCollapsedRef.current = collapsedIds;
       if (!previous.some((id) => !collapsedIds.includes(id))) return;
+      const bounds = graphBounds(layout, movedPositions);
       setTransform((current) => {
         const padding = 16;
         const fits =
-          current.x >= padding &&
-          current.y >= padding &&
-          current.x + layout.width * current.scale <=
+          current.x + bounds.minX * current.scale >= padding &&
+          current.y + bounds.minY * current.scale >= padding &&
+          current.x + bounds.maxX * current.scale <=
             viewportSize.width - padding &&
-          current.y + layout.height * current.scale <=
+          current.y + bounds.maxY * current.scale <=
             viewportSize.height - padding;
-        return fits
-          ? current
-          : fitGraph(layout.width, layout.height, viewportSize);
+        return fits ? current : fitBounds(bounds, viewportSize);
       });
-    }, [layout, viewportSize, collapsedIds]);
+    }, [layout, viewportSize, collapsedIds, movedPositions]);
 
     const zoomAt = React.useCallback(
       (nextScale: number, pointX: number, pointY: number) => {
@@ -527,28 +597,9 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
       [viewportSize, zoomAt]
     );
     const fitCurrentGraph = React.useCallback(() => {
-      if (movedPositions.size === 0 || layout.nodes.length === 0) {
-        setTransform(fitGraph(layout.width, layout.height, viewportSize));
-        return;
-      }
-      let minX = Infinity,
-        minY = Infinity,
-        maxX = -Infinity,
-        maxY = -Infinity;
-      for (const node of layout.nodes) {
-        const point = nodePosition(node.id, layout.positions, movedPositions);
-        const size = layout.nodeSizes.get(node.id)!;
-        minX = Math.min(minX, point.x - size.width / 2);
-        minY = Math.min(minY, point.y - size.height / 2);
-        maxX = Math.max(maxX, point.x + size.width / 2);
-        maxY = Math.max(maxY, point.y + size.height / 2);
-      }
-      const fitted = fitGraph(maxX - minX, maxY - minY, viewportSize);
-      setTransform({
-        ...fitted,
-        x: fitted.x - minX * fitted.scale,
-        y: fitted.y - minY * fitted.scale,
-      });
+      setTransform(
+        fitBounds(graphBounds(layout, movedPositions), viewportSize)
+      );
     }, [layout, movedPositions, viewportSize]);
     React.useImperativeHandle(
       controlsRef,
@@ -666,11 +717,11 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
 
     const handleNodeClick = React.useCallback(
       (
-        event: Pick<MouseEvent, 'preventDefault' | 'stopPropagation'>,
+        event: React.MouseEvent<SVGGElement> | React.KeyboardEvent<SVGGElement>,
         node: NetworkGraphNode
       ) => {
         if (node.state === 'disabled') return;
-        if (suppressClickRef.current) {
+        if (suppressClickRef.current && event.type === 'click') {
           suppressClickRef.current = false;
           event.preventDefault();
           return;
@@ -682,11 +733,13 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
     );
 
     const handleEdgeClick = (
-      event: React.MouseEvent<SVGPathElement>,
+      event:
+        | React.MouseEvent<SVGPathElement>
+        | React.KeyboardEvent<SVGPathElement>,
       edge: NetworkGraphEdge,
       edgeIndex: number
     ) => {
-      if (suppressClickRef.current) {
+      if (suppressClickRef.current && event.type === 'click') {
         suppressClickRef.current = false;
         event.preventDefault();
         return;
@@ -738,7 +791,7 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
         const sourceBottom = source.y + sourceSize.height / 2;
         const targetTop = target.y - targetSize.height / 2;
         const siblings = treeChildrenByParent.get(edge.source) ?? [];
-        if (siblings.length <= 1) {
+        if (siblings.length <= 1 && source.x === target.x) {
           return `M ${source.x} ${sourceBottom} V ${targetTop}`;
         }
         const junctionY = (sourceBottom + targetTop) / 2;
@@ -871,17 +924,17 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
                       data-network-edge={index}
                       role="button"
                       tabIndex={0}
-                      aria-label={getEdgeAccessibleName(edge, nodesById)}
+                      aria-label={getEdgeLabel(
+                        edge,
+                        nodesById.get(edge.source)!,
+                        nodesById.get(edge.target)!
+                      )}
                       aria-pressed={selected}
                       onClick={(event) => handleEdgeClick(event, edge, index)}
                       onKeyDown={(event) => {
                         if (event.key === 'Enter' || event.key === ' ') {
                           event.preventDefault();
-                          handleEdgeClick(
-                            event as unknown as React.MouseEvent<SVGPathElement>,
-                            edge,
-                            index
-                          );
+                          handleEdgeClick(event, edge, index);
                         }
                       }}
                     />
@@ -903,7 +956,9 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
                 const isDisabled = state === 'disabled';
                 const isError = state === 'error';
                 const isActive =
-                  selected || state === 'active' || state === 'focus';
+                  !isDisabled &&
+                  !isError &&
+                  (selected || state === 'active' || state === 'focus');
                 const isHovered = state === 'hover';
                 const circle = node.shape === 'circle';
                 const iconNode = resolveNodeIcon(node.icon);
@@ -954,12 +1009,12 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
                             ? 'size-10 rounded-[4px] bg-[var(--ui-background-status-info)] text-[var(--ui-glyph-on-surface-primary)]'
                             : 'size-10 rounded-[24px] bg-[var(--ui-background-status-info)] text-[var(--ui-glyph-on-surface-primary)]';
                 const nodeContentClass =
-                  variant === 'gateway' || variant === 'device'
+                  !circle && (variant === 'gateway' || variant === 'device')
                     ? 'flex h-full min-w-0 items-center gap-2 overflow-hidden'
                     : 'flex h-full flex-col items-center justify-center gap-2 overflow-hidden text-center';
                 const customTextClass =
-                  variant === 'gateway' || variant === 'device'
-                    ? 'flex min-w-0 max-w-full flex-1 flex-col justify-center overflow-hidden text-left'
+                  !circle && (variant === 'gateway' || variant === 'device')
+                    ? 'flex min-w-0 max-w-full flex-1 flex-col justify-center overflow-hidden text-start'
                     : 'flex w-full min-w-0 max-w-full flex-col items-center justify-center overflow-hidden text-center';
                 const primaryTextClass =
                   variant === 'network'
@@ -1084,23 +1139,33 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
                         r={Math.min(cardSize.width, cardSize.height) / 2}
                         fill="var(--ui-background-surface-primary)"
                         stroke={
-                          selected
+                          isActive
                             ? SELECTED_STROKE
-                            : (node.color ?? DEFAULT_NODE_STROKE)
+                            : (node.color ??
+                              (isError
+                                ? 'var(--ui-border-on-status-danger)'
+                                : isDisabled
+                                  ? 'var(--ui-border-on-status-neutral)'
+                                  : DEFAULT_NODE_STROKE))
                         }
-                        strokeWidth={selected ? 2 : 1}
+                        strokeWidth={isActive ? 2 : 1}
                       />
                     )}
                     {circle ? (
                       <foreignObject
                         x={nodeLeft + 8}
                         y={nodeTop + 8}
-                        width={cardSize.width - 16}
-                        height={cardSize.height - 16}
+                        width={Math.max(0, cardSize.width - 16)}
+                        height={Math.max(0, cardSize.height - 16)}
                         overflow="hidden"
                         pointerEvents="none"
                       >
-                        <div className={nodeContentClass}>{nodeContent}</div>
+                        <div
+                          className={nodeContentClass}
+                          style={{ clipPath: 'circle(50% at center)' }}
+                        >
+                          {nodeContent}
+                        </div>
                       </foreignObject>
                     ) : (
                       <foreignObject
@@ -1132,7 +1197,7 @@ const NetworkGraph = React.forwardRef<HTMLDivElement, NetworkGraphProps>(
                               'group-hover:bg-[var(--ui-background-status-info-hover)]',
                             state === 'focus' &&
                               'ring-[3px] ring-[var(--ui-focus-primary)]',
-                            selected &&
+                            isActive &&
                               'border-[var(--ui-border-on-surface-border-active)]'
                           )}
                           style={{

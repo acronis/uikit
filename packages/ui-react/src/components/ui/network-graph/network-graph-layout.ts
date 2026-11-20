@@ -16,6 +16,11 @@ export interface NetworkGraphNodeLayoutLike {
   variant?: NetworkGraphNodeVariant;
   width?: number;
   height?: number;
+  shape?: 'circle' | 'rect';
+  title?: string;
+  subtitle?: string;
+  caption?: string;
+  icon?: unknown;
   deviceIndicators?: ReadonlyArray<unknown>;
   alerts?: ReadonlyArray<unknown>;
 }
@@ -77,16 +82,39 @@ export function getBaseNetworkGraphNodeSize(
         width: NETWORK_GRAPH_DEFAULT_NODE_WIDTH,
         height: NETWORK_GRAPH_DEFAULT_NODE_HEIGHT,
       };
-  return {
-    width:
-      typeof node.width === 'number' && Number.isFinite(node.width)
-        ? node.width
-        : defaults.width,
-    height:
-      typeof node.height === 'number' && Number.isFinite(node.height)
-        ? node.height
-        : defaults.height,
-  };
+  const width =
+    typeof node.width === 'number' && Number.isFinite(node.width)
+      ? node.width
+      : defaults.width;
+  const height =
+    typeof node.height === 'number' && Number.isFinite(node.height)
+      ? node.height
+      : defaults.height;
+  if (node.shape === 'circle') {
+    const diameter =
+      node.width != null && node.height != null
+        ? Math.min(width, height)
+        : node.width != null
+          ? width
+          : node.height != null
+            ? height
+            : Math.max(defaults.width, defaults.height);
+    return { width: diameter, height: diameter };
+  }
+  if (node.title && node.subtitle && node.caption) {
+    const vertical =
+      node.variant === 'network' ||
+      node.variant === 'subnet' ||
+      node.variant === 'group';
+    const textHeight = node.variant === 'network' ? 48 : 56;
+    const contentHeight = vertical
+      ? textHeight +
+        (node.icon ? 48 : 0) +
+        (node.variant === 'network' ? 32 : 18)
+      : textHeight + 18;
+    return { width, height: Math.max(height, contentHeight) };
+  }
+  return { width, height };
 }
 
 /** Height of the wrapped Figma marker row, including its vertical padding. */

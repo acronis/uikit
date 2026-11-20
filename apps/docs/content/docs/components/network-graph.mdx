@@ -56,6 +56,9 @@ Each node can have a `title`, `subtitle`, `caption`, `variant` (`network`,
 `network-server`, `node-network`, `pc-tower`, `router`, `server`, and `wifi`.
 An icon can also be supplied as a React element; an unknown name renders no
 icon. Additional node and edge fields are retained for callbacks.
+Circular nodes use a square footprint; when both dimensions are supplied, the
+smaller dimension is the diameter. Cards grow to fit title, subtitle, and
+caption together. Disabled and error colors remain visible when selected.
 
 Edge `type` describes the connection but does not choose its appearance. Set
 `style` to `solid` or `dotted` and optionally supply a current `--ui-*` token
@@ -90,6 +93,8 @@ summary node and edge, including any consumer metadata.
 If expansion would place nodes outside the viewport, the graph refits them;
 collapsing a branch preserves the current zoom and position.
 The consumer can provide localized toggle labels with `getBranchToggleLabel`.
+Use `getEdgeLabel={(edge, source, target) => ...}` to localize connection names
+for screen readers. The callback receives the complete edge and endpoint nodes.
 Hide the zoom buttons with `showZoomControls={false}`; wheel zoom remains active.
 
 For a consumer-owned toolbar, pass a `viewportRef` typed as

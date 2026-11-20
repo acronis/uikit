@@ -69,6 +69,9 @@ contract:
     - name: getBranchToggleLabel
       type: '(node: NetworkGraphNode, expanded: boolean) => string'
       description: Supplies a localized accessible label for the branch toggle.
+    - name: getEdgeLabel
+      type: '(edge: NetworkGraphEdge, source: NetworkGraphNode, target: NetworkGraphNode) => string'
+      description: Supplies a localized accessible label for a connection using its complete edge and endpoint data.
   events:
     - name: onNodeClick
       payload: '(node: NetworkGraphNode) => void'

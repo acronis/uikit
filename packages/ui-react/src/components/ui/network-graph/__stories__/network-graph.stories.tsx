@@ -755,6 +755,80 @@ export const BasicHierarchy: Story = {
   parameters: { docs: { source: { code: graphSource(basicData) } } },
 };
 
+const contentAndStateData: NetworkGraphData = {
+  roots: ['circle', 'device', 'disabled', 'error'],
+  nodes: [
+    {
+      id: 'circle',
+      title: 'Circular router',
+      subtitle: '10.0.0.1',
+      caption: 'Online',
+      icon: 'router',
+      shape: 'circle',
+    },
+    {
+      id: 'device',
+      title: 'Device name',
+      subtitle: '10.0.0.2',
+      caption: 'Online',
+      icon: 'laptop',
+    },
+    {
+      id: 'disabled',
+      title: 'Disabled device',
+      subtitle: '10.0.0.3',
+      icon: 'laptop',
+      state: 'disabled',
+    },
+    {
+      id: 'error',
+      title: 'Device error',
+      subtitle: '10.0.0.4',
+      icon: 'laptop',
+      state: 'error',
+    },
+  ],
+  edges: [],
+};
+
+export const ContentAndSelectedStates: Story = {
+  args: {
+    graphData: contentAndStateData,
+    selectedNodeIds: ['disabled', 'error'],
+    height: 300,
+  },
+  parameters: {
+    docs: {
+      source: {
+        code: graphSource(
+          contentAndStateData,
+          '\n  selectedNodeIds={["disabled", "error"]}'
+        ),
+      },
+    },
+  },
+};
+
+export const RightToLeft: Story = {
+  args: {
+    graphData: contentAndStateData,
+    selectedNodeIds: ['disabled', 'error'],
+    height: 300,
+  },
+  decorators: [
+    (Story) => (
+      <div dir="rtl">
+        <Story />
+      </div>
+    ),
+  ],
+  parameters: {
+    docs: {
+      source: { code: graphSource(contentAndStateData, '\n  dir="rtl"') },
+    },
+  },
+};
+
 export const AuvikTopologyExample: Story = {
   args: {
     graphData: auvikTopologyData,
