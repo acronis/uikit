@@ -1,0 +1,95 @@
+spec_version: '1.0'
+component: NetworkGraph
+contract:
+  properties:
+    - name: graphData
+      type: NetworkGraphData
+      required: true
+      description: Nodes with unique IDs, edges with source and target IDs, and root IDs. Extra node and edge fields are retained in callbacks.
+    - name: width
+      type: 'number | string'
+      default: '100%'
+      description: Width of the graph viewport.
+    - name: height
+      type: 'number | string'
+      default: 770
+      description: Height of the graph viewport.
+    - name: horizontalGap
+      type: number
+      default: 64
+      description: Minimum horizontal space in pixels between sibling subtrees.
+    - name: graphDraggable
+      type: boolean
+      default: false
+      description: Enables pointer-drag panning of the canvas.
+    - name: nodeDraggable
+      type: boolean
+      default: false
+      description: Enables pointer dragging of individual nodes.
+    - name: selectedNodeIds
+      type: 'string[]'
+      description: Controlled highlighted node IDs; an empty list clears this selection.
+    - name: selectedNodePairs
+      type: 'Array<{ from: string; to: string }>'
+      description: Node pairs whose shortest connecting paths are highlighted.
+    - name: selectedEdgeIndices
+      type: 'number[]'
+      description: Controlled highlighted input edge indices.
+    - name: collapsedNodeIds
+      type: 'string[]'
+      description: Controlled node IDs whose tree descendants are hidden.
+    - name: defaultCollapsedNodeIds
+      type: 'string[]'
+      description: Initially collapsed node IDs in uncontrolled mode.
+    - name: renderNodeText
+      type: '(node: NetworkGraphNode) => ReactNode'
+      description: Replaces the default text inside each node.
+    - name: emptyState
+      type: ReactNode
+      description: Consumer content shown when no nodes are present.
+    - name: ariaLabel
+      type: string
+      default: Network graph
+      description: Accessible name of the graph region.
+    - name: zoomInLabel
+      type: string
+      default: Zoom in
+      description: Accessible label for the zoom-in button.
+    - name: zoomOutLabel
+      type: string
+      default: Zoom out
+      description: Accessible label for the zoom-out button.
+    - name: showZoomControls
+      type: boolean
+      default: true
+      description: Shows the zoom buttons. Wheel zoom remains enabled.
+    - name: viewportRef
+      type: 'Ref<NetworkGraphViewportHandle>'
+      description: Optional React handle exposing fit, zoomIn, zoomOut and setZoom. The ordinary ref remains the graph DOM element.
+    - name: getBranchToggleLabel
+      type: '(node: NetworkGraphNode, expanded: boolean) => string'
+      description: Supplies a localized accessible label for the branch toggle.
+    - name: getEdgeLabel
+      type: '(edge: NetworkGraphEdge, source: NetworkGraphNode, target: NetworkGraphNode) => string'
+      description: Supplies a localized accessible label for a connection using its complete edge and endpoint data.
+  events:
+    - name: onNodeClick
+      payload: '(node: NetworkGraphNode) => void'
+      description: Called with the complete node object when an enabled node is activated.
+    - name: onEdgeClick
+      payload: '(edge: NetworkGraphEdge) => void'
+      description: Called with the complete edge object when a connection is activated.
+    - name: onCollapsedNodeIdsChange
+      payload: '(nodeIds: string[]) => void'
+      description: Called with the next collapsed node IDs when a branch is toggled.
+    - name: onZoomChange
+      payload: '(scale: number) => void'
+      description: Reports the current zoom scale, where 1 represents 100%.
+  methods: []
+adapters:
+  react:
+    component: NetworkGraph
+    status: implemented
+    import: "import { NetworkGraph } from '@acronis-platform/ui-react'"
+    example: |
+      <NetworkGraph graphData={data} ariaLabel="Network topology" onNodeClick={handleNodeClick} />

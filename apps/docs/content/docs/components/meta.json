@@ -57,6 +57,7 @@
     "histogram",
     "confidence-cone",
     "sankey-chart",
+    "network-graph",
     "category-bar",
     "chart-state",
     "chart-widget",

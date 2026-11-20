@@ -1,0 +1,73 @@
+spec_version: '1.0'
+component: NetworkGraph
+source: '@acronis-platform/tokens-pd'
+tokens:
+  - name: --ui-background-status-danger
+    affects: alerts
+    description: Danger status row and error icon surface.
+  - name: --ui-background-status-info
+    affects: node
+    description: Default device icon surface.
+  - name: --ui-background-status-info-hover
+    affects: node
+    description: Hovered card surface.
+  - name: --ui-background-status-info-pressed
+    affects: node
+    description: Selected card surface.
+  - name: --ui-background-status-neutral
+    affects: node
+    description: Disabled device icon surface.
+  - name: --ui-background-status-strong-info
+    affects: node
+    description: Selected or network icon surface and selected edge.
+  - name: --ui-background-status-strong-danger
+    affects: indicators
+    description: Error device marker surface.
+  - name: --ui-background-surface-active
+    affects: node
+    description: Network card surface and hovered zoom control.
+  - name: --ui-background-surface-primary
+    affects: node
+    description: Card, circular node, and zoom control surface.
+  - name: --ui-border-on-status-danger
+    affects: alerts
+    description: Error card and danger status border.
+  - name: --ui-border-on-status-neutral
+    affects: node
+    description: Disabled card border.
+  - name: --ui-border-on-surface-border-active
+    affects: node
+    description: Selected card and circular node border.
+  - name: --ui-border-on-surface-divider
+    affects: edge
+    description: Default connections, card borders, and inactive marker borders.
+  - name: --ui-focus-primary
+    affects: node
+    description: Keyboard focus ring and connection focus stroke.
+  - name: --ui-glyph-on-status-danger
+    affects: node
+    description: Error icon color.
+  - name: --ui-glyph-on-status-strong-primary
+    affects: node
+    description: Selected or network icon color.
+  - name: --ui-glyph-on-surface-disabled
+    affects: node
+    description: Disabled icon color.
+  - name: --ui-glyph-on-surface-primary
+    affects: indicators
+    description: Default icon, zoom control, and active marker color.
+  - name: --ui-text-on-surface-disabled
+    affects: node
+    description: Disabled card text.
+  - name: --ui-text-on-surface-primary
+    affects: node
+    description: Primary node and alert text.
+  - name: --ui-text-on-surface-secondary
+    affects: node
+    description: Secondary node text.
+  - name: --ui-text-on-surface-destructive
+    affects: node
+    description: Error node secondary text.
+  - name: --ui-text-on-surface-link-idle
+    affects: node
+    description: Selected node secondary text.
