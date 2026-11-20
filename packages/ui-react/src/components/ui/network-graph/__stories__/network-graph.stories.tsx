@@ -809,26 +809,6 @@ export const ContentAndSelectedStates: Story = {
   },
 };
 
-export const RightToLeft: Story = {
-  args: {
-    graphData: contentAndStateData,
-    selectedNodeIds: ['disabled', 'error'],
-    height: 300,
-  },
-  decorators: [
-    (Story) => (
-      <div dir="rtl">
-        <Story />
-      </div>
-    ),
-  ],
-  parameters: {
-    docs: {
-      source: { code: graphSource(contentAndStateData, '\n  dir="rtl"') },
-    },
-  },
-};
-
 export const AuvikTopologyExample: Story = {
   args: {
     graphData: auvikTopologyData,
