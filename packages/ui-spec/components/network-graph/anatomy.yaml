@@ -1,0 +1,60 @@
+spec_version: '1.0'
+component: NetworkGraph
+schematic: |
+  root: labelled region with transparent canvas
+    zoom-controls: zoom in and zoom out buttons
+    graph: SVG containing edges and nodes
+      edge: visible connection and hit area
+      node: card or circle, icon and text
+        indicators: optional compact device markers
+        alerts: optional status rows
+      branch-toggle: optional expand/collapse button
+    empty-state: optional consumer content when there are no nodes
+root:
+  element: div
+  description: Labelled, sized region with a transparent background.
+parts:
+  - id: zoom-controls
+    element: div
+    description: Buttons for zooming around the viewport center.
+  - id: graph
+    element: svg
+    description: Transformed graph viewport with connections and nodes.
+  - id: edge
+    element: path
+    description: Visible line and larger interactive hit area for a valid connection.
+  - id: node
+    element: g
+    description: Focusable card or circle containing icon and label content.
+  - id: indicators
+    element: div
+    optional: true
+    description: Compact active, inactive, muted, and error device markers below a node card.
+  - id: alerts
+    element: div
+    optional: true
+    description: Consumer-labelled danger status rows below a node card.
+  - id: branch-toggle
+    element: g
+    optional: true
+    description: Keyboard-accessible chevron controlling tree descendants of an expandable node.
+  - id: empty-state
+    element: div
+    optional: true
+    description: Consumer-supplied content when no nodes exist.
+states:
+  - id: selected
+    kind: prop
+    prop: selectedNodeIds
+    trigger: A node ID is selected or belongs to a selected path.
+    affects: [node]
+  - id: focus-visible
+    kind: pseudo
+    pseudo: ':focus-visible'
+    trigger: A node or edge receives keyboard focus.
+    affects: [node, edge]
+  - id: collapsed
+    kind: prop
+    prop: collapsedNodeIds
+    trigger: The ID of an expandable node is in the controlled collapsed list.
+    affects: [branch-toggle, graph]

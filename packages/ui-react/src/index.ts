@@ -73,6 +73,7 @@ export * from './components/ui/link';
 export * from './components/ui/loading';
 export * from './components/ui/metric';
 export * from './components/ui/number-field';
+export * from './components/ui/network-graph';
 export * from './components/ui/page-content';
 export * from './components/ui/page-header';
 export * from './components/ui/pagination';

@@ -1,0 +1,118 @@
+---
+title: NetworkGraph
+description: An interactive, data-driven network topology.
+---
+
+import { DemoReact } from '@/components/DemoReact';
+import { NetworkGraphDemo } from '@/components/demos-react/network-graph';
+
+## Usage
+
+`NetworkGraph` renders nodes and connections as a top-down hierarchy. The graph
+canvas is transparent; set the surrounding background in the consuming page.
+
+<DemoReact>
+  <NetworkGraphDemo />
+</DemoReact>
+
+```tsx
+import {
+  NetworkGraph,
+  type NetworkGraphData,
+} from '@acronis-platform/ui-react';
+
+const data: NetworkGraphData = {
+  roots: ['network'],
+  nodes: [
+    { id: 'network', title: 'Network', icon: 'cloud', variant: 'network' },
+    {
+      id: 'switch',
+      title: 'Switch',
+      subtitle: '192.168.1.2',
+      icon: 'ethernet',
+      variant: 'device',
+      deviceType: 'networking',
+    },
+  ],
+  edges: [{ source: 'network', target: 'switch', type: 'layer1' }],
+};
+
+<NetworkGraph
+  graphData={data}
+  ariaLabel="Network topology"
+  onNodeClick={(node) => console.log(node)}
+/>;
+```
+
+Node IDs must be unique. Edges reference IDs with `source` and `target`;
+`roots` specifies the traversal starting points. Disconnected nodes remain
+visible, and edges with missing endpoints are skipped. The component supports
+cycles, cross-connections, multiple roots, and solid or dotted edges.
+
+Each node can have a `title`, `subtitle`, `caption`, `variant` (`network`,
+`gateway`, `subnet`, `device`, or `group`), `deviceType`, visual `state`,
+`width`, `height`, and `shape`. The built-in Figma icon names are `box`,
+`circle-connect`, `cloud`, `cloud-server`, `ethernet`, `firewall`, `laptop`,
+`network-server`, `node-network`, `pc-tower`, `router`, `server`, and `wifi`.
+An icon can also be supplied as a React element; an unknown name renders no
+icon. Additional node and edge fields are retained for callbacks.
+
+Edge `type` describes the connection but does not choose its appearance. Set
+`style` to `solid` or `dotted` and optionally supply a current `--ui-*` token
+reference as `color`. Without a style, the line is solid; selection uses the
+selected-edge color. Node `color` similarly accepts a theme-token reference.
+
+## Interaction and selection
+
+Clicking a node or edge calls `onNodeClick` or `onEdgeClick` with the complete
+input object. Handle dialogs or navigation in the consuming application. Nodes
+and edges can also be activated using Enter or Space.
+
+Pass `selectedNodeIds` or `selectedEdgeIndices` to control highlights, and
+`selectedNodePairs` to highlight shortest paths between nodes. Leave a selection
+prop undefined to let clicks set the corresponding highlight internally.
+
+Canvas panning is off by default. Set `graphDraggable` to enable pointer-drag
+panning; `nodeDraggable` independently enables dragging nodes. Zoom buttons and
+mouse-wheel zoom are available. The default viewport is full width and 770 px
+high; pass `width` and `height` to change it.
+
+Mark a node `expandable` to show a branch toggle when it has tree children.
+Use `collapsedNodeIds` and `onCollapsedNodeIdsChange` to control collapsed
+branches, or `defaultCollapsedNodeIds` for an initial uncontrolled state.
+To collapse all branches, pass the IDs of the expandable nodes as
+`collapsedNodeIds`; pass an empty array to expand all of them.
+For a collapsed summary such as Figma's “Connected” card, add the summary as
+an immediate child node and set its parent's `collapsedGroupId` to that ID.
+The summary is shown only while the branch is collapsed; expanding replaces it
+with the other descendants. The node and edge callbacks receive the original
+summary node and edge, including any consumer metadata.
+If expansion would place nodes outside the viewport, the graph refits them;
+collapsing a branch preserves the current zoom and position.
+The consumer can provide localized toggle labels with `getBranchToggleLabel`.
+Hide the zoom buttons with `showZoomControls={false}`; wheel zoom remains active.
+
+For a consumer-owned toolbar, pass a `viewportRef` typed as
+`NetworkGraphViewportHandle`. It exposes `fit()`, `zoomIn()`, `zoomOut()`, and
+`setZoom(scale)`. Use `onZoomChange` to display a percentage (`1` is 100%).
+The normal React `ref` still points to the graph element, so the consumer can
+request fullscreen using the browser's `requestFullscreen()` API. The
+`horizontalGap` prop adjusts spacing between sibling subtrees in pixels.
+
+## Node details and empty state
+
+Nodes can provide `deviceType`, `state`, `deviceIndicators`, and `alerts` to
+represent the Figma device cards and their status rows. Consumers can replace
+the node text with `renderNodeText` and supply `emptyState` for an empty graph.
+Device indicators support `active`, `inactive`, `muted`, and `error` states.
+Use `{ state: 'active', size: 14 }` for the larger Figma marker; string values
+use the standard 12 px size.
+Provide `deviceIndicatorsLabel` for a localized accessible summary when their
+meaning is important.
+
+## API reference
+
+<AutoTypeTable
+  path="../../packages/ui-react/src/components/ui/network-graph/network-graph.tsx"
+  name="NetworkGraphProps"
+/>

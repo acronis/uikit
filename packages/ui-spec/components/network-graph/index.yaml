@@ -1,0 +1,13 @@
+spec_version: '1.0'
+component: NetworkGraph
+name: network-graph
+status: draft
+category: data-display
+description: >-
+  An interactive network topology with hierarchical nodes, connections,
+  selection, optional panning, and zoom. The consumer owns the canvas surface
+  and supplies data, labels, empty content, and node or edge actions.
+dependencies:
+  components: [card]
+figma:
+  node: 'https://www.figma.com/design/yQW4fg5qT9pw87jf1gRcOe/Network-monitoring-with-Auvik?node-id=2238-211137'

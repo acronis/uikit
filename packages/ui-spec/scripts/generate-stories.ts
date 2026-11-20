@@ -579,6 +579,12 @@ const RENDER: Record<string, RenderHint> = {
     // VR is covered by the hand-written stories (Default / Card).
     skip: true,
   },
+  'network-graph': {
+    // Focus and selection belong to graph nodes and edges, so root pseudo-state
+    // stories would not exercise them. The hand-written stories supply graph
+    // data and cover card states, selection, and interactions.
+    skip: true,
+  },
   combobox: {
     // A multi-part composition needing items + input + list children to render
     // meaningfully. VR is covered by the hand-written stories (Default / Open).
@@ -1073,8 +1079,12 @@ export const Matrix: Story = {
     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
       <${comp} aria-label="Off" />
       <${comp} aria-label="On" defaultChecked />
-      ${supportsRootDisabled ? `<${comp} aria-label="Disabled off" disabled />
-      <${comp} aria-label="Disabled on" disabled defaultChecked />` : ''}
+      ${
+        supportsRootDisabled
+          ? `<${comp} aria-label="Disabled off" disabled />
+      <${comp} aria-label="Disabled on" disabled defaultChecked />`
+          : ''
+      }
     </div>
   ),
 };`);
