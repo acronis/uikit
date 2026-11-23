@@ -17,7 +17,7 @@ Scenario: Activating a sortable header
   Given a sortable TableHead with an onSort handler
   When the user clicks it (or focuses it and presses Enter / Space)
   Then the sort event fires
-  And the consumer updates sort-direction, which swaps the icon (↑ asc / ↓ desc)
+  And the consumer updates sort-direction, which swaps the icon (↓ asc / ↑ desc)
   and sets aria-sort to "ascending" / "descending"
 ```
 

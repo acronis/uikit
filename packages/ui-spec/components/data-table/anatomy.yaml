@@ -6,7 +6,7 @@ schematic: |
   toolbar:   [ search input ] [ filters ▾ ] [ Reset ✕ ]
   applied-filters: ( status: Success ✕ ) ( … )        (chip row, when filtering)
   table: <div> rounded border wrapper
-    column-header: per-column header — title + single-click sort toggle (↑/↓/↕)
+    column-header: per-column header — title + single-click sort toggle (↓/↑/↕)
     header-hint:   hover/focus tooltip listing that column's gestures        ⚙
     resize-handle: drag handle at a resizable header's trailing edge (opt-in)
     pinned column: meta.pin left/right → position: sticky cell
@@ -39,7 +39,7 @@ parts:
     element: button
     description: >-
       Sortable column header (DataTableColumnHeader) — a single-click toggle: the
-      title plus a trailing arrow (up = ascending, down = descending, both in the
+      title plus a trailing arrow (down = ascending, up = descending, both in the
       active blue; a muted up/down arrow when unsorted). One click cycles the sort
       direction. Column hiding lives behind the settings cog in the trailing
       action column's header cell (the `view-options` menu), not here.

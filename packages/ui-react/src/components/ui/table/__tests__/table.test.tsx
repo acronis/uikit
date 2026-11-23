@@ -2,6 +2,10 @@ import { createRef, useState } from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { Checkbox } from '../../checkbox';
 import {
@@ -111,6 +115,28 @@ describe('Table', () => {
       'aria-sort',
       'ascending'
     );
+  });
+
+  // ↓ = ascending (smallest first, values grow down the column), ↑ = descending.
+  it.each([
+    ['asc', ArrowDownIcon],
+    ['desc', ArrowUpIcon],
+  ] as const)('renders the %s sort direction icon', (direction, Icon) => {
+    const { container: expected } = render(<Icon />);
+    const expectedPath = expected.querySelector('path')?.getAttribute('d');
+    render(
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead sortable sortDirection={direction}>
+              Name
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
+    );
+    const header = screen.getByRole('columnheader', { name: /Name/ });
+    expect(header.querySelector('svg path')).toHaveAttribute('d', expectedPath);
   });
 
   it('applies the selected (active) row state', () => {

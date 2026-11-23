@@ -102,7 +102,7 @@ const ARCHIVE_ROWS: Archive[] = [
   { id: 'a2', name: 'Disk image', created: '24 Jan, 2026', size: 1204050 },
 ];
 
-// Sortable headers render the sort affordance (inactive ⇅ / active ↑ / active ↓),
+// Sortable headers render the sort affordance (inactive ⇅ / active ↓ ascending / active ↑ descending),
 // set `aria-sort`, and are wired to `useSortState` so clicking a header actually
 // re-sorts the rows.
 function SortableHeadersDemo() {

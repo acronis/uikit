@@ -123,9 +123,10 @@ export interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElem
 
 function SortIcon({ direction }: { direction: SortDirection }) {
   const size = 'size-[var(--ui-table-header-sort-icon-size)]';
+  // ↓ = ascending (values grow down the column), ↑ = descending.
   if (direction === 'asc') {
     return (
-      <ArrowUpIcon
+      <ArrowDownIcon
         className={cn(
           size,
           'text-[var(--ui-table-header-sort-icon-color-active)]'
@@ -135,7 +136,7 @@ function SortIcon({ direction }: { direction: SortDirection }) {
   }
   if (direction === 'desc') {
     return (
-      <ArrowDownIcon
+      <ArrowUpIcon
         className={cn(
           size,
           'text-[var(--ui-table-header-sort-icon-color-active)]'

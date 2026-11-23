@@ -16,6 +16,10 @@ import {
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+} from '@acronis-platform/icons-react/stroke-mono';
 
 import { Checkbox } from '../../checkbox';
 import { useFilterSearchFilters } from '../../filter-search';
@@ -76,6 +80,35 @@ describe('DataTable', () => {
     );
     const cellsAfter = screen.getAllByRole('cell').map((c) => c.textContent);
     expect(cellsAfter).not.toEqual(cellsBefore);
+  });
+
+  // ↓ = ascending (smallest first, values grow down the column), ↑ = descending.
+  it.each([
+    [false, ArrowDownIcon],
+    [true, ArrowUpIcon],
+  ] as const)('renders the sort direction icon (desc: %s)', (desc, Icon) => {
+    const { container: expected } = render(<Icon />);
+    const expectedPath = expected.querySelector('path')?.getAttribute('d');
+    const sortable: ColumnDef<Row>[] = [
+      {
+        accessorKey: 'amount',
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column} title="Amount" />
+        ),
+        cell: ({ row }) => <span>{row.original.amount}</span>,
+      },
+    ];
+    render(
+      <DataTable
+        columns={sortable}
+        data={data.slice(0, 3)}
+        sorting={[{ id: 'amount', desc }]}
+        onSortingChange={() => {}}
+        hideActionColumn
+      />
+    );
+    const button = screen.getByRole('button', { name: 'Sort by Amount' });
+    expect(button.querySelector('svg path')).toHaveAttribute('d', expectedPath);
   });
 
   it('lets sortLabel override the default accessible name of the sort button', () => {

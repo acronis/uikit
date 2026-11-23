@@ -25,7 +25,7 @@ interface DataTableColumnHeaderProps<
 // Single-click sortable column header — matches the Table primitive's sortable
 // `TableHead`: one click toggles the sort (ascending → descending → unsorted) via
 // TanStack's `column.toggleSorting()`. The trailing icon shows the state with the
-// same `--ui-table-header-sort-icon-*` tokens — an up arrow (ascending) or down
+// same `--ui-table-header-sort-icon-*` tokens — a down arrow (ascending) or up
 // arrow (descending) in the active blue, or the muted up/down arrows when
 // unsorted. (Column hiding lives behind the settings column's cog trigger —
 // `DataTableViewOptions` inside a `TableSettingsCell` — not a per-header menu,
@@ -71,9 +71,9 @@ export function DataTableColumnHeader<TData, TValue>({
         <span>{title}</span>
       )}
       {sorted === 'asc' ? (
-        <ArrowUpIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
-      ) : sorted === 'desc' ? (
         <ArrowDownIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
+      ) : sorted === 'desc' ? (
+        <ArrowUpIcon className="text-[var(--ui-table-header-sort-icon-color-active)]" />
       ) : (
         <ArrowsDownUpIcon className="text-[var(--ui-table-header-sort-icon-color-inactive)]" />
       )}

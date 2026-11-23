@@ -33,8 +33,8 @@ instance (or a row of one). This is a design-pending v1; it reuses the `Table`
 component's `--ui-table-*` tokens (the wrapper border matches the cell borders).
 
 A `DataTableColumnHeader` sorts in a **single click**: the trailing arrow toggles
-ascending → descending and shows the direction with an up/down arrow in the brand
-blue, or a muted up/down arrow when the column is unsorted. Column hiding lives
+ascending → descending and shows the direction with a down (ascending) / up
+(descending) arrow in the brand blue, or a muted up/down arrow when the column is unsorted. Column hiding lives
 behind the cog in the trailing settings column (`DataTableViewOptions` with
 `iconOnly`), not in the toolbar, keeping sorting to one click. That settings
 column is only rendered for `DataTable`'s **own** instance — with an external
@@ -47,7 +47,7 @@ column is sticky at the inline end by default.
 | Export                   | Purpose                                                                            |
 | ------------------------ | ---------------------------------------------------------------------------------- |
 | `DataTable`              | The grid. Owns its state from `columns`/`data`, or renders a caller-built `table`. |
-| `DataTableColumnHeader`  | Single-click sortable header (↑ / ↓ / ↕). Use in a column's `header`.              |
+| `DataTableColumnHeader`  | Single-click sortable header (↓ / ↑ / ↕). Use in a column's `header`.              |
 | `DataTableToolbar`       | Search box, per-column filter popover, applied-filter chips. Takes a `table`.      |
 | `DataTablePagination`    | Selection count, rows-per-page select, page controls. Takes a `table`.             |
 | `DataTableViewOptions`   | Column-visibility menu (TanStack adapter over the `TableViewOptions` primitive).   |
