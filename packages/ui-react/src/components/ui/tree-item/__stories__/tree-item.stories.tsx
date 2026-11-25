@@ -420,3 +420,144 @@ function ExpandableWorkloadTree() {
 export const ExpandCollapseTree: Story = {
   render: () => <ExpandableWorkloadTree />,
 };
+
+type CheckState = 'checked' | 'unchecked' | 'mixed';
+
+function collectLeafIds(node: DemoTreeNode): string[] {
+  if (!node.children?.length) return [node.id];
+  return node.children.flatMap(collectLeafIds);
+}
+
+// Recurses over the full tree, so a collapsed branch still reflects its hidden leaves.
+function stateOf(
+  node: DemoTreeNode,
+  leaves: Record<string, boolean>
+): CheckState {
+  if (!node.children?.length) {
+    return leaves[node.id] ? 'checked' : 'unchecked';
+  }
+  const states = node.children.map((child) => stateOf(child, leaves));
+  if (states.every((s) => s === 'checked')) return 'checked';
+  if (states.every((s) => s === 'unchecked')) return 'unchecked';
+  return 'mixed';
+}
+
+// Only leaf state is stored. Branch state is derived on every render, so a parent
+// can never drift out of sync with the rows beneath it.
+function DerivedCheckboxWorkloadTree() {
+  const [expanded, setExpanded] = React.useState<Record<string, boolean>>({
+    all: true,
+    agents: true,
+    obsidian: true,
+  });
+  const [leaves, setLeaves] = React.useState<Record<string, boolean>>({
+    'cedar-sql': true,
+  });
+  const toggle = (id: string) =>
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
+  const stop = (event: React.SyntheticEvent) => event.stopPropagation();
+  // The checkbox's wrapper slot is padded, so clicks there miss the Checkbox's own
+  // stopPropagation and reach the row. Filter by target instead.
+  const fromCheckbox = (event: React.SyntheticEvent) =>
+    event.target instanceof Element &&
+    !!event.target.closest('[data-slot="tree-item-checkbox"]');
+
+  const renderNode = (
+    node: DemoTreeNode,
+    level = 1,
+    posInSet = 1,
+    setSize = 1
+  ): React.ReactNode => {
+    const branch = !!node.children?.length;
+    const open = branch && !!expanded[node.id];
+    const s = stateOf(node, leaves);
+
+    const setChecked = (checked: boolean) => {
+      if (!branch) {
+        setLeaves((prev) => ({ ...prev, [node.id]: checked }));
+        return;
+      }
+      const next = s !== 'checked';
+      setLeaves((prev) => {
+        const updated = { ...prev };
+        for (const id of collectLeafIds(node)) updated[id] = next;
+        return updated;
+      });
+    };
+
+    return (
+      <li
+        key={node.id}
+        role="treeitem"
+        aria-level={level}
+        aria-posinset={posInSet}
+        aria-setsize={setSize}
+        aria-checked={s === 'mixed' ? 'mixed' : s === 'checked'}
+        {...(branch ? { 'aria-expanded': open } : {})}
+      >
+        <TreeItem
+          onClick={
+            branch
+              ? (event) => {
+                  if (!fromCheckbox(event)) toggle(node.id);
+                }
+              : undefined
+          }
+          onKeyDown={
+            branch
+              ? (event) => {
+                  if (fromCheckbox(event)) return;
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggle(node.id);
+                  }
+                }
+              : undefined
+          }
+          className={branch ? 'cursor-pointer' : undefined}
+          isExpandable={branch}
+          expanded={open}
+          hasCheckbox
+          checkboxProps={{
+            checked: s === 'checked',
+            indeterminate: s === 'mixed',
+            onCheckedChange: setChecked,
+            onClick: stop,
+            onKeyDown: stop,
+          }}
+          hasIcon
+          icon={node.icon ?? <NodeTreeIcon size={16} />}
+          title={node.label}
+          tabIndex={level === 1 ? 0 : -1}
+        />
+        {open && (
+          <ul role="group" className="ps-4">
+            {node.children!.map((child, index) =>
+              renderNode(child, level + 1, index + 1, node.children!.length)
+            )}
+          </ul>
+        )}
+      </li>
+    );
+  };
+
+  return (
+    <ul role="tree" aria-label="Workloads" className="w-80">
+      {renderNode(workloadTree)}
+    </ul>
+  );
+}
+
+/**
+ * Leaf state is the single source of truth: the story stores one boolean per leaf
+ * and derives every branch from the full tree, including collapsed branches, so a
+ * parent reads `mixed` when only some of its leaves are checked. Clicking a branch
+ * checks all of its leaves unless they are already all checked. The row carries
+ * `aria-checked` (`true`, `false`, or `mixed`), which is the contract assistive tech
+ * relies on for the tri-state. The checkbox stops click and Space propagation so it
+ * does not also toggle expansion. The first render starts with one `cedar` leaf
+ * checked, so a mixed parent is visible without any interaction.
+ */
+export const DerivedCheckboxTree: Story = {
+  render: () => <DerivedCheckboxWorkloadTree />,
+};
